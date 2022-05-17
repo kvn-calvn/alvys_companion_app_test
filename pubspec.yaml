@@ -15,10 +15,11 @@ dependencies:
   flutter_native_splash: ^2.1.6
   flutter_secure_storage: ^5.0.2
   page_transition: ^2.0.5
+  rflutter_alert: ^2.0.4
   google_fonts: ^2.3.2
   http: ^0.13.4
   equatable: ^2.0.3
-  flutter_riverpod: ^1.0.3
+  flutter_riverpod: ^1.0.4
   json_serializable: ^6.2.0  
   dio: ^4.0.6
   internet_connection_checker: ^0.0.1+3

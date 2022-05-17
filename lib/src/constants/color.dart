@@ -1,4 +1,6 @@
-class Color {
+import 'package:flutter/material.dart';
+
+class ColorManager {
   static Color primary = HexColor.fromHex("#003494");
   static Color darkgrey = HexColor.fromHex("#1F1F1F");
   static Color lightgrey = HexColor.fromHex("#777777");
@@ -6,8 +8,7 @@ class Color {
   static Color pickupColor = HexColor.fromHex("#2991C2");
   static Color deliveryColor = HexColor.fromHex("#F08080");
   static Color cancelColor = HexColor.fromHex("#FF0000");
-
-  Color(int parse);
+  static Color white = Colors.white;
 }
 
 extension HexColor on Color {
