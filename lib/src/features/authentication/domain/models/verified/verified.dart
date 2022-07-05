@@ -7,11 +7,12 @@ part 'verified.g.dart';
 
 @freezed
 class Verified with _$Verified {
-	factory Verified({
-		@JsonKey(name: 'Data') Data? data,
-		@JsonKey(name: 'ErrorMessage') String? errorMessage,
-		@JsonKey(name: 'ErrorCode') int? errorCode,
-	}) = _Verified;
+  factory Verified({
+    @JsonKey(name: 'Data') Data? data,
+    @JsonKey(name: 'ErrorMessage') String? errorMessage,
+    @JsonKey(name: 'ErrorCode') int? errorCode,
+  }) = _Verified;
 
-	factory Verified.fromJson(Map<String, dynamic> json) => _$VerifiedFromJson(json);
+  factory Verified.fromJson(Map<String, dynamic> json) =>
+      _$VerifiedFromJson(json);
 }

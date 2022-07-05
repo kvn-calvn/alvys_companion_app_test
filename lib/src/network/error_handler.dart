@@ -17,6 +17,7 @@ enum DataSource {
   SEND_TIMEOUT,
   CACHE_ERROR,
   NO_INTERNET_CONNECTION,
+  EXPECTATION_FAILED,
   DEFAULT
 }
 
@@ -25,7 +26,9 @@ class ErrorHandler implements Exception {
 
   ErrorHandler.handle(dynamic error) {
     if (error is DioError) {
+      print(error.response!.data);
       // dio error so its error from response of the API
+      print("HERA1");
       failure = _handleError(error);
     } else {
       // default error
@@ -42,6 +45,7 @@ class ErrorHandler implements Exception {
       case DioErrorType.receiveTimeout:
         return DataSource.RECEIVE_TIMEOUT.getFailure();
       case DioErrorType.response:
+        print(error.response?.statusCode);
         switch (error.response?.statusCode) {
           case ResponseCode.BAD_REQUEST:
             return DataSource.BAD_REQUEST.getFailure();
@@ -53,6 +57,9 @@ class ErrorHandler implements Exception {
             return DataSource.NOT_FOUND.getFailure();
           case ResponseCode.INTERNAL_SERVER_ERROR:
             return DataSource.INTERNAL_SERVER_ERROR.getFailure();
+          case ResponseCode.EXPECTATION_FAILED:
+            print("Callhere");
+            return DataSource.EXPECTATION_FAILED.getFailure();
           default:
             return DataSource.DEFAULT.getFailure();
         }
@@ -75,6 +82,9 @@ extension DataSourceExtension on DataSource {
         return Failure(ResponseCode.UNAUTHORISED, ResponseMessage.UNAUTHORISED);
       case DataSource.NOT_FOUND:
         return Failure(ResponseCode.NOT_FOUND, ResponseMessage.NOT_FOUND);
+      case DataSource.EXPECTATION_FAILED:
+        return Failure(
+            ResponseCode.EXPECTATION_FAILED, ResponseMessage.SUCCESS);
       case DataSource.INTERNAL_SERVER_ERROR:
         return Failure(ResponseCode.INTERNAL_SERVER_ERROR,
             ResponseMessage.INTERNAL_SERVER_ERROR);
@@ -112,6 +122,7 @@ class ResponseCode {
       404; // failure, api url is not correct and not found
   static const int INTERNAL_SERVER_ERROR =
       500; // failure, crash happened in server side
+  static const int EXPECTATION_FAILED = 417;
 
   // local status code
   static const int DEFAULT = -1;
@@ -137,7 +148,8 @@ class ResponseMessage {
   static const String NOT_FOUND =
       "Url is not found, try again later"; // failure, api url is not correct and not found
   static const String INTERNAL_SERVER_ERROR =
-      "some thing went wrong, try again later"; // failure, crash happened in server side
+      "Something went wrong, try again later"; // failure, crash happened in server side
+  static const String EXPECTATION_FAILED = "Expectation Failed";
 
   // local status code
   static const String DEFAULT = "some thing went wrong, try again later";

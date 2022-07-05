@@ -1,16 +1,25 @@
+import 'package:alvys3/src/constants/color.dart';
+import 'package:alvys3/src/constants/text_styles.dart';
+import 'package:alvys3/src/features/trips/domain/trips/datum.dart';
+import 'package:alvys3/src/routing/routes.dart';
+import 'package:alvys3/src/routing/routing_arguments.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class TripCard extends StatelessWidget {
-  const TripCard({Key? key}) : super(key: key);
+  const TripCard({Key? key, required this.trip}) : super(key: key);
+
+  final Datum trip;
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, '/loaddetails');
+        final args = TripDetailsArguments(tripId: trip.id!);
+        Navigator.pushNamed(context, Routes.tripDetailsRoute, arguments: args);
       },
       child: Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(10, 12, 10, 0),
+        padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
         child: Container(
           width: double.infinity,
           decoration: BoxDecoration(
@@ -36,21 +45,13 @@ class TripCard extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: const [
-                      Text(
-                        'Trip# 1000047',
-                        style: TextStyle(
-                            color: Colors.grey,
-                            fontSize: 14,
-                            fontWeight: FontWeight.normal),
-                      ),
-                      Text(
-                        '\$45000.00',
-                        style: TextStyle(
-                            color: Colors.green,
-                            fontSize: 14,
-                            fontWeight: FontWeight.normal),
-                      ),
+                    children: [
+                      Text('Trip# ${trip.tripNumber}',
+                          style: getMediumStyle(
+                              color: ColorManager.darkgrey, fontSize: 14)),
+                      Text(NumberFormat.simpleCurrency().format(trip.tripValue),
+                          style: getMediumStyle(
+                              color: ColorManager.darkgrey, fontSize: 14)),
                     ],
                   ),
                 ),
@@ -71,25 +72,17 @@ class TripCard extends StatelessWidget {
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
-                            Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(0, 0, 10, 0),
-                              child: Text(
-                                '4820 E Main St Russellville, AR',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
+                          children: [
+                            Text('${trip.firstStopAddress}',
+                                style: getBoldStyle(
+                                    color: ColorManager.darkgrey,
+                                    fontSize: 14)),
                             Text(
-                              'Jan 27, 2022 @ 10:05',
-                              style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.normal),
-                            ),
+                                DateFormat('MMM d @ h:mm a', 'en_US')
+                                    .format(trip.pickupDate!),
+                                style: getMediumStyle(
+                                    color: ColorManager.darkgrey,
+                                    fontSize: 12)),
                           ],
                         ),
                       ),
@@ -113,25 +106,27 @@ class TripCard extends StatelessWidget {
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
                           crossAxisAlignment: CrossAxisAlignment.start,
-                          children: const [
+                          children: [
                             Padding(
-                              padding:
-                                  EdgeInsetsDirectional.fromSTEB(0, 0, 10, 0),
-                              child: Text(
-                                '609 S Grant St  Amarillo, TX',
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ),
+                                padding: const EdgeInsetsDirectional.fromSTEB(
+                                    0, 0, 10, 0),
+                                child: Wrap(
+                                  children: [
+                                    Text(
+                                      '${trip.lastStopAddress}',
+                                      maxLines: 2,
+                                      style: getBoldStyle(
+                                          color: ColorManager.darkgrey,
+                                          fontSize: 14),
+                                    ),
+                                  ],
+                                )),
                             Text(
-                              'Jan 28, 2022 @ 15:00',
-                              style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.normal),
-                            ),
+                                DateFormat('MMM d @ h:mm a', 'en_US')
+                                    .format(trip.deliveryDate!),
+                                style: getMediumStyle(
+                                    color: ColorManager.darkgrey,
+                                    fontSize: 12)),
                           ],
                         ),
                       ),
@@ -148,82 +143,67 @@ class TripCard extends StatelessWidget {
                       Column(
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        children: const [
-                          Text(
-                            'DH (mi)',
+                        children: [
+                          const Text(
+                            'DH',
                             style: TextStyle(
                                 color: Colors.grey,
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold),
                           ),
-                          Text(
-                            '0.00',
-                            style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 14,
-                                fontWeight: FontWeight.normal),
-                          ),
+                          Text('0.00 mi',
+                              style: getMediumStyle(
+                                  color: ColorManager.darkgrey, fontSize: 12)),
                         ],
                       ),
                       Column(
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        children: const [
-                          Text(
-                            'TRIP (mi)',
+                        children: [
+                          const Text(
+                            'TRIP',
                             style: TextStyle(
                                 color: Colors.grey,
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold),
                           ),
                           Text(
-                            '827.7',
-                            style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 14,
-                                fontWeight: FontWeight.normal),
-                          ),
+                              '${double.parse((trip.totalMiles)!.toStringAsFixed(2))} mi',
+                              style: getMediumStyle(
+                                  color: ColorManager.darkgrey, fontSize: 12)),
                         ],
                       ),
                       Column(
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        children: const [
-                          Text(
+                        children: [
+                          const Text(
                             'STOPS',
                             style: TextStyle(
                                 color: Colors.grey,
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold),
                           ),
-                          Text(
-                            '2',
-                            style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 14,
-                                fontWeight: FontWeight.normal),
-                          ),
+                          Text('${trip.stopCount}',
+                              style: getMediumStyle(
+                                  color: ColorManager.darkgrey, fontSize: 12)),
                         ],
                       ),
                       Column(
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        children: const [
-                          Text(
+                        children: [
+                          const Text(
                             'WEIGHT',
                             style: TextStyle(
                                 color: Colors.grey,
                                 fontSize: 14,
                                 fontWeight: FontWeight.bold),
                           ),
-                          Text(
-                            '_',
-                            style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 14,
-                                fontWeight: FontWeight.normal),
-                          ),
+                          Text('${trip.totalWeight} lbs',
+                              style: getMediumStyle(
+                                  color: ColorManager.darkgrey, fontSize: 12)),
                         ],
                       ),
                     ],

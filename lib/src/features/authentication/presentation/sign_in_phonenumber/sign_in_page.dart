@@ -1,4 +1,8 @@
-import 'package:alvys3/src/common_widgets/alert_dialog.dart';
+// ignore_for_file: unnecessary_string_escapes
+import 'package:alvys3/src/features/authentication/domain/models/phonenumber/phonenumber.dart';
+import 'package:alvys3/src/routing/routes.dart';
+import 'package:reactive_forms/reactive_forms.dart';
+
 import 'package:alvys3/src/constants/color.dart';
 import 'package:alvys3/src/constants/text_styles.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -6,9 +10,25 @@ import 'sign_in_page_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class SignInPage extends StatelessWidget {
-  SignInPage({Key? key}) : super(key: key);
+class SignInPage extends StatefulWidget {
+  const SignInPage({Key? key}) : super(key: key);
+
+  @override
+  State<SignInPage> createState() => _SignInPageState();
+}
+
+class _SignInPageState extends State<SignInPage> with InputValidationMixin {
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  final formGlobalKey = GlobalKey<FormState>();
+
+  final form = FormGroup({
+    'phone': FormControl(validators: [
+      Validators.required,
+      Validators.number,
+      Validators.minLength(10)
+    ])
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -42,72 +62,92 @@ class SignInPage extends StatelessWidget {
                 const SizedBox(
                   height: 16,
                 ),
-                Consumer(builder: ((context, ref, _) {
-                  final state = ref.watch(signInPageControllerProvider);
-                  final isloading = state is AsyncLoading;
+                Consumer(
+                  builder: ((context, ref, _) {
+                    final state = ref.watch(signInPageControllerProvider);
+                    final isloading = state is AsyncLoading;
 
-                  TextEditingController phoneNumberController =
-                      TextEditingController();
+                    state.whenData((Phonenumber? value) {
+                      if (value!.errorCode == 0) {
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          Navigator.pushNamed(context, Routes.verifyRoute,
+                              arguments: {'phone': '9094623310'});
+                        });
+                      }
+                    });
 
-                  ref.listen<AsyncValue<void>>(
-                    signInPageControllerProvider,
-                    (_, state) => state.whenOrNull(
-                      error: (error, stackTrace) {
-                        Alert(
-                            context: context,
-                            type: AlertType.error,
-                            desc: error.toString(),
-                            style: getLightErrorAlertStyle(),
-                            buttons: [
-                              DialogButton(
-                                child: const Text(
-                                  "Ok",
-                                  style: TextStyle(
-                                      color: Colors.white, fontSize: 20),
+                    ref.listen<AsyncValue<void>>(
+                      signInPageControllerProvider,
+                      (_, state) => state.whenOrNull(
+                        error: (error, stackTrace) {
+                          Alert(
+                              context: context,
+                              type: AlertType.error,
+                              desc: error.toString(),
+                              style: getLightErrorAlertStyle(),
+                              buttons: [
+                                DialogButton(
+                                  child: const Text(
+                                    "Ok",
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 20),
+                                  ),
+                                  onPressed: () => Navigator.pop(context),
+                                  color: ColorManager.primary,
+                                )
+                              ]).show();
+                        },
+                      ),
+                    );
+
+                    return ReactiveForm(
+                        formGroup: form,
+                        child: Column(
+                          children: [
+                            ReactiveTextField(
+                              formControlName: 'phone',
+                              keyboardType: TextInputType.number,
+                              maxLength: 10,
+                              autofocus: true,
+                              validationMessages: (control) => {'required': ''},
+                              decoration: InputDecoration(
+                                fillColor: Colors.white,
+                                filled: true,
+                                enabledBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(
+                                      color: Color(0xffE5E5E5), width: 2.0),
+                                  borderRadius: BorderRadius.circular(10),
                                 ),
-                                onPressed: () => Navigator.pop(context),
-                                color: ColorManager.primary,
-                              )
-                            ]).show();
-                      },
-                    ),
-                  );
-                  return Column(
-                    children: [
-                      TextField(
-                        keyboardType: TextInputType.number,
-                        controller: phoneNumberController,
-                        autofocus: true,
-                        decoration: InputDecoration(
-                          fillColor: Colors.white,
-                          filled: true,
-                          enabledBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                color: Color(0xffE5E5E5), width: 2.0),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderSide: const BorderSide(
-                                color: Color(0xffE5E5E5), width: 2.0),
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      ButtonStyle1(
-                          title: "Next",
-                          isLoading: isloading,
-                          onPressAction: () {
-                            ref
-                                .read(signInPageControllerProvider.notifier)
-                                .loginWithPhoneNumber(
-                                    phoneNumberController.text);
-                          }),
-                    ],
-                  );
-                })),
+                                focusedBorder: OutlineInputBorder(
+                                  borderSide: const BorderSide(
+                                      color: Color(0xffE5E5E5), width: 2.0),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                              ),
+                            ),
+                            ReactiveFormConsumer(
+                                builder: ((context, formGroup, child) {
+                              return ButtonStyle1(
+                                  title: "Next",
+                                  isLoading: isloading,
+                                  isDisable: !form.valid,
+                                  onPressAction: () {
+                                    formGroup.valid
+                                        ?
+                                        // use the email provided here
+                                        ref
+                                            .read(signInPageControllerProvider
+                                                .notifier)
+                                            .loginWithPhoneNumber(formGroup
+                                                .control('phone')
+                                                .value)
+                                        : null;
+                                  });
+                            }))
+                          ],
+                        ));
+                  }),
+                ),
               ],
             ),
           ),
@@ -115,6 +155,63 @@ class SignInPage extends StatelessWidget {
       ),
     );
   }
+/*
+  Form SignInForm(bool _btnEnabled, TextEditingController phoneNumberController,
+      bool isloading, WidgetRef ref) {
+    return Form(
+      key: formGlobalKey,
+      onChanged: () =>
+          setState(() => _btnEnabled = formGlobalKey.currentState!.validate()),
+      child: Column(
+        children: [
+          TextFormField(
+            keyboardType: TextInputType.number,
+            controller: phoneNumberController,
+            maxLength: 10,
+            validator: (phoneNumber) {
+              if (isPhoneNumberValid(phoneNumber!)) {
+                _btnEnabled = true;
+              } else {
+                _btnEnabled = false;
+              }
+              return null;
+            },
+            autofocus: true,
+            decoration: InputDecoration(
+              fillColor: Colors.white,
+              filled: true,
+              enabledBorder: OutlineInputBorder(
+                borderSide:
+                    const BorderSide(color: Color(0xffE5E5E5), width: 2.0),
+                borderRadius: BorderRadius.circular(10),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderSide:
+                    const BorderSide(color: Color(0xffE5E5E5), width: 2.0),
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ),
+          const SizedBox(
+            height: 10,
+          ),
+          ButtonStyle1(
+              title: "Next",
+              isLoading: isloading,
+              isDisable: _btnEnabled,
+              onPressAction: () {
+                if (formGlobalKey.currentState!.validate()) {
+                  formGlobalKey.currentState!.save();
+                  // use the email provided here
+                  ref
+                      .read(signInPageControllerProvider.notifier)
+                      .loginWithPhoneNumber(phoneNumberController.text);
+                }
+              }),
+        ],
+      ),
+    );
+  }*/
 }
 
 class ButtonStyle1 extends StatelessWidget {
@@ -122,12 +219,13 @@ class ButtonStyle1 extends StatelessWidget {
       {Key? key,
       required this.onPressAction,
       required this.title,
-      required this.isLoading})
+      this.isLoading = false,
+      this.isDisable = false})
       : super(key: key);
 
   final Function onPressAction;
   final bool isLoading;
-  final bool isDisable = false;
+  final bool isDisable;
   final String title;
 
   @override
@@ -137,7 +235,7 @@ class ButtonStyle1 extends StatelessWidget {
         isLoading ? "Loading.." : title,
         style: getRegularStyle(color: ColorManager.white),
       ),
-      onPressed: isLoading ? null : () => onPressAction(),
+      onPressed: isLoading || isDisable ? null : () => onPressAction(),
       /*onPressed: () {
                     Navigator.pushNamed(context, '/verifyphone');
                   },*/
@@ -150,4 +248,14 @@ class ButtonStyle1 extends StatelessWidget {
       ),
     );
   }
+}
+
+mixin InputValidationMixin {
+  bool isPhoneNumberValid(String phoneNumber) => phoneNumber.length == 10;
+/*
+  bool isEmailValid(String email) {
+    Pattern pattern = r '^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
+    RegExp regex =  RegExp(pattern);
+    return regex.hasMatch(email);
+  }*/
 }

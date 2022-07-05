@@ -19,6 +19,7 @@ class DioFactory {
   Future<Dio> getDio() async {
     Dio dio = Dio();
     int _timeOut = 60 * 1000; // 1 min
+
     Map<String, String> headers = {
       CONTENT_TYPE: APPLICATION_JSON,
       ACCEPT: APPLICATION_JSON,

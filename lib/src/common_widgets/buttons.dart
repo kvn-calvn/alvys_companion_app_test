@@ -7,12 +7,13 @@ class ButtonStyle1 extends StatelessWidget {
       {Key? key,
       required this.onPressAction,
       required this.title,
-      required this.isLoading})
+      required this.isLoading,
+      required this.isDisable})
       : super(key: key);
 
   final Function onPressAction;
   final bool isLoading;
-  final bool isDisable = false;
+  final bool isDisable;
   final String title;
 
   @override
@@ -31,6 +32,41 @@ class ButtonStyle1 extends StatelessWidget {
         primary: ColorManager.primary,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
+        ),
+      ),
+    );
+  }
+}
+
+class ButtonStyle2 extends StatelessWidget {
+  const ButtonStyle2(
+      {Key? key,
+      required this.onPressAction,
+      required this.title,
+      required this.isLoading,
+      required this.isDisable})
+      : super(key: key);
+
+  final Function onPressAction;
+  final bool isLoading;
+  final bool isDisable;
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton(
+      onPressed: isDisable ? null : () => onPressAction(),
+      style: ElevatedButton.styleFrom(
+        primary: ColorManager.primary,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 10.0),
+        child: Text(
+          title,
+          style: getSemiBoldStyle(color: ColorManager.white, fontSize: 14),
         ),
       ),
     );

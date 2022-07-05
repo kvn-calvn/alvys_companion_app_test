@@ -1,4 +1,6 @@
 import 'package:alvys3/src/common_widgets/echeck_card.dart';
+import 'package:alvys3/src/constants/color.dart';
+import 'package:alvys3/src/constants/text_styles.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -17,32 +19,17 @@ class _EcheckPageState extends State<EcheckPage> {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
+        iconTheme: const IconThemeData(
+          color: Colors.black, //change your color here
+        ),
         backgroundColor: Colors.transparent,
         title: Text(
           'EChecks',
-          style: GoogleFonts.poppins(
-            fontWeight: FontWeight.bold,
-            fontSize: 28,
-            textStyle: const TextStyle(color: Colors.black),
-          ),
+          textAlign: TextAlign.start,
+          style: getBoldStyle(color: ColorManager.darkgrey, fontSize: 20),
         ),
-        actions: [
-          IconButton(
-            /* borderColor: Colors.transparent,
-            borderRadius: 30,
-            borderWidth: 1,
-            buttonSize: 60,*/
-            icon: const Icon(
-              Icons.map_rounded,
-              color: Colors.black,
-              size: 30,
-            ),
-            onPressed: () {
-              debugPrint('IconButton pressed ...');
-            },
-          ),
-        ],
-        centerTitle: false,
+        actions: const [],
+        centerTitle: true,
         elevation: 0,
       ),
       backgroundColor: const Color(0xFFF1F4F8),

@@ -20,7 +20,7 @@ class _LandingState extends State<Landing> {
     const storage = FlutterSecureStorage();
 
     var token = await storage.read(key: 'appToken');
-    if (token != null) {
+    if (token == null) {
       Navigator.pushNamedAndRemoveUntil(context, Routes.tripPageRoute,
           ModalRoute.withName(Routes.tripPageRoute));
       //debugPrint("Home");

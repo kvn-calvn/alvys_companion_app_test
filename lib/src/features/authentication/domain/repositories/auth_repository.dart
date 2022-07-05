@@ -4,5 +4,6 @@ import 'package:alvys3/src/features/authentication/domain/models/verified/verifi
 
 abstract class AuthRepository {
   Future<ApiResponse<Phonenumber>> loginWithPhoneNumber(String phoneNumber);
-  Future<ApiResponse<Verified>> verifyPhoneNumber(String verificationCode);
+  Future<ApiResponse<Verified>> verifyPhoneNumber(
+      String phoneNumber, String verificationCode);
 }

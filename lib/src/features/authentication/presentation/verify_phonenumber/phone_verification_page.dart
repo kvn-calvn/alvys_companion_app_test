@@ -1,5 +1,15 @@
+import 'package:alvys3/src/common_widgets/buttons.dart';
+import 'package:alvys3/src/constants/color.dart';
+import 'package:alvys3/src/constants/text_styles.dart';
+import 'package:alvys3/src/features/authentication/domain/models/verified/verified.dart';
+import 'package:alvys3/src/routing/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:reactive_forms/reactive_forms.dart';
+import 'package:rflutter_alert/rflutter_alert.dart';
+
+import 'phone_verification_controller.dart';
 
 class PhoneNumberVerificationPage extends StatefulWidget {
   const PhoneNumberVerificationPage({Key? key}) : super(key: key);
@@ -18,6 +28,14 @@ class _PhoneNumberVerificationPageState
     super.initState();
   }
 
+  final form = FormGroup({
+    'verify': FormControl(validators: [
+      Validators.required,
+      Validators.number,
+      Validators.minLength(6)
+    ])
+  });
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,67 +52,109 @@ class _PhoneNumberVerificationPageState
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(
-                  height: 50,
+                  height: 95,
+                ),
+                Text('Enter the verification code',
+                    textAlign: TextAlign.start,
+                    style: getExtraBoldStyle(
+                        color: ColorManager.darkgrey, fontSize: 30)),
+                const SizedBox(
+                  height: 19,
                 ),
                 Text(
-                  'Enter the verification code',
-                  textAlign: TextAlign.start,
-                  style: GoogleFonts.poppins(
-                    fontWeight: FontWeight.w800,
-                    fontSize: 30,
-                    textStyle: const TextStyle(color: Colors.black),
-                  ),
-                ),
+                    'We sent you a SMS with a 6 digit code to verify your phone number.',
+                    textAlign: TextAlign.start,
+                    style: getRegularStyle(color: ColorManager.lightgrey)),
                 const SizedBox(
-                  height: 10,
+                  height: 16,
                 ),
-                const Text(
-                  'We sent you a SMS with a 6 digit code to verify your phone number.',
-                  textAlign: TextAlign.start,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                TextFormField(
-                  obscureText: false,
-                  decoration: InputDecoration(
-                    enabledBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                        color: Color(0x00000000),
-                        width: 1,
+                Consumer(
+                  builder: ((context, ref, _) {
+                    final state = ref.watch(verificationPageController);
+                    final isloading = state is AsyncLoading;
+
+                    state.whenData((Verified? value) {
+                      if (value!.errorCode == 0) {
+                        WidgetsBinding.instance.addPostFrameCallback((_) {
+                          Navigator.pushNamed(context, Routes.tripPageRoute);
+                        });
+                      }
+                    });
+
+                    ref.listen<AsyncValue<void>>(
+                      verificationPageController,
+                      (_, state) => state.whenOrNull(
+                        error: (error, stackTrace) {
+                          Alert(
+                              context: context,
+                              type: AlertType.error,
+                              desc: error.toString(),
+                              style: getLightErrorAlertStyle(),
+                              buttons: [
+                                DialogButton(
+                                  child: const Text(
+                                    "Ok",
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 20),
+                                  ),
+                                  onPressed: () => Navigator.pop(context),
+                                  color: ColorManager.primary,
+                                )
+                              ]).show();
+                        },
                       ),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderSide: const BorderSide(
-                        color: Color(0x00000000),
-                        width: 1,
+                    );
+                    return ReactiveForm(
+                      formGroup: form,
+                      child: Column(
+                        children: [
+                          ReactiveTextField(
+                            formControlName: 'verify',
+                            keyboardType: TextInputType.number,
+                            maxLength: 6,
+                            autofocus: true,
+                            validationMessages: (control) => {'required': ''},
+                            decoration: InputDecoration(
+                              fillColor: Colors.white,
+                              filled: true,
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                    color: Color(0xffE5E5E5), width: 2.0),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: const BorderSide(
+                                    color: Color(0xffE5E5E5), width: 2.0),
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                            ),
+                          ),
+                          ReactiveFormConsumer(
+                              builder: ((context, formGroup, child) {
+                            return ButtonStyle1(
+                                isDisable: !form.valid,
+                                onPressAction: () {
+                                  Navigator.pushNamed(
+                                      context, Routes.tripPageRoute);
+                                  var code = formGroup.control('verify').value;
+/*
+                                  formGroup.valid
+                                      ? ref
+                                          .read(verificationPageController
+                                              .notifier)
+                                          .verifyPhoneNumber('', code)
+                                      : null;*/
+                                },
+                                title: "Continue",
+                                isLoading: isloading);
+                          }))
+                        ],
                       ),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    filled: true,
-                    fillColor: const Color(0xFFCFD8DC),
-                  ),
-                  //style: FlutterFlowTheme.of(context).bodyText1,
-                  keyboardType: TextInputType.number,
+                    );
+                  }),
                 ),
                 const SizedBox(
                   height: 10,
-                ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushNamed(context, '/loadlist');
-                  },
-                  style: ElevatedButton.styleFrom(
-                    minimumSize: const Size.fromHeight(50),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                  ),
-                  child: const Text(
-                    'Next',
-                    style: TextStyle(fontSize: 16),
-                  ),
                 ),
                 SizedBox(
                   width: double.infinity,
