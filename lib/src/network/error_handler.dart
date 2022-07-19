@@ -2,6 +2,7 @@
 
 import 'package:alvys3/src/network/failure.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/foundation.dart';
 
 enum DataSource {
   SUCCESS,
@@ -26,9 +27,12 @@ class ErrorHandler implements Exception {
 
   ErrorHandler.handle(dynamic error) {
     if (error is DioError) {
-      print(error.response!.data);
+      if (error.response != null) {
+        debugPrint(error.response!.data);
+      }
+
       // dio error so its error from response of the API
-      print("HERA1");
+      debugPrint("HERA1");
       failure = _handleError(error);
     } else {
       // default error
@@ -45,7 +49,6 @@ class ErrorHandler implements Exception {
       case DioErrorType.receiveTimeout:
         return DataSource.RECEIVE_TIMEOUT.getFailure();
       case DioErrorType.response:
-        print(error.response?.statusCode);
         switch (error.response?.statusCode) {
           case ResponseCode.BAD_REQUEST:
             return DataSource.BAD_REQUEST.getFailure();
@@ -58,7 +61,6 @@ class ErrorHandler implements Exception {
           case ResponseCode.INTERNAL_SERVER_ERROR:
             return DataSource.INTERNAL_SERVER_ERROR.getFailure();
           case ResponseCode.EXPECTATION_FAILED:
-            print("Callhere");
             return DataSource.EXPECTATION_FAILED.getFailure();
           default:
             return DataSource.DEFAULT.getFailure();

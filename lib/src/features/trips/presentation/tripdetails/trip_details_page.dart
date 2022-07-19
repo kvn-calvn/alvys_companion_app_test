@@ -82,7 +82,7 @@ class TripDetails extends ConsumerWidget {
               size: 50.0,
             ),
         error: (error, stack) =>
-            Text('Oops, something unexpected happened, ${stack}'),
+            Text('Oops, something unexpected happened, $stack'),
         data: (value) {
           var equipment =
               "${value!.data!.equipment} ${value.data!.equipmentLength}";
@@ -90,7 +90,7 @@ class TripDetails extends ConsumerWidget {
           var temp = "${value.data!.temperature}";
           var distance = "${value.data!.totalMiles}";
           var trailer = "${value.data!.trailerNum}";
-          var truck = "${value.data!.truckNum}";
+          //var truck = "${value.data!.truckNum}";
           var pay = "${value.data!.paidMiles}";
           var tripId = value.data!.id!;
 

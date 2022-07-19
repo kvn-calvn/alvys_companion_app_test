@@ -2,12 +2,9 @@ import 'package:alvys3/src/common_widgets/large_nav_button.dart';
 import 'package:alvys3/src/constants/color.dart';
 import 'package:alvys3/src/constants/text_styles.dart';
 import 'package:alvys3/src/features/trips/domain/trips/datum.dart';
-import 'package:alvys3/src/features/trips/domain/trips/trips.dart';
 import 'package:alvys3/src/features/trips/presentation/trip/trip_page_controller.dart';
 import 'package:alvys3/src/routing/routes.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/cupertino.dart';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../common_widgets/trip_card.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';

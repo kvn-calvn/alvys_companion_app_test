@@ -4,7 +4,6 @@ import 'package:alvys3/src/features/trips/domain/stop_details/stop_details.dart'
 import 'package:alvys3/src/features/trips/domain/trip_details/trip_details.dart';
 import 'package:alvys3/src/features/trips/domain/trips/trips.dart';
 import 'package:alvys3/src/network/api_client.dart';
-import 'package:alvys3/src/network/error_handler.dart';
 
 abstract class TripsRemoteDataSource {
   Future<Trips> getTrips();

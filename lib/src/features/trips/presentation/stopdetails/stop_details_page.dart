@@ -1,5 +1,6 @@
 import 'package:alvys3/src/constants/color.dart';
 import 'package:alvys3/src/constants/text_styles.dart';
+import 'package:alvys3/src/features/trips/domain/stop_details/m_comodity.dart';
 import 'package:alvys3/src/features/trips/presentation/stopdetails/stop_details_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -78,7 +79,7 @@ class StopDetails extends ConsumerWidget {
                     style: getBoldStyle(color: ColorManager.darkgrey),
                   ),
                   Text(
-                    value!.data!.companyName ?? "",
+                    value!.data?.companyName ?? "",
                     style: getSemiBoldStyle(
                         color: ColorManager.darkgrey, fontSize: 14),
                   ),
@@ -112,7 +113,7 @@ class StopDetails extends ConsumerWidget {
                         style: getBoldStyle(color: ColorManager.darkgrey),
                       ),
                       Text(
-                        value.data!.phone ?? "",
+                        value.data?.phone ?? "",
                         style: getRegularStyle(
                             color: ColorManager.darkgrey, fontSize: 14),
                       ),
@@ -126,7 +127,7 @@ class StopDetails extends ConsumerWidget {
                         style: getBoldStyle(color: ColorManager.darkgrey),
                       ),
                       Text(
-                        value.data!.actualStopdate ?? "",
+                        value.data?.actualStopdate ?? "",
                         style: getRegularStyle(
                             color: ColorManager.darkgrey, fontSize: 14),
                       ),
@@ -146,7 +147,7 @@ class StopDetails extends ConsumerWidget {
                         style: getBoldStyle(color: ColorManager.darkgrey),
                       ),
                       Text(
-                        value.data!.timeRecord!.driver!.driverIn ?? '',
+                        value.data?.timeRecord?.driver?.driverIn ?? '',
                         style: getRegularStyle(
                             color: ColorManager.darkgrey, fontSize: 14),
                       ),
@@ -160,7 +161,7 @@ class StopDetails extends ConsumerWidget {
                         style: getBoldStyle(color: ColorManager.darkgrey),
                       ),
                       Text(
-                        value.data!.timeRecord!.driver!.out ?? '',
+                        value.data?.timeRecord?.driver?.out ?? '',
                         style: getRegularStyle(
                             color: ColorManager.darkgrey, fontSize: 14),
                       ),
@@ -174,79 +175,7 @@ class StopDetails extends ConsumerWidget {
                 style: getBoldStyle(color: ColorManager.darkgrey),
               ),
               const SizedBox(height: 5),
-              Text(
-                'General Frieght',
-                style:
-                    getRegularStyle(color: ColorManager.darkgrey, fontSize: 14),
-              ),
-              const SizedBox(
-                height: 10,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'UNITS',
-                        style: getSemiBoldStyle(
-                            color: ColorManager.darkgrey, fontSize: 14),
-                      ),
-                      Text(
-                        '20 Pallets',
-                        style: getRegularStyle(
-                            color: ColorManager.darkgrey, fontSize: 14),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        'PIECES',
-                        style: getSemiBoldStyle(
-                            color: ColorManager.darkgrey, fontSize: 14),
-                      ),
-                      Text(
-                        '0',
-                        style: getRegularStyle(
-                            color: ColorManager.darkgrey, fontSize: 14),
-                      ),
-                    ],
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        'WEIGHT',
-                        style: getSemiBoldStyle(
-                            color: ColorManager.darkgrey, fontSize: 14),
-                      ),
-                      Text(
-                        '20,000lbs',
-                        style: getRegularStyle(
-                            color: ColorManager.darkgrey, fontSize: 14),
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-              const SizedBox(height: 20),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Stop Notes',
-                    style: getBoldStyle(color: ColorManager.darkgrey),
-                  ),
-                  Text(
-                    'None',
-                    style: getRegularStyle(
-                        color: ColorManager.lightgrey, fontSize: 14),
-                  ),
-                ],
-              ),
+              ItemsWidget(commodities: value.data?.mComodities ?? []),
               const SizedBox(height: 20),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -280,5 +209,92 @@ class StopDetails extends ConsumerWidget {
             ],
           );
         });
+  }
+}
+
+class ItemsWidget extends StatelessWidget {
+  const ItemsWidget({
+    Key? key,
+    required this.commodities,
+  }) : super(key: key);
+
+  final List<MComodity> commodities;
+
+  @override
+  Widget build(BuildContext context) {
+    _items() {
+      return commodities
+          .map((item) => Padding(
+                padding: const EdgeInsets.only(top: 5, bottom: 5),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      item.description ?? '',
+                      style: getRegularStyle(
+                          color: ColorManager.darkgrey, fontSize: 14),
+                    ),
+                    const SizedBox(
+                      height: 10,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'UNITS',
+                              style: getSemiBoldStyle(
+                                  color: ColorManager.darkgrey, fontSize: 14),
+                            ),
+                            Text(
+                              '${item.numUnits} ${item.unitType}',
+                              style: getRegularStyle(
+                                  color: ColorManager.darkgrey, fontSize: 14),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              'PIECES',
+                              style: getSemiBoldStyle(
+                                  color: ColorManager.darkgrey, fontSize: 14),
+                            ),
+                            Text(
+                              '${item.numPieces}',
+                              style: getRegularStyle(
+                                  color: ColorManager.darkgrey, fontSize: 14),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            Text(
+                              'WEIGHT',
+                              style: getSemiBoldStyle(
+                                  color: ColorManager.darkgrey, fontSize: 14),
+                            ),
+                            Text(
+                              '${item.weight} ${item.weightType}',
+                              style: getRegularStyle(
+                                  color: ColorManager.darkgrey, fontSize: 14),
+                            ),
+                          ],
+                        ),
+                      ],
+                    )
+                  ],
+                ),
+              ))
+          .toList();
+    }
+
+    return Column(
+      children: [..._items()],
+    );
   }
 }

@@ -17,14 +17,14 @@ class AlertDialogView extends StatelessWidget {
       builder: (BuildContext context) {
         return Expanded(
           child: AlertDialog(
-            title: Text('Welcome'),
-            content: Text('Do you wanna learn flutter?'),
+            title: const Text('Welcome'),
+            content: const Text('Do you wanna learn flutter?'),
             actions: [
               TextButton(
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text(
+                child: const Text(
                   'YES',
                   style: TextStyle(color: Colors.black),
                 ),
