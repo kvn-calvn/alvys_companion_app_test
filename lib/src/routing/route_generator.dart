@@ -37,6 +37,7 @@ class RouteGenerator {
         return PageTransition(
             child: LoadDetailsPage(
               tripId: arguments.tripId,
+              tripNumber: arguments.tripNumber,
             ),
             type: PageTransitionType.rightToLeft);
 

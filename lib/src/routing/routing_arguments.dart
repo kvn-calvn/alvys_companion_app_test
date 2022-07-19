@@ -10,7 +10,8 @@ class FilteredTripsArguments {
 
 class TripDetailsArguments {
   final String tripId;
-  const TripDetailsArguments({required this.tripId});
+  final String tripNumber;
+  const TripDetailsArguments({required this.tripNumber, required this.tripId});
 }
 
 class StopDetailsArguments {

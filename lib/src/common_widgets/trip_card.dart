@@ -15,7 +15,8 @@ class TripCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        final args = TripDetailsArguments(tripId: trip.id!);
+        final args = TripDetailsArguments(
+            tripId: trip.id!, tripNumber: trip.tripNumber!);
         Navigator.pushNamed(context, Routes.tripDetailsRoute, arguments: args);
       },
       child: Padding(

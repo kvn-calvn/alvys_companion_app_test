@@ -33,22 +33,34 @@ class _StopDetailsPageState extends ConsumerState<StopDetailsPage> {
   Widget build(BuildContext context) {
     debugPrint(widget.stopId + ' ' + widget.tripId);
     return Scaffold(
-        appBar: AppBar(
-          backgroundColor: Colors.transparent,
-          automaticallyImplyLeading: false,
-          title: Text(
-            'Stop Details',
-            style: GoogleFonts.poppins(
-              fontWeight: FontWeight.bold,
-              fontSize: 28,
-              textStyle: const TextStyle(color: Colors.black),
-            ),
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        automaticallyImplyLeading: false,
+        title: Text(
+          'Stop Details',
+          style: GoogleFonts.poppins(
+            fontWeight: FontWeight.bold,
+            fontSize: 28,
+            textStyle: const TextStyle(color: Colors.black),
           ),
-          centerTitle: true,
-          elevation: 0,
         ),
-        backgroundColor: const Color(0xFFF1F4F8),
-        body: StopDetails());
+        centerTitle: true,
+        leading: IconButton(
+          // 1
+          icon: const Icon(
+            Icons.arrow_back,
+            size: 30,
+          ),
+          color: ColorManager.darkgrey,
+          onPressed: () {
+            Navigator.of(context).maybePop();
+          },
+        ),
+        elevation: 0,
+      ),
+      backgroundColor: const Color(0xFFF1F4F8),
+      body: const StopDetails(),
+    );
   }
 }
 
