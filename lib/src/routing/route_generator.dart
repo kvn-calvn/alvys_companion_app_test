@@ -4,6 +4,7 @@ import 'package:alvys/app/pages/load_list.dart';
 import 'package:alvys/app/pages/auth/phone_verification.dart';
 import 'package:alvys/app/pages/auth/sign_in.dart';*/
 import 'package:alvys3/src/features/echeck/presentation/echeck_page.dart';
+import 'package:alvys3/src/features/trips/presentation/stopdetails/stop_details_page.dart';
 import 'package:alvys3/src/features/trips/presentation/trip/filtered_trip_page.dart';
 import 'package:alvys3/src/features/trips/presentation/tripdetails/trip_details_page.dart';
 import 'package:alvys3/src/features/trips/presentation/trip/load_list_page.dart';
@@ -49,6 +50,15 @@ class RouteGenerator {
             child: FilteredTripPage(
               trips: arguments.data,
               title: arguments.title,
+            ),
+            type: PageTransitionType.rightToLeft);
+
+      case Routes.stopDetailsRoute:
+        final arguments = settings.arguments as StopDetailsArguments;
+        return PageTransition(
+            child: StopDetailsPage(
+              tripId: arguments.tripId,
+              stopId: arguments.stopId,
             ),
             type: PageTransitionType.rightToLeft);
       case Routes.processingTripsRoute:
