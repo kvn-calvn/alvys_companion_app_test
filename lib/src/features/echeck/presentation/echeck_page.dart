@@ -1,18 +1,29 @@
 import 'package:alvys3/src/common_widgets/echeck_card.dart';
 import 'package:alvys3/src/constants/color.dart';
 import 'package:alvys3/src/constants/text_styles.dart';
+import 'package:alvys3/src/features/echeck/presentation/echeck_page_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class EcheckPage extends StatefulWidget {
-  const EcheckPage({Key? key}) : super(key: key);
+class EcheckPage extends ConsumerStatefulWidget {
+  const EcheckPage({required this.tripId, Key? key}) : super(key: key);
+
+  final String tripId;
 
   @override
   _EcheckPageState createState() => _EcheckPageState();
 }
 
-class _EcheckPageState extends State<EcheckPage> {
+class _EcheckPageState extends ConsumerState<EcheckPage> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
+
+  @override
+  void initState() {
+    super.initState();
+    ref
+        .read(echeckPageControllerProvider.notifier)
+        .getEcheckList(widget.tripId);
+  }
 
   @override
   Widget build(BuildContext context) {

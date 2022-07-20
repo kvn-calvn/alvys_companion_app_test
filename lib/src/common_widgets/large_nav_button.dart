@@ -5,12 +5,17 @@ import 'package:flutter/material.dart';
 
 class LargeNavButton extends StatelessWidget {
   const LargeNavButton(
-      {Key? key, required this.title, required this.route, this.data})
+      {Key? key,
+      required this.title,
+      required this.route,
+      this.data,
+      this.args})
       : super(key: key);
 
   final String title;
   final String route;
   final dynamic data;
+  final dynamic args;
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +64,7 @@ class LargeNavButton extends StatelessWidget {
           ),
         ),
         onTap: () {
-          final args = FilteredTripsArguments(data: data, title: title);
+          //final args = FilteredTripsArguments(data: data, title: title);
           Navigator.pushNamed(context, route, arguments: args);
         });
   }

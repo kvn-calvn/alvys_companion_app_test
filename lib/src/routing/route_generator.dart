@@ -42,8 +42,10 @@ class RouteGenerator {
             type: PageTransitionType.rightToLeft);
 
       case Routes.echecksRoute:
+        final arguments = settings.arguments as EcheckArguments;
         return PageTransition(
-            child: const EcheckPage(), type: PageTransitionType.rightToLeft);
+            child: EcheckPage(tripId: arguments.tripId),
+            type: PageTransitionType.rightToLeft);
       case Routes.deliveredTripsRoute:
         final arguments = settings.arguments as FilteredTripsArguments;
 

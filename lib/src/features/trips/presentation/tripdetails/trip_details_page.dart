@@ -3,6 +3,7 @@ import 'package:alvys3/src/common_widgets/stop_card.dart';
 import 'package:alvys3/src/constants/color.dart';
 import 'package:alvys3/src/features/trips/presentation/tripdetails/trip_details_controller.dart';
 import 'package:alvys3/src/routing/routes.dart';
+import 'package:alvys3/src/routing/routing_arguments.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -132,9 +133,10 @@ class TripDetails extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    const LargeNavButton(
+                    LargeNavButton(
                       title: 'E-Checks',
                       route: Routes.echecksRoute,
+                      args: EcheckArguments(tripId: tripId),
                     ),
                     const LargeNavButton(
                       title: 'Documents',

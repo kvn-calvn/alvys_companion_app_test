@@ -19,3 +19,8 @@ class StopDetailsArguments {
   final String tripId;
   const StopDetailsArguments({required this.stopId, required this.tripId});
 }
+
+class EcheckArguments {
+  final String tripId;
+  const EcheckArguments({required this.tripId});
+}

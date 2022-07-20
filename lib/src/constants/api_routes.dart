@@ -7,4 +7,6 @@ class ApiRoutes {
   static const String tripdocs = 'getdocumentsbytrip/';
   static const String tripechecks = 'getechecksbytrip/';
   static const String stopdetails = 'getstopdetail/';
+  static const String getEchecksByTrip = 'getechecksbytrip/';
+  static const String queryExpressNumber = 'comcheckenquiry/';
 }
