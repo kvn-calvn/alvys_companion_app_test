@@ -24,3 +24,8 @@ class EcheckArguments {
   final String tripId;
   const EcheckArguments({required this.tripId});
 }
+
+class TripDocsArguments {
+  final String tripId;
+  const TripDocsArguments({required this.tripId});
+}

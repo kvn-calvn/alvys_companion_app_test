@@ -138,9 +138,10 @@ class TripDetails extends ConsumerWidget {
                       route: Routes.echecksRoute,
                       args: EcheckArguments(tripId: tripId),
                     ),
-                    const LargeNavButton(
+                    LargeNavButton(
                       title: 'Documents',
-                      route: Routes.echecksRoute,
+                      route: Routes.tripDocumentsRoute,
+                      args: TripDocsArguments(tripId: tripId),
                     ),
                     Column(
                       mainAxisSize: MainAxisSize.max,
