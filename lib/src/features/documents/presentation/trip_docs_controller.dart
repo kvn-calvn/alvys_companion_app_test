@@ -20,8 +20,7 @@ class TripsDocsPageController
   }
 }
 
-final tripDocsPageControllerProvider =
-    StateNotifierProvider<TripsDocsPageController, AsyncValue<TripDocuments?>>(
-        (ref) {
+final tripDocsPageControllerProvider = StateNotifierProvider.autoDispose<
+    TripsDocsPageController, AsyncValue<TripDocuments?>>((ref) {
   return TripsDocsPageController(ref.watch(tripDocsRepositoryImplProvider));
 });

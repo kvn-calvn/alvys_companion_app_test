@@ -1,8 +1,9 @@
-import 'dart:html';
-
+import 'package:alvys3/src/common_widgets/large_nav_button.dart';
 import 'package:alvys3/src/constants/color.dart';
 import 'package:alvys3/src/constants/text_styles.dart';
 import 'package:alvys3/src/features/documents/presentation/trip_docs_controller.dart';
+import 'package:alvys3/src/routing/routes.dart';
+import 'package:alvys3/src/routing/routing_arguments.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -70,41 +71,14 @@ class TripDocsList extends ConsumerWidget {
       error: (error, stack) => Text('Oops, could not load documents, $stack'),
       data: (data) {
         var docs = data!.data ?? [];
-        _getFile(String url) {
-          Widget image;
-
-          return () async {
-            try {
-              final thumbnail = await FilePreview.getThumbnail(url);
-
-              image = thumbnail;
-            } catch (e) {
-              image = Image.asset("");
-            }
-
-            // ignore: unnecessary_null_comparison
-            return image != null
-                ? Container(
-                    width: 210,
-                    height: 297,
-                    padding: const EdgeInsets.all(8.0),
-                    color: Colors.white,
-                    child: image,
-                  )
-                : Container();
-          };
-        }
 
         _docsList() {
-          _getFile(
-              "https://alvyssandboxstorage.blob.core.windows.net/cl358/1000088_a198dc2f-0d6b-4eb3-8b0c-ea0704cead02_Unclassified_2022-07-1913:56:20-125423Z.pdf");
           return docs.map(
-            (doc) => Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(doc.type ?? ''),
-              ],
-            ),
+            (doc) => LargeNavButton(
+                icon: const Icon(Icons.insert_drive_file),
+                title: doc.type ?? '',
+                route: Routes.pdfViewer,
+                args: PDFViewerArguments(docUrl: doc.link!)),
           );
         }
 

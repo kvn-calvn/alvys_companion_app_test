@@ -8,6 +8,7 @@ class LargeNavButton extends StatelessWidget {
       {Key? key,
       required this.title,
       required this.route,
+      this.icon,
       this.data,
       this.args})
       : super(key: key);
@@ -16,6 +17,7 @@ class LargeNavButton extends StatelessWidget {
   final String route;
   final dynamic data;
   final dynamic args;
+  final Icon? icon;
 
   @override
   Widget build(BuildContext context) {
@@ -42,6 +44,7 @@ class LargeNavButton extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
+                  if (icon != null) ...[icon!],
                   Padding(
                     padding: const EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
                     child: Text(title,

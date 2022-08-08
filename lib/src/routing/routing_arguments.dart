@@ -29,3 +29,8 @@ class TripDocsArguments {
   final String tripId;
   const TripDocsArguments({required this.tripId});
 }
+
+class PDFViewerArguments {
+  final String docUrl;
+  const PDFViewerArguments({required this.docUrl});
+}

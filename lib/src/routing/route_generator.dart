@@ -3,6 +3,7 @@ import 'package:alvys/app/pages/load_details.dart';
 import 'package:alvys/app/pages/load_list.dart';
 import 'package:alvys/app/pages/auth/phone_verification.dart';
 import 'package:alvys/app/pages/auth/sign_in.dart';*/
+import 'package:alvys3/src/features/documents/presentation/pdf_viewer.dart';
 import 'package:alvys3/src/features/documents/presentation/trip_docs_page.dart';
 import 'package:alvys3/src/features/echeck/presentation/echeck_page.dart';
 import 'package:alvys3/src/features/trips/presentation/stopdetails/stop_details_page.dart';
@@ -61,6 +62,12 @@ class RouteGenerator {
         final arguments = settings.arguments as TripDocsArguments;
         return PageTransition(
             child: TripDocsPage(tripId: arguments.tripId),
+            type: PageTransitionType.rightToLeft);
+
+      case Routes.pdfViewer:
+        final arguments = settings.arguments as PDFViewerArguments;
+        return PageTransition(
+            child: PDFViewer(documentPath: arguments.docUrl),
             type: PageTransitionType.rightToLeft);
 
       case Routes.stopDetailsRoute:
