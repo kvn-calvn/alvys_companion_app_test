@@ -45,7 +45,7 @@ final routerProvider = Provider(
                   path: '/trips',
                   pageBuilder: (context, state) => CustomTransitionPage(
                       key: state.pageKey,
-                      child: const LoadListPage(),
+                      child: LoadListPage(key: state.pageKey),
                       transitionDuration: Duration.zero,
                       transitionsBuilder:
                           (context, animation, secondaryAnimation, child) =>
