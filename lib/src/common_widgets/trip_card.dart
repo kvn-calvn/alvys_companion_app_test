@@ -5,6 +5,7 @@ import 'package:alvys3/src/routing/routes.dart';
 import 'package:alvys3/src/routing/routing_arguments.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:go_router/go_router.dart';
 
 class TripCard extends StatelessWidget {
   const TripCard({Key? key, required this.trip}) : super(key: key);
@@ -15,9 +16,20 @@ class TripCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        final args = TripDetailsArguments(
+        /* final args = TripDetailsArguments(
             tripId: trip.id!, tripNumber: trip.tripNumber!);
-        Navigator.pushNamed(context, Routes.tripDetailsRoute, arguments: args);
+        Navigator.pushNamed(context, Routes.tripDetailsRoute, arguments: args);*/
+
+        context.goNamed(
+          'tripDetails',
+          queryParams: <String, String>{
+            'tripId': trip.id!,
+            'tripNumber': trip.tripNumber!
+          },
+        );
+/*
+        context.go('/trips/tripdetails/${trip.id!}',
+            extra: {"tripNumber": trip.tripNumber!});*/
       },
       child: Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),

@@ -73,13 +73,13 @@ class TripDocsList extends ConsumerWidget {
         var docs = data!.data ?? [];
 
         _docsList() {
-          return docs.map(
-            (doc) => LargeNavButton(
+          return docs.map((doc) => Container()
+              /*LargeNavButton(
                 icon: const Icon(Icons.insert_drive_file),
                 title: doc.type ?? '',
                 route: Routes.pdfViewer,
-                args: PDFViewerArguments(docUrl: doc.link!)),
-          );
+                args: PDFViewerArguments(docUrl: doc.link!))*/
+              );
         }
 
         return ListView(

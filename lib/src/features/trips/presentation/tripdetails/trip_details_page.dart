@@ -7,6 +7,7 @@ import 'package:alvys3/src/routing/routing_arguments.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class LoadDetailsPage extends ConsumerStatefulWidget {
@@ -54,7 +55,8 @@ class _LoadDetailsPageState extends ConsumerState<LoadDetailsPage> {
           ),
           color: ColorManager.darkgrey,
           onPressed: () {
-            Navigator.of(context).maybePop();
+            //Navigator.of(context).maybePop();
+            GoRouter.of(context).pop();
           },
         ),
         actions: [
@@ -108,6 +110,7 @@ class TripDetails extends ConsumerWidget {
           //var truck = "${value.data!.truckNum}";
           var pay = "${value.data!.paidMiles}";
           var tripId = value.data!.id!;
+          var loadNum = value.data!.tripNumber!;
 
           var stops = value.data!.miniStops!;
 
@@ -135,13 +138,21 @@ class TripDetails extends ConsumerWidget {
                   children: [
                     LargeNavButton(
                       title: 'E-Checks',
-                      route: Routes.echecksRoute,
-                      args: EcheckArguments(tripId: tripId),
+                      onPressed: () {
+                        context.go(context.namedLocation(
+                          'echeck',
+                          params: {'tripId': tripId},
+                        ));
+                        //context.goNamed('echeck', params: {'tripId': tripId});
+                        //context.go('/trips/tripdetails/$tripId/echeck');
+                      },
                     ),
                     LargeNavButton(
                       title: 'Documents',
-                      route: Routes.tripDocumentsRoute,
-                      args: TripDocsArguments(tripId: tripId),
+                      onPressed: () {
+                        context.goNamed('tripDocs', params: {'tripId': tripId});
+                        //context.go('/trips/tripdetails/docs/$tripId');
+                      },
                     ),
                     Column(
                       mainAxisSize: MainAxisSize.max,

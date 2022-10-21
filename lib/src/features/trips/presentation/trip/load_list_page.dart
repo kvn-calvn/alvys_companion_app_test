@@ -7,6 +7,7 @@ import 'package:alvys3/src/routing/routes.dart';
 import 'package:alvys3/src/routing/routing_arguments.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../common_widgets/trip_card.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
@@ -140,15 +141,21 @@ class TripList extends ConsumerWidget {
                 children: [
                   LargeNavButton(
                     title: "Delivered",
-                    route: Routes.deliveredTripsRoute,
-                    args: FilteredTripsArguments(
-                        data: _deliveredTripsData, title: "Delivered"),
+                    onPressed: () {
+                      context.go('/trips/delivered', extra: {
+                        'deliveredTrips': _deliveredTripsData,
+                        'title': "Delivered"
+                      });
+                    },
                   ),
                   LargeNavButton(
                     title: "Processing",
-                    route: Routes.processingTripsRoute,
-                    args: FilteredTripsArguments(
-                        data: _processingTripsData, title: "Processing"),
+                    onPressed: () {
+                      context.go('/trips/processing', extra: {
+                        'processingTrips': _processingTripsData,
+                        'title': "Processing"
+                      });
+                    },
                   ),
                   if (_activeTripsData.isNotEmpty) ...[
                     Column(

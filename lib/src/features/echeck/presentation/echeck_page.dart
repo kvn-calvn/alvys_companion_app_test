@@ -4,6 +4,7 @@ import 'package:alvys3/src/constants/text_styles.dart';
 import 'package:alvys3/src/features/echeck/presentation/echeck_page_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class EcheckPage extends ConsumerStatefulWidget {
   const EcheckPage({required this.tripId, Key? key}) : super(key: key);
@@ -40,6 +41,18 @@ class _EcheckPageState extends ConsumerState<EcheckPage> {
           style: getBoldStyle(color: ColorManager.darkgrey, fontSize: 20),
         ),
         actions: const [],
+        leading: IconButton(
+          // 1
+          icon: const Icon(
+            Icons.arrow_back,
+            size: 30,
+          ),
+          color: ColorManager.darkgrey,
+          onPressed: () {
+            //Navigator.of(context).maybePop();
+            GoRouter.of(context).pop();
+          },
+        ),
         centerTitle: true,
         elevation: 0,
       ),

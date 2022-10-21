@@ -1,5 +1,7 @@
 import 'package:alvys3/src/routing/routes.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class Landing extends StatefulWidget {
@@ -21,18 +23,23 @@ class _LandingState extends State<Landing> {
 
     var token = await storage.read(key: 'appToken');
     if (token == null) {
-      Navigator.pushNamedAndRemoveUntil(context, Routes.tripPageRoute,
-          ModalRoute.withName(Routes.tripPageRoute));
+      context.go('/trips');
+
+      /* Navigator.pushNamedAndRemoveUntil(context, Routes.tripPageRoute,
+          ModalRoute.withName(Routes.tripPageRoute));*/
       //debugPrint("Home");
     } else {
-      Navigator.pushNamedAndRemoveUntil(
-          context, Routes.signInRoute, ModalRoute.withName(Routes.signInRoute));
+      context.go('/signin');
+      /*Navigator.pushNamedAndRemoveUntil(
+          context, Routes.signInRoute, ModalRoute.withName(Routes.signInRoute));*/
       //debugPrint("SignIn");
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Container(
+      color: Colors.blue,
+    );
   }
 }

@@ -16,6 +16,7 @@ class FilteredTripPage extends StatelessWidget {
       return trips.map((trip) => TripCard(trip: trip));
     }
 
+    print("Hello");
     return Scaffold(
       key: key,
       appBar: AppBar(

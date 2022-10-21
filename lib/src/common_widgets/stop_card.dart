@@ -5,6 +5,7 @@ import 'package:alvys3/src/features/trips/domain/trip_details/mini_stop.dart';
 import 'package:alvys3/src/routing/routes.dart';
 import 'package:alvys3/src/routing/routing_arguments.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class StopCard extends StatelessWidget {
   const StopCard({Key? key, required this.stop, required this.tripId})
@@ -17,8 +18,7 @@ class StopCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        final args = StopDetailsArguments(tripId: tripId, stopId: stop.stopId!);
-        Navigator.pushNamed(context, Routes.stopDetailsRoute, arguments: args);
+        context.go('/trips/tripdetails/stopdetails/$tripId/${stop.stopId!}');
       },
       child: Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
