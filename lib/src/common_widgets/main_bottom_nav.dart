@@ -1,3 +1,4 @@
+import 'package:alvys3/src/constants/color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -40,17 +41,19 @@ class _MainBottomNavState extends ConsumerState<MainBottomNav> {
                     break;
                 }
               },
+              unselectedItemColor: Colors.grey,
+              selectedItemColor: ColorManager.primary,
               items: const [
                 BottomNavigationBarItem(
                     icon: Icon(
                       Icons.drive_eta_rounded,
-                      color: Colors.grey,
+                      // color: Colors.grey,
                     ),
                     label: 'Trips'),
                 BottomNavigationBarItem(
                     icon: Icon(
                       Icons.settings,
-                      color: Colors.grey,
+                      // color: Colors.grey,
                     ),
                     label: 'Settings'),
               ],
