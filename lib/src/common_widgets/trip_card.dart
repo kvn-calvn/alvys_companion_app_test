@@ -86,10 +86,13 @@ class TripCard extends StatelessWidget {
                           mainAxisSize: MainAxisSize.max,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text('${trip.firstStopAddress}',
-                                style: getBoldStyle(
-                                    color: ColorManager.darkgrey,
-                                    fontSize: 14)),
+                            SizedBox(
+                              width: MediaQuery.of(context).size.width * 0.7,
+                              child: Text('${trip.firstStopAddress}',
+                                  style: getBoldStyle(
+                                      color: ColorManager.darkgrey,
+                                      fontSize: 14)),
+                            ),
                             Text(
                                 DateFormat('MMM d @ h:mm a', 'en_US')
                                     .format(trip.pickupDate!),
@@ -123,16 +126,16 @@ class TripCard extends StatelessWidget {
                             Padding(
                                 padding: const EdgeInsetsDirectional.fromSTEB(
                                     0, 0, 10, 0),
-                                child: Wrap(
-                                  children: [
-                                    Text(
-                                      '${trip.lastStopAddress}',
-                                      maxLines: 2,
-                                      style: getBoldStyle(
-                                          color: ColorManager.darkgrey,
-                                          fontSize: 14),
-                                    ),
-                                  ],
+                                child: SizedBox(
+                                  width:
+                                      MediaQuery.of(context).size.width * 0.7,
+                                  child: Text(
+                                    '${trip.lastStopAddress}',
+                                    maxLines: 2,
+                                    style: getBoldStyle(
+                                        color: ColorManager.darkgrey,
+                                        fontSize: 14),
+                                  ),
                                 )),
                             Text(
                                 DateFormat('MMM d @ h:mm a', 'en_US')
