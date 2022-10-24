@@ -23,8 +23,8 @@ class TripCard extends StatelessWidget {
         context.goNamed(
           'tripDetails',
           queryParams: <String, String>{
-            'tripId': trip.id!,
-            'tripNumber': trip.tripNumber!
+            'tripNumber': trip.tripNumber!,
+            'tripId': trip.id!
           },
         );
 /*

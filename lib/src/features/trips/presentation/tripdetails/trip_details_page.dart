@@ -139,10 +139,11 @@ class TripDetails extends ConsumerWidget {
                     LargeNavButton(
                       title: 'E-Checks',
                       onPressed: () {
-                        context.go(context.namedLocation(
-                          'echeck',
-                          params: {'tripId': tripId},
-                        ));
+                        context.go(context.namedLocation('echeck',
+                            queryParams: {
+                              'tripNumber': loadNum,
+                              'tripId': tripId
+                            }));
                         //context.goNamed('echeck', params: {'tripId': tripId});
                         //context.go('/trips/tripdetails/$tripId/echeck');
                       },
@@ -150,7 +151,10 @@ class TripDetails extends ConsumerWidget {
                     LargeNavButton(
                       title: 'Documents',
                       onPressed: () {
-                        context.goNamed('tripDocs', params: {'tripId': tripId});
+                        context.goNamed('tripDocs', queryParams: {
+                          'tripNumber': loadNum,
+                          'tripId': tripId
+                        });
                         //context.go('/trips/tripdetails/docs/$tripId');
                       },
                     ),

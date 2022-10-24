@@ -51,7 +51,6 @@ final routerProvider = Provider(
                           (context, animation, secondaryAnimation, child) =>
                               child),
                   routes: [
-                    
                     GoRoute(
                       name: 'Delivered',
                       path: 'delivered',
@@ -109,9 +108,9 @@ final routerProvider = Provider(
                       routes: <GoRoute>[
                         GoRoute(
                           name: 'echeck',
-                          path: ':tripId/echeck',
+                          path: 'echeck',
                           builder: (context, state) {
-                            final _tripId = state.params['tripId']!;
+                            final _tripId = state.queryParams['tripId']!;
                             return EcheckPage(
                               tripId: _tripId,
                             );
@@ -119,9 +118,9 @@ final routerProvider = Provider(
                         ),
                         GoRoute(
                           name: 'tripDocs',
-                          path: ':tripId/docs',
+                          path: 'docs',
                           builder: (context, state) {
-                            final _tripId = state.params['tripId']!;
+                            final _tripId = state.queryParams['tripId']!;
                             return TripDocsPage(
                               tripId: _tripId,
                             );
