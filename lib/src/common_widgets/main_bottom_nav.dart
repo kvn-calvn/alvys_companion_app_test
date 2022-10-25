@@ -21,44 +21,37 @@ class _MainBottomNavState extends ConsumerState<MainBottomNav> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Stack(
-        children: [
-          widget.child,
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: BottomNavigationBar(
-              type: BottomNavigationBarType.fixed,
-              currentIndex: ref.watch(bottomNavIndexProvider),
-              onTap: (i) {
-                ref.read(bottomNavIndexProvider.notifier).update((state) => i);
+      body: widget.child,
+      bottomNavigationBar: BottomNavigationBar(
+        type: BottomNavigationBarType.fixed,
+        currentIndex: ref.watch(bottomNavIndexProvider),
+        onTap: (i) {
+          ref.read(bottomNavIndexProvider.notifier).update((state) => i);
 
-                switch (i) {
-                  case 0:
-                    context.go('/trips');
-                    break;
-                  case 1:
-                    context.go('/settings');
-                    break;
-                }
-              },
-              unselectedItemColor: Colors.grey,
-              selectedItemColor: ColorManager.primary,
-              items: const [
-                BottomNavigationBarItem(
-                    icon: Icon(
-                      Icons.drive_eta_rounded,
-                      // color: Colors.grey,
-                    ),
-                    label: 'Trips'),
-                BottomNavigationBarItem(
-                    icon: Icon(
-                      Icons.settings,
-                      // color: Colors.grey,
-                    ),
-                    label: 'Settings'),
-              ],
-            ),
-          ),
+          switch (i) {
+            case 0:
+              context.go('/trips');
+              break;
+            case 1:
+              context.go('/settings');
+              break;
+          }
+        },
+        unselectedItemColor: Colors.grey,
+        selectedItemColor: ColorManager.primary,
+        items: const [
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.drive_eta_rounded,
+                // color: Colors.grey,
+              ),
+              label: 'Trips'),
+          BottomNavigationBarItem(
+              icon: Icon(
+                Icons.settings,
+                // color: Colors.grey,
+              ),
+              label: 'Settings'),
         ],
       ),
     );

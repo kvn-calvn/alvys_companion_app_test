@@ -7,6 +7,7 @@ import 'package:alvys3/src/routing/routing_arguments.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:simple_speed_dial/simple_speed_dial.dart';
 import 'package:thumbnailer/thumbnailer.dart';
 import 'package:file_previewer/file_previewer.dart';
 
@@ -49,6 +50,32 @@ class _TripDocsPageState extends ConsumerState<TripDocsPage> {
         elevation: 0,
       ),
       backgroundColor: const Color(0xFFF1F4F8),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: SpeedDial(
+        child: const Icon(Icons.cloud_upload),
+        closedForegroundColor: ColorManager.white,
+        openForegroundColor: Colors.white,
+        closedBackgroundColor: ColorManager.primary,
+        openBackgroundColor: ColorManager.primary,
+        speedDialChildren: <SpeedDialChild>[
+          SpeedDialChild(
+            child: const Icon(Icons.camera_enhance),
+            foregroundColor: ColorManager.white,
+            backgroundColor: ColorManager.primary,
+            label: 'Camera',
+            onPressed: () {},
+            closeSpeedDialOnPressed: false,
+          ),
+          SpeedDialChild(
+            child: const Icon(Icons.photo_album_outlined),
+            foregroundColor: ColorManager.white,
+            backgroundColor: ColorManager.primary,
+            label: 'Gallery',
+            onPressed: () {},
+          ),
+          //  Your other SpeedDialChildren go here.
+        ],
+      ),
       body: const TripDocsList(),
     );
   }
