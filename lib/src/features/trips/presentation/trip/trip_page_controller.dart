@@ -21,6 +21,7 @@ class TripPageController extends StateNotifier<AsyncValue<Trips?>> {
 }
 
 final tripPageControllerProvider =
-    StateNotifierProvider<TripPageController, AsyncValue<Trips?>>((ref) {
+    StateNotifierProvider.autoDispose<TripPageController, AsyncValue<Trips?>>(
+        (ref) {
   return TripPageController(ref.watch(tripRepositoryImplProvider));
 });

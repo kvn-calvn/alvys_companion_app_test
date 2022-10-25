@@ -3,8 +3,6 @@ import 'package:alvys3/src/constants/color.dart';
 import 'package:alvys3/src/constants/text_styles.dart';
 import 'package:alvys3/src/features/trips/domain/trips/datum.dart';
 import 'package:alvys3/src/features/trips/presentation/trip/trip_page_controller.dart';
-import 'package:alvys3/src/routing/routes.dart';
-import 'package:alvys3/src/routing/routing_arguments.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -32,25 +30,7 @@ class _LoadListPageState extends ConsumerState<LoadListPage> {
     'Online',
     'Offline',
   ];
-/*
-  @override
-  Widget build(BuildContext context) {
-    return CupertinoPageScaffold(
-      child: NestedScrollView(
-        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
-          return <Widget>[
-            const CupertinoSliverNavigationBar(
-              largeTitle: Text('Settings'),
-            )
-          ];
-        },
-        body: const Center(
-          child: Text('Home Page'),
-        ),
-      ),
-    );
-  }
-}*/
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

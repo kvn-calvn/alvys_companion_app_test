@@ -2,6 +2,7 @@ import 'package:alvys3/src/common_widgets/main_bottom_nav.dart';
 import 'package:alvys3/src/features/authentication/presentation/sign_in_phonenumber/sign_in_page.dart';
 import 'package:alvys3/src/features/documents/presentation/trip_docs_page.dart';
 import 'package:alvys3/src/features/echeck/presentation/echeck_page.dart';
+import 'package:alvys3/src/features/settings/presentation/settings_page.dart';
 import 'package:alvys3/src/features/trips/presentation/stopdetails/stop_details_page.dart';
 import 'package:alvys3/src/features/trips/presentation/trip/filtered_trip_page.dart';
 import 'package:alvys3/src/features/trips/presentation/trip/load_list_page.dart';
@@ -12,7 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-final _rootNavigatorKey = GlobalKey<NavigatorState>();
+//final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
 
 final routerProvider = Provider(
@@ -84,16 +85,6 @@ final routerProvider = Provider(
                         );
                       },
                     ),
-                    /* GoRoute(
-                      name: 'echeck',
-                      path: 'tripdetails/echeck/:tripId',
-                      builder: (context, state) {
-                        final _tripId = state.params['tripId']!;
-                        return EcheckPage(
-                          tripId: _tripId,
-                        );
-                      },
-                    ),*/
                     GoRoute(
                       name: 'tripDetails',
                       path: 'tripdetails',
@@ -126,32 +117,6 @@ final routerProvider = Provider(
                             );
                           },
                         ),
-                        /*
-                        GoRoute(
-                          name: 'echeck',
-                          path: 'echeck',
-                          builder: (context, state) {
-                            /*final Map<String, Object> extra =
-                                state.extra! as Map<String, Object>;*/
-
-                            //final _tripId = extra['tripId']! as String;
-                            final _tripId = state.queryParams['tripId']!;
-                            return EcheckPage(
-                              tripId: _tripId,
-                            );
-                          },
-                        ),
-                        GoRoute(
-                          name: 'tripDocs',
-                          path: 'tripDetails/docs/:tripId',
-                          builder: (context, state) {
-                            final _tripId = state.params['tripId']!;
-                            return TripDocsPage(
-                              tripId: _tripId,
-                            );
-                          },
-                        ),
-                        */
                         GoRoute(
                           name: 'stopDetails',
                           path: 'tripdetails/stopdetails/:tripId/:stopId',
@@ -172,10 +137,7 @@ final routerProvider = Provider(
                   name: 'settings',
                   path: '/settings',
                   builder: (context, state) {
-                    final _tripId = state.params['tripId']!;
-                    return TripDocsPage(
-                      tripId: _tripId,
-                    );
+                    return const SettingsPage();
                   },
                 ),
               ])
