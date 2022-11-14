@@ -35,8 +35,8 @@ dependencies:
   thumbnailer: ^2.0.2
   file_previewer: ^0.0.5
   auto_size_text: ^3.0.0
-
-
+  flutter_cache_manager: ^3.3.0
+  pdf_viewer_plugin: ^2.0.1
   
 dev_dependencies:
   flutter_test:

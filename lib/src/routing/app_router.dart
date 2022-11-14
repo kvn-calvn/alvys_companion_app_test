@@ -1,5 +1,6 @@
 import 'package:alvys3/src/common_widgets/main_bottom_nav.dart';
 import 'package:alvys3/src/features/authentication/presentation/sign_in_phonenumber/sign_in_page.dart';
+import 'package:alvys3/src/features/documents/presentation/pdf_viewer.dart';
 import 'package:alvys3/src/features/documents/presentation/trip_docs_page.dart';
 import 'package:alvys3/src/features/echeck/presentation/echeck_page.dart';
 import 'package:alvys3/src/features/settings/presentation/settings_page.dart';
@@ -53,7 +54,7 @@ final routerProvider = Provider(
                               child),
                   routes: [
                     GoRoute(
-                      name: 'Delivered',
+                      name: 'delivered',
                       path: 'delivered',
                       builder: (context, state) {
                         final Map<String, Object> extra =
@@ -70,7 +71,7 @@ final routerProvider = Provider(
                       },
                     ),
                     GoRoute(
-                      name: 'Processing',
+                      name: 'processing',
                       path: 'processing',
                       builder: (context, state) {
                         final Map<String, Object> extra =
@@ -108,21 +109,35 @@ final routerProvider = Provider(
                           },
                         ),
                         GoRoute(
-                          name: 'tripDocs',
-                          path: 'docs',
-                          builder: (context, state) {
-                            final _tripId = state.queryParams['tripId']!;
-                            return TripDocsPage(
-                              tripId: _tripId,
-                            );
-                          },
-                        ),
+                            name: 'tripDocs',
+                            path: 'docs',
+                            builder: (context, state) {
+                              final _tripId = state.queryParams['tripId']!;
+                              return TripDocsPage(
+                                tripId: _tripId,
+                              );
+                            },
+                            routes: <GoRoute>[
+                              GoRoute(
+                                name: 'docView',
+                                path: 'docview',
+                                builder: (context, state) {
+                                  final _docURL = state.queryParams['docUrl']!;
+                                  final _docType =
+                                      state.queryParams['docType']!;
+                                  return PDFViewer(
+                                    documentType: _docType,
+                                    documentPath: _docURL,
+                                  );
+                                },
+                              )
+                            ]),
                         GoRoute(
                           name: 'stopDetails',
-                          path: 'tripdetails/stopdetails/:tripId/:stopId',
+                          path: 'stopdetails',
                           builder: (context, state) {
-                            final _tripId = state.params['tripId']!;
-                            final _stopId = state.params['stopId']!;
+                            final _tripId = state.queryParams['tripId']!;
+                            final _stopId = state.queryParams['stopId']!;
                             return StopDetailsPage(
                               stopId: _stopId,
                               tripId: _tripId,

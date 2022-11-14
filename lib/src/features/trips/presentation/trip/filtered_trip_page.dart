@@ -12,11 +12,6 @@ class FilteredTripPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _filteredTrips() {
-      return trips.map((trip) => TripCard(trip: trip));
-    }
-
-    debugPrint("Hello");
     return Scaffold(
       key: key,
       appBar: AppBar(
@@ -42,22 +37,45 @@ class FilteredTripPage extends StatelessWidget {
         ),
       ),
       backgroundColor: const Color(0xFFF1F4F8),
-      body: SafeArea(
-        child: ListView(
-          padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-          scrollDirection: Axis.vertical,
+      body: SafeArea(child: TripList(trips: trips, title: title)),
+    );
+  }
+}
+
+class TripList extends StatelessWidget {
+  const TripList({
+    Key? key,
+    required this.trips,
+    required this.title,
+  }) : super(key: key);
+
+  final dynamic trips;
+  final String title;
+
+  @override
+  Widget build(BuildContext context) {
+    _filteredTrips() {
+      return trips.map((trip) => TripCard(trip: trip));
+    }
+
+    if (trips.isNotEmpty) {
+      return ListView(
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+        scrollDirection: Axis.vertical,
+        children: [..._filteredTrips()],
+      );
+    } else {
+      return Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            if (trips.isNotEmpty) ...[
-              Column(
-                children: [..._filteredTrips()],
-              )
-              //
-            ] else ...[
-              Text("There are no $title loads")
-            ],
+            Text(
+              "There are no ${title.toLowerCase()} trips.",
+              style: getMediumStyle(color: ColorManager.lightgrey),
+            )
           ],
         ),
-      ),
-    );
+      );
+    }
   }
 }

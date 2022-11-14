@@ -16,7 +16,13 @@ class StopCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        context.go('/trips/tripdetails/stopdetails/$tripId/${stop.stopId!}');
+        context.pushNamed(
+          'stopDetails',
+          queryParams: <String, String>{
+            'stopId': stop.stopId!,
+            'tripId': tripId
+          },
+        );
       },
       child: Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),

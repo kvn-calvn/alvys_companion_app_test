@@ -1,9 +1,11 @@
+import 'package:alvys3/src/common_widgets/large_nav_button.dart';
 import 'package:alvys3/src/constants/color.dart';
 import 'package:alvys3/src/constants/text_styles.dart';
 import 'package:alvys3/src/features/documents/presentation/trip_docs_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:go_router/go_router.dart';
 import 'package:simple_speed_dial/simple_speed_dial.dart';
 
 class TripDocsPage extends ConsumerStatefulWidget {
@@ -93,15 +95,18 @@ class TripDocsList extends ConsumerWidget {
       error: (error, stack) => Text('Oops, could not load documents, $stack'),
       data: (data) {
         var docs = data!.data ?? [];
-
+        debugPrint(docs.first.type);
         _docsList() {
-          return docs.map((doc) => Container()
-              /*LargeNavButton(
-                icon: const Icon(Icons.insert_drive_file),
-                title: doc.type ?? '',
-                route: Routes.pdfViewer,
-                args: PDFViewerArguments(docUrl: doc.link!))*/
-              );
+          return docs.map(
+            (doc) => LargeNavButton(
+              icon: const Icon(Icons.insert_drive_file),
+              title: doc.type ?? '',
+              onPressed: () {
+                context.pushNamed('docView',
+                    queryParams: {'docUrl': doc.link!, 'docType': doc.type!});
+              },
+            ),
+          );
         }
 
         return ListView(

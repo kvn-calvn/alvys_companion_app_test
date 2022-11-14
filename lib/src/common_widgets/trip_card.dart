@@ -1,7 +1,6 @@
 import 'package:alvys3/src/constants/color.dart';
 import 'package:alvys3/src/constants/text_styles.dart';
 import 'package:alvys3/src/features/trips/domain/trips/datum.dart';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
@@ -15,20 +14,13 @@ class TripCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        /* final args = TripDetailsArguments(
-            tripId: trip.id!, tripNumber: trip.tripNumber!);
-        Navigator.pushNamed(context, Routes.tripDetailsRoute, arguments: args);*/
-
-        context.goNamed(
+        context.pushNamed(
           'tripDetails',
           queryParams: <String, String>{
             'tripNumber': trip.tripNumber!,
             'tripId': trip.id!
           },
         );
-/*
-        context.go('/trips/tripdetails/${trip.id!}',
-            extra: {"tripNumber": trip.tripNumber!});*/
       },
       child: Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),

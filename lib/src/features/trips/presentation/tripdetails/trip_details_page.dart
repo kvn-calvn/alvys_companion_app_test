@@ -137,23 +137,19 @@ class TripDetails extends ConsumerWidget {
                     LargeNavButton(
                       title: 'E-Checks',
                       onPressed: () {
-                        context.go(context.namedLocation('echeck',
-                            queryParams: {
-                              'tripNumber': loadNum,
-                              'tripId': tripId
-                            }));
-                        //context.goNamed('echeck', params: {'tripId': tripId});
-                        //context.go('/trips/tripdetails/$tripId/echeck');
+                        context.pushNamed('echeck', queryParams: {
+                          'tripNumber': loadNum,
+                          'tripId': tripId
+                        });
                       },
                     ),
                     LargeNavButton(
                       title: 'Documents',
                       onPressed: () {
-                        context.goNamed('tripDocs', queryParams: {
+                        context.pushNamed('tripDocs', queryParams: {
                           'tripNumber': loadNum,
                           'tripId': tripId
                         });
-                        //context.go('/trips/tripdetails/docs/$tripId');
                       },
                     ),
                     Column(

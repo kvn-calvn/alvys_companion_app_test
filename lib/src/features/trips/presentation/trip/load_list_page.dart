@@ -122,7 +122,7 @@ class TripList extends ConsumerWidget {
                   LargeNavButton(
                     title: "Delivered",
                     onPressed: () {
-                      context.go('/trips/delivered', extra: {
+                      context.pushNamed('delivered', extra: {
                         'deliveredTrips': _deliveredTripsData,
                         'title': "Delivered"
                       });
@@ -131,7 +131,7 @@ class TripList extends ConsumerWidget {
                   LargeNavButton(
                     title: "Processing",
                     onPressed: () {
-                      context.go('/trips/processing', extra: {
+                      context.pushNamed('processing', extra: {
                         'processingTrips': _processingTripsData,
                         'title': "Processing"
                       });
