@@ -1,9 +1,9 @@
+// ignore_for_file: constant_identifier_names
+
 import 'package:alvys3/src/constants/api_routes.dart';
 import 'package:alvys3/src/network/user_token_handler.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 const String APPLICATION_JSON = "application/json";
 const String CONTENT_TYPE = "content-type";

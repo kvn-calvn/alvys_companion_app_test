@@ -5,7 +5,6 @@ import 'package:alvys3/src/features/authentication/data/datasources/auth_remote_
 import 'package:alvys3/src/features/authentication/domain/models/verified/verified.dart';
 import 'package:alvys3/src/features/authentication/domain/models/phonenumber/phonenumber.dart';
 import 'package:alvys3/src/features/authentication/domain/repositories/auth_repository.dart';
-import 'package:dio/dio.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource _remoteDataSource;

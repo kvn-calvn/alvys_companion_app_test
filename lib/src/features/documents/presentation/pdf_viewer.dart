@@ -65,10 +65,10 @@ class _PDFViewerState extends State<PDFViewer> {
     debugPrint(widget.documentPath);
     return Scaffold(
       appBar: AppBar(
-        title: Text("Document"),
+        title: const Text("Document"),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.share),
+            icon: const Icon(Icons.share),
             onPressed: () {},
           ),
         ],
@@ -96,22 +96,22 @@ class _PDFViewerState extends State<PDFViewer> {
               setState(() {
                 errorMessage = error.toString();
               });
-              print(error.toString());
+              debugPrint(error.toString());
             },
             onPageError: (page, error) {
               setState(() {
                 errorMessage = '$page: ${error.toString()}';
               });
-              print('$page: ${error.toString()}');
+              debugPrint('$page: ${error.toString()}');
             },
             onViewCreated: (PDFViewController pdfViewController) {
               _controller.complete(pdfViewController);
             },
             onLinkHandler: (String? uri) {
-              print('goto uri: $uri');
+              debugPrint('goto uri: $uri');
             },
             onPageChanged: (int? page, int? total) {
-              print('page change: $page/$total');
+              debugPrint('page change: $page/$total');
               setState(() {
                 currentPage = page;
               });
@@ -119,7 +119,7 @@ class _PDFViewerState extends State<PDFViewer> {
           ),
           errorMessage.isEmpty
               ? !isReady
-                  ? Center(
+                  ? const Center(
                       child: CircularProgressIndicator(),
                     )
                   : Container()

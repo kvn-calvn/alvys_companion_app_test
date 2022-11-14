@@ -79,7 +79,7 @@ class StopDetails extends ConsumerWidget {
               size: 50.0,
             ),
         error: (error, stack) =>
-            Text('Oops, something unexpected happened, ${stack}'),
+            Text('Oops, something unexpected happened, $stack'),
         data: (value) {
           return ListView(
             children: [

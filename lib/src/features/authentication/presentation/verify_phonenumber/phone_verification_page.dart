@@ -4,7 +4,6 @@ import 'package:alvys3/src/constants/text_styles.dart';
 import 'package:alvys3/src/features/authentication/domain/models/verified/verified.dart';
 import 'package:alvys3/src/routing/routes.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -136,6 +135,7 @@ class _PhoneNumberVerificationPageState
                                 onPressAction: () {
                                   Navigator.pushNamed(
                                       context, Routes.tripPageRoute);
+                                  // ignore: unused_local_variable
                                   var code = formGroup.control('verify').value;
 /*
                                   formGroup.valid

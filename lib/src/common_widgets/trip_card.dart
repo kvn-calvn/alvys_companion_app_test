@@ -1,8 +1,7 @@
 import 'package:alvys3/src/constants/color.dart';
 import 'package:alvys3/src/constants/text_styles.dart';
 import 'package:alvys3/src/features/trips/domain/trips/datum.dart';
-import 'package:alvys3/src/routing/routes.dart';
-import 'package:alvys3/src/routing/routing_arguments.dart';
+
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';

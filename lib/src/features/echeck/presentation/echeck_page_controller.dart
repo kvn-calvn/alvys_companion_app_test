@@ -1,7 +1,6 @@
 import 'package:alvys3/src/features/echeck/data/data_provider.dart';
 import 'package:alvys3/src/features/echeck/data/repositories/echeck_repository_impl.dart';
 import 'package:alvys3/src/features/echeck/domain/echeck_list/echeck_list.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class EcheckPageController extends StateNotifier<AsyncValue<EcheckList?>> {

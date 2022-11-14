@@ -29,7 +29,7 @@ class _SettingsPageState extends State<SettingsPage> {
         elevation: 0,
       ),
       backgroundColor: const Color(0xFFF1F4F8),
-      body: SettingsList(),
+      body: const SettingsList(),
     );
   }
 }

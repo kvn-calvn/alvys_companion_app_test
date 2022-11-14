@@ -26,7 +26,7 @@ class ButtonStyle1 extends StatelessWidget {
       onPressed: isLoading || isDisable ? null : () => onPressAction(),
       style: ElevatedButton.styleFrom(
         minimumSize: const Size.fromHeight(60),
-        primary: ColorManager.primary,
+        backgroundColor: ColorManager.primary,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),

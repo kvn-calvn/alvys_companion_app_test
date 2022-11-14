@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
@@ -33,7 +31,7 @@ class AlertDialogView extends StatelessWidget {
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
-                child: Text(
+                child: const Text(
                   'NO',
                   style: TextStyle(color: Colors.black),
                 ),

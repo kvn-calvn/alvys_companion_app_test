@@ -57,7 +57,7 @@ class ButtonStyle2 extends StatelessWidget {
     return ElevatedButton(
       onPressed: isDisable ? null : () => onPressAction(),
       style: ElevatedButton.styleFrom(
-        primary: ColorManager.primary,
+        backgroundColor: ColorManager.primary,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
