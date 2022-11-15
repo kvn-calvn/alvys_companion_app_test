@@ -46,7 +46,7 @@ android {
         applicationId "io.alvys.app.alvys3"
         minSdkVersion localProperties.getProperty('flutter.minSdkVersion').toInteger()
         targetSdkVersion localProperties.getProperty('flutter.targetSdkVersion').toInteger()
-
+        compileSdkVersion localProperties.getProperty('flutter.compileSdkVersion').toInteger()
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
     }

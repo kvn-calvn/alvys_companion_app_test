@@ -63,13 +63,13 @@ class RouteGenerator {
         return PageTransition(
             child: TripDocsPage(tripId: arguments.tripId),
             type: PageTransitionType.rightToLeft);
-
+/*
       case Routes.pdfViewer:
         final arguments = settings.arguments as PDFViewerArguments;
         return PageTransition(
             child: PDFViewer(documentPath: arguments.docUrl),
             type: PageTransitionType.rightToLeft);
-
+*/
       case Routes.stopDetailsRoute:
         final arguments = settings.arguments as StopDetailsArguments;
         return PageTransition(
