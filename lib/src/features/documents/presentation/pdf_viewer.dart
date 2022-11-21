@@ -4,7 +4,6 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:pdf_viewer_plugin/pdf_viewer_plugin.dart';
 
 class PDFViewer extends StatefulWidget {
@@ -80,10 +79,7 @@ class _PDFViewerState extends State<PDFViewer> {
       ),
       body: Stack(
         children: <Widget>[
-          PdfView(
-            path:
-                '/data/user/0/io.alvys.app.alvys3/app_flutter/1000185_a198dc2f-0d6b-4eb3-8b0c-ea0704cead02_ProofofDelivery_2022-11-1419:00:56-751183Z.pdf',
-          ),
+          PdfView(path: pdfFlePath),
         ],
       ),
     );
