@@ -2,9 +2,12 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:pdf_viewer_plugin/pdf_viewer_plugin.dart';
+
+import '../../../constants/color.dart';
 
 class PDFViewer extends StatefulWidget {
   const PDFViewer(
@@ -36,6 +39,7 @@ class _PDFViewerState extends State<PDFViewer> {
           debugPrint(widget.documentPath);
           debugPrint(value.path);
           debugPrint('\n\n\n');
+          isLoading = false;
         }));
   }
 
@@ -58,6 +62,7 @@ class _PDFViewerState extends State<PDFViewer> {
       await file.writeAsBytes(bytes, flush: true);
       completer.complete(file);
     } catch (e) {
+      debugPrint("$e");
       throw Exception('Error parsing asset file!');
     }
 
@@ -79,7 +84,12 @@ class _PDFViewerState extends State<PDFViewer> {
       ),
       body: Stack(
         children: <Widget>[
-          PdfView(path: pdfFlePath),
+          isLoading
+              ? SpinKitFoldingCube(
+                  color: ColorManager.primary,
+                  size: 50.0,
+                )
+              : PdfView(path: pdfFlePath),
         ],
       ),
     );
