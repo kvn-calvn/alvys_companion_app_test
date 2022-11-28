@@ -59,10 +59,6 @@ class _LoadDetailsPageState extends ConsumerState<LoadDetailsPage> {
         ),
         actions: [
           IconButton(
-            /* borderColor: Colors.transparent,
-            borderRadius: 30,
-            borderWidth: 1,
-            buttonSize: 60,*/
             icon: const Icon(
               Icons.map_rounded,
               color: Colors.black,

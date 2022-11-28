@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:alvys3/src/constants/text_styles.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:go_router/go_router.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:pdf_viewer_plugin/pdf_viewer_plugin.dart';
@@ -74,14 +76,33 @@ class _PDFViewerState extends State<PDFViewer> {
     //debugPrint(widget.documentPath);
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.documentType),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        centerTitle: true,
+        title: Text(
+          widget.documentType,
+          textAlign: TextAlign.start,
+          style: getBoldStyle(color: ColorManager.darkgrey, fontSize: 20),
+        ),
+        leading: IconButton(
+          icon: const Icon(
+            Icons.arrow_back,
+            size: 30,
+          ),
+          color: ColorManager.darkgrey,
+          onPressed: () {
+            GoRouter.of(context).pop();
+          },
+        ),
         actions: <Widget>[
           IconButton(
+            color: ColorManager.darkgrey,
             icon: const Icon(Icons.share),
             onPressed: () {},
           ),
         ],
       ),
+      backgroundColor: const Color(0xFFFFFFFF),
       body: Stack(
         children: <Widget>[
           isLoading
