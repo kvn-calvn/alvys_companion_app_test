@@ -51,12 +51,12 @@ class AlertDialogView extends StatelessWidget {
       desc: "Flutter is more awesome with RFlutter Alert.",
       buttons: [
         DialogButton(
+          onPressed: () => (context),
+          width: 120,
           child: const Text(
             "COOL",
             style: TextStyle(color: Colors.white, fontSize: 20),
           ),
-          onPressed: () => (context),
-          width: 120,
         )
       ],
     );

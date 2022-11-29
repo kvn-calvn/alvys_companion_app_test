@@ -17,6 +17,7 @@ class LargeNavButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
+      onTap: onPressed,
       child: Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
         child: Container(
@@ -61,7 +62,6 @@ class LargeNavButton extends StatelessWidget {
           ),
         ),
       ),
-      onTap: onPressed,
     );
   }
 }

@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api, no_leading_underscores_for_local_identifiers
+
 import 'package:alvys3/src/common_widgets/large_nav_button.dart';
 import 'package:alvys3/src/constants/color.dart';
 import 'package:alvys3/src/constants/text_styles.dart';
@@ -49,7 +51,6 @@ class _TripDocsPageState extends ConsumerState<TripDocsPage> {
       backgroundColor: const Color(0xFFF1F4F8),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: SpeedDial(
-        child: const Icon(Icons.cloud_upload),
         closedForegroundColor: ColorManager.white,
         openForegroundColor: Colors.white,
         closedBackgroundColor: ColorManager.primary,
@@ -72,6 +73,7 @@ class _TripDocsPageState extends ConsumerState<TripDocsPage> {
           ),
           //  Your other SpeedDialChildren go here.
         ],
+        child: const Icon(Icons.cloud_upload),
       ),
       body: const TripDocsList(),
     );

@@ -15,7 +15,7 @@ class TripPageController extends StateNotifier<AsyncValue<Trips?>> {
     if (result.success) {
       state = AsyncValue.data(result.data!);
     } else {
-      state = AsyncValue.error(result.error!);
+      state = AsyncValue.error(result.error!, StackTrace.current);
     }
   }
 }

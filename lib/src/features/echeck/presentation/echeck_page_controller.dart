@@ -17,7 +17,7 @@ class EcheckPageController extends StateNotifier<AsyncValue<EcheckList?>> {
           _echeckRepositoryImpl.queryExpressNumber(e.expressCheckNumber!));*/
       //debugPrint(test.first);
     } else {
-      state = AsyncValue.error(result.error!);
+      state = AsyncValue.error(result.error!, StackTrace.current);
     }
   }
 /*

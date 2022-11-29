@@ -1,4 +1,4 @@
-// ignore_for_file: constant_identifier_names
+// ignore_for_file: constant_identifier_names, no_leading_underscores_for_local_identifiers
 
 import 'package:alvys3/src/constants/api_routes.dart';
 import 'package:alvys3/src/network/user_token_handler.dart';

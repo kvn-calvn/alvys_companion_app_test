@@ -19,10 +19,6 @@ class ButtonStyle1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      child: Text(
-        isLoading ? "Loading.." : title,
-        style: getRegularStyle(color: ColorManager.white),
-      ),
       onPressed: isLoading ? null : () => onPressAction(),
       /*onPressed: () {
                     Navigator.pushNamed(context, '/verifyphone');
@@ -33,6 +29,10 @@ class ButtonStyle1 extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
+      ),
+      child: Text(
+        isLoading ? "Loading.." : title,
+        style: getRegularStyle(color: ColorManager.white),
       ),
     );
   }

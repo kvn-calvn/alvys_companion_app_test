@@ -1,3 +1,5 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'package:alvys3/src/common_widgets/main_bottom_nav.dart';
 import 'package:alvys3/src/features/authentication/presentation/sign_in_phonenumber/sign_in_page.dart';
 import 'package:alvys3/src/features/documents/presentation/pdf_viewer.dart';

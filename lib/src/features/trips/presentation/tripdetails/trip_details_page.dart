@@ -1,3 +1,5 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'package:alvys3/src/common_widgets/large_nav_button.dart';
 import 'package:alvys3/src/common_widgets/stop_card.dart';
 import 'package:alvys3/src/constants/color.dart';
@@ -17,6 +19,7 @@ class LoadDetailsPage extends ConsumerStatefulWidget {
   final String? tripNumber;
 
   @override
+  // ignore: library_private_types_in_public_api
   _LoadDetailsPageState createState() => _LoadDetailsPageState();
 }
 
@@ -166,27 +169,27 @@ class TripDetails extends ConsumerWidget {
                               ],
                               if (weight != ' ') ...[
                                 Chip(
-                                    label: Text(weight + 'lbs'),
+                                    label: Text('${weight}lbs'),
                                     backgroundColor: const Color(0xFFBBDEFB)),
                               ],
                               if (temp != ' ') ...[
                                 Chip(
-                                    label: Text(temp + '°F'),
+                                    label: Text('$temp°F'),
                                     backgroundColor: const Color(0xFFBBDEFB)),
                               ],
                               if (distance != ' ') ...[
                                 Chip(
-                                    label: Text(distance + 'mi'),
+                                    label: Text('${distance}mi'),
                                     backgroundColor: const Color(0xFFBBDEFB)),
                               ],
                               if (trailer != ' ') ...[
                                 Chip(
-                                    label: Text('Trailer ' + trailer),
+                                    label: Text('Trailer $trailer'),
                                     backgroundColor: const Color(0xFFBBDEFB)),
                               ],
                               if (pay != ' ') ...[
                                 Chip(
-                                    label: Text('Pay \$' + pay),
+                                    label: Text('Pay \$$pay'),
                                     backgroundColor: const Color(0xFFBBDEFB)),
                               ],
                             ],

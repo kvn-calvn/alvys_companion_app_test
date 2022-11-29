@@ -14,6 +14,7 @@ class PhoneNumberVerificationPage extends StatefulWidget {
   const PhoneNumberVerificationPage({Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _PhoneNumberVerificationPageState createState() =>
       _PhoneNumberVerificationPageState();
 }
@@ -91,13 +92,13 @@ class _PhoneNumberVerificationPageState
                               style: getLightErrorAlertStyle(),
                               buttons: [
                                 DialogButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  color: ColorManager.primary,
                                   child: const Text(
                                     "Ok",
                                     style: TextStyle(
                                         color: Colors.white, fontSize: 20),
                                   ),
-                                  onPressed: () => Navigator.pop(context),
-                                  color: ColorManager.primary,
                                 )
                               ]).show();
                         },

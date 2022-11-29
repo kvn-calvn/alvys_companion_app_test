@@ -19,10 +19,6 @@ class ButtonStyle1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      child: Text(
-        isLoading ? "Loading.." : title,
-        style: getRegularStyle(color: ColorManager.white),
-      ),
       onPressed: isLoading || isDisable ? null : () => onPressAction(),
       style: ElevatedButton.styleFrom(
         minimumSize: const Size.fromHeight(60),
@@ -30,6 +26,10 @@ class ButtonStyle1 extends StatelessWidget {
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
+      ),
+      child: Text(
+        isLoading ? "Loading.." : title,
+        style: getRegularStyle(color: ColorManager.white),
       ),
     );
   }

@@ -1,3 +1,5 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'package:alvys3/src/constants/color.dart';
 import 'package:alvys3/src/constants/text_styles.dart';
 import 'package:alvys3/src/features/trips/domain/stop_details/m_comodity.dart';
@@ -31,7 +33,7 @@ class _StopDetailsPageState extends ConsumerState<StopDetailsPage> {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint(widget.stopId + ' ' + widget.tripId);
+    debugPrint('${widget.stopId} ${widget.tripId}');
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -101,11 +103,7 @@ class StopDetails extends ConsumerWidget {
                         color: ColorManager.darkgrey, fontSize: 14),
                   ),
                   Text(
-                    value.data!.city! +
-                        ' ' +
-                        value.data!.state! +
-                        ' ' +
-                        value.data!.zip!,
+                    '${value.data!.city!} ${value.data!.state!} ${value.data!.zip!}',
                     style: getMediumStyle(
                         color: ColorManager.darkgrey, fontSize: 14),
                   ),

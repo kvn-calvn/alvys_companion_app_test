@@ -7,6 +7,7 @@ class Landing extends StatefulWidget {
   const Landing({Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _LandingState createState() => _LandingState();
 }
 
@@ -22,12 +23,14 @@ class _LandingState extends State<Landing> {
 
     var token = await storage.read(key: 'appToken');
     if (token == null) {
+      if (!mounted) return;
       context.go('/trips');
 
       /* Navigator.pushNamedAndRemoveUntil(context, Routes.tripPageRoute,
           ModalRoute.withName(Routes.tripPageRoute));*/
       //debugPrint("Home");
     } else {
+      if (!mounted) return;
       context.go('/signin');
       /*Navigator.pushNamedAndRemoveUntil(
           context, Routes.signInRoute, ModalRoute.withName(Routes.signInRoute));*/

@@ -1,3 +1,5 @@
+// ignore_for_file: no_leading_underscores_for_local_identifiers
+
 import 'package:alvys3/src/common_widgets/large_nav_button.dart';
 import 'package:alvys3/src/constants/color.dart';
 import 'package:alvys3/src/constants/text_styles.dart';
@@ -13,6 +15,7 @@ class LoadListPage extends ConsumerStatefulWidget {
   const LoadListPage({Key? key}) : super(key: key);
 
   @override
+  // ignore: library_private_types_in_public_api
   _LoadListPageState createState() => _LoadListPageState();
 }
 
@@ -20,7 +23,7 @@ class _LoadListPageState extends ConsumerState<LoadListPage> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
-  void initState() {
+  initState() {
     super.initState();
     ref.read(tripPageControllerProvider.notifier).getTrips();
   }
@@ -49,12 +52,16 @@ class _LoadListPageState extends ConsumerState<LoadListPage> {
             icon: const Icon(Icons.keyboard_arrow_down),
             items: items.map((String items) {
               return DropdownMenuItem(
-                  value: items,
-                  child: Text(
-                    items,
-                    style: getMediumStyle(
-                        color: ColorManager.darkgrey, fontSize: 18),
-                  ));
+                value: items,
+                onTap: () {
+                  ref.read(tripPageControllerProvider.notifier).getTrips();
+                },
+                child: Text(
+                  items,
+                  style: getMediumStyle(
+                      color: ColorManager.darkgrey, fontSize: 18),
+                ),
+              );
             }).toList(),
             onChanged: (String? value) {
               setState(() {

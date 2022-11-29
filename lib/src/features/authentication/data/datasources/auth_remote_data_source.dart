@@ -20,7 +20,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     var base64PhoneNumber = Utils.base64String(phoneNumber);
 
     var res =
-        await _apiClient.dio.get(ApiRoutes.phoneNumber + '/$base64PhoneNumber');
+        await _apiClient.dio.get('${ApiRoutes.phoneNumber}/$base64PhoneNumber');
 
     return Phonenumber.fromJson(res.data);
   }
@@ -32,7 +32,7 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
     var base64PhoneNumber = Utils.base64String(phoneNumber);
 
     var res = await _apiClient.dio
-        .get(ApiRoutes.verify + '/$base64PhoneNumber/$base64VerificationCode');
+        .get('${ApiRoutes.verify}/$base64PhoneNumber/$base64VerificationCode');
     return Verified.fromJson(res.data);
   }
 }
