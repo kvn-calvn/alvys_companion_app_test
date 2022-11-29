@@ -25,7 +25,9 @@ class _LoadListPageState extends ConsumerState<LoadListPage> {
   @override
   initState() {
     super.initState();
-    ref.read(tripPageControllerProvider.notifier).getTrips();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      ref.read(tripPageControllerProvider.notifier).getTrips();
+    });
   }
 
   String dropdownvalue = 'Online';
