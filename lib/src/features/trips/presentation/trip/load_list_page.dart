@@ -22,14 +22,6 @@ class LoadListPage extends ConsumerStatefulWidget {
 class _LoadListPageState extends ConsumerState<LoadListPage> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
-  @override
-  initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      ref.read(tripPageControllerProvider.notifier).getTrips();
-    });
-  }
-
   String dropdownvalue = 'Online';
   var items = [
     'Online',

@@ -5,7 +5,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class TripPageController extends StateNotifier<AsyncValue<Trips?>> {
   TripPageController(this._tripRepositoryImpl)
-      : super(const AsyncValue.data(null));
+      : super(const AsyncValue.data(null)) {
+    getTrips();
+  }
 
   final TripRepositoryImpl _tripRepositoryImpl;
 
