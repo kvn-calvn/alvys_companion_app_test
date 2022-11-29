@@ -81,7 +81,6 @@ class TripList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final tripsState = ref.watch(tripPageControllerProvider);
-
     return tripsState.when(
         loading: () => SpinKitFoldingCube(
               color: ColorManager.primary,

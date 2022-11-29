@@ -1,17 +1,15 @@
+import 'dart:async';
+
 import 'package:alvys3/src/features/trips/data/data_provider.dart';
 import 'package:alvys3/src/features/trips/data/trip_repository_impl.dart';
 import 'package:alvys3/src/features/trips/domain/trips/trips.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class TripPageController extends StateNotifier<AsyncValue<Trips?>> {
-  TripPageController(this._tripRepositoryImpl)
-      : super(const AsyncValue.data(null)) {
-    getTrips();
-  }
+class TripPageController extends AutoDisposeAsyncNotifier<Trips?> {
+  late TripRepositoryImpl _tripRepositoryImpl;
 
-  final TripRepositoryImpl _tripRepositoryImpl;
-
-  void getTrips() async {
+  Future<void> getTrips() async {
     state = const AsyncValue.loading();
     final result = await _tripRepositoryImpl.getTrips();
     if (result.success) {
@@ -20,10 +18,15 @@ class TripPageController extends StateNotifier<AsyncValue<Trips?>> {
       state = AsyncValue.error(result.error!, StackTrace.current);
     }
   }
+
+  @override
+  FutureOr<Trips?> build() async {
+    _tripRepositoryImpl = ref.read(tripRepositoryImplProvider);
+    await getTrips();
+    return null;
+  }
 }
 
 final tripPageControllerProvider =
-    StateNotifierProvider.autoDispose<TripPageController, AsyncValue<Trips?>>(
-        (ref) {
-  return TripPageController(ref.watch(tripRepositoryImplProvider));
-});
+    AutoDisposeAsyncNotifierProvider<TripPageController, Trips?>(
+        TripPageController.new);
