@@ -119,16 +119,19 @@ class TripList extends ConsumerWidget {
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  LargeNavButton(
-                    title: "Delivered",
-                    onPressed: () {
-                      context.pushNamed('delivered', extra: {
-                        'deliveredTrips': _deliveredTripsData,
-                        'title': "Delivered"
-                      });
-                    },
-                  ),
-                  LargeNavButton(
+                  if (_deliveredTripsData.isNotEmpty) ...[
+                    LargeNavButton(
+                      title: "Delivered",
+                      onPressed: () {
+                        context.pushNamed('delivered', extra: {
+                          'deliveredTrips': _deliveredTripsData,
+                          'title': "Delivered"
+                        });
+                      },
+                    ),
+                  ],
+
+                  /*LargeNavButton(
                     title: "Processing",
                     onPressed: () {
                       context.pushNamed('processing', extra: {
@@ -136,7 +139,7 @@ class TripList extends ConsumerWidget {
                         'title': "Processing"
                       });
                     },
-                  ),
+                  ),*/
                   if (_activeTripsData.isNotEmpty) ...[
                     Column(
                       children: [..._activeTripList()],
