@@ -25,13 +25,6 @@ class LoadDetailsPage extends ConsumerStatefulWidget {
 
 class _LoadDetailsPageState extends ConsumerState<LoadDetailsPage> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
-  @override
-  void initState() {
-    super.initState();
-    ref
-        .read(tripDetailsControllerProvider.notifier)
-        .getTripDetails(widget.tripId);
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -76,19 +69,19 @@ class _LoadDetailsPageState extends ConsumerState<LoadDetailsPage> {
         elevation: 0,
       ),
       backgroundColor: const Color(0xFFF1F4F8),
-      body: const TripDetails(),
+      body: TripDetails(tripId: widget.tripId),
     );
   }
 }
 
 class TripDetails extends ConsumerWidget {
-  const TripDetails({
-    Key? key,
-  }) : super(key: key);
+  final String tripId;
+
+  const TripDetails({Key? key, required this.tripId}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final tripDetailsState = ref.watch(tripDetailsControllerProvider);
+    final tripDetailsState = ref.watch(getTripDetailsProvider(tripId));
 
     return tripDetailsState.when(
         loading: () => SpinKitFoldingCube(
@@ -98,18 +91,18 @@ class TripDetails extends ConsumerWidget {
         error: (error, stack) =>
             Text('Oops, something unexpected happened, $stack'),
         data: (value) {
-          var equipment =
-              "${value!.data!.equipment} ${value.data!.equipmentLength}";
-          var weight = "${value.data!.totalWeight}";
-          var temp = "${value.data!.temperature}";
-          var distance = "${value.data!.totalMiles}";
-          var trailer = "${value.data!.trailerNum}";
+          final data = value.data!.data!;
+          var equipment = "${data.equipment} ${data.equipmentLength}";
+          var weight = "${data.totalWeight}";
+          var temp = "${data.temperature}";
+          var distance = "${data.totalMiles}";
+          var trailer = "${data.trailerNum}";
           //var truck = "${value.data!.truckNum}";
-          var pay = "${value.data!.paidMiles}";
-          var tripId = value.data!.id!;
-          var loadNum = value.data!.tripNumber!;
+          var pay = "${data.paidMiles}";
+          var tripId = data.id!;
+          var loadNum = data.tripNumber!;
 
-          var stops = value.data!.miniStops!;
+          var stops = data.miniStops!;
 
           Widget _stopList() {
             if (stops.isNotEmpty) {

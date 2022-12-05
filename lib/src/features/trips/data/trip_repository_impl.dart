@@ -1,3 +1,4 @@
+import 'package:alvys3/src/features/trips/data/data_provider.dart';
 import 'package:alvys3/src/features/trips/data/trip_repository.dart';
 import 'package:alvys3/src/features/trips/data/trips_remote_data_source.dart';
 import 'package:alvys3/src/features/trips/domain/stop_details/stop_details.dart';

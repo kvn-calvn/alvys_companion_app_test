@@ -21,6 +21,7 @@ dependencies:
   simple_speed_dial: ^0.1.7
   equatable: ^2.0.3
   flutter_riverpod: ^2.1.1
+  riverpod_annotation: ^1.0.6
   json_serializable: ^6.2.0
   json_annotation: ^4.5.0  
   dio: ^4.0.6
@@ -46,6 +47,7 @@ dev_dependencies:
   freezed: ^2.0.3
   freezed_annotation: ^2.0.3
   build_runner: ^2.1.10
+  riverpod_generator: ^1.0.6
 
 
 flutter_icons:

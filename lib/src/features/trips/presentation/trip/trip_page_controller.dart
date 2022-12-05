@@ -3,8 +3,13 @@ import 'dart:async';
 import 'package:alvys3/src/features/trips/data/data_provider.dart';
 import 'package:alvys3/src/features/trips/data/trip_repository_impl.dart';
 import 'package:alvys3/src/features/trips/domain/trips/trips.dart';
-import 'package:flutter/material.dart';
+import 'package:alvys3/src/network/api_response.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+final getTripsProvider = FutureProvider<ApiResponse<Trips?>>((ref) async {
+  final trips = await ref.read(tripRepositoryImplProvider).getTrips();
+  return trips;
+});
 
 class TripPageController extends AutoDisposeAsyncNotifier<Trips?> {
   late TripRepositoryImpl _tripRepositoryImpl;

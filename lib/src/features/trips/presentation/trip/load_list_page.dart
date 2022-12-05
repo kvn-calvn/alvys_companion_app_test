@@ -80,7 +80,7 @@ class TripList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final tripsState = ref.watch(tripPageControllerProvider);
+    final tripsState = ref.watch(getTripsProvider);
     return tripsState.when(
         loading: () => SpinKitFoldingCube(
               color: ColorManager.primary,
@@ -93,18 +93,18 @@ class TripList extends ConsumerWidget {
           List<Datum> _deliveredTripsData = [];
           List<Datum> _processingTripsData = [];
 
-          if (value != null && value.data != null) {
-            _activeTripsData = value.data!
+          if (value.data != null) {
+            final data = value.data!.data!;
+
+            _activeTripsData = data
                 .where((element) => element.status == "Dispatched")
                 .toList();
 
-            _deliveredTripsData = value.data!
-                .where((element) => element.status == "Delivered")
-                .toList();
+            _deliveredTripsData =
+                data.where((element) => element.status == "Delivered").toList();
 
-            _processingTripsData = value.data!
-                .where((element) => element.status == "Released")
-                .toList();
+            _processingTripsData =
+                data.where((element) => element.status == "Released").toList();
           }
 
           _activeTripList() {
