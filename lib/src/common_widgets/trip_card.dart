@@ -1,19 +1,24 @@
 import 'package:alvys3/src/constants/color.dart';
 import 'package:alvys3/src/constants/text_styles.dart';
 import 'package:alvys3/src/features/trips/domain/trips/datum.dart';
+import 'package:alvys3/src/features/trips/presentation/trip/trip_page_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
 
-class TripCard extends StatelessWidget {
+import '../features/trips/domain/app_trip/app_trip.dart';
+
+class TripCard extends ConsumerWidget {
   const TripCard({Key? key, required this.trip}) : super(key: key);
 
-  final Datum trip;
+  final AppTrip trip;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () {
+        ref.read(tripPageControllerProvider.notifier).setCurrentTrip(trip.id!);
         context.pushNamed(
           'tripDetails',
           queryParams: <String, String>{

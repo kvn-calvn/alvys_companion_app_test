@@ -1,9 +1,11 @@
 import 'dart:async';
+import 'dart:convert';
 import 'package:alvys3/src/constants/api_routes.dart';
 import 'package:alvys3/src/features/trips/domain/stop_details/stop_details.dart';
 import 'package:alvys3/src/features/trips/domain/trip_details/trip_details.dart';
 import 'package:alvys3/src/features/trips/domain/trips/trips.dart';
 import 'package:alvys3/src/network/api_client.dart';
+import 'package:flutter/material.dart';
 
 abstract class TripsRemoteDataSource {
   Future<Trips> getTrips();

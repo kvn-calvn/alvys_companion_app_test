@@ -3,12 +3,14 @@
 import 'package:alvys3/src/common_widgets/large_nav_button.dart';
 import 'package:alvys3/src/common_widgets/stop_card.dart';
 import 'package:alvys3/src/constants/color.dart';
-import 'package:alvys3/src/features/trips/presentation/tripdetails/trip_details_controller.dart';
+import 'package:alvys3/src/features/trips/presentation/trip/trip_page_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../../../../utils/extensions.dart';
 
 class LoadDetailsPage extends ConsumerStatefulWidget {
   const LoadDetailsPage(
@@ -81,7 +83,7 @@ class TripDetails extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final tripDetailsState = ref.watch(getTripDetailsProvider(tripId));
+    final tripDetailsState = ref.watch(tripPageControllerProvider);
 
     return tripDetailsState.when(
         loading: () => SpinKitFoldingCube(
@@ -91,24 +93,14 @@ class TripDetails extends ConsumerWidget {
         error: (error, stack) =>
             Text('Oops, something unexpected happened, $stack'),
         data: (value) {
-          final data = value.data!.data!;
-          var equipment = "${data.equipment} ${data.equipmentLength}";
-          var weight = "${data.totalWeight}";
-          var temp = "${data.temperature}";
-          var distance = "${data.totalMiles}";
-          var trailer = "${data.trailerNum}";
-          //var truck = "${value.data!.truckNum}";
-          var pay = "${data.paidMiles}";
-          var tripId = data.id!;
-          var loadNum = data.tripNumber!;
-
-          var stops = data.miniStops!;
-
+          var equipment =
+              "${value.currentTrip.equipment} ${value.currentTrip.equipmentLength}";
           Widget _stopList() {
-            if (stops.isNotEmpty) {
+            if (value.currentTrip.stops!.isNotEmpty) {
               return Column(
                 children: [
-                  ...stops.map((stop) => StopCard(stop: stop, tripId: tripId))
+                  ...value.currentTrip.stops!
+                      .map((stop) => StopCard(stop: stop, tripId: tripId))
                 ],
               );
             } else {
@@ -116,86 +108,99 @@ class TripDetails extends ConsumerWidget {
             }
           }
 
-          return ListView(scrollDirection: Axis.vertical, children: [
-            Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    LargeNavButton(
-                      title: 'E-Checks',
-                      onPressed: () {
-                        context.pushNamed('echeck', queryParams: {
-                          'tripNumber': loadNum,
-                          'tripId': tripId
-                        });
-                      },
-                    ),
-                    LargeNavButton(
-                      title: 'Documents',
-                      onPressed: () {
-                        context.pushNamed('tripDocs', queryParams: {
-                          'tripNumber': loadNum,
-                          'tripId': tripId
-                        });
-                      },
-                    ),
-                    Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsetsDirectional.fromSTEB(
-                              15, 10, 15, 0),
-                          child: Wrap(
-                            spacing: 5,
-                            runSpacing: 8,
-                            children: [
-                              if (equipment != ' ') ...[
-                                Chip(
-                                    label: Text(equipment),
-                                    backgroundColor: const Color(0xFFBBDEFB)),
+          return RefreshIndicator(
+            onRefresh: () async {
+              await ref
+                  .read(tripPageControllerProvider.notifier)
+                  .refreshCurrentTrip();
+            },
+            child: ListView(scrollDirection: Axis.vertical, children: [
+              Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      LargeNavButton(
+                        title: 'E-Checks',
+                        onPressed: () {
+                          context.pushNamed('echeck', queryParams: {
+                            'tripNumber': value.currentTrip.tripNumber,
+                            'tripId': value.currentTrip.id
+                          });
+                        },
+                      ),
+                      LargeNavButton(
+                        title: 'Documents',
+                        onPressed: () {
+                          context.pushNamed('tripDocs', queryParams: {
+                            'tripNumber': value.currentTrip.tripNumber,
+                            'tripId': value.currentTrip.id
+                          });
+                        },
+                      ),
+                      Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Padding(
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                15, 10, 15, 0),
+                            child: Wrap(
+                              spacing: 5,
+                              runSpacing: 5,
+                              children: [
+                                if (equipment.isNotNullOrEmpty) ...[
+                                  Chip(
+                                      label: Text(value.currentTrip.equipment!),
+                                      backgroundColor: const Color(0xFFBBDEFB)),
+                                ],
+                                if (value.currentTrip.totalWeight != null) ...[
+                                  Chip(
+                                      label: Text(
+                                          '${value.currentTrip.totalWeight}lbs'),
+                                      backgroundColor: const Color(0xFFBBDEFB)),
+                                ],
+                                if (value.currentTrip.temperature != null) ...[
+                                  Chip(
+                                      label: Text(
+                                          '${value.currentTrip.temperature!.toStringAsFixed(2)}°F'),
+                                      backgroundColor: const Color(0xFFBBDEFB)),
+                                ],
+                                if (value.currentTrip.totalMiles != null) ...[
+                                  Chip(
+                                      label: Text(
+                                          '${value.currentTrip.totalMiles!.toStringAsFixed(2)} mi'),
+                                      backgroundColor: const Color(0xFFBBDEFB)),
+                                ],
+                                if (value.currentTrip.trailerNum
+                                    .isNotNullOrEmpty) ...[
+                                  Chip(
+                                      label: Text(
+                                          'Trailer ${value.currentTrip.trailerNum}'),
+                                      backgroundColor: const Color(0xFFBBDEFB)),
+                                ],
+                                if (value.currentTrip.paidMiles != null) ...[
+                                  Chip(
+                                      label: Text(
+                                          'Pay \$${value.currentTrip.paidMiles!.toStringAsFixed(2)}'),
+                                      backgroundColor: const Color(0xFFBBDEFB)),
+                                ],
                               ],
-                              if (weight != ' ') ...[
-                                Chip(
-                                    label: Text('${weight}lbs'),
-                                    backgroundColor: const Color(0xFFBBDEFB)),
-                              ],
-                              if (temp != ' ') ...[
-                                Chip(
-                                    label: Text('$temp°F'),
-                                    backgroundColor: const Color(0xFFBBDEFB)),
-                              ],
-                              if (distance != ' ') ...[
-                                Chip(
-                                    label: Text('${distance}mi'),
-                                    backgroundColor: const Color(0xFFBBDEFB)),
-                              ],
-                              if (trailer != ' ') ...[
-                                Chip(
-                                    label: Text('Trailer $trailer'),
-                                    backgroundColor: const Color(0xFFBBDEFB)),
-                              ],
-                              if (pay != ' ') ...[
-                                Chip(
-                                    label: Text('Pay \$$pay'),
-                                    backgroundColor: const Color(0xFFBBDEFB)),
-                              ],
-                            ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                    _stopList(),
-                  ],
-                ),
-              ],
-            )
-          ]);
+                        ],
+                      ),
+                      _stopList(),
+                    ],
+                  ),
+                ],
+              )
+            ]),
+          );
         });
   }
 }

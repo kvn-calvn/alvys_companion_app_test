@@ -1,4 +1,3 @@
-import 'package:alvys3/src/features/trips/data/data_provider.dart';
 import 'package:alvys3/src/features/trips/data/trip_repository.dart';
 import 'package:alvys3/src/features/trips/data/trips_remote_data_source.dart';
 import 'package:alvys3/src/features/trips/domain/stop_details/stop_details.dart';
@@ -7,6 +6,7 @@ import 'package:alvys3/src/features/trips/domain/trips/trips.dart';
 import 'package:alvys3/src/network/api_response.dart';
 import 'package:alvys3/src/network/error_handler.dart';
 import 'package:alvys3/src/network/network_info.dart';
+import 'package:flutter/material.dart';
 
 class TripRepositoryImpl implements TripRepository {
   final TripsRemoteDataSource _remoteDataSource;
@@ -23,6 +23,8 @@ class TripRepositoryImpl implements TripRepository {
           data: response,
         );
       } catch (error) {
+        debugPrint('$error');
+        debugPrintStack(stackTrace: StackTrace.current);
         return ApiResponse(
           success: false,
           error: ErrorHandler.handle(error).failure.message,

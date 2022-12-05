@@ -80,81 +80,71 @@ class TripList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final tripsState = ref.watch(getTripsProvider);
+    final tripsState = ref.watch(tripPageControllerProvider);
     return tripsState.when(
         loading: () => SpinKitFoldingCube(
               color: ColorManager.primary,
               size: 50.0,
             ),
-        error: (error, stack) =>
-            const Text('Oops, something unexpected happened'),
+        error: (error, stack) {
+          return const Text('Oops, something unexpected happened');
+        },
         data: (value) {
-          List<Datum> _activeTripsData = [];
-          List<Datum> _deliveredTripsData = [];
-          List<Datum> _processingTripsData = [];
-
-          if (value.data != null) {
-            final data = value.data!.data!;
-
-            _activeTripsData = data
-                .where((element) => element.status == "Dispatched")
-                .toList();
-
-            _deliveredTripsData =
-                data.where((element) => element.status == "Delivered").toList();
-
-            _processingTripsData =
-                data.where((element) => element.status == "Released").toList();
-          }
-
           _activeTripList() {
-            return _activeTripsData.map((trip) => TripCard(trip: trip));
+            return value.activeTrips.map((trip) => TripCard(trip: trip));
           }
 
-          return ListView(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-            scrollDirection: Axis.vertical,
-            children: [
-              Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  if (_deliveredTripsData.isNotEmpty) ...[
-                    LargeNavButton(
-                      title: "Delivered",
+          return RefreshIndicator(
+            onRefresh: () async {
+              await ref
+                  .read(tripPageControllerProvider.notifier)
+                  .refreshTrips();
+            },
+            child: ListView(
+              padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+              scrollDirection: Axis.vertical,
+              children: [
+                Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    if (value.deliveredTrips.isNotEmpty) ...[
+                      LargeNavButton(
+                        title: "Delivered",
+                        onPressed: () {
+                          context.pushNamed('delivered', extra: {
+                            // 'deliveredTrips': _deliveredTripsData,
+                            // 'title': "Delivered"
+                          });
+                        },
+                      ),
+                    ],
+
+                    /*LargeNavButton(
+                      title: "Processing",
                       onPressed: () {
-                        context.pushNamed('delivered', extra: {
-                          'deliveredTrips': _deliveredTripsData,
-                          'title': "Delivered"
+                        context.pushNamed('processing', extra: {
+                          'processingTrips': _processingTripsData,
+                          'title': "Processing"
                         });
                       },
-                    ),
+                    ),*/
+                    if (value.activeTrips.isNotEmpty) ...[
+                      Column(
+                        children: [..._activeTripList()],
+                      )
+                      //
+                    ] else ...[
+                      const Center(
+                        heightFactor: 10,
+                        child: Text(
+                            "You do not have any active trip at the moment."),
+                      )
+                    ],
                   ],
-
-                  /*LargeNavButton(
-                    title: "Processing",
-                    onPressed: () {
-                      context.pushNamed('processing', extra: {
-                        'processingTrips': _processingTripsData,
-                        'title': "Processing"
-                      });
-                    },
-                  ),*/
-                  if (_activeTripsData.isNotEmpty) ...[
-                    Column(
-                      children: [..._activeTripList()],
-                    )
-                    //
-                  ] else ...[
-                    const Center(
-                      heightFactor: 10,
-                      child: Text(
-                          "You do not have any active trip at the moment."),
-                    )
-                  ],
-                ],
-              ),
-            ],
+                ),
+              ],
+            ),
           );
         });
   }

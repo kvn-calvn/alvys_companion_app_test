@@ -2,20 +2,27 @@ import 'package:alvys3/src/common_widgets/buttons.dart';
 import 'package:alvys3/src/constants/color.dart';
 import 'package:alvys3/src/constants/text_styles.dart';
 import 'package:alvys3/src/features/trips/domain/trip_details/mini_stop.dart';
+import 'package:alvys3/src/features/trips/presentation/trip/trip_page_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-class StopCard extends StatelessWidget {
+import '../features/trips/domain/app_trip/stop.dart';
+
+class StopCard extends ConsumerWidget {
   const StopCard({Key? key, required this.stop, required this.tripId})
       : super(key: key);
 
-  final MiniStop stop;
+  final Stop stop;
   final String tripId;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
       onTap: () {
+        ref
+            .watch(tripPageControllerProvider.notifier)
+            .setCurrentStop(stop.stopId!);
         context.pushNamed(
           'stopDetails',
           queryParams: <String, String>{
