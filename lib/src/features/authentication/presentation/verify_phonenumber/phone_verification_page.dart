@@ -5,6 +5,7 @@ import 'package:alvys3/src/features/authentication/domain/models/verified/verifi
 import 'package:alvys3/src/routing/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:pinput/pinput.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
@@ -29,11 +30,18 @@ class _PhoneNumberVerificationPageState
   final formKey = GlobalKey<FormState>();
 
   @override
+  void initState() {
+    focusNode.requestFocus();
+    super.initState();
+  }
+
+  @override
   void dispose() {
     pinController.dispose();
     focusNode.dispose();
     super.dispose();
   }
+
 /*
   final form = FormGroup({
     'verify': FormControl(validators: [
@@ -67,7 +75,7 @@ class _PhoneNumberVerificationPageState
       //backgroundColor:
       body: SafeArea(
         child: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
+          onTap: () => (focusNode.dispose()),
           child: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
             child: Form(
@@ -119,6 +127,13 @@ class _PhoneNumberVerificationPageState
                   const SizedBox(
                     height: 10,
                   ),
+                  ButtonStyle1(
+                      isDisable: false,
+                      onPressAction: () {
+                        context.goNamed('Trips');
+                      },
+                      title: "Verify",
+                      isLoading: false),
                   SizedBox(
                     width: double.infinity,
                     child: TextButton(
@@ -129,13 +144,6 @@ class _PhoneNumberVerificationPageState
                       ),
                     ),
                   ),
-                  ButtonStyle1(
-                      isDisable: false,
-                      onPressAction: () {
-                        formKey.currentState!.validate();
-                      },
-                      title: "Verify",
-                      isLoading: false),
 
                   /*Consumer(
                   builder: ((context, ref, _) {

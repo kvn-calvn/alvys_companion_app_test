@@ -22,12 +22,12 @@ class _LandingState extends State<Landing> {
     const storage = FlutterSecureStorage();
 
     var token = await storage.read(key: 'appToken');
-    if (token != null) {
+    if (token == null) {
       if (!mounted) return;
-      context.go('/trips');
+      context.goNamed('SignIn');
     } else {
       if (!mounted) return;
-      context.go('/verify');
+      context.goNamed('trips');
     }
   }
 

@@ -33,14 +33,14 @@ final routerProvider = Provider(
             },
           ),
           GoRoute(
-            name: 'signin',
+            name: 'SignIn',
             path: '/signin',
             builder: (context, state) {
               return const SignInPage();
             },
           ),
           GoRoute(
-            name: 'verify',
+            name: 'Verify',
             path: '/verify',
             builder: (context, state) {
               return const PhoneNumberVerificationPage();
@@ -53,7 +53,7 @@ final routerProvider = Provider(
               },
               routes: [
                 GoRoute(
-                  name: 'trips',
+                  name: 'Trips',
                   path: '/trips',
                   pageBuilder: (context, state) => CustomTransitionPage(
                       key: state.pageKey,
@@ -159,7 +159,7 @@ final routerProvider = Provider(
                   ],
                 ),
                 GoRoute(
-                  name: 'settings',
+                  name: 'Settings',
                   path: '/settings',
                   builder: (context, state) {
                     return const SettingsPage();

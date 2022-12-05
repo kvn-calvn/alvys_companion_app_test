@@ -1,6 +1,7 @@
 // ignore_for_file: unnecessary_string_escapes
 import 'package:alvys3/src/features/authentication/domain/models/phonenumber/phonenumber.dart';
 import 'package:alvys3/src/routing/routes.dart';
+import 'package:go_router/go_router.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import 'package:alvys3/src/constants/color.dart';
@@ -129,19 +130,12 @@ class _SignInPageState extends State<SignInPage> with InputValidationMixin {
                                 builder: ((context, formGroup, child) {
                               return ButtonStyle1(
                                   title: "Next",
-                                  isLoading: isloading,
-                                  isDisable: !form.valid,
+                                  isLoading: false,
+                                  isDisable: false,
                                   onPressAction: () {
-                                    formGroup.valid
-                                        ?
-                                        // use the email provided here
-                                        ref
-                                            .read(signInPageControllerProvider
-                                                .notifier)
-                                            .loginWithPhoneNumber(formGroup
-                                                .control('phone')
-                                                .value)
-                                        : null;
+                                    context.pushNamed(
+                                      'Verify',
+                                    );
                                   });
                             }))
                           ],

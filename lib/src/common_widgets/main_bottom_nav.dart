@@ -30,10 +30,10 @@ class _MainBottomNavState extends ConsumerState<MainBottomNav> {
 
           switch (i) {
             case 0:
-              context.go('/trips');
+              context.goNamed('Trips');
               break;
             case 1:
-              context.go('/settings');
+              context.goNamed('Settings');
               break;
           }
         },
