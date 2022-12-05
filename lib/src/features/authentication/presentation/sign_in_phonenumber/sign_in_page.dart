@@ -43,13 +43,13 @@ class _SignInPageState extends State<SignInPage> with InputValidationMixin {
             child: Column(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(
                   height: 95,
                 ),
                 Text('Enter your 10 digit phone number',
-                    textAlign: TextAlign.start,
+                    textAlign: TextAlign.center,
                     style: getExtraBoldStyle(
                         color: ColorManager.darkgrey, fontSize: 30)),
                 const SizedBox(
@@ -57,7 +57,7 @@ class _SignInPageState extends State<SignInPage> with InputValidationMixin {
                 ),
                 Text(
                     'A text message with a verification code will be sent to the number.',
-                    textAlign: TextAlign.start,
+                    textAlign: TextAlign.center,
                     style: getRegularStyle(color: ColorManager.lightgrey)),
                 const SizedBox(
                   height: 16,

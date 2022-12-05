@@ -22,19 +22,12 @@ class _LandingState extends State<Landing> {
     const storage = FlutterSecureStorage();
 
     var token = await storage.read(key: 'appToken');
-    if (token == null) {
+    if (token != null) {
       if (!mounted) return;
       context.go('/trips');
-
-      /* Navigator.pushNamedAndRemoveUntil(context, Routes.tripPageRoute,
-          ModalRoute.withName(Routes.tripPageRoute));*/
-      //debugPrint("Home");
     } else {
       if (!mounted) return;
-      context.go('/signin');
-      /*Navigator.pushNamedAndRemoveUntil(
-          context, Routes.signInRoute, ModalRoute.withName(Routes.signInRoute));*/
-      //debugPrint("SignIn");
+      context.go('/verify');
     }
   }
 

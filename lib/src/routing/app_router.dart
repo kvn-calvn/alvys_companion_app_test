@@ -2,6 +2,7 @@
 
 import 'package:alvys3/src/common_widgets/main_bottom_nav.dart';
 import 'package:alvys3/src/features/authentication/presentation/sign_in_phonenumber/sign_in_page.dart';
+import 'package:alvys3/src/features/authentication/presentation/verify_phonenumber/phone_verification_page.dart';
 import 'package:alvys3/src/features/documents/presentation/pdf_viewer.dart';
 import 'package:alvys3/src/features/documents/presentation/trip_docs_page.dart';
 import 'package:alvys3/src/features/echeck/presentation/echeck_page.dart';
@@ -36,6 +37,13 @@ final routerProvider = Provider(
             path: '/signin',
             builder: (context, state) {
               return const SignInPage();
+            },
+          ),
+          GoRoute(
+            name: 'verify',
+            path: '/verify',
+            builder: (context, state) {
+              return const PhoneNumberVerificationPage();
             },
           ),
           ShellRoute(
