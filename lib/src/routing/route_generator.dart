@@ -34,12 +34,8 @@ class RouteGenerator {
         return PageTransition(
             child: const LoadListPage(), type: PageTransitionType.rightToLeft);
       case Routes.tripDetailsRoute:
-        final arguments = settings.arguments as TripDetailsArguments;
         return PageTransition(
-            child: LoadDetailsPage(
-              tripId: arguments.tripId,
-              tripNumber: arguments.tripNumber,
-            ),
+            child: const LoadDetailsPage(),
             type: PageTransitionType.rightToLeft);
 
       case Routes.echecksRoute:
@@ -70,12 +66,8 @@ class RouteGenerator {
             type: PageTransitionType.rightToLeft);
 */
       case Routes.stopDetailsRoute:
-        final arguments = settings.arguments as StopDetailsArguments;
         return PageTransition(
-            child: StopDetailsPage(
-              tripId: arguments.tripId,
-              stopId: arguments.stopId,
-            ),
+            child: const StopDetailsPage(),
             type: PageTransitionType.rightToLeft);
       case Routes.processingTripsRoute:
         final arguments = settings.arguments as FilteredTripsArguments;

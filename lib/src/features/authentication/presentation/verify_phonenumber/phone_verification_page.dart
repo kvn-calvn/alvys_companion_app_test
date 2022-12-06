@@ -4,6 +4,7 @@ import 'package:alvys3/src/constants/text_styles.dart';
 import 'package:alvys3/src/features/authentication/domain/models/verified/verified.dart';
 import 'package:alvys3/src/routing/routes.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pinput/pinput.dart';
@@ -58,11 +59,13 @@ class _PhoneNumberVerificationPageState
     const length = 5;
     const borderColor = Color.fromRGBO(114, 178, 238, 1);
     const errorColor = Color.fromRGBO(255, 234, 238, 1);
-    const fillColor = Color.fromRGBO(222, 231, 240, .57);
+    const fillColor = Color.fromARGB(203, 235, 245, 255);
     final defaultPinTheme = PinTheme(
       width: 56,
       height: 60,
-      textStyle: getMediumStyle(color: ColorManager.primary, fontSize: 22),
+      textStyle: getMediumStyle(
+          color: ColorManager.primary(Theme.of(context).brightness),
+          fontSize: 22),
       decoration: BoxDecoration(
         color: fillColor,
         borderRadius: BorderRadius.circular(8),
@@ -70,12 +73,12 @@ class _PhoneNumberVerificationPageState
       ),
     );
 
-    return Scaffold(
-      key: scaffoldKey,
-      //backgroundColor:
-      body: SafeArea(
-        child: GestureDetector(
-          onTap: () => (focusNode.dispose()),
+    return GestureDetector(
+      onTap: () => (focusNode.unfocus()),
+      child: Scaffold(
+        key: scaffoldKey,
+        //backgroundColor:
+        body: SafeArea(
           child: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
             child: Form(
@@ -90,17 +93,17 @@ class _PhoneNumberVerificationPageState
                   ),
                   Text('Verification',
                       textAlign: TextAlign.center,
-                      style: getExtraBoldStyle(
-                          color: ColorManager.darkgrey, fontSize: 30)),
+                      style: Theme.of(context).textTheme.headlineLarge),
                   const SizedBox(
                     height: 19,
                   ),
-                  Text('Enter the code sent to the number.',
-                      textAlign: TextAlign.center,
-                      style: getRegularStyle(color: ColorManager.darkgrey)),
+                  Text(
+                    'Enter the code sent to the number.',
+                    textAlign: TextAlign.center,
+                  ),
                   Text('+909 462 3310',
                       textAlign: TextAlign.center,
-                      style: getBoldStyle(color: ColorManager.darkgrey)),
+                      style: Theme.of(context).textTheme.titleMedium),
                   const SizedBox(
                     height: 16,
                   ),
@@ -109,6 +112,9 @@ class _PhoneNumberVerificationPageState
                     controller: pinController,
                     focusNode: focusNode,
                     defaultPinTheme: defaultPinTheme,
+                    inputFormatters: [
+                      FilteringTextInputFormatter.allow(RegExp('[0-9]')),
+                    ],
                     onCompleted: (pin) {
                       setState(() => showError = pin != '5555');
                     },
@@ -149,7 +155,7 @@ class _PhoneNumberVerificationPageState
                   builder: ((context, ref, _) {
                     final state = ref.watch(verificationPageController);
                     final isloading = state is AsyncLoading;
-
+    
                     state.whenData((Verified? value) {
                       if (value!.errorCode == 0) {
                         WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -157,7 +163,7 @@ class _PhoneNumberVerificationPageState
                         });
                       }
                     });
-
+    
                     ref.listen<AsyncValue<void>>(
                       verificationPageController,
                       (_, state) => state.whenOrNull(
@@ -215,7 +221,7 @@ class _PhoneNumberVerificationPageState
                                       context, Routes.tripPageRoute);
                                   // ignore: unused_local_variable
                                   var code = formGroup.control('verify').value;
-/*
+    /*
                                   formGroup.valid
                                       ? ref
                                           .read(verificationPageController

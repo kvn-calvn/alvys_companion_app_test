@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 extension ListExt<T> on Iterable<T>? {
   bool isInStatus(String test) {
     bool inStatus = false;
@@ -48,4 +50,8 @@ extension DoubleExt on double? {
     if (this == null) return '-';
     return '\$${this!.toStringAsPrecision(2)}';
   }
+}
+
+extension BrightnessExtn on Brightness {
+  bool get isLight => this == Brightness.light;
 }

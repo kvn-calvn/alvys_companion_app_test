@@ -1,3 +1,4 @@
+import 'package:alvys3/custom_icons/alvys3_icons.dart';
 import 'package:alvys3/src/constants/color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -37,19 +38,15 @@ class _MainBottomNavState extends ConsumerState<MainBottomNav> {
               break;
           }
         },
-        unselectedItemColor: Colors.grey,
-        selectedItemColor: ColorManager.primary,
         items: const [
           BottomNavigationBarItem(
               icon: Icon(
-                Icons.drive_eta_rounded,
-                // color: Colors.grey,
+                Alvys3Icons.homeIco,
               ),
               label: 'Trips'),
           BottomNavigationBarItem(
               icon: Icon(
                 Icons.settings,
-                // color: Colors.grey,
               ),
               label: 'Settings'),
         ],

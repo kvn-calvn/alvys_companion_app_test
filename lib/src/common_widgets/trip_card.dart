@@ -32,7 +32,7 @@ class TripCard extends ConsumerWidget {
         child: Container(
           width: double.infinity,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).cardColor,
             boxShadow: const [
               BoxShadow(
                 blurRadius: 2,
@@ -55,12 +55,12 @@ class TripCard extends ConsumerWidget {
                     mainAxisSize: MainAxisSize.max,
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Text('Trip# ${trip.tripNumber}',
-                          style: getMediumStyle(
-                              color: ColorManager.darkgrey, fontSize: 14)),
+                      Text(
+                        'Trip# ${trip.tripNumber}',
+                        style: Theme.of(context).textTheme.titleMedium,
+                      ),
                       Text(NumberFormat.simpleCurrency().format(trip.tripValue),
-                          style: getMediumStyle(
-                              color: ColorManager.darkgrey, fontSize: 14)),
+                          style: Theme.of(context).textTheme.titleMedium),
                     ],
                   ),
                 ),
@@ -85,16 +85,17 @@ class TripCard extends ConsumerWidget {
                             SizedBox(
                               width: MediaQuery.of(context).size.width * 0.7,
                               child: Text('${trip.firstStopAddress}',
-                                  style: getBoldStyle(
-                                      color: ColorManager.darkgrey,
-                                      fontSize: 14)),
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyLarge!
+                                      .copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.grey)),
                             ),
                             Text(
-                                DateFormat('MMM d @ h:mm a', 'en_US')
-                                    .format(trip.pickupDate!),
-                                style: getMediumStyle(
-                                    color: ColorManager.darkgrey,
-                                    fontSize: 12)),
+                              DateFormat('MMM d @ h:mm a', 'en_US')
+                                  .format(trip.pickupDate!),
+                            ),
                           ],
                         ),
                       ),
@@ -128,17 +129,16 @@ class TripCard extends ConsumerWidget {
                                   child: Text(
                                     '${trip.lastStopAddress}',
                                     maxLines: 2,
-                                    style: getBoldStyle(
-                                        color: ColorManager.darkgrey,
-                                        fontSize: 14),
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyLarge!
+                                        .copyWith(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.grey),
                                   ),
                                 )),
-                            Text(
-                                DateFormat('MMM d @ h:mm a', 'en_US')
-                                    .format(trip.deliveryDate!),
-                                style: getMediumStyle(
-                                    color: ColorManager.darkgrey,
-                                    fontSize: 12)),
+                            Text(DateFormat('MMM d @ h:mm a', 'en_US')
+                                .format(trip.deliveryDate!)),
                           ],
                         ),
                       ),
@@ -152,71 +152,21 @@ class TripCard extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      Column(
-                        mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Text(
-                            'DH',
-                            style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Text('0.00 mi',
-                              style: getMediumStyle(
-                                  color: ColorManager.darkgrey, fontSize: 12)),
-                        ],
+                      const TripCardDetail(
+                        title: 'dh',
+                        details: '0.00 mi',
                       ),
-                      Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Text(
-                            'TRIP',
-                            style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Text(
-                              '${double.parse((trip.totalMiles)!.toStringAsFixed(2))} mi',
-                              style: getMediumStyle(
-                                  color: ColorManager.darkgrey, fontSize: 12)),
-                        ],
+                      TripCardDetail(
+                        title: 'trip',
+                        details: '${trip.totalMiles!.toStringAsFixed(2)} mi',
                       ),
-                      Column(
-                        mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Text(
-                            'STOPS',
-                            style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Text('${trip.stopCount}',
-                              style: getMediumStyle(
-                                  color: ColorManager.darkgrey, fontSize: 12)),
-                        ],
+                      TripCardDetail(
+                        title: 'stops',
+                        details: '${trip.stopCount}',
                       ),
-                      Column(
-                        mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          const Text(
-                            'WEIGHT',
-                            style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold),
-                          ),
-                          Text('${trip.totalWeight} lbs',
-                              style: getMediumStyle(
-                                  color: ColorManager.darkgrey, fontSize: 12)),
-                        ],
+                      TripCardDetail(
+                        title: 'weight',
+                        details: '${trip.totalWeight} lbs',
                       ),
                     ],
                   ),
@@ -226,6 +176,36 @@ class TripCard extends ConsumerWidget {
           ),
         ),
       ),
+    );
+  }
+}
+
+class TripCardDetail extends StatelessWidget {
+  final String details, title;
+  const TripCardDetail({
+    Key? key,
+    required this.title,
+    required this.details,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          title.toUpperCase(),
+          style: Theme.of(context)
+              .textTheme
+              .bodyMedium!
+              .copyWith(color: Colors.grey, fontWeight: FontWeight.bold),
+        ),
+        Text(
+          details,
+        ),
+      ],
     );
   }
 }

@@ -23,20 +23,14 @@ class StopCard extends ConsumerWidget {
         ref
             .watch(tripPageControllerProvider.notifier)
             .setCurrentStop(stop.stopId!);
-        context.pushNamed(
-          'stopDetails',
-          queryParams: <String, String>{
-            'stopId': stop.stopId!,
-            'tripId': tripId
-          },
-        );
+        context.pushNamed('stopDetails');
       },
       child: Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
         child: Container(
           width: double.infinity,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(10),
             boxShadow: const [
               BoxShadow(
@@ -78,19 +72,21 @@ class StopCard extends ConsumerWidget {
                                 child: Text(
                                   stop.companyName!,
                                   style: getBoldStyle(
-                                      color: ColorManager.darkgrey,
+                                      color: ColorManager.lightgrey,
                                       fontSize: 16),
                                 ),
                               ),
                               Text(
                                 stop.street!,
                                 style: getMediumStyle(
-                                    color: ColorManager.darkgrey, fontSize: 14),
+                                    color: ColorManager.lightgrey,
+                                    fontSize: 14),
                               ),
                               Text(
                                 '${stop.city} ${stop.state} ${stop.zip}',
                                 style: getMediumStyle(
-                                    color: ColorManager.darkgrey, fontSize: 14),
+                                    color: ColorManager.lightgrey,
+                                    fontSize: 14),
                               ),
                               Text(
                                 'Jan 28, 2022 @ 15:00',

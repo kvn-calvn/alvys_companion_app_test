@@ -25,27 +25,7 @@ class TextfieldInput extends StatelessWidget {
       autofocus: isFocus,
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
-        filled: true,
-        focusColor: ColorManager.primary,
-        enabledBorder: OutlineInputBorder(
-          borderRadius: const BorderRadius.all(
-            Radius.circular(10.0),
-          ),
-          borderSide: BorderSide(
-            color: ColorManager.lightgrey,
-            width: .5,
-          ),
-        ),
-        focusedBorder: OutlineInputBorder(
-          borderRadius: const BorderRadius.all(
-            Radius.circular(10.0),
-          ),
-          borderSide: BorderSide(
-            color: ColorManager.primary,
-          ),
-        ),
         hintText: hint,
-        fillColor: ColorManager.white,
       ),
       onChanged: (str) {
         // To Do

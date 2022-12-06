@@ -24,7 +24,7 @@ class LargeNavButton extends StatelessWidget {
           width: double.infinity,
           height: 60,
           decoration: BoxDecoration(
-            color: Colors.white,
+            color: Theme.of(context).cardColor,
             boxShadow: const [
               BoxShadow(
                 blurRadius: 2,
@@ -43,9 +43,13 @@ class LargeNavButton extends StatelessWidget {
                 if (icon != null) ...[icon!],
                 Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
-                  child: Text(title,
-                      style: getMediumStyle(
-                          color: ColorManager.darkgrey, fontSize: 18)),
+                  child: Text(
+                    title,
+                    style: Theme.of(context)
+                        .textTheme
+                        .bodyLarge!
+                        .copyWith(fontWeight: FontWeight.bold),
+                  ),
                 ),
                 const Expanded(
                   child: Align(

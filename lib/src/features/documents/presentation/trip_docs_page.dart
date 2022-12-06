@@ -35,31 +35,27 @@ class _TripDocsPageState extends ConsumerState<TripDocsPage> {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
-        iconTheme: const IconThemeData(
-          color: Colors.black, //change your color here
-        ),
-        backgroundColor: Colors.transparent,
         title: Text(
           'Documents',
           textAlign: TextAlign.start,
-          style: getBoldStyle(color: ColorManager.darkgrey, fontSize: 20),
+          // style: getBoldStyle(color: ColorManager.darkgrey, fontSize: 20),
         ),
         actions: const [],
-        centerTitle: true,
         elevation: 0,
       ),
-      backgroundColor: const Color(0xFFF1F4F8),
+      // backgroundColor: const Color(0xFFF1F4F8),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: SpeedDial(
         closedForegroundColor: ColorManager.white,
         openForegroundColor: Colors.white,
-        closedBackgroundColor: ColorManager.primary,
-        openBackgroundColor: ColorManager.primary,
+        closedBackgroundColor:
+            ColorManager.primary(Theme.of(context).brightness),
+        openBackgroundColor: ColorManager.primary(Theme.of(context).brightness),
         speedDialChildren: <SpeedDialChild>[
           SpeedDialChild(
             child: const Icon(Icons.camera_enhance),
             foregroundColor: ColorManager.white,
-            backgroundColor: ColorManager.primary,
+            backgroundColor: ColorManager.primary(Theme.of(context).brightness),
             label: 'Camera',
             onPressed: () {},
             closeSpeedDialOnPressed: false,
@@ -67,7 +63,7 @@ class _TripDocsPageState extends ConsumerState<TripDocsPage> {
           SpeedDialChild(
             child: const Icon(Icons.photo_album_outlined),
             foregroundColor: ColorManager.white,
-            backgroundColor: ColorManager.primary,
+            backgroundColor: ColorManager.primary(Theme.of(context).brightness),
             label: 'Gallery',
             onPressed: () {},
           ),
@@ -91,7 +87,7 @@ class TripDocsList extends ConsumerWidget {
 
     return tripDocsState.when(
       loading: () => SpinKitFoldingCube(
-        color: ColorManager.primary,
+        color: ColorManager.primary(Theme.of(context).brightness),
         size: 50.0,
       ),
       error: (error, stack) => Text('Oops, could not load documents, $stack'),

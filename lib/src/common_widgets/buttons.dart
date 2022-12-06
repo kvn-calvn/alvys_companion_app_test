@@ -25,7 +25,7 @@ class ButtonStyle1 extends StatelessWidget {
                   },*/
       style: ElevatedButton.styleFrom(
         minimumSize: const Size.fromHeight(60),
-        backgroundColor: ColorManager.primary,
+        backgroundColor: ColorManager.primary(Theme.of(context).brightness),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
@@ -57,7 +57,7 @@ class ButtonStyle2 extends StatelessWidget {
     return ElevatedButton(
       onPressed: isDisable ? null : () => onPressAction(),
       style: ElevatedButton.styleFrom(
-        backgroundColor: ColorManager.primary,
+        backgroundColor: ColorManager.primary(Theme.of(context).brightness),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),

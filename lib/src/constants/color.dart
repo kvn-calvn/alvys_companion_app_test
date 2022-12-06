@@ -1,23 +1,14 @@
+import 'package:alvys3/src/utils/extensions.dart';
 import 'package:flutter/material.dart';
 
 class ColorManager {
-  static Color primary = HexColor.fromHex("#233E90");
-  static Color darkgrey = HexColor.fromHex("#1F1F1F");
-  static Color lightgrey = HexColor.fromHex("#777777");
-  static Color lightBackground = HexColor.fromHex("#F1F4F8");
-  static Color pickupColor = HexColor.fromHex("#2991C2");
-  static Color deliveryColor = HexColor.fromHex("#F08080");
-  static Color cancelColor = HexColor.fromHex("#FF0000");
+  static Color primary(Brightness brightness) =>
+      brightness.isLight ? const Color(0XFF233E90) : const Color(0XFF265CFF);
+  static Color darkgrey = const Color(0XFF1F1F1F);
+  static Color lightgrey = const Color(0XFF777777);
+  static Color lightBackground = const Color(0XFFF1F4F8);
+  static Color pickupColor = const Color(0XFF2991C2);
+  static Color deliveryColor = const Color(0XFFF08080);
+  static Color cancelColor = const Color(0XFFFF0000);
   static Color white = Colors.white;
-}
-
-extension HexColor on Color {
-  static Color fromHex(String hexColorString) {
-    hexColorString = hexColorString.replaceAll("#", '');
-    if (hexColorString.length == 6) {
-      hexColorString = "FF$hexColorString";
-    }
-
-    return Color(int.parse(hexColorString, radix: 16));
-  }
 }

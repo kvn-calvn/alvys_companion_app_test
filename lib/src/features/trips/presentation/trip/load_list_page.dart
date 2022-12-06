@@ -33,13 +33,8 @@ class _LoadListPageState extends ConsumerState<LoadListPage> {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
         automaticallyImplyLeading: false,
-        title: Text(
-          'Trips',
-          textAlign: TextAlign.start,
-          style: getBoldStyle(color: ColorManager.darkgrey, fontSize: 20),
-        ),
+        title: const Text('Trips'),
         actions: [
           DropdownButton(
             value: dropdownvalue,
@@ -48,12 +43,11 @@ class _LoadListPageState extends ConsumerState<LoadListPage> {
               return DropdownMenuItem(
                 value: items,
                 onTap: () {
-                  ref.read(tripPageControllerProvider.notifier).getTrips();
+                  // ref.read(tripPageControllerProvider.notifier).getTrips();
                 },
                 child: Text(
                   items,
-                  style: getMediumStyle(
-                      color: ColorManager.darkgrey, fontSize: 18),
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
               );
             }).toList(),
@@ -67,7 +61,6 @@ class _LoadListPageState extends ConsumerState<LoadListPage> {
         centerTitle: false,
         elevation: 0,
       ),
-      backgroundColor: const Color(0xFFF1F4F8),
       body: const TripList(),
     );
   }
@@ -83,17 +76,13 @@ class TripList extends ConsumerWidget {
     final tripsState = ref.watch(tripPageControllerProvider);
     return tripsState.when(
         loading: () => SpinKitFoldingCube(
-              color: ColorManager.primary,
+              color: ColorManager.primary(Theme.of(context).brightness),
               size: 50.0,
             ),
         error: (error, stack) {
           return const Text('Oops, something unexpected happened');
         },
         data: (value) {
-          _activeTripList() {
-            return value.activeTrips.map((trip) => TripCard(trip: trip));
-          }
-
           return RefreshIndicator(
             onRefresh: () async {
               await ref
@@ -131,7 +120,10 @@ class TripList extends ConsumerWidget {
                     ),*/
                     if (value.activeTrips.isNotEmpty) ...[
                       Column(
-                        children: [..._activeTripList()],
+                        children: [
+                          ...value.activeTrips
+                              .map((trip) => TripCard(trip: trip))
+                        ],
                       )
                       //
                     ] else ...[

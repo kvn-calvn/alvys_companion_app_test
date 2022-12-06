@@ -1,4 +1,6 @@
 import 'package:alvys3/src/routing/app_router.dart';
+import 'package:alvys3/src/utils/app_theme.dart';
+import 'package:alvys3/src/utils/theme_handler.dart';
 //import 'package:alvys3/src/routing/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -15,6 +17,9 @@ class App extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);
     return MaterialApp.router(
+      themeMode: ref.watch(themeHandlerProvider),
+      theme: AlvysTheme.mainTheme(Brightness.light),
+      darkTheme: AlvysTheme.mainTheme(Brightness.dark),
       routeInformationProvider: router.routeInformationProvider,
       routeInformationParser: router.routeInformationParser,
       routerDelegate: router.routerDelegate,

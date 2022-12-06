@@ -35,12 +35,11 @@ class _SignInPageState extends State<SignInPage> with InputValidationMixin {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: scaffoldKey,
-      backgroundColor: ColorManager.lightBackground,
-      body: SafeArea(
-        child: GestureDetector(
-          onTap: () => FocusScope.of(context).unfocus(),
+    return GestureDetector(
+      onTap: () => FocusScope.of(context).unfocus(),
+      child: Scaffold(
+        key: scaffoldKey,
+        body: SafeArea(
           child: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
             child: Column(
@@ -51,17 +50,18 @@ class _SignInPageState extends State<SignInPage> with InputValidationMixin {
                 const SizedBox(
                   height: 95,
                 ),
-                Text('Enter your 10 digit phone number',
-                    textAlign: TextAlign.center,
-                    style: getExtraBoldStyle(
-                        color: ColorManager.darkgrey, fontSize: 30)),
+                Text(
+                  'Enter your 10 digit phone number',
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.headlineLarge,
+                ),
                 const SizedBox(
                   height: 19,
                 ),
                 Text(
-                    'A text message with a verification code will be sent to the number.',
-                    textAlign: TextAlign.center,
-                    style: getRegularStyle(color: ColorManager.lightgrey)),
+                  'A text message with a verification code will be sent to the number.',
+                  textAlign: TextAlign.center,
+                ),
                 const SizedBox(
                   height: 16,
                 ),
@@ -108,7 +108,8 @@ class _SignInPageState extends State<SignInPage> with InputValidationMixin {
                               buttons: [
                                 DialogButton(
                                   onPressed: () => Navigator.pop(context),
-                                  color: ColorManager.primary,
+                                  color: ColorManager.primary(
+                                      Theme.of(context).brightness),
                                   child: const Text(
                                     "Ok",
                                     style: TextStyle(
@@ -130,20 +131,6 @@ class _SignInPageState extends State<SignInPage> with InputValidationMixin {
                               maxLength: 10,
                               autofocus: true,
                               validationMessages: (control) => {'required': ''},
-                              decoration: InputDecoration(
-                                fillColor: Colors.white,
-                                filled: true,
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: Color(0xffE5E5E5), width: 2.0),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: Color(0xffE5E5E5), width: 2.0),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              ),
                             ),
                             ReactiveFormConsumer(
                                 builder: ((context, formGroup, child) {
@@ -251,7 +238,7 @@ class ButtonStyle1 extends StatelessWidget {
                   },*/
       style: ElevatedButton.styleFrom(
         minimumSize: const Size.fromHeight(60),
-        backgroundColor: ColorManager.primary,
+        backgroundColor: ColorManager.primary(Theme.of(context).brightness),
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),

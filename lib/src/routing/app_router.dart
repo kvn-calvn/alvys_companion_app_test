@@ -100,12 +100,9 @@ final routerProvider = Provider(
                       name: 'tripDetails',
                       path: 'tripdetails',
                       builder: (context, state) {
-                        final _tripNumber = state.queryParams['tripNumber']!;
-                        final _tripId = state.queryParams['tripId']!;
                         return LoadDetailsPage(
-                            key: state.pageKey,
-                            tripId: _tripId,
-                            tripNumber: _tripNumber);
+                          key: state.pageKey,
+                        );
                       },
                       routes: <GoRoute>[
                         GoRoute(
@@ -146,12 +143,7 @@ final routerProvider = Provider(
                           name: 'stopDetails',
                           path: 'stopdetails',
                           builder: (context, state) {
-                            final _tripId = state.queryParams['tripId']!;
-                            final _stopId = state.queryParams['stopId']!;
-                            return StopDetailsPage(
-                              stopId: _stopId,
-                              tripId: _tripId,
-                            );
+                            return const StopDetailsPage();
                           },
                         ),
                       ],

@@ -107,7 +107,7 @@ class _PDFViewerState extends State<PDFViewer> {
         children: <Widget>[
           isLoading
               ? SpinKitFoldingCube(
-                  color: ColorManager.primary,
+                  color: ColorManager.primary(Theme.of(context).brightness),
                   size: 50.0,
                 )
               : PdfView(path: pdfFlePath),

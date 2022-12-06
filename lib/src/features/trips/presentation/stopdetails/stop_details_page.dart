@@ -11,11 +11,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../domain/app_trip/m_comodity.dart';
 
 class StopDetailsPage extends ConsumerStatefulWidget {
-  const StopDetailsPage({Key? key, required this.tripId, required this.stopId})
-      : super(key: key);
-
-  final String tripId;
-  final String stopId;
+  const StopDetailsPage({Key? key}) : super(key: key);
 
   @override
   ConsumerState<StopDetailsPage> createState() => _StopDetailsPageState();
@@ -24,34 +20,23 @@ class StopDetailsPage extends ConsumerStatefulWidget {
 class _StopDetailsPageState extends ConsumerState<StopDetailsPage> {
   @override
   Widget build(BuildContext context) {
-    debugPrint('${widget.stopId} ${widget.tripId}');
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         automaticallyImplyLeading: false,
-        title: Text(
-          'Stop Details',
-          style: GoogleFonts.poppins(
-            fontWeight: FontWeight.bold,
-            fontSize: 28,
-            textStyle: const TextStyle(color: Colors.black),
-          ),
-        ),
+        title: Text('Stop Details'),
         centerTitle: true,
         leading: IconButton(
           // 1
-          icon: const Icon(
-            Icons.arrow_back,
-            size: 30,
+          icon: Icon(
+            Icons.adaptive.arrow_back,
           ),
-          color: ColorManager.darkgrey,
           onPressed: () {
             Navigator.of(context).maybePop();
           },
         ),
         elevation: 0,
       ),
-      backgroundColor: const Color(0xFFF1F4F8),
       body: const StopDetails(),
     );
   }
@@ -68,7 +53,7 @@ class StopDetails extends ConsumerWidget {
 
     return stopDetailsState.when(
         loading: () => SpinKitFoldingCube(
-              color: ColorManager.primary,
+              color: ColorManager.primary(Theme.of(context).brightness),
               size: 50.0,
             ),
         error: (error, stack) =>
