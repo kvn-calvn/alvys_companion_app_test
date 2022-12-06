@@ -1,4 +1,5 @@
 // ignore_for_file: unnecessary_string_escapes
+import 'package:alvys3/src/common_widgets/textfield_input.dart';
 import 'package:alvys3/src/features/authentication/domain/models/phonenumber/phonenumber.dart';
 import 'package:alvys3/src/routing/routes.dart';
 import 'package:go_router/go_router.dart';
@@ -20,6 +21,7 @@ class SignInPage extends StatefulWidget {
 
 class _SignInPageState extends State<SignInPage> with InputValidationMixin {
   final scaffoldKey = GlobalKey<ScaffoldState>();
+  final TextEditingController phoneNumber = TextEditingController();
 
   final formGlobalKey = GlobalKey<FormState>();
 
@@ -63,7 +65,24 @@ class _SignInPageState extends State<SignInPage> with InputValidationMixin {
                 const SizedBox(
                   height: 16,
                 ),
-                Consumer(
+                TextfieldInput(
+                    hint: "Phone",
+                    textfieldController: phoneNumber,
+                    isFocus: true,
+                    keyboardType: TextInputType.number),
+                const SizedBox(
+                  height: 16,
+                ),
+                ButtonStyle1(
+                    title: "Next",
+                    isLoading: false,
+                    isDisable: false,
+                    onPressAction: () {
+                      context.pushNamed(
+                        'Verify',
+                      );
+                    }),
+                /*Consumer(
                   builder: ((context, ref, _) {
                     final state = ref.watch(signInPageControllerProvider);
                     final isloading = state is AsyncLoading;
@@ -142,6 +161,7 @@ class _SignInPageState extends State<SignInPage> with InputValidationMixin {
                         ));
                   }),
                 ),
+              */
               ],
             ),
           ),
