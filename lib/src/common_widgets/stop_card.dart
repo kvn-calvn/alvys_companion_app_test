@@ -71,28 +71,20 @@ class StopCard extends ConsumerWidget {
                                 width: MediaQuery.of(context).size.width * 0.80,
                                 child: Text(
                                   stop.companyName!,
-                                  style: getBoldStyle(
-                                      color: ColorManager.lightgrey,
-                                      fontSize: 16),
+                                  style: Theme.of(context).textTheme.labelLarge,
                                 ),
                               ),
                               Text(
                                 stop.street!,
-                                style: getMediumStyle(
-                                    color: ColorManager.lightgrey,
-                                    fontSize: 14),
+                                style: Theme.of(context).textTheme.bodyMedium,
                               ),
                               Text(
                                 '${stop.city} ${stop.state} ${stop.zip}',
-                                style: getMediumStyle(
-                                    color: ColorManager.lightgrey,
-                                    fontSize: 14),
+                                style: Theme.of(context).textTheme.bodyMedium,
                               ),
                               Text(
                                 'Jan 28, 2022 @ 15:00',
-                                style: getMediumStyle(
-                                    color: ColorManager.lightgrey,
-                                    fontSize: 14),
+                                style: Theme.of(context).textTheme.bodyMedium,
                               ),
                             ],
                           ),

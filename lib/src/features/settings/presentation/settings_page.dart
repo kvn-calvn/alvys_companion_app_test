@@ -18,17 +18,11 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
         automaticallyImplyLeading: false,
-        title: Text(
-          'Settings',
-          textAlign: TextAlign.start,
-          style: getBoldStyle(color: ColorManager.darkgrey, fontSize: 20),
-        ),
+        title: const Text('Settings'),
         centerTitle: false,
         elevation: 0,
       ),
-      backgroundColor: const Color(0xFFF1F4F8),
       body: const SettingsList(),
     );
   }
@@ -47,12 +41,10 @@ class SettingsList extends StatelessWidget {
         Text(
           'Sandbox Driver',
           textAlign: TextAlign.start,
-          style: getMediumStyle(color: ColorManager.darkgrey, fontSize: 18),
         ),
         Text(
           'app@alvys.com',
           textAlign: TextAlign.start,
-          style: getMediumStyle(color: ColorManager.darkgrey, fontSize: 18),
         ),
         const SizedBox(
           height: 10,

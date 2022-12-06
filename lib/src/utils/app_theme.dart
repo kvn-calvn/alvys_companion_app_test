@@ -32,7 +32,7 @@ class AlvysTheme {
                       .size
                       .width,
                   brightness)
-              .headlineMedium!
+              .headlineSmall!
               .copyWith(fontWeight: FontWeight.bold)
           // titleTextStyle: TextStyle(
           //   fontSize: 20,
@@ -138,13 +138,13 @@ class AlvysTheme {
       // height: 28,
       fontSize: 22,
       wordSpacing: 0,
-      fontWeight: FontWeight.w800,
+      fontWeight: FontWeight.w700,
     ),
     titleMedium: TextStyle(
       // height: 24,
-      fontSize: 16,
+      fontSize: 18,
       wordSpacing: 0.15,
-      fontWeight: FontWeight.w600,
+      fontWeight: FontWeight.w500,
     ),
     titleSmall: TextStyle(
       // height: 20,
@@ -153,11 +153,11 @@ class AlvysTheme {
       fontWeight: FontWeight.w500,
     ),
     labelLarge: TextStyle(
-      // height: 20,
-      fontSize: 14,
-      wordSpacing: 0.1,
-      fontWeight: FontWeight.w500,
-    ),
+        // height: 20,
+        fontSize: 16,
+        wordSpacing: 0.1,
+        fontWeight: FontWeight.w800,
+        color: Colors.grey),
     labelMedium: TextStyle(
       // height: 16,
       fontSize: 12,

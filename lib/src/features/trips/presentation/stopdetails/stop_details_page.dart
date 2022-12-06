@@ -24,7 +24,7 @@ class _StopDetailsPageState extends ConsumerState<StopDetailsPage> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         automaticallyImplyLeading: false,
-        title: Text('Stop Details'),
+        title: const Text('Stop Details'),
         centerTitle: true,
         leading: IconButton(
           // 1
@@ -37,7 +37,10 @@ class _StopDetailsPageState extends ConsumerState<StopDetailsPage> {
         ),
         elevation: 0,
       ),
-      body: const StopDetails(),
+      body: const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+        child: StopDetails(),
+      ),
     );
   }
 }
@@ -73,22 +76,19 @@ class StopDetails extends ConsumerWidget {
                   children: [
                     Text(
                       'Location',
-                      style: getBoldStyle(color: ColorManager.darkgrey),
+                      style: Theme.of(context).textTheme.labelLarge,
                     ),
                     Text(
                       currentStop.companyName ?? "",
-                      style: getSemiBoldStyle(
-                          color: ColorManager.darkgrey, fontSize: 14),
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     Text(
                       currentStop.street ?? "",
-                      style: getMediumStyle(
-                          color: ColorManager.darkgrey, fontSize: 14),
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     Text(
                       '${currentStop.city!} ${currentStop.state!} ${currentStop.zip!}',
-                      style: getMediumStyle(
-                          color: ColorManager.darkgrey, fontSize: 14),
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ],
                 ),
@@ -103,12 +103,11 @@ class StopDetails extends ConsumerWidget {
                       children: [
                         Text(
                           'Contact',
-                          style: getBoldStyle(color: ColorManager.darkgrey),
+                          style: Theme.of(context).textTheme.labelLarge,
                         ),
                         Text(
                           currentStop.phone ?? "",
-                          style: getRegularStyle(
-                              color: ColorManager.darkgrey, fontSize: 14),
+                          style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
                     ),
@@ -117,12 +116,11 @@ class StopDetails extends ConsumerWidget {
                       children: [
                         Text(
                           'Date',
-                          style: getBoldStyle(color: ColorManager.darkgrey),
+                          style: Theme.of(context).textTheme.labelLarge,
                         ),
                         Text(
                           currentStop.actualStopdate ?? "",
-                          style: getRegularStyle(
-                              color: ColorManager.darkgrey, fontSize: 14),
+                          style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
                     ),
@@ -137,12 +135,11 @@ class StopDetails extends ConsumerWidget {
                       children: [
                         Text(
                           'Check In',
-                          style: getBoldStyle(color: ColorManager.darkgrey),
+                          style: Theme.of(context).textTheme.labelLarge,
                         ),
                         Text(
-                          currentStop.timeRecord?.driver?.driverIn ?? '',
-                          style: getRegularStyle(
-                              color: ColorManager.darkgrey, fontSize: 14),
+                          currentStop.timeRecord?.driver?.driverIn ?? '-',
+                          style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
                     ),
@@ -151,12 +148,11 @@ class StopDetails extends ConsumerWidget {
                       children: [
                         Text(
                           'Check Out',
-                          style: getBoldStyle(color: ColorManager.darkgrey),
+                          style: Theme.of(context).textTheme.labelLarge,
                         ),
                         Text(
-                          currentStop.timeRecord?.driver?.out ?? '',
-                          style: getRegularStyle(
-                              color: ColorManager.darkgrey, fontSize: 14),
+                          currentStop.timeRecord?.driver?.out ?? '-',
+                          style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
                     ),
@@ -165,7 +161,7 @@ class StopDetails extends ConsumerWidget {
                 const SizedBox(height: 20),
                 Text(
                   'Items',
-                  style: getBoldStyle(color: ColorManager.darkgrey),
+                  style: Theme.of(context).textTheme.labelLarge,
                 ),
                 const SizedBox(height: 5),
                 ItemsWidget(
@@ -176,12 +172,11 @@ class StopDetails extends ConsumerWidget {
                   children: [
                     Text(
                       'Company Instruction',
-                      style: getBoldStyle(color: ColorManager.darkgrey),
+                      style: Theme.of(context).textTheme.labelLarge,
                     ),
                     Text(
-                      currentStop.genInstructions ?? '',
-                      style: getRegularStyle(
-                          color: ColorManager.lightgrey, fontSize: 14),
+                      currentStop.genInstructions ?? '-',
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ],
                 ),
@@ -191,12 +186,11 @@ class StopDetails extends ConsumerWidget {
                   children: [
                     Text(
                       'Stop Instruction',
-                      style: getBoldStyle(color: ColorManager.darkgrey),
+                      style: Theme.of(context).textTheme.labelLarge,
                     ),
                     Text(
                       currentStop.instructions ?? '',
-                      style: getRegularStyle(
-                          color: ColorManager.lightgrey, fontSize: 14),
+                      style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ],
                 )
@@ -217,79 +211,69 @@ class ItemsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _items() {
-      return commodities
-          .map((item) => Padding(
-                padding: const EdgeInsets.only(top: 5, bottom: 5),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+    return Column(
+      children: [
+        for (var item in commodities)
+          Padding(
+            padding: const EdgeInsets.only(top: 5, bottom: 5),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  item.description ?? '',
+                  style: Theme.of(context).textTheme.bodyMedium,
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      item.description ?? '',
-                      style: getRegularStyle(
-                          color: ColorManager.darkgrey, fontSize: 14),
-                    ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              'UNITS',
-                              style: getSemiBoldStyle(
-                                  color: ColorManager.darkgrey, fontSize: 14),
-                            ),
-                            Text(
-                              '${item.numUnits} ${item.unitType}',
-                              style: getRegularStyle(
-                                  color: ColorManager.darkgrey, fontSize: 14),
-                            ),
-                          ],
+                        Text(
+                          'UNITS',
+                          style: Theme.of(context).textTheme.labelLarge,
                         ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              'PIECES',
-                              style: getSemiBoldStyle(
-                                  color: ColorManager.darkgrey, fontSize: 14),
-                            ),
-                            Text(
-                              '${item.numPieces}',
-                              style: getRegularStyle(
-                                  color: ColorManager.darkgrey, fontSize: 14),
-                            ),
-                          ],
-                        ),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.end,
-                          children: [
-                            Text(
-                              'WEIGHT',
-                              style: getSemiBoldStyle(
-                                  color: ColorManager.darkgrey, fontSize: 14),
-                            ),
-                            Text(
-                              '${item.weight} ${item.weightType}',
-                              style: getRegularStyle(
-                                  color: ColorManager.darkgrey, fontSize: 14),
-                            ),
-                          ],
+                        Text(
+                          '${item.numUnits} ${item.unitType}',
+                          style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
-                    )
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          'PIECES',
+                          style: Theme.of(context).textTheme.labelLarge,
+                        ),
+                        Text(
+                          '${item.numPieces}',
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          'WEIGHT',
+                          style: Theme.of(context).textTheme.labelLarge,
+                        ),
+                        Text(
+                          '${item.weight} ${item.weightType}',
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ],
+                    ),
                   ],
-                ),
-              ))
-          .toList();
-    }
-
-    return Column(
-      children: [..._items()],
+                )
+              ],
+            ),
+          )
+      ],
     );
   }
 }
