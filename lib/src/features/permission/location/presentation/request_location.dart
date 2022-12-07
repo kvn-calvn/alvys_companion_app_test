@@ -1,0 +1,69 @@
+import 'dart:io';
+import 'package:alvys3/custom_icons/alvys3_icons.dart';
+import 'package:alvys3/src/common_widgets/buttons.dart';
+import 'package:alvys3/src/constants/color.dart';
+import 'package:alvys3/src/constants/text_styles.dart';
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+
+class RequestLocation extends StatelessWidget {
+  const RequestLocation({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          title: const Text(
+            'Location Permission',
+          ),
+          centerTitle: true,
+          elevation: 0,
+        ),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Icon(Alvys3Icons.trackIcon, size: 90),
+                const SizedBox(
+                  height: 30,
+                ),
+                Text(
+                  Platform.isAndroid
+                      ? 'Alvys driver companion collects your location data to enable real time driver location tracking even when the app is closed or not in use.'
+                      : 'Alvys uses your location data to track the movement of loads you have been assigned.',
+                  textAlign: TextAlign.center,
+                  style:
+                      getMediumStyle(color: ColorManager.white, fontSize: 16),
+                ),
+                const SizedBox(
+                  height: 30,
+                ),
+                ButtonStyle1(
+                  title: "Continue",
+                  isLoading: false,
+                  isDisable: false,
+                  onPressAction: () {
+                    context.goNamed(
+                      'NotificationPermission',
+                    );
+                  },
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                TextButton(
+                  onPressed: () {},
+                  child: const Text(
+                    'Not now',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ));
+  }
+}

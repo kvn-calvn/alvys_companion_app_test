@@ -6,6 +6,8 @@ import 'package:alvys3/src/features/authentication/presentation/verify_phonenumb
 import 'package:alvys3/src/features/documents/presentation/pdf_viewer.dart';
 import 'package:alvys3/src/features/documents/presentation/trip_docs_page.dart';
 import 'package:alvys3/src/features/echeck/presentation/echeck_page.dart';
+import 'package:alvys3/src/features/permission/location/presentation/request_location.dart';
+import 'package:alvys3/src/features/permission/notification/request_notification.dart';
 import 'package:alvys3/src/features/settings/presentation/settings_page.dart';
 import 'package:alvys3/src/features/trips/presentation/stopdetails/stop_details_page.dart';
 import 'package:alvys3/src/features/trips/presentation/trip/filtered_trip_page.dart';
@@ -44,6 +46,20 @@ final routerProvider = Provider(
             path: '/verify',
             builder: (context, state) {
               return const PhoneNumberVerificationPage();
+            },
+          ),
+          GoRoute(
+            name: 'LocationPermission',
+            path: '/location',
+            builder: (context, state) {
+              return const RequestLocation();
+            },
+          ),
+          GoRoute(
+            name: 'NotificationPermission',
+            path: '/notification',
+            builder: (context, state) {
+              return const RequestNotification();
             },
           ),
           ShellRoute(

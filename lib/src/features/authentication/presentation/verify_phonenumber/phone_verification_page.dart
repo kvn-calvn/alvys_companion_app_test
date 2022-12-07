@@ -163,7 +163,8 @@ class _PhoneNumberVerificationPageState
                   ButtonStyle1(
                       isDisable: false,
                       onPressAction: () {
-                        context.goNamed('Trips');
+                        //context.goNamed('Trips');
+                        context.goNamed('LocationPermission');
                       },
                       title: "Verify",
                       isLoading: false),
