@@ -12,4 +12,8 @@ class ColorManager {
   static Color deliveryColor = const Color(0XFFF08080);
   static Color cancelColor = const Color(0XFFFF0000);
   static Color white = Colors.white;
+  static Color cardColor(Brightness brightness) =>
+      brightness.isLight ? Colors.white : const Color(0XFF232323);
+  static Color scaffoldColor(Brightness brightness) =>
+      brightness.isLight ? const Color(0xFFF1F4F8) : const Color(0XFF141414);
 }

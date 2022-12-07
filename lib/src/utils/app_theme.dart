@@ -13,9 +13,7 @@ class AlvysTheme {
           brightness),
       brightness: brightness,
       primaryColor: brightness.isLight ? Colors.white : Colors.black,
-      scaffoldBackgroundColor: brightness.isLight
-          ? const Color(0xFFF1F4F8)
-          : const Color(0XFF141414),
+      scaffoldBackgroundColor: ColorManager.scaffoldColor(brightness),
       appBarTheme: AppBarTheme(
           centerTitle: true,
           iconTheme: IconThemeData(
@@ -50,10 +48,9 @@ class AlvysTheme {
           foregroundColor: Colors.white,
         ),
       ),
-      cardColor: brightness.isLight ? Colors.white : const Color(0XFF232323),
+      cardColor: ColorManager.cardColor(brightness),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        backgroundColor:
-            brightness.isLight ? Colors.white : const Color(0XFF232323),
+        backgroundColor: ColorManager.cardColor(brightness),
         selectedItemColor: ColorManager.primary(brightness),
         unselectedItemColor: Colors.grey,
       ),

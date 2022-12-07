@@ -11,7 +11,7 @@
 ///      fonts:
 ///       - asset: fonts/Alvys3Icons.ttf
 ///
-/// 
+///
 ///
 import 'package:flutter/widgets.dart';
 
@@ -21,7 +21,10 @@ class Alvys3Icons {
   static const _kFontFam = 'Alvys3Icons';
   static const String? _kFontPkg = null;
 
-  static const IconData homeIco = IconData(0xe800, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData notificationIcon = IconData(0xe801, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-  static const IconData trackIcon = IconData(0xe802, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData homeIco =
+      IconData(0xe902, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData notificationIcon =
+      IconData(0xe901, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData trackIcon =
+      IconData(0xe900, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }
