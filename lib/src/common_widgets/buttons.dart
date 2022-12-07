@@ -66,7 +66,10 @@ class ButtonStyle2 extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 10.0),
         child: Text(
           title,
-          style: getSemiBoldStyle(color: ColorManager.white, fontSize: 14),
+          style: Theme.of(context)
+              .textTheme
+              .titleSmall!
+              .copyWith(fontWeight: FontWeight.bold),
         ),
       ),
     );

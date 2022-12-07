@@ -37,6 +37,7 @@ class StopCard extends ConsumerWidget {
               Padding(
                 padding: const EdgeInsetsDirectional.fromSTEB(15, 5, 15, 5),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Padding(
                       padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 0, 8),
@@ -87,7 +88,7 @@ class StopCard extends ConsumerWidget {
                       padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 5, 8),
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           ButtonStyle2(
                               onPressAction: () => {debugPrint("")},

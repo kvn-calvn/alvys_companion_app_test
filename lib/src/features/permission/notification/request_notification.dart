@@ -26,7 +26,11 @@ class RequestNotification extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Alvys3Icons.notificationIcon, size: 90),
+                Icon(
+                  Alvys3Icons.notificationIcon,
+                  size: MediaQuery.of(context).size.height * 0.125,
+                  color: ColorManager.primary(Theme.of(context).brightness),
+                ),
                 const SizedBox(
                   height: 30,
                 ),

@@ -26,7 +26,11 @@ class RequestLocation extends StatelessWidget {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const Icon(Alvys3Icons.trackIcon, size: 90),
+                Icon(
+                  Alvys3Icons.trackIcon,
+                  size: MediaQuery.of(context).size.height * 0.15,
+                  color: ColorManager.primary(Theme.of(context).brightness),
+                ),
                 const SizedBox(
                   height: 30,
                 ),
