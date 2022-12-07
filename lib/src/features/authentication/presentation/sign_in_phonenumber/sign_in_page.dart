@@ -79,7 +79,7 @@ class _SignInPageState extends State<SignInPage> with InputValidationMixin {
                 TextField(
                   keyboardType: TextInputType.number,
                   inputFormatters: [phoneNumberMaskFormatter],
-                  // maxLength: 10,
+                  textAlign: TextAlign.center,
                   autofocus: true,
                   decoration: const InputDecoration(hintText: "(###) ###-####"),
                 ),

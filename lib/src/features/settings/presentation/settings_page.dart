@@ -1,4 +1,4 @@
-import 'package:alvys3/src/common_widgets/custom_bottomSheet.dart';
+import 'package:alvys3/src/common_widgets/custom_bottom_sheet.dart';
 import 'package:alvys3/src/common_widgets/large_nav_button.dart';
 import 'package:alvys3/src/common_widgets/theme_switcher.dart';
 import 'package:flutter/material.dart';
