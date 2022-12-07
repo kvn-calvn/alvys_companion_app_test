@@ -2,31 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 
-TextStyle getRegularStyle({required Color color, double fontSize = 16}) {
-  return GoogleFonts.getFont('Poppins',
-      color: color, fontSize: fontSize, fontWeight: FontWeight.normal);
-}
-
-TextStyle getBoldStyle({required Color color, double fontSize = 16}) {
-  return GoogleFonts.getFont('Poppins',
-      color: color, fontSize: fontSize, fontWeight: FontWeight.bold);
-}
-
-TextStyle getMediumStyle({required Color color, double fontSize = 16}) {
-  return GoogleFonts.getFont('Poppins',
-      color: color, fontSize: fontSize, fontWeight: FontWeight.w500);
-}
-
-TextStyle getSemiBoldStyle({required Color color, double fontSize = 16}) {
-  return GoogleFonts.getFont('Poppins',
-      color: color, fontSize: fontSize, fontWeight: FontWeight.w600);
-}
-
-TextStyle getExtraBoldStyle({required Color color, double fontSize = 16}) {
-  return GoogleFonts.getFont('Poppins',
-      color: color, fontSize: fontSize, fontWeight: FontWeight.w800);
-}
-
 AlertStyle getLightErrorAlertStyle() {
   return AlertStyle(
       animationType: AnimationType.fromTop,

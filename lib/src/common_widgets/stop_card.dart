@@ -96,7 +96,7 @@ class StopCard extends ConsumerWidget {
                               isLoading: false,
                               isDisable: true),
                           const SizedBox(
-                            width: 5,
+                            width: 8,
                           ),
                           ButtonStyle2(
                               onPressAction: () => {debugPrint("")},
@@ -104,7 +104,7 @@ class StopCard extends ConsumerWidget {
                               isLoading: false,
                               isDisable: false),
                           const SizedBox(
-                            width: 10,
+                            width: 8,
                           ),
                           ButtonStyle2(
                               onPressAction: () => {debugPrint("")},

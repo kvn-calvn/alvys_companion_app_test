@@ -24,7 +24,7 @@ class FilteredTripPage extends StatelessWidget {
         elevation: 0,
         title: Text(
           title,
-          style: getBoldStyle(color: ColorManager.darkgrey, fontSize: 20),
+          style: Theme.of(context).textTheme.titleMedium,
         ),
         leading: IconButton(
           // 1
@@ -73,7 +73,7 @@ class TripList extends StatelessWidget {
           children: [
             Text(
               "There are no ${title.toLowerCase()} trips.",
-              style: getMediumStyle(color: ColorManager.lightgrey),
+              style: Theme.of(context).textTheme.labelLarge,
             )
           ],
         ),

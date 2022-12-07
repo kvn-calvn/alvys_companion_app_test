@@ -69,6 +69,27 @@ extension StringExt on String? {
         .map((str) => str.sentenceCase)
         .join(" ");
   }
+
+  String get numbersOnly {
+    if (this == null) return '';
+    return this!.replaceAll(RegExp(r'[^0-9]'), '');
+  }
+
+  String get toPhoneNumberString {
+    if (this == null) return '';
+    String newNumber = numbersOnly;
+
+    switch (newNumber.length) {
+      case 7:
+        return "${newNumber.substring(0, 3)}-${newNumber.substring(3, 7)}";
+      case 10:
+        return "(${newNumber.substring(0, 3)}) ${newNumber.substring(3, 6)}-${newNumber.substring(6, 10)}";
+      case 11:
+        return "${newNumber[0]} (${newNumber.substring(1, 4)}) ${newNumber.substring(4, 7)}-${newNumber.substring(7, 11)}";
+      default:
+        throw Exception("Not a valid phone number");
+    }
+  }
 }
 
 extension DoubleExt on double? {

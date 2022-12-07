@@ -1,3 +1,5 @@
+import 'package:alvys3/src/features/authentication/domain/models/auth_state/auth_state.dart';
+
 import 'app_trip.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../../../utils/extensions.dart';
