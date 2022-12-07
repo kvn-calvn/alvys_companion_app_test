@@ -26,6 +26,17 @@ class TextfieldInput extends StatelessWidget {
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
         hintText: hint,
+        filled: true,
+        fillColor: ColorManager.darkgrey,
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(width: .5, color: ColorManager.lightgrey),
+          borderRadius: BorderRadius.circular(15),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(
+              width: 1, color: ColorManager.primary(Brightness.dark)),
+          borderRadius: BorderRadius.circular(10),
+        ),
       ),
       onChanged: (str) {
         // To Do

@@ -67,9 +67,9 @@ class _PhoneNumberVerificationPageState
           color: ColorManager.primary(Theme.of(context).brightness),
           fontSize: 22),
       decoration: BoxDecoration(
-        color: fillColor,
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.transparent),
+        color: ColorManager.darkgrey,
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(color: ColorManager.lightgrey, width: .5),
       ),
     );
 
@@ -120,7 +120,9 @@ class _PhoneNumberVerificationPageState
                     },
                     focusedPinTheme: defaultPinTheme.copyWith(
                       decoration: defaultPinTheme.decoration!.copyWith(
-                        border: Border.all(color: borderColor),
+                        border: Border.all(
+                            color: ColorManager.primary(Brightness.dark),
+                            width: 1),
                       ),
                     ),
                     errorPinTheme: defaultPinTheme.copyWith(
