@@ -1,6 +1,6 @@
+import 'package:alvys3/src/common_widgets/custom_bottomSheet.dart';
 import 'package:alvys3/src/common_widgets/large_nav_button.dart';
-import 'package:alvys3/src/constants/color.dart';
-import 'package:alvys3/src/constants/text_styles.dart';
+import 'package:alvys3/src/common_widgets/theme_switcher.dart';
 import 'package:flutter/material.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -67,6 +67,12 @@ class SettingsList extends StatelessWidget {
         ),
         const SizedBox(
           height: 15,
+        ),
+        LargeNavButton(
+          title: "Change Theme",
+          onPressed: () {
+            showCustomBottomSheet(context, const ThemeSwitcher());
+          },
         ),
         LargeNavButton(
           title: "About",

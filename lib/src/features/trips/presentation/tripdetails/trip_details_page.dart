@@ -54,7 +54,10 @@ class _LoadDetailsPageState extends ConsumerState<LoadDetailsPage> {
         centerTitle: true,
         elevation: 0,
       ),
-      body: const TripDetails(),
+      body: const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.0),
+        child: TripDetails(),
+      ),
     );
   }
 }

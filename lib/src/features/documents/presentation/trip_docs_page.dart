@@ -25,9 +25,6 @@ class _TripDocsPageState extends ConsumerState<TripDocsPage> {
   @override
   void initState() {
     super.initState();
-    ref
-        .read(tripDocsPageControllerProvider.notifier)
-        .getTripDocsList(widget.tripId);
   }
 
   @override
@@ -35,11 +32,7 @@ class _TripDocsPageState extends ConsumerState<TripDocsPage> {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
-        title: Text(
-          'Documents',
-          textAlign: TextAlign.start,
-          // style: getBoldStyle(color: ColorManager.darkgrey, fontSize: 20),
-        ),
+        title: const Text('Documents'),
         actions: const [],
         elevation: 0,
       ),
@@ -71,28 +64,33 @@ class _TripDocsPageState extends ConsumerState<TripDocsPage> {
         ],
         child: const Icon(Icons.cloud_upload),
       ),
-      body: const TripDocsList(),
+      body: Padding(
+        padding: const EdgeInsets.all(8.0),
+        child: TripDocsList(
+          tripId: widget.tripId,
+        ),
+      ),
     );
   }
 }
 
 class TripDocsList extends ConsumerWidget {
-  const TripDocsList({
-    Key? key,
-  }) : super(key: key);
+  final String tripId;
+  const TripDocsList({Key? key, required this.tripId}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final tripDocsState = ref.watch(tripDocsPageControllerProvider);
+    final tripDocsState =
+        ref.watch(tripDocsPageControllerProvider.call(tripId));
 
     return tripDocsState.when(
       loading: () => SpinKitFoldingCube(
         color: ColorManager.primary(Theme.of(context).brightness),
         size: 50.0,
       ),
-      error: (error, stack) => Text('Oops, could not load documents, $stack'),
+      error: (error, stack) => const Text('No Documents'),
       data: (data) {
-        var docs = data!.data ?? [];
+        var docs = data.data ?? [];
         debugPrint(docs.first.type);
         _docsList() {
           return docs.map(

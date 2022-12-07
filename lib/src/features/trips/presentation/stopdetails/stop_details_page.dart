@@ -3,6 +3,7 @@
 import 'package:alvys3/src/constants/color.dart';
 import 'package:alvys3/src/constants/text_styles.dart';
 import 'package:alvys3/src/features/trips/presentation/trip/trip_page_controller.dart';
+import 'package:alvys3/src/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -175,7 +176,9 @@ class StopDetails extends ConsumerWidget {
                       style: Theme.of(context).textTheme.labelLarge,
                     ),
                     Text(
-                      currentStop.genInstructions ?? '-',
+                      currentStop.genInstructions.isNullOrEmpty
+                          ? '-'
+                          : currentStop.genInstructions!,
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ],

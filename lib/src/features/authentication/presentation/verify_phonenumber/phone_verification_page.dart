@@ -3,6 +3,8 @@ import 'package:alvys3/src/constants/color.dart';
 import 'package:alvys3/src/constants/text_styles.dart';
 import 'package:alvys3/src/features/authentication/domain/models/verified/verified.dart';
 import 'package:alvys3/src/routing/routes.dart';
+import 'package:alvys3/src/utils/app_theme.dart';
+import 'package:alvys3/src/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -53,23 +55,24 @@ class _PhoneNumberVerificationPageState
   });*/
 
   bool showError = false;
-
+  PinTheme defaultPinTheme(BuildContext context) => PinTheme(
+        width: 56,
+        height: 60,
+        textStyle: Theme.of(context).textTheme.titleLarge,
+        decoration: BoxDecoration(
+          color: Theme.of(context).inputDecorationTheme.fillColor,
+          borderRadius: BorderRadius.circular(8),
+          border: Border.all(
+            color: (Theme.of(context).brightness.isLight
+                    ? Colors.black
+                    : Colors.white)
+                .withOpacity(0.5),
+          ),
+        ),
+      );
   @override
   Widget build(BuildContext context) {
     const length = 5;
-    const errorColor = Color.fromRGBO(255, 234, 238, 1);
-    final defaultPinTheme = PinTheme(
-      width: 56,
-      height: 60,
-      textStyle: getMediumStyle(
-          color: ColorManager.primary(Theme.of(context).brightness),
-          fontSize: 22),
-      decoration: BoxDecoration(
-        color: ColorManager.darkgrey,
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(color: ColorManager.lightgrey, width: .5),
-      ),
-    );
 
     return GestureDetector(
       onTap: () => (focusNode.unfocus()),
@@ -120,23 +123,36 @@ class _PhoneNumberVerificationPageState
                     length: length,
                     controller: pinController,
                     focusNode: focusNode,
-                    defaultPinTheme: defaultPinTheme,
+                    defaultPinTheme: defaultPinTheme(context),
+                    cursor: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 12.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                            color: Theme.of(context)
+                                .textSelectionTheme
+                                .cursorColor),
+                        height: double.infinity,
+                        width: 2,
+                      ),
+                    ),
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp('[0-9]')),
                     ],
                     onCompleted: (pin) {
                       setState(() => showError = pin != '5555');
                     },
-                    focusedPinTheme: defaultPinTheme.copyWith(
-                      decoration: defaultPinTheme.decoration!.copyWith(
-                        border: Border.all(
-                            color: ColorManager.primary(Brightness.dark),
-                            width: 1),
-                      ),
+                    focusedPinTheme: defaultPinTheme(context).copyWith(
+                      decoration: defaultPinTheme(context).decoration!.copyWith(
+                            border: Border.all(
+                              color: ColorManager.primary(
+                                      Theme.of(context).brightness)
+                                  .withOpacity(0.8),
+                            ),
+                          ),
                     ),
-                    errorPinTheme: defaultPinTheme.copyWith(
+                    errorPinTheme: defaultPinTheme(context).copyWith(
                       decoration: BoxDecoration(
-                        color: errorColor,
+                        color: ColorManager.cancelColor,
                         borderRadius: BorderRadius.circular(8),
                       ),
                     ),

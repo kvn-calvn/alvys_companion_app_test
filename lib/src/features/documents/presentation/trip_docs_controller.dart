@@ -3,6 +3,8 @@ import 'package:alvys3/src/features/documents/data/repositories/trip_docs_reposi
 import 'package:alvys3/src/features/documents/domain/trip_documents/trip_documents.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../network/api_response.dart';
+
 class TripsDocsPageController
     extends StateNotifier<AsyncValue<TripDocuments?>> {
   TripsDocsPageController(this._tripDocsRepositoryImpl)
@@ -20,7 +22,13 @@ class TripsDocsPageController
   }
 }
 
-final tripDocsPageControllerProvider = StateNotifierProvider.autoDispose<
-    TripsDocsPageController, AsyncValue<TripDocuments?>>((ref) {
-  return TripsDocsPageController(ref.watch(tripDocsRepositoryImplProvider));
+final tripDocsPageControllerProvider =
+    AutoDisposeFutureProviderFamily<TripDocuments, String>((ref, tripId) async {
+  final result =
+      await ref.watch(tripDocsRepositoryImplProvider).getTripDocs(tripId);
+  if (result.success) {
+    return result.data!;
+  } else {
+    throw Exception(result.error!);
+  }
 });

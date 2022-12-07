@@ -27,13 +27,17 @@ class AlvysTheme {
             statusBarBrightness: brightness,
           ),
           backgroundColor: Colors.transparent,
+          elevation: 0,
           titleTextStyle: appTextTheme(
                   MediaQueryData.fromWindow(WidgetsBinding.instance.window)
                       .size
                       .width,
                   brightness)
-              .headlineSmall!
-              .copyWith(fontWeight: FontWeight.bold)
+              .headlineMedium!
+              .copyWith(
+                fontWeight: FontWeight.bold,
+                color: brightness.isLight ? Colors.black : Colors.white,
+              )
           // titleTextStyle: TextStyle(
           //   fontSize: 20,
           //   fontWeight: FontWeight.bold,
@@ -41,10 +45,11 @@ class AlvysTheme {
           // ),
           ),
       elevatedButtonTheme: ElevatedButtonThemeData(
-          style: ElevatedButton.styleFrom(
-        backgroundColor: ColorManager.primary(brightness),
-        foregroundColor: Colors.white,
-      )),
+        style: ElevatedButton.styleFrom(
+          backgroundColor: ColorManager.primary(brightness),
+          foregroundColor: Colors.white,
+        ),
+      ),
       cardColor: brightness.isLight ? Colors.white : const Color(0XFF232323),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
         backgroundColor: brightness.isLight
@@ -60,9 +65,17 @@ class AlvysTheme {
         border: AlvysOutlineBorder(brightness),
       ),
       textSelectionTheme: TextSelectionThemeData(
-          cursorColor: ColorManager.primary(brightness),
-          selectionHandleColor: ColorManager.primary(brightness),
-          selectionColor: ColorManager.primary(brightness).withOpacity(0.5)),
+        cursorColor: ColorManager.primary(brightness),
+        selectionHandleColor: ColorManager.primary(brightness),
+        selectionColor: ColorManager.primary(brightness).withOpacity(0.5),
+      ),
+      radioTheme: RadioThemeData(
+        fillColor: AlvysMaterialStateColor(brightness),
+      ),
+      cardTheme: CardTheme(
+        elevation: 2,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+      ),
     );
   }
 
@@ -96,8 +109,7 @@ class AlvysTheme {
   //   displayLarge: const TextStyle(
   //       fontSize: 11, fontWeight: FontWeight.w400, wordSpacing: 1.5),
   // );
-  static TextTheme defaultTextTheme =
-      GoogleFonts.poppinsTextTheme(const TextTheme(
+  static TextTheme defaultTextTheme = const TextTheme(
     displayLarge: TextStyle(
       // height: 64,
       fontSize: 57,
@@ -156,7 +168,7 @@ class AlvysTheme {
         // height: 20,
         fontSize: 16,
         wordSpacing: 0.1,
-        fontWeight: FontWeight.w800,
+        fontWeight: FontWeight.w700,
         color: Colors.grey),
     labelMedium: TextStyle(
       // height: 16,
@@ -174,7 +186,7 @@ class AlvysTheme {
       // height: 24,
       fontSize: 16,
       wordSpacing: 0.15,
-      fontWeight: FontWeight.w400,
+      fontWeight: FontWeight.w600,
     ),
     bodyMedium: TextStyle(
       // height: 20,
@@ -188,11 +200,11 @@ class AlvysTheme {
       wordSpacing: 0.4,
       fontWeight: FontWeight.w400,
     ),
-  ));
+  );
   static TextTheme appTextTheme(double width, Brightness brightness) {
-    return defaultTextTheme.apply(
+    return GoogleFonts.poppinsTextTheme(defaultTextTheme.apply(
       fontSizeFactor: (width / 1000) * 2.3,
-    );
+    ));
   }
 }
 
@@ -225,13 +237,17 @@ class AlvysMaterialStateColor extends MaterialStateColor {
   const AlvysMaterialStateColor(this.brightness) : super(0);
   @override
   Color resolve(Set<MaterialState> states) {
-    Color color = ColorManager.primary(brightness).withOpacity(0.8);
+    Color color = Colors.grey;
     if (states.contains(MaterialState.error)) {
       color = ColorManager.cancelColor;
     }
-    // if (states.contains(MaterialState.disabled)) {
-    //   color = Colors.transparent;
-    // }
+    if (states.contains(MaterialState.disabled)) {
+      color = Colors.grey.withOpacity(0.5);
+    }
+    if (states.contains(MaterialState.focused) ||
+        states.contains(MaterialState.selected)) {
+      color = ColorManager.primary(brightness).withOpacity(0.8);
+    }
     return color;
   }
 }

@@ -2,6 +2,7 @@
 import 'package:alvys3/src/common_widgets/textfield_input.dart';
 import 'package:alvys3/src/features/authentication/domain/models/phonenumber/phonenumber.dart';
 import 'package:alvys3/src/routing/routes.dart';
+import 'package:flutter/services.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:reactive_forms/reactive_forms.dart';
@@ -75,13 +76,18 @@ class _SignInPageState extends State<SignInPage> with InputValidationMixin {
                 const SizedBox(
                   height: 16,
                 ),
-                TextfieldInput(
-                    hint: "(###) ###-####",
-                    inputFormatters: [phoneNumberMaskFormatter],
-                    textAlignment: TextAlign.center,
-                    textfieldController: phoneNumber,
-                    isFocus: true,
-                    keyboardType: TextInputType.number),
+                TextField(
+                  keyboardType: TextInputType.number,
+                  inputFormatters: [phoneNumberMaskFormatter],
+                  // maxLength: 10,
+                  autofocus: true,
+                  decoration: const InputDecoration(hintText: "(###) ###-####"),
+                ),
+                // TextfieldInput(
+                //     hint: "Phone",
+                //     textfieldController: phoneNumber,
+                //     isFocus: true,
+                //     keyboardType: TextInputType.number),
                 const SizedBox(
                   height: 16,
                 ),

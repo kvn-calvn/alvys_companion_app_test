@@ -18,28 +18,20 @@ class StopCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return GestureDetector(
-      onTap: () {
-        ref
-            .watch(tripPageControllerProvider.notifier)
-            .setCurrentStop(stop.stopId!);
-        context.pushNamed('stopDetails');
-      },
-      child: Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
-        child: Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: Theme.of(context).cardColor,
-            borderRadius: BorderRadius.circular(10),
-            boxShadow: const [
-              BoxShadow(
-                blurRadius: 2,
-                color: Color(0x3416202A),
-                offset: Offset(0, 1),
-              )
-            ],
-          ),
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Material(
+        elevation: 2,
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(10),
+        clipBehavior: Clip.antiAlias,
+        child: InkWell(
+          onTap: () {
+            ref
+                .watch(tripPageControllerProvider.notifier)
+                .setCurrentStop(stop.stopId!);
+            context.pushNamed('stopDetails');
+          },
           child: Row(
             children: [
               Padding(

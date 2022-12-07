@@ -16,33 +16,26 @@ class TripCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return GestureDetector(
-      onTap: () {
-        ref.read(tripPageControllerProvider.notifier).setCurrentTrip(trip.id!);
-        context.pushNamed(
-          'tripDetails',
-          queryParams: <String, String>{
-            'tripNumber': trip.tripNumber!,
-            'tripId': trip.id!
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Material(
+        color: Theme.of(context).cardColor,
+        borderRadius: BorderRadius.circular(12),
+        clipBehavior: Clip.antiAlias,
+        elevation: 4,
+        child: InkWell(
+          onTap: () {
+            ref
+                .read(tripPageControllerProvider.notifier)
+                .setCurrentTrip(trip.id!);
+            context.pushNamed(
+              'tripDetails',
+              queryParams: <String, String>{
+                'tripNumber': trip.tripNumber!,
+                'tripId': trip.id!
+              },
+            );
           },
-        );
-      },
-      child: Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 0),
-        child: Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: Theme.of(context).cardColor,
-            boxShadow: const [
-              BoxShadow(
-                blurRadius: 2,
-                color: Color(0x3416202A),
-                offset: Offset(0, 1),
-              )
-            ],
-            borderRadius: BorderRadius.circular(12),
-            shape: BoxShape.rectangle,
-          ),
           child: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(15, 5, 15, 5),
             child: Column(

@@ -21,6 +21,16 @@ extension ListExt<T> on Iterable<T>? {
     }
     return this!.map((e) => e).toList();
   }
+
+  bool get isNullOrEmpty {
+    if (this == null) return true;
+    return this!.isEmpty;
+  }
+
+  bool get isNotNullOrEmpty {
+    if (this == null) return false;
+    return this!.isNotEmpty;
+  }
 }
 
 extension StringExt on String? {
@@ -43,6 +53,22 @@ extension StringExt on String? {
     if (this == null) return false;
     return this!.isNotEmpty;
   }
+
+  String get sentenceCase {
+    if (this == null) return "";
+    return this!.isNotEmpty
+        ? '${this![0].toUpperCase()}${this!.substring(1).toLowerCase()}'
+        : '';
+  }
+
+  String get titleCase {
+    if (this == null) return "";
+    return this!
+        .replaceAll(RegExp(' +'), ' ')
+        .split(" ")
+        .map((str) => str.sentenceCase)
+        .join(" ");
+  }
 }
 
 extension DoubleExt on double? {
@@ -54,4 +80,8 @@ extension DoubleExt on double? {
 
 extension BrightnessExtn on Brightness {
   bool get isLight => this == Brightness.light;
+}
+
+extension EnumExtn on Enum {
+  String get toTitleCase => name.titleCase;
 }
