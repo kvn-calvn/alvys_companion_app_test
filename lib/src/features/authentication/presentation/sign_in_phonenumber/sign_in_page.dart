@@ -3,6 +3,7 @@ import 'package:alvys3/src/common_widgets/textfield_input.dart';
 import 'package:alvys3/src/features/authentication/domain/models/phonenumber/phonenumber.dart';
 import 'package:alvys3/src/routing/routes.dart';
 import 'package:go_router/go_router.dart';
+import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:reactive_forms/reactive_forms.dart';
 
 import 'package:alvys3/src/constants/color.dart';
@@ -25,6 +26,11 @@ class _SignInPageState extends State<SignInPage> with InputValidationMixin {
 
   final formGlobalKey = GlobalKey<FormState>();
 
+  var phoneNumberMaskFormatter = MaskTextInputFormatter(
+      mask: '(###) ###-####',
+      filter: {"#": RegExp(r'[0-9]')},
+      type: MaskAutoCompletionType.lazy);
+
   final form = FormGroup({
     'phone': FormControl(validators: [
       Validators.required,
@@ -39,16 +45,20 @@ class _SignInPageState extends State<SignInPage> with InputValidationMixin {
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
         key: scaffoldKey,
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          elevation: 0,
+        ),
         body: SafeArea(
           child: Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
+            padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
             child: Column(
               mainAxisSize: MainAxisSize.max,
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(
-                  height: 95,
+                  height: 25,
                 ),
                 Text(
                   'Enter your 10 digit phone number',
@@ -56,9 +66,9 @@ class _SignInPageState extends State<SignInPage> with InputValidationMixin {
                   style: Theme.of(context).textTheme.headlineLarge,
                 ),
                 const SizedBox(
-                  height: 19,
+                  height: 20,
                 ),
-                Text(
+                const Text(
                   'A text message with a verification code will be sent to the number.',
                   textAlign: TextAlign.center,
                 ),
@@ -66,7 +76,9 @@ class _SignInPageState extends State<SignInPage> with InputValidationMixin {
                   height: 16,
                 ),
                 TextfieldInput(
-                    hint: "Phone",
+                    hint: "(###) ###-####",
+                    inputFormatters: [phoneNumberMaskFormatter],
+                    textAlignment: TextAlign.center,
                     textfieldController: phoneNumber,
                     isFocus: true,
                     keyboardType: TextInputType.number),

@@ -38,6 +38,7 @@ dependencies:
   flutter_cache_manager: ^3.3.0
   pdf_viewer_plugin: ^2.0.1
   flutter_gen: ^5.1.0+1
+  mask_text_input_formatter: ^2.4.0
 
 dev_dependencies:
   flutter_test:

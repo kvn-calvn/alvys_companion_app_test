@@ -57,9 +57,7 @@ class _PhoneNumberVerificationPageState
   @override
   Widget build(BuildContext context) {
     const length = 5;
-    const borderColor = Color.fromRGBO(114, 178, 238, 1);
     const errorColor = Color.fromRGBO(255, 234, 238, 1);
-    const fillColor = Color.fromARGB(203, 235, 245, 255);
     final defaultPinTheme = PinTheme(
       width: 56,
       height: 60,
@@ -77,10 +75,21 @@ class _PhoneNumberVerificationPageState
       onTap: () => (focusNode.unfocus()),
       child: Scaffold(
         key: scaffoldKey,
-        //backgroundColor:
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          elevation: 0,
+          leading: IconButton(
+            icon: Icon(
+              Icons.adaptive.arrow_back,
+            ),
+            onPressed: () {
+              GoRouter.of(context).pop();
+            },
+          ),
+        ),
         body: SafeArea(
           child: Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(10, 0, 10, 0),
+            padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
             child: Form(
               key: formKey,
               child: Column(
@@ -89,15 +98,15 @@ class _PhoneNumberVerificationPageState
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   const SizedBox(
-                    height: 95,
+                    height: 25,
                   ),
                   Text('Verification',
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.headlineLarge),
                   const SizedBox(
-                    height: 19,
+                    height: 20,
                   ),
-                  Text(
+                  const Text(
                     'Enter the code sent to the number.',
                     textAlign: TextAlign.center,
                   ),
@@ -105,7 +114,7 @@ class _PhoneNumberVerificationPageState
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.titleMedium),
                   const SizedBox(
-                    height: 16,
+                    height: 40,
                   ),
                   Pinput(
                     length: length,
@@ -133,7 +142,7 @@ class _PhoneNumberVerificationPageState
                     ),
                   ),
                   const SizedBox(
-                    height: 10,
+                    height: 20,
                   ),
                   ButtonStyle1(
                       isDisable: false,

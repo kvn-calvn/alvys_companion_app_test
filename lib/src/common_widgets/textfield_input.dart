@@ -1,5 +1,6 @@
 import 'package:alvys3/src/constants/color.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class TextfieldInput extends StatelessWidget {
   const TextfieldInput(
@@ -8,6 +9,8 @@ class TextfieldInput extends StatelessWidget {
       required this.textfieldController,
       this.isDisabled = false,
       this.isFocus = false,
+      this.textAlignment = TextAlign.left,
+      this.inputFormatters,
       required this.keyboardType})
       : super(key: key);
 
@@ -16,13 +19,17 @@ class TextfieldInput extends StatelessWidget {
   final TextInputType keyboardType;
   final bool isDisabled;
   final bool isFocus;
+  final TextAlign textAlignment;
+  final List<TextInputFormatter>? inputFormatters;
 
   @override
   Widget build(BuildContext context) {
     return TextField(
+      textAlign: textAlignment,
       controller: textfieldController,
       keyboardType: keyboardType,
       autofocus: isFocus,
+      inputFormatters: inputFormatters,
       textInputAction: TextInputAction.next,
       decoration: InputDecoration(
         hintText: hint,
