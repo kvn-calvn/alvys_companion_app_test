@@ -52,15 +52,14 @@ class AlvysTheme {
       ),
       cardColor: brightness.isLight ? Colors.white : const Color(0XFF232323),
       bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        backgroundColor: brightness.isLight
-            ? Colors.white
-            : const Color.fromARGB(255, 0, 0, 0),
+        backgroundColor:
+            brightness.isLight ? Colors.white : const Color(0XFF232323),
         selectedItemColor: ColorManager.primary(brightness),
         unselectedItemColor: Colors.grey,
       ),
       inputDecorationTheme: InputDecorationTheme(
         isDense: true,
-        fillColor: brightness.isLight ? Colors.white : Colors.black,
+        fillColor: brightness.isLight ? Colors.white : ColorManager.lightgrey2,
         filled: true,
         border: AlvysOutlineBorder(brightness),
       ),
@@ -225,7 +224,7 @@ class AlvysOutlineBorder extends MaterialStateUnderlineInputBorder {
       color = Colors.transparent;
     }
     return OutlineInputBorder(
-      borderSide: BorderSide(color: color, width: 0.5),
+      borderSide: BorderSide(color: color, width: 1),
       borderRadius: BorderRadius.circular(10),
     );
   }

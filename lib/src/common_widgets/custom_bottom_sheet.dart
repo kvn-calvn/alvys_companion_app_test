@@ -22,31 +22,42 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
         constraints: BoxConstraints(maxHeight: constraints.maxHeight * 0.5),
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
-          color: Theme.of(context).primaryColor,
+          color: Theme.of(context).cardColor,
           borderRadius: const BorderRadius.only(
             topLeft: Radius.circular(20),
             topRight: Radius.circular(20),
           ),
         ),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Container(
-                height: 8,
-                width: 40,
-                decoration: BoxDecoration(
-                  color: Colors.grey,
-                  borderRadius: BorderRadius.circular(4),
-                ),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    height: 6,
+                    width: 50,
+                    margin: const EdgeInsets.only(top: 10),
+                    decoration: BoxDecoration(
+                      color: Colors.grey,
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                  ),
+                  Flexible(
+                    child: SingleChildScrollView(
+                      child: widget.child,
+                    ),
+                  ),
+                ],
               ),
-              Flexible(
-                  child: SingleChildScrollView(
-                child: widget.child,
-              ))
-            ],
-          ),
+            ),
+            const Divider(
+              color: Colors.grey,
+              height: 0,
+            )
+          ],
         ),
       );
     });
