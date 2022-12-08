@@ -29,7 +29,10 @@ class ButtonStyle1 extends StatelessWidget {
       ),
       child: Text(
         isLoading ? "Loading.." : title,
-        style: getRegularStyle(color: ColorManager.white),
+        style: Theme.of(context)
+            .textTheme
+            .labelLarge!
+            .copyWith(color: Colors.white),
       ),
     );
   }

@@ -34,7 +34,7 @@ class _EcheckPageState extends ConsumerState<EcheckPage> {
       key: scaffoldKey,
       appBar: AppBar(
         title: const Text(
-          'EChecks',
+          'E-Checks',
         ),
         leading: IconButton(
           // 1

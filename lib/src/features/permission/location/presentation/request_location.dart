@@ -39,8 +39,7 @@ class RequestLocation extends StatelessWidget {
                       ? 'Alvys driver companion collects your location data to enable real time driver location tracking even when the app is closed or not in use.'
                       : 'Alvys uses your location data to track the movement of loads you have been assigned.',
                   textAlign: TextAlign.center,
-                  style:
-                      getMediumStyle(color: ColorManager.white, fontSize: 16),
+                  style: Theme.of(context).textTheme.labelLarge,
                 ),
                 const SizedBox(
                   height: 30,

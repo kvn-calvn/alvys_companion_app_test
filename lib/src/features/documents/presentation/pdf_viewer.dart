@@ -82,7 +82,7 @@ class _PDFViewerState extends State<PDFViewer> {
         title: Text(
           widget.documentType,
           textAlign: TextAlign.start,
-          style: getBoldStyle(color: ColorManager.darkgrey, fontSize: 20),
+          style: Theme.of(context).textTheme.titleMedium,
         ),
         leading: IconButton(
           icon: const Icon(

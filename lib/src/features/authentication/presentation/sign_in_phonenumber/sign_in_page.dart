@@ -1,27 +1,22 @@
-// ignore_for_file: unnecessary_string_escapes
-import 'package:alvys3/src/common_widgets/textfield_input.dart';
-import 'package:alvys3/src/features/authentication/domain/models/phonenumber/phonenumber.dart';
-import 'package:alvys3/src/routing/routes.dart';
-import 'package:flutter/services.dart';
+import 'package:alvys3/src/features/authentication/presentation/auth_provider_controller.dart';
+import 'package:alvys3/src/utils/extensions.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
-import 'package:reactive_forms/reactive_forms.dart';
 
 import 'package:alvys3/src/constants/color.dart';
 import 'package:alvys3/src/constants/text_styles.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
-import 'sign_in_page_controller.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-class SignInPage extends StatefulWidget {
+class SignInPage extends ConsumerStatefulWidget {
   const SignInPage({Key? key}) : super(key: key);
 
   @override
-  State<SignInPage> createState() => _SignInPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _SignInPageState();
 }
 
-class _SignInPageState extends State<SignInPage> with InputValidationMixin {
+class _SignInPageState extends ConsumerState<SignInPage>
+    with InputValidationMixin {
   final scaffoldKey = GlobalKey<ScaffoldState>();
   final TextEditingController phoneNumber = TextEditingController();
 
@@ -31,15 +26,6 @@ class _SignInPageState extends State<SignInPage> with InputValidationMixin {
       mask: '(###) ###-####',
       filter: {"#": RegExp(r'[0-9]')},
       type: MaskAutoCompletionType.lazy);
-
-  final form = FormGroup({
-    'phone': FormControl(validators: [
-      Validators.required,
-      Validators.number,
-      Validators.minLength(10)
-    ])
-  });
-
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -79,6 +65,7 @@ class _SignInPageState extends State<SignInPage> with InputValidationMixin {
                 TextField(
                   keyboardType: TextInputType.number,
                   inputFormatters: [phoneNumberMaskFormatter],
+                  onChanged: ref.read(authProvider.notifier).setPhone,
                   textAlign: TextAlign.center,
                   autofocus: true,
                   decoration: const InputDecoration(hintText: "(###) ###-####"),
@@ -94,7 +81,8 @@ class _SignInPageState extends State<SignInPage> with InputValidationMixin {
                 ButtonStyle1(
                     title: "Next",
                     isLoading: false,
-                    isDisable: false,
+                    isDisable:
+                        ref.watch(authProvider).value!.phone.length != 10,
                     onPressAction: () {
                       context.pushNamed(
                         'Verify',
@@ -257,13 +245,13 @@ class ButtonStyle1 extends StatelessWidget {
       style: ElevatedButton.styleFrom(
         minimumSize: const Size.fromHeight(60),
         backgroundColor: ColorManager.primary(Theme.of(context).brightness),
+        textStyle: Theme.of(context).textTheme.titleLarge,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),
       ),
       child: Text(
         isLoading ? "Loading.." : title,
-        style: getRegularStyle(color: ColorManager.white),
       ),
     );
   }

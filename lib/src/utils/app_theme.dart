@@ -42,10 +42,22 @@ class AlvysTheme {
           //   color: brightness.isLight ? Colors.black : Colors.white,
           // ),
           ),
+      buttonTheme: const ButtonThemeData(textTheme: ButtonTextTheme.primary),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
           backgroundColor: ColorManager.primary(brightness),
-          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          textStyle: appTextTheme(
+                  MediaQueryData.fromWindow(WidgetsBinding.instance.window)
+                      .size
+                      .width,
+                  brightness)
+              .titleSmall!
+              .copyWith(
+                fontWeight: FontWeight.bold,
+              ),
         ),
       ),
       cardColor: ColorManager.cardColor(brightness),
@@ -243,6 +255,20 @@ class AlvysMaterialStateColor extends MaterialStateColor {
     if (states.contains(MaterialState.focused) ||
         states.contains(MaterialState.selected)) {
       color = ColorManager.primary(brightness).withOpacity(0.8);
+    }
+    return color;
+  }
+}
+
+class AlvysButtonMaterialStateColor extends MaterialStateColor {
+  final Brightness brightness;
+
+  const AlvysButtonMaterialStateColor(this.brightness) : super(0);
+  @override
+  Color resolve(Set<MaterialState> states) {
+    Color color = Colors.white;
+    if (states.contains(MaterialState.disabled)) {
+      color = Colors.green;
     }
     return color;
   }

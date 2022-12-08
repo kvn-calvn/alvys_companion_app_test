@@ -1,31 +1,25 @@
 import 'package:alvys3/src/common_widgets/buttons.dart';
 import 'package:alvys3/src/constants/color.dart';
-import 'package:alvys3/src/constants/text_styles.dart';
-import 'package:alvys3/src/features/authentication/domain/models/verified/verified.dart';
-import 'package:alvys3/src/routing/routes.dart';
-import 'package:alvys3/src/utils/app_theme.dart';
 import 'package:alvys3/src/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pinput/pinput.dart';
-import 'package:reactive_forms/reactive_forms.dart';
-import 'package:rflutter_alert/rflutter_alert.dart';
 
-import 'phone_verification_controller.dart';
+import '../auth_provider_controller.dart';
 
-class PhoneNumberVerificationPage extends StatefulWidget {
+class PhoneNumberVerificationPage extends ConsumerStatefulWidget {
   const PhoneNumberVerificationPage({Key? key}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
-  _PhoneNumberVerificationPageState createState() =>
+  ConsumerState<ConsumerStatefulWidget> createState() =>
       _PhoneNumberVerificationPageState();
 }
 
 class _PhoneNumberVerificationPageState
-    extends State<PhoneNumberVerificationPage> {
+    extends ConsumerState<PhoneNumberVerificationPage> {
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   final pinController = TextEditingController();
@@ -113,7 +107,7 @@ class _PhoneNumberVerificationPageState
                     'Enter the code sent to the number.',
                     textAlign: TextAlign.center,
                   ),
-                  Text('+909 462 3310',
+                  Text(ref.watch(authProvider).value!.phone.toPhoneNumberString,
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.titleMedium),
                   const SizedBox(
@@ -123,6 +117,8 @@ class _PhoneNumberVerificationPageState
                     length: length,
                     controller: pinController,
                     focusNode: focusNode,
+                    onChanged:
+                        ref.watch(authProvider.notifier).setVerificationCode,
                     defaultPinTheme: defaultPinTheme(context),
                     cursor: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 12.0),
@@ -161,7 +157,12 @@ class _PhoneNumberVerificationPageState
                     height: 20,
                   ),
                   ButtonStyle1(
-                      isDisable: false,
+                      isDisable: ref
+                              .watch(authProvider)
+                              .value!
+                              .verificationCode
+                              .length !=
+                          5,
                       onPressAction: () {
                         //context.goNamed('Trips');
                         context.goNamed('LocationPermission');

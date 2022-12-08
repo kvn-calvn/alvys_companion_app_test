@@ -37,8 +37,7 @@ class RequestNotification extends StatelessWidget {
                 Text(
                   'Get notified when you are assigned a load and other critical updates.',
                   textAlign: TextAlign.center,
-                  style:
-                      getMediumStyle(color: ColorManager.white, fontSize: 16),
+                  style: Theme.of(context).textTheme.labelLarge,
                 ),
                 const SizedBox(
                   height: 30,
