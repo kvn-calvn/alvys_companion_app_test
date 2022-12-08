@@ -1,5 +1,6 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
+import 'package:alvys3/src/common_widgets/empty_view.dart';
 import 'package:alvys3/src/common_widgets/large_nav_button.dart';
 import 'package:alvys3/src/constants/color.dart';
 import 'package:alvys3/src/constants/text_styles.dart';
@@ -108,16 +109,6 @@ class TripList extends ConsumerWidget {
                         },
                       ),
                     ],
-
-                    /*LargeNavButton(
-                      title: "Processing",
-                      onPressed: () {
-                        context.pushNamed('processing', extra: {
-                          'processingTrips': _processingTripsData,
-                          'title': "Processing"
-                        });
-                      },
-                    ),*/
                     if (value.activeTrips.isNotEmpty) ...[
                       Column(
                         children: [
@@ -127,10 +118,12 @@ class TripList extends ConsumerWidget {
                       )
                       //
                     ] else ...[
-                      const Center(
-                        heightFactor: 10,
-                        child: Text(
-                            "You do not have any active trip at the moment."),
+                      // ignore: prefer_const_constructors
+                      Align(
+                        alignment: Alignment.center,
+                        child: const EmptyView(
+                            title: "No Trips",
+                            description: "Assigned trips will appear here."),
                       )
                     ],
                   ],

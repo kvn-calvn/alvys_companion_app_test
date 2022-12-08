@@ -1,6 +1,7 @@
 // ignore_for_file: constant_identifier_names
 
 import 'package:alvys3/src/constants/api_routes.dart';
+import 'package:alvys3/src/network/dio_factory.dart';
 import 'package:alvys3/src/network/user_token_handler.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -24,8 +25,9 @@ class ApiClient {
     Map<String, String> headers = {
       CONTENT_TYPE: APPLICATION_JSON,
       ACCEPT: APPLICATION_JSON,
+      //AUTHORIZATION: Basic Y1JleVdBeTUyZ2c6YlVkbkxURmxNMkU0WW1RMExURTJOMlF0TkRrNE9TMWhPVGczTFRKa1pqSTVZV00yTWpWbE1DMDFTR1pK',
       AUTHORIZATION:
-          'Basic Y1JleVdBeTUyZ2c6YlVkbkxURmxNMkU0WW1RMExURTJOMlF0TkRrNE9TMWhPVGczTFRKa1pqSTVZV00yTWpWbE1DMDFTR1pK',
+          'Basic c1UxN1pnRVEyUWc6UWxSaUxUbGxZVFV4TTJabUxXUTRNRFl0TkdZNVlTMWlNVGt3TFRFeU1EWmlZemM0T1dFNE1DMHlOSFZv',
       DEFAULT_LANGUAGE: "en" // todo get lang from app prefs
     };
 
