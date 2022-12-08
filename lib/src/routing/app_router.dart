@@ -1,6 +1,7 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
 import 'package:alvys3/src/common_widgets/main_bottom_nav.dart';
+import 'package:alvys3/src/features/authentication/presentation/auth_provider_controller.dart';
 import 'package:alvys3/src/features/authentication/presentation/sign_in_phonenumber/sign_in_page.dart';
 import 'package:alvys3/src/features/authentication/presentation/verify_phonenumber/phone_verification_page.dart';
 import 'package:alvys3/src/features/documents/presentation/pdf_viewer.dart';
@@ -16,6 +17,7 @@ import 'package:alvys3/src/features/trips/presentation/trip/load_list_page.dart'
 import 'package:alvys3/src/features/trips/presentation/tripdetails/trip_details_page.dart';
 import 'package:alvys3/src/routing/error_page.dart';
 import 'package:alvys3/src/routing/landing.dart';
+import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -26,6 +28,9 @@ final _shellNavigatorKey = GlobalKey<NavigatorState>();
 final routerProvider = Provider(
   ((ref) => GoRouter(
         initialLocation: '/landing',
+        //  ref.watch(authProvider).value!.driver == null
+        //     ? '/landing'
+        //     : '/trips',
         debugLogDiagnostics: true,
         routes: [
           GoRoute(
@@ -84,16 +89,10 @@ final routerProvider = Provider(
                       name: 'delivered',
                       path: 'delivered',
                       builder: (context, state) {
-                        final Map<String, Object> extra =
-                            state.extra! as Map<String, Object>;
-
-                        final String _title = extra['title']! as String;
-                        final List<Object> _deliveredTrips =
-                            extra['deliveredTrips']! as List<Object>;
-
+                        final TripFilterType extra =
+                            state.extra! as TripFilterType;
                         return FilteredTripPage(
-                          trips: _deliveredTrips,
-                          title: _title,
+                          filterType: extra,
                         );
                       },
                     ),
@@ -101,15 +100,10 @@ final routerProvider = Provider(
                       name: 'processing',
                       path: 'processing',
                       builder: (context, state) {
-                        final Map<String, Object> extra =
-                            state.extra! as Map<String, Object>;
-
-                        final String _title = extra['title']! as String;
-                        final List<Object> _processingTripsData =
-                            extra['processingTrips']! as List<Object>;
+                        final TripFilterType extra =
+                            state.extra! as TripFilterType;
                         return FilteredTripPage(
-                          trips: _processingTripsData,
-                          title: _title,
+                          filterType: extra,
                         );
                       },
                     ),

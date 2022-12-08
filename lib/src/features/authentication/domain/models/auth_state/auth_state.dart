@@ -13,6 +13,7 @@ class AuthState with _$AuthState {
     String? userTenantCompanyCode,
     @Default('') String phone,
     @Default('') String verificationCode,
+    @Default(false) bool driverLoggedIn,
   }) = _AuthState;
   UserTenant get currentUserTenant => driver!.userTenants
       .firstWhere((element) => element.companyCode == userTenantCompanyCode);

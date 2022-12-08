@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
 
-Future<T?> showCustomBottomSheet<T>(BuildContext context, Widget child) =>
+Future<T?> showCustomBottomSheet<T>(BuildContext context, Widget child,
+        {Widget? title}) =>
     showModalBottomSheet(
+        useRootNavigator: true,
         backgroundColor: Colors.transparent,
         context: context,
-        builder: (context) => CustomBottomSheet(child: child));
+        builder: (context) => CustomBottomSheet(
+              title: title,
+              child: child,
+            ));
 
 class CustomBottomSheet extends StatefulWidget {
   final Widget child;
-  const CustomBottomSheet({Key? key, required this.child}) : super(key: key);
+  final Widget? title;
+
+  const CustomBottomSheet({Key? key, required this.child, this.title})
+      : super(key: key);
 
   @override
   State<CustomBottomSheet> createState() => _CustomBottomSheetState();
@@ -19,7 +27,8 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
       return Container(
-        constraints: BoxConstraints(maxHeight: constraints.maxHeight * 0.5),
+        constraints:
+            BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.5),
         clipBehavior: Clip.antiAlias,
         decoration: BoxDecoration(
           color: Theme.of(context).cardColor,
@@ -28,36 +37,41 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
             topRight: Radius.circular(20),
           ),
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Container(
-                    height: 6,
-                    width: 50,
-                    margin: const EdgeInsets.only(top: 10),
-                    decoration: BoxDecoration(
-                      color: Colors.grey,
-                      borderRadius: BorderRadius.circular(4),
+        child: SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Container(
+                      height: 5,
+                      width: 55,
+                      margin: const EdgeInsets.only(top: 10),
+                      decoration: BoxDecoration(
+                        color: Colors.grey,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
                     ),
-                  ),
-                  Flexible(
-                    child: SingleChildScrollView(
-                      child: widget.child,
+                    Flexible(
+                      child: SingleChildScrollView(
+                        child: widget.child,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-            const Divider(
-              color: Colors.grey,
-              height: 0,
-            )
-          ],
+              if (widget.title != null)
+                DefaultTextStyle.merge(
+                    child: widget.title!,
+                    style: Theme.of(context)
+                        .textTheme
+                        .titleLarge!
+                        .copyWith(fontWeight: FontWeight.w300))
+            ],
+          ),
         ),
       );
     });

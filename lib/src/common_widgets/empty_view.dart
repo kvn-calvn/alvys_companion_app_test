@@ -9,17 +9,26 @@ class EmptyView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            title,
-            style: Theme.of(context).textTheme.bodyLarge,
+    return LayoutBuilder(builder: (context, constraints) {
+      return SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: Container(
+          height: constraints.maxHeight,
+          alignment: Alignment.center,
+          child: Center(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  title,
+                  style: Theme.of(context).textTheme.bodyLarge,
+                ),
+                Text(description, style: Theme.of(context).textTheme.bodyText2)
+              ],
+            ),
           ),
-          Text(description, style: Theme.of(context).textTheme.bodyText2)
-        ],
-      ),
-    );
+        ),
+      );
+    });
   }
 }

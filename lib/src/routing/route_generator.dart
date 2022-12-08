@@ -11,6 +11,7 @@ import 'package:alvys3/src/features/trips/presentation/tripdetails/trip_details_
 import 'package:alvys3/src/features/trips/presentation/trip/load_list_page.dart';
 import 'package:alvys3/src/routing/routes.dart';
 import 'package:alvys3/src/routing/routing_arguments.dart';
+import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
 import 'landing.dart';
@@ -44,12 +45,11 @@ class RouteGenerator {
             child: EcheckPage(tripId: arguments.tripId),
             type: PageTransitionType.rightToLeft);
       case Routes.deliveredTripsRoute:
-        final arguments = settings.arguments as FilteredTripsArguments;
+        final arguments = settings.arguments as TripFilterType;
 
         return PageTransition(
             child: FilteredTripPage(
-              trips: arguments.data,
-              title: arguments.title,
+              filterType: arguments,
             ),
             type: PageTransitionType.rightToLeft);
 
@@ -70,12 +70,11 @@ class RouteGenerator {
             child: const StopDetailsPage(),
             type: PageTransitionType.rightToLeft);
       case Routes.processingTripsRoute:
-        final arguments = settings.arguments as FilteredTripsArguments;
+        final arguments = settings.arguments as TripFilterType;
 
         return PageTransition(
             child: FilteredTripPage(
-              trips: arguments.data,
-              title: arguments.title,
+              filterType: arguments,
             ),
             type: PageTransitionType.rightToLeft);
 
