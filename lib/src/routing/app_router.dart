@@ -8,6 +8,7 @@ import 'package:alvys3/src/features/documents/presentation/trip_docs_page.dart';
 import 'package:alvys3/src/features/echeck/presentation/echeck_page.dart';
 import 'package:alvys3/src/features/permission/location/presentation/request_location.dart';
 import 'package:alvys3/src/features/permission/notification/request_notification.dart';
+import 'package:alvys3/src/features/settings/presentation/profile_page.dart';
 import 'package:alvys3/src/features/settings/presentation/settings_page.dart';
 import 'package:alvys3/src/features/trips/presentation/stopdetails/stop_details_page.dart';
 import 'package:alvys3/src/features/trips/presentation/trip/filtered_trip_page.dart';
@@ -167,12 +168,28 @@ final routerProvider = Provider(
                   ],
                 ),
                 GoRoute(
-                  name: 'Settings',
-                  path: '/settings',
-                  builder: (context, state) {
-                    return const SettingsPage();
-                  },
-                ),
+                    name: 'Settings',
+                    path: '/settings',
+                    builder: (context, state) {
+                      return const SettingsPage();
+                    },
+                    routes: [
+                      GoRoute(
+                          name: 'ProfileView',
+                          path: 'profile',
+                          builder: (context, state) {
+                            return const ProfilePage();
+                          },
+                          routes: [
+                            GoRoute(
+                              name: 'EditProfile',
+                              path: 'editprofile',
+                              builder: (context, state) {
+                                return const RequestNotification();
+                              },
+                            ),
+                          ]),
+                    ]),
               ])
         ],
         errorPageBuilder: (context, state) => MaterialPage(

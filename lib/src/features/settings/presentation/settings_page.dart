@@ -1,8 +1,10 @@
 import 'package:alvys3/src/common_widgets/custom_bottom_sheet.dart';
 import 'package:alvys3/src/common_widgets/large_nav_button.dart';
+import 'package:alvys3/src/common_widgets/profile_nav_button.dart';
 import 'package:alvys3/src/common_widgets/theme_switcher.dart';
 import 'package:alvys3/src/constants/color.dart';
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -42,38 +44,33 @@ class SettingsList extends StatelessWidget {
     return ListView(
       scrollDirection: Axis.vertical,
       children: [
-        Text(
-          'Sandbox Driver',
-          textAlign: TextAlign.start,
-        ),
-        Text(
-          'app@alvys.com',
-          textAlign: TextAlign.start,
-        ),
         const SizedBox(
           height: 10,
         ),
-        LargeNavButton(
-          title: "Profile",
-          onPressed: () {},
+        ProfileNavButton(
+          title: "Sandbox Driver",
+          profileImageUrl: 'https://via.placeholder.com/150',
+          onPressed: () {
+            context.pushNamed("ProfileView");
+          },
         ),
         LargeNavButton(
           title: "My Documents",
           onPressed: () {},
         ),
         LargeNavButton(
-          title: "Trip Report",
+          title: "Paystubs",
           onPressed: () {},
         ),
         LargeNavButton(
-          title: "Paystubs",
+          title: "Trip Report",
           onPressed: () {},
         ),
         const SizedBox(
           height: 15,
         ),
         LargeNavButton(
-          title: "Change Theme",
+          title: "Theme",
           onPressed: () {
             showCustomBottomSheet(context, const ThemeSwitcher());
           },
@@ -83,7 +80,7 @@ class SettingsList extends StatelessWidget {
           onPressed: () {},
         ),
         LargeNavButton(
-          title: "Tutorial",
+          title: "Help",
           onPressed: () {},
         ),
         LargeNavButton(

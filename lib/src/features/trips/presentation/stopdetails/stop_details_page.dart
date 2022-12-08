@@ -1,12 +1,10 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
 import 'package:alvys3/src/constants/color.dart';
-import 'package:alvys3/src/constants/text_styles.dart';
 import 'package:alvys3/src/features/trips/presentation/trip/trip_page_controller.dart';
 import 'package:alvys3/src/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../domain/app_trip/m_comodity.dart';

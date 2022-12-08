@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 
-class LargeNavButton extends StatelessWidget {
-  const LargeNavButton({
+class ProfileNavButton extends StatelessWidget {
+  const ProfileNavButton({
     Key? key,
     required this.title,
     required this.onPressed,
-    this.icon,
+    required this.profileImageUrl,
   }) : super(key: key);
 
   final String title;
-  final Icon? icon;
+  final String profileImageUrl;
   final void Function()? onPressed;
 
   @override
@@ -29,7 +29,11 @@ class LargeNavButton extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  if (icon != null) icon!,
+                  CircleAvatar(
+                    radius: 30.0,
+                    backgroundImage: NetworkImage(profileImageUrl),
+                    backgroundColor: Colors.transparent,
+                  ),
                   Padding(
                     padding: const EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
                     child: Text(
