@@ -1,15 +1,14 @@
 import 'dart:convert';
 
-import 'package:alvys3/src/features/authentication/domain/models/auth_state/auth_state.dart';
-import 'package:alvys3/src/features/authentication/domain/models/driver_user/driver_user.dart';
-import 'package:alvys3/src/features/authentication/presentation/auth_provider_controller.dart';
-import 'package:alvys3/src/network/user_token_handler.dart';
+import 'src/features/authentication/domain/models/driver_user/driver_user.dart';
+import 'src/features/authentication/presentation/auth_provider_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 //import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'app.dart';
+import 'src/routing/app_router.dart';
 
 Future<void> main() async {
   //WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -17,11 +16,41 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   var storage = const FlutterSecureStorage();
   String? driverData = await storage.read(key: "driverData");
+  DriverUser? driverUser;
   if (driverData != null) {
-    var driverUser = DriverUser.fromJson(jsonDecode(driverData));
-    authProvider = AsyncNotifierProvider<AuthProviderNotifier, AuthState>(
-        () => AuthProviderNotifier(driver: driverUser));
+    driverUser = DriverUser.fromJson(jsonDecode(driverData));
   }
-  runApp(ProviderScope(child: App()));
+  runApp(ProviderScope(
+    overrides: [
+      authProvider.overrideWith(() => AuthProviderNotifier(driver: driverUser))
+    ],
+    child: App(),
+  ));
   //FlutterNativeSplash.remove();
+}
+
+class Testingr extends ConsumerWidget {
+  const Testingr({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final router = ref.read(routerProvider);
+
+    return Container();
+  }
+}
+
+class Tasdga extends ConsumerStatefulWidget {
+  const Tasdga({Key? key}) : super(key: key);
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _TasdgaState();
+}
+
+class _TasdgaState extends ConsumerState<Tasdga> {
+  @override
+  Widget build(BuildContext context) {
+    final router = ref.watch(routerProvider);
+    return Container();
+  }
 }

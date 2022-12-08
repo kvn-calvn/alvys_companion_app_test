@@ -1,6 +1,7 @@
 import 'package:alvys3/src/common_widgets/buttons.dart';
 import 'package:alvys3/src/constants/color.dart';
 import 'package:alvys3/src/utils/extensions.dart';
+import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -165,7 +166,7 @@ class _PhoneNumberVerificationPageState
                           5,
                       onPressAction: () {
                         //context.goNamed('Trips');
-                        context.goNamed('LocationPermission');
+                        context.goNamed(RouteName.locationPermission.name);
                       },
                       title: "Verify",
                       isLoading: false),

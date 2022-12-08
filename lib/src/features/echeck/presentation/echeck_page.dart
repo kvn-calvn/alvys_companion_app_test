@@ -9,9 +9,7 @@ import 'package:go_router/go_router.dart';
 import '../../../utils/extensions.dart';
 
 class EcheckPage extends ConsumerStatefulWidget {
-  const EcheckPage({required this.tripId, Key? key}) : super(key: key);
-
-  final String tripId;
+  const EcheckPage({Key? key}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api

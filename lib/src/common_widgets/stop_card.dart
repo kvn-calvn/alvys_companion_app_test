@@ -3,6 +3,7 @@ import 'package:alvys3/src/constants/color.dart';
 import 'package:alvys3/src/constants/text_styles.dart';
 import 'package:alvys3/src/features/trips/domain/trip_details/mini_stop.dart';
 import 'package:alvys3/src/features/trips/presentation/trip/trip_page_controller.dart';
+import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -30,7 +31,7 @@ class StopCard extends ConsumerWidget {
             ref
                 .watch(tripPageControllerProvider.notifier)
                 .setCurrentStop(stop.stopId!);
-            context.pushNamed('stopDetails');
+            context.pushNamed(RouteName.stopDetails.name);
           },
           child: Row(
             children: [

@@ -4,6 +4,7 @@ import 'package:alvys3/src/common_widgets/large_nav_button.dart';
 import 'package:alvys3/src/common_widgets/stop_card.dart';
 import 'package:alvys3/src/constants/color.dart';
 import 'package:alvys3/src/features/trips/presentation/trip/trip_page_controller.dart';
+import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -111,19 +112,17 @@ class TripDetails extends ConsumerWidget {
                     LargeNavButton(
                       title: 'E-Checks',
                       onPressed: () {
-                        context.pushNamed('echeck', queryParams: {
-                          'tripNumber': value.currentTrip.tripNumber,
-                          'tripId': value.currentTrip.id
-                        });
+                        context.pushNamed(RouteName.eCheck.name);
                       },
                     ),
                     LargeNavButton(
                       title: 'Documents',
                       onPressed: () {
-                        context.pushNamed('tripDocs', queryParams: {
-                          'tripNumber': value.currentTrip.tripNumber,
-                          'tripId': value.currentTrip.id
-                        });
+                        context.pushNamed(RouteName.tripDocuments.name,
+                            queryParams: {
+                              'tripNumber': value.currentTrip.tripNumber,
+                              'tripId': value.currentTrip.id
+                            });
                       },
                     ),
                     Column(

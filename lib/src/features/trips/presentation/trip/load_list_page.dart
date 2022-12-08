@@ -93,8 +93,7 @@ class TripList extends ConsumerWidget {
                   LargeNavButton(
                     title: "Delivered",
                     onPressed: () {
-                      context.pushNamed('delivered',
-                          extra: TripFilterType.delivered);
+                      context.pushNamed(RouteName.delivered.name);
                     },
                   ),
                 Expanded(

@@ -4,6 +4,7 @@ import 'package:alvys3/src/common_widgets/large_nav_button.dart';
 import 'package:alvys3/src/constants/color.dart';
 import 'package:alvys3/src/constants/text_styles.dart';
 import 'package:alvys3/src/features/documents/presentation/trip_docs_controller.dart';
+import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -98,7 +99,7 @@ class TripDocsList extends ConsumerWidget {
               icon: const Icon(Icons.insert_drive_file),
               title: doc.type ?? '',
               onPressed: () {
-                context.pushNamed('docView',
+                context.pushNamed(RouteName.documentView.name,
                     queryParams: {'docUrl': doc.link!, 'docType': doc.type!});
               },
             ),

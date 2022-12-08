@@ -3,6 +3,7 @@ import 'package:alvys3/custom_icons/alvys3_icons.dart';
 import 'package:alvys3/src/common_widgets/buttons.dart';
 import 'package:alvys3/src/constants/color.dart';
 import 'package:alvys3/src/constants/text_styles.dart';
+import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -47,9 +48,7 @@ class RequestNotification extends StatelessWidget {
                   isLoading: false,
                   isDisable: false,
                   onPressAction: () {
-                    context.goNamed(
-                      'Trips',
-                    );
+                    context.goNamed(RouteName.trips.name);
                   },
                 ),
                 const SizedBox(

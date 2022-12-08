@@ -3,6 +3,7 @@ import 'package:alvys3/src/common_widgets/large_nav_button.dart';
 import 'package:alvys3/src/common_widgets/profile_nav_button.dart';
 import 'package:alvys3/src/common_widgets/theme_switcher.dart';
 import 'package:alvys3/src/constants/color.dart';
+import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -51,7 +52,7 @@ class SettingsList extends StatelessWidget {
           title: "Sandbox Driver",
           profileImageUrl: 'https://via.placeholder.com/150',
           onPressed: () {
-            context.pushNamed("ProfileView");
+            context.pushNamed(RouteName.profile.name);
           },
         ),
         LargeNavButton(

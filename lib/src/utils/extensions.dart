@@ -105,4 +105,5 @@ extension BrightnessExtn on Brightness {
 
 extension EnumExtn on Enum {
   String get toTitleCase => name.titleCase;
+  String get toRoute => "/$name";
 }

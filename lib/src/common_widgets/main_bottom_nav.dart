@@ -1,5 +1,6 @@
 import 'package:alvys3/custom_icons/alvys3_icons.dart';
 import 'package:alvys3/src/constants/color.dart';
+import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -31,10 +32,10 @@ class _MainBottomNavState extends ConsumerState<MainBottomNav> {
 
           switch (i) {
             case 0:
-              context.goNamed('Trips');
+              context.goNamed(RouteName.trips.name);
               break;
             case 1:
-              context.goNamed('Settings');
+              context.goNamed(RouteName.settings.name);
               break;
           }
         },

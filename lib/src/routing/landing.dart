@@ -1,3 +1,4 @@
+import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -24,17 +25,19 @@ class _LandingState extends State<Landing> {
     var token = await storage.read(key: 'appToken');
     if (token == null) {
       if (!mounted) return;
-      context.goNamed('SignIn');
+      context.goNamed(RouteName.signIn.name);
     } else {
       if (!mounted) return;
-      context.goNamed('trips');
+      context.goNamed(RouteName.trips.name);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.blue,
+    return Scaffold(
+      body: Container(
+        color: Colors.blue,
+      ),
     );
   }
 }

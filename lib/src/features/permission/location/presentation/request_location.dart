@@ -3,6 +3,7 @@ import 'package:alvys3/custom_icons/alvys3_icons.dart';
 import 'package:alvys3/src/common_widgets/buttons.dart';
 import 'package:alvys3/src/constants/color.dart';
 import 'package:alvys3/src/constants/text_styles.dart';
+import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -49,9 +50,7 @@ class RequestLocation extends StatelessWidget {
                   isLoading: false,
                   isDisable: false,
                   onPressAction: () {
-                    context.goNamed(
-                      'NotificationPermission',
-                    );
+                    context.goNamed(RouteName.notificationPermission.name);
                   },
                 ),
                 const SizedBox(

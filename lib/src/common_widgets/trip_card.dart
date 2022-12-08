@@ -2,6 +2,7 @@ import 'package:alvys3/src/constants/color.dart';
 import 'package:alvys3/src/constants/text_styles.dart';
 import 'package:alvys3/src/features/trips/domain/trips/datum.dart';
 import 'package:alvys3/src/features/trips/presentation/trip/trip_page_controller.dart';
+import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -28,13 +29,7 @@ class TripCard extends ConsumerWidget {
             ref
                 .read(tripPageControllerProvider.notifier)
                 .setCurrentTrip(trip.id!);
-            context.pushNamed(
-              'tripDetails',
-              queryParams: <String, String>{
-                'tripNumber': trip.tripNumber!,
-                'tripId': trip.id!
-              },
-            );
+            context.pushNamed(RouteName.tripDetails.name);
           },
           child: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(15, 5, 15, 5),

@@ -1,5 +1,6 @@
 import 'package:alvys3/src/features/authentication/presentation/auth_provider_controller.dart';
 import 'package:alvys3/src/utils/extensions.dart';
+import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -84,9 +85,7 @@ class _SignInPageState extends ConsumerState<SignInPage>
                     isDisable:
                         ref.watch(authProvider).value!.phone.length != 10,
                     onPressAction: () {
-                      context.pushNamed(
-                        'Verify',
-                      );
+                      context.pushNamed(RouteName.verify.name);
                     }),
                 /*Consumer(
                   builder: ((context, ref, _) {

@@ -1,7 +1,4 @@
-// ignore_for_file: no_leading_underscores_for_local_identifiers
-
 import 'package:alvys3/src/common_widgets/main_bottom_nav.dart';
-import 'package:alvys3/src/features/authentication/presentation/auth_provider_controller.dart';
 import 'package:alvys3/src/features/authentication/presentation/sign_in_phonenumber/sign_in_page.dart';
 import 'package:alvys3/src/features/authentication/presentation/verify_phonenumber/phone_verification_page.dart';
 import 'package:alvys3/src/features/documents/presentation/pdf_viewer.dart';
@@ -17,6 +14,7 @@ import 'package:alvys3/src/features/trips/presentation/trip/load_list_page.dart'
 import 'package:alvys3/src/features/trips/presentation/tripdetails/trip_details_page.dart';
 import 'package:alvys3/src/routing/error_page.dart';
 import 'package:alvys3/src/routing/landing.dart';
+import 'package:alvys3/src/utils/extensions.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,171 +24,162 @@ import 'package:go_router/go_router.dart';
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
 
 final routerProvider = Provider(
-  ((ref) => GoRouter(
-        initialLocation: '/landing',
-        //  ref.watch(authProvider).value!.driver == null
-        //     ? '/landing'
-        //     : '/trips',
-        debugLogDiagnostics: true,
-        routes: [
-          GoRoute(
-            name: 'landing',
-            path: '/landing',
-            builder: (context, state) {
-              return const Landing();
-            },
-          ),
-          GoRoute(
-            name: 'SignIn',
-            path: '/signin',
-            builder: (context, state) {
-              return const SignInPage();
-            },
-          ),
-          GoRoute(
-            name: 'Verify',
-            path: '/verify',
-            builder: (context, state) {
-              return const PhoneNumberVerificationPage();
-            },
-          ),
-          GoRoute(
-            name: 'LocationPermission',
-            path: '/location',
-            builder: (context, state) {
-              return const RequestLocation();
-            },
-          ),
-          GoRoute(
-            name: 'NotificationPermission',
-            path: '/notification',
-            builder: (context, state) {
-              return const RequestNotification();
-            },
-          ),
-          ShellRoute(
-              navigatorKey: _shellNavigatorKey,
-              builder: (context, state, child) {
-                return MainBottomNav(child: child);
-              },
+  (ref) => GoRouter(
+    initialLocation: RouteName.landing.toRoute,
+    //  ref.watch(authProvider).value!.driver == null
+    //     ? '/landing'
+    //     : '/trips',
+    debugLogDiagnostics: true,
+    routes: [
+      GoRoute(
+        name: RouteName.landing.name,
+        path: RouteName.landing.toRoute,
+        builder: (context, state) {
+          return const Landing();
+        },
+      ),
+      GoRoute(
+        name: RouteName.signIn.name,
+        path: RouteName.signIn.toRoute,
+        builder: (context, state) {
+          return const SignInPage();
+        },
+      ),
+      GoRoute(
+        name: RouteName.verify.name,
+        path: RouteName.verify.toRoute,
+        builder: (context, state) {
+          return const PhoneNumberVerificationPage();
+        },
+      ),
+      GoRoute(
+        name: RouteName.locationPermission.name,
+        path: RouteName.locationPermission.toRoute,
+        builder: (context, state) {
+          return const RequestLocation();
+        },
+      ),
+      GoRoute(
+        name: RouteName.notificationPermission.name,
+        path: RouteName.notificationPermission.toRoute,
+        builder: (context, state) {
+          return const RequestNotification();
+        },
+      ),
+      ShellRoute(
+          navigatorKey: _shellNavigatorKey,
+          builder: (context, state, child) {
+            return MainBottomNav(child: child);
+          },
+          routes: [
+            GoRoute(
+              name: RouteName.trips.name,
+              path: RouteName.trips.toRoute,
+              pageBuilder: (context, state) => CustomTransitionPage(
+                  key: state.pageKey,
+                  child: LoadListPage(key: state.pageKey),
+                  transitionDuration: Duration.zero,
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) => child),
               routes: [
                 GoRoute(
-                  name: 'Trips',
-                  path: '/trips',
-                  pageBuilder: (context, state) => CustomTransitionPage(
+                  name: RouteName.delivered.name,
+                  path: RouteName.delivered.name,
+                  builder: (context, state) {
+                    return const FilteredTripPage(
+                      filterType: TripFilterType.delivered,
+                    );
+                  },
+                ),
+                GoRoute(
+                  name: RouteName.processing.name,
+                  path: RouteName.processing.name,
+                  builder: (context, state) {
+                    return const FilteredTripPage(
+                      filterType: TripFilterType.processing,
+                    );
+                  },
+                ),
+                GoRoute(
+                  name: RouteName.tripDetails.name,
+                  path: RouteName.tripDetails.name,
+                  builder: (context, state) {
+                    return LoadDetailsPage(
                       key: state.pageKey,
-                      child: LoadListPage(key: state.pageKey),
-                      transitionDuration: Duration.zero,
-                      transitionsBuilder:
-                          (context, animation, secondaryAnimation, child) =>
-                              child),
-                  routes: [
+                    );
+                  },
+                  routes: <GoRoute>[
                     GoRoute(
-                      name: 'delivered',
-                      path: 'delivered',
+                      name: RouteName.eCheck.name,
+                      path: RouteName.eCheck.name,
                       builder: (context, state) {
-                        final TripFilterType extra =
-                            state.extra! as TripFilterType;
-                        return FilteredTripPage(
-                          filterType: extra,
-                        );
+                        return const EcheckPage();
                       },
                     ),
                     GoRoute(
-                      name: 'processing',
-                      path: 'processing',
-                      builder: (context, state) {
-                        final TripFilterType extra =
-                            state.extra! as TripFilterType;
-                        return FilteredTripPage(
-                          filterType: extra,
-                        );
-                      },
-                    ),
-                    GoRoute(
-                      name: 'tripDetails',
-                      path: 'tripdetails',
-                      builder: (context, state) {
-                        return LoadDetailsPage(
-                          key: state.pageKey,
-                        );
-                      },
-                      routes: <GoRoute>[
-                        GoRoute(
-                          name: 'echeck',
-                          path: 'echeck',
-                          builder: (context, state) {
-                            final _tripId = state.queryParams['tripId']!;
-                            return EcheckPage(
-                              tripId: _tripId,
-                            );
-                          },
-                        ),
-                        GoRoute(
-                            name: 'tripDocs',
-                            path: 'docs',
+                        name: RouteName.tripDocuments.name,
+                        path: RouteName.tripDocuments.name,
+                        builder: (context, state) {
+                          final tripId = state.queryParams['tripId']!;
+                          return TripDocsPage(
+                            tripId: tripId,
+                          );
+                        },
+                        routes: <GoRoute>[
+                          GoRoute(
+                            name: RouteName.documentView.name,
+                            path: RouteName.documentView.name,
                             builder: (context, state) {
-                              final _tripId = state.queryParams['tripId']!;
-                              return TripDocsPage(
-                                tripId: _tripId,
+                              final docURL = state.queryParams['docUrl']!;
+                              final docType = state.queryParams['docType']!;
+                              return PDFViewer(
+                                documentType: docType,
+                                documentPath: docURL,
                               );
                             },
-                            routes: <GoRoute>[
-                              GoRoute(
-                                name: 'docView',
-                                path: 'docview',
-                                builder: (context, state) {
-                                  final _docURL = state.queryParams['docUrl']!;
-                                  final _docType =
-                                      state.queryParams['docType']!;
-                                  return PDFViewer(
-                                    documentType: _docType,
-                                    documentPath: _docURL,
-                                  );
-                                },
-                              )
-                            ]),
-                        GoRoute(
-                          name: 'stopDetails',
-                          path: 'stopdetails',
-                          builder: (context, state) {
-                            return const StopDetailsPage();
-                          },
-                        ),
-                      ],
+                          )
+                        ]),
+                    GoRoute(
+                      name: RouteName.stopDetails.name,
+                      path: RouteName.stopDetails.name,
+                      builder: (context, state) {
+                        return const StopDetailsPage();
+                      },
                     ),
                   ],
                 ),
-                GoRoute(
-                    name: 'Settings',
-                    path: '/settings',
-                    builder: (context, state) {
-                      return const SettingsPage();
-                    },
-                    routes: [
-                      GoRoute(
-                          name: 'ProfileView',
-                          path: 'profile',
+              ],
+            ),
+            GoRoute(
+                name: RouteName.settings.name,
+                path: RouteName.settings.toRoute,
+                builder: (context, state) {
+                  return const SettingsPage();
+                },
+                routes: [
+                  GoRoute(
+                      name: RouteName.profile.name,
+                      path: RouteName.profile.name,
+                      builder: (context, state) {
+                        return const ProfilePage();
+                      },
+                      routes: [
+                        GoRoute(
+                          name: RouteName.editProfile.name,
+                          path: RouteName.editProfile.name,
                           builder: (context, state) {
-                            return const ProfilePage();
+                            return const RequestNotification();
                           },
-                          routes: [
-                            GoRoute(
-                              name: 'EditProfile',
-                              path: 'editprofile',
-                              builder: (context, state) {
-                                return const RequestNotification();
-                              },
-                            ),
-                          ]),
-                    ]),
-              ])
-        ],
-        errorPageBuilder: (context, state) => MaterialPage(
-          key: state.pageKey,
-          child: ErrorScreen(
-            exception: state.error,
-          ),
-        ),
-      )),
+                        ),
+                      ]),
+                ]),
+          ])
+    ],
+    errorPageBuilder: (context, state) => MaterialPage(
+      key: state.pageKey,
+      child: ErrorScreen(
+        exception: state.error,
+      ),
+    ),
+  ),
 );
