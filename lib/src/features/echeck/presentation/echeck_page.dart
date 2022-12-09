@@ -3,6 +3,7 @@ import 'package:alvys3/src/constants/color.dart';
 import 'package:alvys3/src/constants/text_styles.dart';
 import 'package:alvys3/src/features/echeck/presentation/echeck_page_controller.dart';
 import 'package:alvys3/src/features/trips/presentation/trip/trip_page_controller.dart';
+import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -46,6 +47,13 @@ class _EcheckPageState extends ConsumerState<EcheckPage> {
         ),
         centerTitle: true,
         elevation: 0,
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          GoRouter.of(context).pushNamed(RouteName.generateEcheck.name);
+        },
+        backgroundColor: ColorManager.primary(Theme.of(context).brightness),
+        child: const Icon(Icons.attach_money, color: Colors.white),
       ),
       body: RefreshIndicator(
         onRefresh: () async {

@@ -4,6 +4,7 @@ import 'package:alvys3/src/features/authentication/presentation/verify_phonenumb
 import 'package:alvys3/src/features/documents/presentation/pdf_viewer.dart';
 import 'package:alvys3/src/features/documents/presentation/trip_docs_page.dart';
 import 'package:alvys3/src/features/echeck/presentation/echeck_page.dart';
+import 'package:alvys3/src/features/echeck/presentation/generate_echeck.dart';
 import 'package:alvys3/src/features/permission/location/presentation/request_location.dart';
 import 'package:alvys3/src/features/permission/notification/request_notification.dart';
 import 'package:alvys3/src/features/settings/presentation/profile_page.dart';
@@ -114,6 +115,13 @@ final routerProvider = Provider(
                       path: RouteName.eCheck.name,
                       builder: (context, state) {
                         return const EcheckPage();
+                      },
+                    ),
+                    GoRoute(
+                      name: RouteName.generateEcheck.name,
+                      path: RouteName.generateEcheck.name,
+                      builder: (context, state) {
+                        return GenerateEcheck();
                       },
                     ),
                     GoRoute(
