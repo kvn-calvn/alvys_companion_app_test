@@ -1,7 +1,5 @@
 import 'package:alvys3/src/common_widgets/buttons.dart';
 import 'package:alvys3/src/constants/color.dart';
-import 'package:alvys3/src/constants/text_styles.dart';
-import 'package:alvys3/src/features/trips/domain/trip_details/mini_stop.dart';
 import 'package:alvys3/src/features/trips/presentation/trip/trip_page_controller.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';

@@ -1,4 +1,4 @@
-import 'package:alvys3/src/common_widgets/textfield_input.dart';
+import 'package:alvys3/src/common_widgets/echeck_stop_card.dart';
 import 'package:alvys3/src/constants/color.dart';
 import 'package:alvys3/src/features/authentication/presentation/sign_in_phonenumber/sign_in_page.dart';
 import 'package:flutter/material.dart';
@@ -117,101 +117,19 @@ class _GenerateEcheckState extends State<GenerateEcheck> {
                 height: 16,
               ),
               const Text("Select a Stop"),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Material(
-                  elevation: 2,
-                  color: Theme.of(context).cardColor,
-                  borderRadius: BorderRadius.circular(10),
-                  clipBehavior: Clip.antiAlias,
-                  child: InkWell(
-                    onTap: () {},
-                    child: Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(10, 8, 0, 8),
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsetsDirectional.fromSTEB(
-                                0, 0, 8, 0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: ColorManager.pickupColor,
-                                  /*color: stop.stopType == 'Pickup'
-                                        ? ColorManager.pickupColor
-                                        : ColorManager.deliveryColor,*/
-                                  borderRadius: BorderRadius.circular(10)),
-                              width: 8,
-                              height: 35,
-                            ),
-                          ),
-                          Column(
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Eufaula Fresh Proc",
-                                style: Theme.of(context).textTheme.labelLarge,
-                              ),
-                              Text(
-                                "Eufaula AL, 36027",
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+              const ECheckStopCard(
+                stopType: "Pickup",
+                stopName: "Eufaula Fresh Proc",
+                city: "Eufaula",
+                state: "AL",
+                zip: "36027",
               ),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 8.0),
-                child: Material(
-                  elevation: 2,
-                  color: Theme.of(context).cardColor,
-                  borderRadius: BorderRadius.circular(10),
-                  clipBehavior: Clip.antiAlias,
-                  child: InkWell(
-                    onTap: () {},
-                    child: Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(10, 8, 0, 8),
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsetsDirectional.fromSTEB(
-                                0, 0, 8, 0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: ColorManager.deliveryColor,
-                                  /*color: stop.stopType == 'Pickup'
-                                        ? ColorManager.pickupColor
-                                        : ColorManager.deliveryColor,*/
-                                  borderRadius: BorderRadius.circular(10)),
-                              width: 8,
-                              height: 35,
-                            ),
-                          ),
-                          Column(
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                "Stop & Shop Freetown",
-                                style: Theme.of(context).textTheme.labelLarge,
-                              ),
-                              Text(
-                                "Freetown MA, 02702",
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
+              const ECheckStopCard(
+                stopType: "Delivery",
+                stopName: "Stop & Shop Freetown",
+                city: "Freetown",
+                state: "MA",
+                zip: "02702",
               ),
               const SizedBox(
                 height: 16,
