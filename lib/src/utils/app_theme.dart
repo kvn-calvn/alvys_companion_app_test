@@ -35,13 +35,7 @@ class AlvysTheme {
               .copyWith(
                 fontWeight: FontWeight.bold,
                 color: brightness.isLight ? Colors.black : Colors.white,
-              )
-          // titleTextStyle: TextStyle(
-          //   fontSize: 20,
-          //   fontWeight: FontWeight.bold,
-          //   color: brightness.isLight ? Colors.black : Colors.white,
-          // ),
-          ),
+              )),
       buttonTheme: const ButtonThemeData(textTheme: ButtonTextTheme.primary),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(

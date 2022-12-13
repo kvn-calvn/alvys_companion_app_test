@@ -84,7 +84,7 @@ class StopCard extends ConsumerWidget {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 5, 8),
+                      padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 0, 8),
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.start,

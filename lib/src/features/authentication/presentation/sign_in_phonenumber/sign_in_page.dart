@@ -19,7 +19,7 @@ class SignInPage extends ConsumerStatefulWidget {
 class _SignInPageState extends ConsumerState<SignInPage> {
   final TextEditingController phoneNumber = TextEditingController();
 
-  var phoneNumberMaskFormatter = MaskTextInputFormatter(
+  final phoneNumberMaskFormatter = MaskTextInputFormatter(
       mask: '(###) ###-####',
       filter: {"#": RegExp(r'[0-9]')},
       type: MaskAutoCompletionType.lazy);
