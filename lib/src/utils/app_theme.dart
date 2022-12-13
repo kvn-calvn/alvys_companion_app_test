@@ -205,7 +205,7 @@ class AlvysTheme {
       );
   static TextTheme appTextTheme(double width, Brightness brightness) {
     return GoogleFonts.poppinsTextTheme(defaultTextTheme(brightness).apply(
-      fontSizeFactor: (width / 1000) * 2.3,
+      fontSizeFactor: (width / 1000) * 2.2,
     ));
   }
 }
