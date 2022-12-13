@@ -15,27 +15,28 @@ class AlvysTheme {
       primaryColor: brightness.isLight ? Colors.white : Colors.black,
       scaffoldBackgroundColor: ColorManager.scaffoldColor(brightness),
       appBarTheme: AppBarTheme(
-          centerTitle: true,
-          iconTheme: IconThemeData(
-            color: brightness.isLight
-                ? Colors.black
-                : Colors.white, //change your color here
-          ),
-          systemOverlayStyle: SystemUiOverlayStyle(
-            statusBarBrightness: brightness,
-          ),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
-          titleTextStyle: appTextTheme(
-                  MediaQueryData.fromWindow(WidgetsBinding.instance.window)
-                      .size
-                      .width,
-                  brightness)
-              .headlineMedium!
-              .copyWith(
-                fontWeight: FontWeight.bold,
-                color: brightness.isLight ? Colors.black : Colors.white,
-              )),
+        centerTitle: true,
+        iconTheme: IconThemeData(
+          color: brightness.isLight
+              ? Colors.black
+              : Colors.white, //change your color here
+        ),
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarBrightness: brightness,
+        ),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
+        titleTextStyle: appTextTheme(
+                MediaQueryData.fromWindow(WidgetsBinding.instance.window)
+                    .size
+                    .width,
+                brightness)
+            .headlineMedium!
+            .copyWith(
+              fontWeight: FontWeight.bold,
+              color: brightness.isLight ? Colors.black : Colors.white,
+            ),
+      ),
       buttonTheme: const ButtonThemeData(textTheme: ButtonTextTheme.primary),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
@@ -78,39 +79,33 @@ class AlvysTheme {
         elevation: 2,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
       ),
+      progressIndicatorTheme: ProgressIndicatorThemeData(
+        color: ColorManager.primary(brightness),
+      ),
+      indicatorColor: ColorManager.primary(brightness),
+      floatingActionButtonTheme: FloatingActionButtonThemeData(
+        backgroundColor: ColorManager.primary(brightness),
+        foregroundColor: Colors.white,
+      ),
+      iconTheme: IconThemeData(
+        color: brightness.isLight ? Colors.black : Colors.white,
+      ),
+      colorScheme: ColorScheme(
+        brightness: brightness,
+        primary: ColorManager.primary(brightness),
+        onPrimary: Colors.white,
+        secondary: Colors.grey,
+        onSecondary: brightness.isLight ? Colors.black : Colors.white,
+        error: Colors.red,
+        onError: Colors.white,
+        background: brightness.isLight ? Colors.white : Colors.black,
+        onBackground: brightness.isLight ? Colors.black : Colors.white,
+        surface: brightness.isLight ? Colors.white : Colors.black,
+        onSurface: brightness.isLight ? Colors.black : Colors.white,
+      ),
     );
   }
 
-  // static TextTheme defaultTextTheme = TextTheme(
-  //   headline1: const TextStyle(
-  //       fontSize: 96, fontWeight: FontWeight.w300, wordSpacing: -1.5),
-  //   headline2: const TextStyle(
-  //       fontSize: 60, fontWeight: FontWeight.w300, wordSpacing: -0.5),
-  //   headline3: const TextStyle(
-  //       fontSize: 48, fontWeight: FontWeight.w400, wordSpacing: 0.0),
-  //   headline4: const TextStyle(
-  //       fontSize: 34.0, fontWeight: FontWeight.w400, wordSpacing: 0.25),
-  //   headline5: const TextStyle(
-  //       fontSize: 24.0, fontWeight: FontWeight.w400, wordSpacing: 0.0),
-  //   headline6: const TextStyle(
-  //       fontSize: 20, fontWeight: FontWeight.w500, wordSpacing: 0.15),
-  //   subtitle1: const TextStyle(
-  //       fontSize: 18, fontWeight: FontWeight.w400, wordSpacing: 0.15),
-  //   subtitle2: const TextStyle(
-  //       fontSize: 14, fontWeight: FontWeight.w500, wordSpacing: 0.1),
-  //   bodyText1: const TextStyle(
-  //       fontSize: 16, fontWeight: FontWeight.w400, wordSpacing: 0.5),
-  //   bodyText2: const TextStyle(
-  //       fontSize: 14, fontWeight: FontWeight.w400, wordSpacing: 0.25),
-  //   button: const TextStyle(
-  //       fontSize: 14, fontWeight: FontWeight.w500, wordSpacing: 1.125),
-  //   caption: const TextStyle(
-  //       fontSize: 12, fontWeight: FontWeight.w400, wordSpacing: 0.4),
-  //   overline: const TextStyle(
-  //       fontSize: 11, fontWeight: FontWeight.w400, wordSpacing: 1.5),
-  //   displayLarge: const TextStyle(
-  //       fontSize: 11, fontWeight: FontWeight.w400, wordSpacing: 1.5),
-  // );
   static TextTheme defaultTextTheme(Brightness brightness) => TextTheme(
         displayLarge: const TextStyle(
           // height: 64,
@@ -205,7 +200,7 @@ class AlvysTheme {
       );
   static TextTheme appTextTheme(double width, Brightness brightness) {
     return GoogleFonts.poppinsTextTheme(defaultTextTheme(brightness).apply(
-      fontSizeFactor: (width / 1000) * 2.2,
+      fontSizeFactor: (width / 1000) * 2.3,
     ));
   }
 }
@@ -260,9 +255,9 @@ class AlvysButtonMaterialStateColor extends MaterialStateColor {
   const AlvysButtonMaterialStateColor(this.brightness) : super(0);
   @override
   Color resolve(Set<MaterialState> states) {
-    Color color = Colors.white;
+    Color color = ColorManager.primary(brightness);
     if (states.contains(MaterialState.disabled)) {
-      color = Colors.green;
+      color = Colors.grey.withOpacity(0.5);
     }
     return color;
   }

@@ -76,9 +76,7 @@ class TripList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final tripsState = ref.watch(tripPageControllerProvider);
     return tripsState.when(loading: (() {
-      return const TripCardShimmer(
-        millisecondsDelay: 20000,
-      );
+      return const TripListShimmer();
 
       /*  SpinKitFoldingCube(
               color: ColorManager.primary(Theme.of(context).brightness),

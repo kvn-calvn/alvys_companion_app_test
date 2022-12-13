@@ -1,6 +1,7 @@
 import 'package:alvys3/src/common_widgets/main_bottom_nav.dart';
 import 'package:alvys3/src/features/authentication/presentation/sign_in_phonenumber/sign_in_page.dart';
 import 'package:alvys3/src/features/authentication/presentation/verify_phonenumber/phone_verification_page.dart';
+import 'package:alvys3/src/features/documents/presentation/paystubs_page.dart';
 import 'package:alvys3/src/features/documents/presentation/pdf_viewer.dart';
 import 'package:alvys3/src/features/documents/presentation/trip_docs_page.dart';
 import 'package:alvys3/src/features/echeck/presentation/echeck_page.dart';
@@ -15,11 +16,13 @@ import 'package:alvys3/src/features/trips/presentation/trip/load_list_page.dart'
 import 'package:alvys3/src/features/trips/presentation/tripdetails/trip_details_page.dart';
 import 'package:alvys3/src/routing/error_page.dart';
 import 'package:alvys3/src/routing/landing.dart';
+import 'package:alvys3/src/routing/routing_arguments.dart';
 import 'package:alvys3/src/utils/extensions.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:pdf_viewer_plugin/pdf_viewer_plugin.dart';
 
 import '../features/authentication/presentation/auth_provider_controller.dart';
 
@@ -28,14 +31,10 @@ final _shellNavigatorKey = GlobalKey<NavigatorState>();
 
 final routerProvider = Provider(
   (ref) => GoRouter(
-    initialLocation: RouteName.trips.toRoute,
-    // ref.watch(authProvider).value!.driver == null
-    //     ? RouteName.signIn.toRoute
-    //     : RouteName.trips.toRoute,
-    //  ref.watch(authProvider).value!.driver == null
-    //     ? '/landing'
-    //     : '/trips',
-    // debugLogDiagnostics: true,
+    initialLocation: ref.read(authProvider).value!.driver == null
+        ? RouteName.signIn.toRoute
+        : RouteName.trips.toRoute,
+    debugLogDiagnostics: true,
     routes: [
       GoRoute(
         name: RouteName.landing.name,
@@ -130,28 +129,28 @@ final routerProvider = Provider(
                       },
                     ),
                     GoRoute(
-                        name: RouteName.tripDocuments.name,
-                        path: RouteName.tripDocuments.name,
-                        builder: (context, state) {
-                          final tripId = state.queryParams['tripId']!;
-                          return TripDocsPage(
-                            tripId: tripId,
-                          );
-                        },
-                        routes: <GoRoute>[
-                          GoRoute(
-                            name: RouteName.documentView.name,
-                            path: RouteName.documentView.name,
-                            builder: (context, state) {
-                              final docURL = state.queryParams['docUrl']!;
-                              final docType = state.queryParams['docType']!;
-                              return PDFViewer(
-                                documentType: docType,
-                                documentPath: docURL,
-                              );
-                            },
-                          )
-                        ]),
+                      name: RouteName.tripDocuments.name,
+                      path: RouteName.tripDocuments.name,
+                      builder: (context, state) {
+                        final tripId = state.queryParams['tripId']!;
+                        return TripDocsPage(
+                          tripId: tripId,
+                        );
+                      },
+                      routes: <GoRoute>[
+                        GoRoute(
+                          name: RouteName.documentView.name,
+                          path: RouteName.documentView.name,
+                          builder: (context, state) {
+                            final args = state.extra! as PDFViewerArguments;
+
+                            return PDFViewer(
+                              arguments: args,
+                            );
+                          },
+                        )
+                      ],
+                    ),
                     GoRoute(
                       name: RouteName.stopDetails.name,
                       path: RouteName.stopDetails.name,
@@ -171,20 +170,29 @@ final routerProvider = Provider(
                 },
                 routes: [
                   GoRoute(
-                      name: RouteName.profile.name,
-                      path: RouteName.profile.name,
-                      builder: (context, state) {
-                        return const ProfilePage();
-                      },
-                      routes: [
-                        GoRoute(
-                          name: RouteName.editProfile.name,
-                          path: RouteName.editProfile.name,
-                          builder: (context, state) {
-                            return const RequestNotification();
-                          },
-                        ),
-                      ]),
+                    name: RouteName.profile.name,
+                    path: RouteName.profile.name,
+                    builder: (context, state) {
+                      return const ProfilePage();
+                    },
+                    routes: [
+                      GoRoute(
+                        name: RouteName.editProfile.name,
+                        path: RouteName.editProfile.name,
+                        builder: (context, state) {
+                          return const RequestNotification();
+                        },
+                      ),
+                    ],
+                  ),
+                  GoRoute(
+                    name: RouteName.paystubs.name,
+                    path: RouteName.paystubs.name,
+                    builder: (context, state) {
+                      return const PaystubPage();
+                    },
+                    // routes: [],
+                  ),
                 ]),
           ])
     ],

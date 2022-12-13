@@ -2,5 +2,5 @@ import 'package:alvys3/src/features/documents/domain/trip_documents/trip_documen
 import 'package:alvys3/src/network/api_response.dart';
 
 abstract class TripDocsRepository {
-  Future<ApiResponse<TripDocuments>> getTripDocs(String tripId);
+  Future<ApiResponse<List<TripDocuments>>> getTripDocs(String tripId);
 }

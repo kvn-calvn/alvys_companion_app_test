@@ -15,7 +15,8 @@ enum RouteName {
   settings,
   profile,
   editProfile,
-  generateEcheck
+  generateEcheck,
+  paystubs,
 }
 
 enum TripFilterType { processing, delivered }

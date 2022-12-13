@@ -32,5 +32,6 @@ class TripDocsArguments {
 
 class PDFViewerArguments {
   final String docUrl;
-  const PDFViewerArguments({required this.docUrl});
+  final String title;
+  const PDFViewerArguments(this.docUrl, this.title);
 }

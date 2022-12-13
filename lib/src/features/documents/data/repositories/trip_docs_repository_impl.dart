@@ -12,7 +12,7 @@ class TripDocsRepositoryImpl implements TripDocsRepository {
   TripDocsRepositoryImpl(this._remoteDataSource, this._networkInfo);
 
   @override
-  Future<ApiResponse<TripDocuments>> getTripDocs(String tripId) async {
+  Future<ApiResponse<List<TripDocuments>>> getTripDocs(String tripId) async {
     if (await _networkInfo.isConnected) {
       try {
         var response = await _remoteDataSource.getTripDocs(tripId);

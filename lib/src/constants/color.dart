@@ -18,4 +18,19 @@ class ColorManager {
       brightness.isLight ? Colors.white : const Color(0XFF232323);
   static Color scaffoldColor(Brightness brightness) =>
       brightness.isLight ? const Color(0xFFF1F4F8) : const Color(0XFF141414);
+  static Color shimmerHighlight(Brightness brightness) => brightness.isLight
+      ? const Color.fromARGB(255, 233, 235, 238)
+      : const Color(0xFF4C4C4C);
+  static Color shimmerBaseColor(Brightness brightness) => brightness.isLight
+      ? const Color.fromARGB(255, 214, 217, 221)
+      : const Color(0xFF2A2A2A);
+  static List<Color> shimmerColors(Brightness brightness) => [
+        shimmerBaseColor(brightness),
+        shimmerBaseColor(brightness),
+        shimmerHighlight(brightness),
+        shimmerBaseColor(brightness),
+        shimmerBaseColor(brightness),
+        shimmerHighlight(brightness),
+        shimmerBaseColor(brightness)
+      ];
 }

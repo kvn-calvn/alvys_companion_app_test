@@ -27,9 +27,9 @@ class _SettingsPageState extends State<SettingsPage> {
         centerTitle: false,
         elevation: 0,
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 16.0),
-        child: const SettingsList(),
+      body: const Padding(
+        padding: EdgeInsets.symmetric(horizontal: 16.0),
+        child: SettingsList(),
       ),
     );
   }
@@ -61,7 +61,9 @@ class SettingsList extends StatelessWidget {
         ),
         LargeNavButton(
           title: "Paystubs",
-          onPressed: () {},
+          onPressed: () {
+            context.pushNamed(RouteName.paystubs.name);
+          },
         ),
         LargeNavButton(
           title: "Trip Report",

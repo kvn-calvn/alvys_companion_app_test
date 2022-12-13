@@ -1,10 +1,33 @@
+import 'package:alvys3/src/common_widgets/shimmers/shimmer_widget.dart';
 import 'package:alvys3/src/constants/color.dart';
 import 'package:fade_shimmer/fade_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+class TripListShimmer extends StatelessWidget {
+  const TripListShimmer({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer(
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: ColorManager.shimmerColors(Theme.of(context).brightness),
+      ),
+      child: ListView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: 5,
+        itemBuilder: (context, index) {
+          return const TripCardShimmer();
+        },
+      ),
+    );
+  }
+}
+
 class TripCardShimmer extends ConsumerWidget {
-  const TripCardShimmer({Key? key, this.millisecondsDelay = 0})
+  const TripCardShimmer({Key? key, this.millisecondsDelay = 2000})
       : super(key: key);
 
   final int millisecondsDelay;
@@ -14,7 +37,7 @@ class TripCardShimmer extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
       child: Material(
-        color: Theme.of(context).cardColor,
+        color: Theme.of(context).cardColor.withAlpha(100),
         borderRadius: BorderRadius.circular(12),
         clipBehavior: Clip.antiAlias,
         elevation: 4,
@@ -34,7 +57,7 @@ class TripCardShimmer extends ConsumerWidget {
                       millisecondsDelay: millisecondsDelay,
                       height: 16,
                       width: 100,
-                      radius: 7,
+                      radius: 5,
                       highlightColor: Color(0xffF9F9FB),
                       baseColor: Color(0xffE6E8EB),
                     ),
@@ -42,7 +65,7 @@ class TripCardShimmer extends ConsumerWidget {
                       millisecondsDelay: millisecondsDelay,
                       height: 16,
                       width: 80,
-                      radius: 7,
+                      radius: 5,
                       highlightColor: Color(0xffF9F9FB),
                       baseColor: Color(0xffE6E8EB),
                     ),
@@ -73,7 +96,7 @@ class TripCardShimmer extends ConsumerWidget {
                               millisecondsDelay: millisecondsDelay,
                               height: 16,
                               width: 100,
-                              radius: 7,
+                              radius: 5,
                               highlightColor: Color(0xffF9F9FB),
                               baseColor: Color(0xffE6E8EB),
                             ),
@@ -85,7 +108,7 @@ class TripCardShimmer extends ConsumerWidget {
                             millisecondsDelay: millisecondsDelay,
                             height: 16,
                             width: 100,
-                            radius: 7,
+                            radius: 5,
                             highlightColor: Color(0xffF9F9FB),
                             baseColor: Color(0xffE6E8EB),
                           ),
@@ -119,7 +142,7 @@ class TripCardShimmer extends ConsumerWidget {
                               millisecondsDelay: millisecondsDelay,
                               height: 16,
                               width: 100,
-                              radius: 7,
+                              radius: 5,
                               highlightColor: Color(0xffF9F9FB),
                               baseColor: Color(0xffE6E8EB),
                             ),
@@ -131,7 +154,7 @@ class TripCardShimmer extends ConsumerWidget {
                             millisecondsDelay: millisecondsDelay,
                             height: 16,
                             width: 100,
-                            radius: 7,
+                            radius: 5,
                             highlightColor: Color(0xffF9F9FB),
                             baseColor: Color(0xffE6E8EB),
                           ),
@@ -150,23 +173,15 @@ class TripCardShimmer extends ConsumerWidget {
                   children: [
                     TripCardDetail(
                       millisecondsDelay: millisecondsDelay,
-                      title: 'dh',
-                      details: '0.00 mi',
                     ),
                     TripCardDetail(
                       millisecondsDelay: millisecondsDelay,
-                      title: 'trip',
-                      details: 'Trip number',
                     ),
                     TripCardDetail(
                       millisecondsDelay: millisecondsDelay,
-                      title: 'stops',
-                      details: 'StopCount',
                     ),
                     TripCardDetail(
                       millisecondsDelay: millisecondsDelay,
-                      title: 'weight',
-                      details: 'Weightlbs',
                     ),
                   ],
                 ),
@@ -180,13 +195,8 @@ class TripCardShimmer extends ConsumerWidget {
 }
 
 class TripCardDetail extends StatelessWidget {
-  final String details, title;
   final int millisecondsDelay;
-  const TripCardDetail(
-      {Key? key,
-      required this.title,
-      required this.details,
-      required this.millisecondsDelay})
+  const TripCardDetail({Key? key, required this.millisecondsDelay})
       : super(key: key);
 
   @override
@@ -196,17 +206,20 @@ class TripCardDetail extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(
-          title.toUpperCase(),
-          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-              color: ColorManager.lightTextColor(Theme.of(context).brightness),
-              fontWeight: FontWeight.bold),
+        FadeShimmer(
+          millisecondsDelay: millisecondsDelay,
+          height: 16,
+          width: 20,
+          radius: 5,
+          highlightColor: Color(0xffF9F9FB),
+          baseColor: Color(0xffE6E8EB),
         ),
+        SizedBox(height: 5),
         FadeShimmer(
           millisecondsDelay: millisecondsDelay,
           height: 16,
           width: 60,
-          radius: 7,
+          radius: 5,
           highlightColor: Color(0xffF9F9FB),
           baseColor: Color(0xffE6E8EB),
         ),

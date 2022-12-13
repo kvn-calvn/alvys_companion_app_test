@@ -38,12 +38,15 @@ class ProfilePage extends StatelessWidget {
         child: ListView(children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
+            children: [
               CircleAvatar(
                 radius: 50.0,
-                backgroundImage:
-                    NetworkImage("https://via.placeholder.com/150"),
                 backgroundColor: Colors.transparent,
+                child: Image.network(
+                  'https://via.placeholder.com/150',
+                  errorBuilder: (context, error, stackTrace) =>
+                      const Icon(Icons.warning_rounded),
+                ),
               ),
             ],
           ),

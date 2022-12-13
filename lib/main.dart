@@ -26,29 +26,3 @@ Future<void> main() async {
   ));
   //FlutterNativeSplash.remove();
 }
-
-class Testingr extends ConsumerWidget {
-  const Testingr({Key? key}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final router = ref.read(routerProvider);
-
-    return Container();
-  }
-}
-
-class Tasdga extends ConsumerStatefulWidget {
-  const Tasdga({Key? key}) : super(key: key);
-
-  @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _TasdgaState();
-}
-
-class _TasdgaState extends ConsumerState<Tasdga> {
-  @override
-  Widget build(BuildContext context) {
-    final router = ref.watch(routerProvider);
-    return Container();
-  }
-}

@@ -17,11 +17,14 @@ class _ThemeSwitcherState extends ConsumerState<ThemeSwitcher> {
       children: [
         for (var themeMode in ThemeMode.values)
           RadioListTile<ThemeMode>(
-              value: themeMode,
-              groupValue: ref.watch(themeHandlerProvider),
-              title: Text("${themeMode.toTitleCase} Mode"),
-              onChanged: (value) =>
-                  ref.watch(themeHandlerProvider.notifier).setThemeMode(value!))
+            value: themeMode,
+            groupValue: ref.watch(themeHandlerProvider),
+            title: Text("${themeMode.toTitleCase} Mode"),
+            onChanged: (value) {
+              ref.watch(themeHandlerProvider.notifier).setThemeMode(value!);
+              Navigator.of(context, rootNavigator: true).pop();
+            },
+          )
       ],
     );
   }

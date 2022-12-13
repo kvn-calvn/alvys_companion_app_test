@@ -13,14 +13,12 @@ import 'package:pdf_viewer_plugin/pdf_viewer_plugin.dart';
 import 'package:share_plus/share_plus.dart';
 
 import '../../../constants/color.dart';
+import '../../../routing/routing_arguments.dart';
 
 class PDFViewer extends StatefulWidget {
-  const PDFViewer(
-      {Key? key, required this.documentPath, required this.documentType})
-      : super(key: key);
+  final PDFViewerArguments arguments;
 
-  final String documentPath;
-  final String documentType;
+  const PDFViewer({Key? key, required this.arguments}) : super(key: key);
 
   @override
   State<PDFViewer> createState() => _PDFViewerState();
@@ -28,6 +26,7 @@ class PDFViewer extends StatefulWidget {
 
 class _PDFViewerState extends State<PDFViewer> {
   double progress = 0;
+  String errorMessage = '';
   late String path;
   @override
   void initState() {
@@ -38,7 +37,7 @@ class _PDFViewerState extends State<PDFViewer> {
   Future<void> initPdf() async {
     path = "${(await getTemporaryDirectory()).path}/doc.pdf";
     await Dio().download(
-      widget.documentPath,
+      widget.arguments.docUrl,
       path,
       onReceiveProgress: (count, total) {
         if (mounted) {
@@ -47,7 +46,13 @@ class _PDFViewerState extends State<PDFViewer> {
           });
         }
       },
-    );
+    ).catchError((err) {
+      setState(() {
+        errorMessage = "Failed to download file.";
+        progress = 1;
+      });
+      return Response(requestOptions: RequestOptions(path: ''));
+    });
   }
 
   @override
@@ -57,9 +62,8 @@ class _PDFViewerState extends State<PDFViewer> {
         elevation: 0,
         centerTitle: true,
         title: Text(
-          widget.documentType,
+          widget.arguments.title,
           textAlign: TextAlign.start,
-          style: Theme.of(context).textTheme.titleMedium,
         ),
         leading: IconButton(
           icon: Icon(
@@ -88,7 +92,11 @@ class _PDFViewerState extends State<PDFViewer> {
                   value: progress,
                 ),
               )
-            : PdfView(path: path),
+            : errorMessage.isNotEmpty
+                ? Center(
+                    child: Text(errorMessage),
+                  )
+                : PdfView(path: path),
       ),
     );
   }

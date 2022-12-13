@@ -25,4 +25,13 @@ class Endpoint {
         return 'api.alvys.com';
     }
   }
+
+  static String get baseApi => 'https://$rawApiBase/api/';
+  static String get mobileBaseApi => '${baseApi}mobilev2/';
+  static String tripDocuments(String tripId) =>
+      "${mobileBaseApi}getDocumentsByTrip/$tripId";
+
+  static String driverPaystubs(String driverId, String companyCode,
+          [int top = 10]) =>
+      '${baseApi}billing/QueryPaystubData?UserId=$driverId&CompanyCode=$companyCode&Top=$top';
 }

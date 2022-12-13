@@ -31,8 +31,12 @@ class ProfileNavButton extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 30.0,
-                    backgroundImage: NetworkImage(profileImageUrl),
                     backgroundColor: Colors.transparent,
+                    child: Image.network(
+                      profileImageUrl,
+                      errorBuilder: (context, error, stackTrace) =>
+                          const Icon(Icons.warning_rounded),
+                    ),
                   ),
                   Padding(
                     padding: const EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),

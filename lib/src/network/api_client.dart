@@ -13,15 +13,15 @@ const String AUTHORIZATION = "authorization";
 const String DEFAULT_LANGUAGE = "language";
 
 class ApiClient {
-  final dio = createDio();
+  Dio get dio => createDio();
 
   ApiClient._internal();
 
-  static final _singleton = ApiClient._internal();
+  static final singleton = ApiClient._internal();
 
-  factory ApiClient() => _singleton;
+  factory ApiClient() => singleton;
 
-  static Dio createDio() {
+  Dio createDio() {
     Map<String, String> headers = {
       CONTENT_TYPE: APPLICATION_JSON,
       ACCEPT: APPLICATION_JSON,

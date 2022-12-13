@@ -1,3 +1,4 @@
+import 'package:alvys3/src/common_widgets/unfocus_widget.dart';
 import 'package:alvys3/src/features/authentication/presentation/auth_provider_controller.dart';
 import 'package:alvys3/src/utils/extensions.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
@@ -17,22 +18,16 @@ class SignInPage extends ConsumerStatefulWidget {
 }
 
 class _SignInPageState extends ConsumerState<SignInPage> {
-  final TextEditingController phoneNumber = TextEditingController();
-
   final phoneNumberMaskFormatter = MaskTextInputFormatter(
-      mask: '(###) ###-####',
-      filter: {"#": RegExp(r'[0-9]')},
-      type: MaskAutoCompletionType.lazy);
-
+    mask: '(###) ###-####',
+    filter: {"#": RegExp(r'[0-9]')},
+    type: MaskAutoCompletionType.eager,
+  );
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () => FocusScope.of(context).unfocus(),
+    return UnfocusWidget(
       child: Scaffold(
-        appBar: AppBar(
-          automaticallyImplyLeading: false,
-          elevation: 0,
-        ),
+        appBar: AppBar(),
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
