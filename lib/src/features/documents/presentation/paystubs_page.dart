@@ -1,3 +1,4 @@
+import 'package:alvys3/src/common_widgets/shimmers/documents_shimmer.dart';
 import 'package:alvys3/src/features/documents/presentation/trip_docs_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,12 +23,8 @@ class PaystubPage extends ConsumerWidget {
       body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16),
           child: tripDocsState.when(
-            loading: () => SpinKitFoldingCube(
-              color: ColorManager.primary(Theme.of(context).brightness),
-              size: 50.0,
-            ),
+            loading: () => const DocumentsShimmer(),
             error: (error, stack) {
-              print(error);
               return const EmptyView(title: "No Paystubs", description: '');
             },
             data: (data) {

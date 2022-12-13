@@ -36,6 +36,7 @@ class DocumentsNotifier
     docRepo = ref.watch(documentsRepositoryProvider);
     state = AsyncValue.data(DocumentState());
     await init();
+
     return state.value!;
   }
 

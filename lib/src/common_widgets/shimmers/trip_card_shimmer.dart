@@ -9,20 +9,8 @@ class TripListShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Shimmer(
-      gradient: LinearGradient(
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
-        colors: ColorManager.shimmerColors(Theme.of(context).brightness),
-      ),
-      child: ListView.builder(
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: 5,
-        itemBuilder: (context, index) {
-          return const TripCardShimmer();
-        },
-      ),
-    );
+    return const AlvysShimmer(
+        repeatingChild: TripCardShimmer(), repeatAmount: 5);
   }
 }
 

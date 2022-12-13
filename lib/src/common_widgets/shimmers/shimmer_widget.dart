@@ -1,6 +1,34 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
+import '../../constants/color.dart';
+
+class AlvysShimmer extends StatelessWidget {
+  final Widget repeatingChild;
+  final int repeatAmount;
+  const AlvysShimmer(
+      {Key? key, required this.repeatingChild, required this.repeatAmount})
+      : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer(
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: ColorManager.shimmerColors(Theme.of(context).brightness),
+      ),
+      child: ListView.builder(
+        physics: const NeverScrollableScrollPhysics(),
+        itemCount: repeatAmount,
+        itemBuilder: (context, index) {
+          return repeatingChild;
+        },
+      ),
+    );
+  }
+}
+
 ///
 /// An enum defines all supported directions of shimmer effect
 ///

@@ -3,6 +3,7 @@
 import 'package:alvys3/src/common_widgets/custom_bottom_sheet.dart';
 import 'package:alvys3/src/common_widgets/empty_view.dart';
 import 'package:alvys3/src/common_widgets/large_nav_button.dart';
+import 'package:alvys3/src/common_widgets/shimmers/documents_shimmer.dart';
 import 'package:alvys3/src/constants/color.dart';
 import 'package:alvys3/src/constants/text_styles.dart';
 import 'package:alvys3/src/features/documents/presentation/document_list.dart';
@@ -87,10 +88,7 @@ class TripDocsList extends ConsumerWidget {
         ref.watch(documentsProvider.call(DocumentType.tripDocuments));
 
     return tripDocsState.when(
-      loading: () => SpinKitFoldingCube(
-        color: ColorManager.primary(Theme.of(context).brightness),
-        size: 50.0,
-      ),
+      loading: () => const DocumentsShimmer(),
       error: (error, stack) =>
           const EmptyView(title: "No Documents", description: ''),
       data: (data) {
