@@ -2,9 +2,8 @@
 
 import 'package:alvys3/src/common_widgets/empty_view.dart';
 import 'package:alvys3/src/common_widgets/large_nav_button.dart';
+import 'package:alvys3/src/common_widgets/shimmers/trip_card_shimmer.dart';
 import 'package:alvys3/src/constants/color.dart';
-import 'package:alvys3/src/constants/text_styles.dart';
-import 'package:alvys3/src/features/trips/domain/trips/datum.dart';
 import 'package:alvys3/src/features/trips/presentation/trip/trip_page_controller.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
@@ -76,48 +75,51 @@ class TripList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final tripsState = ref.watch(tripPageControllerProvider);
-    return tripsState.when(
-        loading: () => SpinKitFoldingCube(
+    return tripsState.when(loading: (() {
+      return const TripCardShimmer(
+        millisecondsDelay: 20000,
+      );
+
+      /*  SpinKitFoldingCube(
               color: ColorManager.primary(Theme.of(context).brightness),
               size: 50.0,
+            )*/
+    }), error: (error, stack) {
+      return const Text('Oops, something unexpected happened');
+    }, data: (value) {
+      return Padding(
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+        child: Column(
+          children: [
+            if (value.deliveredTrips.isNotEmpty)
+              LargeNavButton(
+                title: "Delivered",
+                onPressed: () {
+                  context.pushNamed(RouteName.delivered.name);
+                },
+              ),
+            Expanded(
+              child: RefreshIndicator(
+                onRefresh: () async {
+                  await ref
+                      .read(tripPageControllerProvider.notifier)
+                      .refreshTrips();
+                },
+                child: value.activeTrips.isNotEmpty
+                    ? ListView(
+                        children: value.activeTrips
+                            .map((trip) => TripCard(trip: trip))
+                            .toList(),
+                      )
+                    : const EmptyView(
+                        title: "No Trips",
+                        description: "Assigned trips will appear here.",
+                      ),
+              ),
             ),
-        error: (error, stack) {
-          return const Text('Oops, something unexpected happened');
-        },
-        data: (value) {
-          return Padding(
-            padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-            child: Column(
-              children: [
-                if (value.deliveredTrips.isNotEmpty)
-                  LargeNavButton(
-                    title: "Delivered",
-                    onPressed: () {
-                      context.pushNamed(RouteName.delivered.name);
-                    },
-                  ),
-                Expanded(
-                  child: RefreshIndicator(
-                    onRefresh: () async {
-                      await ref
-                          .read(tripPageControllerProvider.notifier)
-                          .refreshTrips();
-                    },
-                    child: value.activeTrips.isNotEmpty
-                        ? ListView(
-                            children: value.activeTrips
-                                .map((trip) => TripCard(trip: trip))
-                                .toList(),
-                          )
-                        : const EmptyView(
-                            title: "No Trips",
-                            description: "Assigned trips will appear here.",
-                          ),
-                  ),
-                ),
-              ],
-            ),
-          );
-        });
+          ],
+        ),
+      );
+    });
   }
 }
