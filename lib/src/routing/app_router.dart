@@ -21,16 +21,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../features/authentication/presentation/auth_provider_controller.dart';
+
 //final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
 
 final routerProvider = Provider(
   (ref) => GoRouter(
-    initialLocation: RouteName.landing.toRoute,
+    initialLocation: RouteName.trips.toRoute,
+    // ref.watch(authProvider).value!.driver == null
+    //     ? RouteName.signIn.toRoute
+    //     : RouteName.trips.toRoute,
     //  ref.watch(authProvider).value!.driver == null
     //     ? '/landing'
     //     : '/trips',
-    debugLogDiagnostics: true,
+    // debugLogDiagnostics: true,
     routes: [
       GoRoute(
         name: RouteName.landing.name,
@@ -121,7 +126,7 @@ final routerProvider = Provider(
                       name: RouteName.generateEcheck.name,
                       path: RouteName.generateEcheck.name,
                       builder: (context, state) {
-                        return GenerateEcheck();
+                        return const GenerateEcheck();
                       },
                     ),
                     GoRoute(

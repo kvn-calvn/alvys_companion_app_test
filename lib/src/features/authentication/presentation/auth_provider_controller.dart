@@ -11,9 +11,7 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> {
   AuthProviderNotifier({this.driver});
   @override
   FutureOr<AuthState> build() {
-    state = AsyncValue.data(
-        AuthState(driver: driver, driverLoggedIn: driver != null));
-    return state.value!;
+    return AuthState(driver: driver, driverLoggedIn: driver != null);
   }
 
   void setUserTenantCompanyCode(String? companyCode) {

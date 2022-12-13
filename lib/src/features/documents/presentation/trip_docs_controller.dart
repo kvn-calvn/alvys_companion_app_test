@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:alvys3/src/features/documents/data/data_provider.dart';
 import 'package:alvys3/src/features/documents/data/repositories/trip_docs_repository_impl.dart';
+import 'package:alvys3/src/features/documents/domain/document_state/document_state.dart';
 import 'package:alvys3/src/features/documents/domain/trip_documents/trip_documents.dart';
+import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../network/api_response.dart';
@@ -32,3 +36,19 @@ final tripDocsPageControllerProvider =
     throw Exception(result.error!);
   }
 });
+
+class DocumentsNotifier
+    extends FamilyAsyncNotifier<DocumentState, DocumentType> {
+  @override
+  FutureOr<DocumentState> build(DocumentType arg) {
+    state = AsyncValue.data(DocumentState());
+    init(arg);
+    return state.value!;
+  }
+
+  Future<void> init(DocumentType docType) async {}
+}
+
+final documentsProvider =
+    AsyncNotifierProviderFamily<DocumentsNotifier, DocumentState, DocumentType>(
+        DocumentsNotifier.new);

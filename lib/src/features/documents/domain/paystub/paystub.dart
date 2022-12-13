@@ -1,0 +1,21 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+
+import '../../../../network/endpoints.dart';
+
+part 'paystub.freezed.dart';
+part 'paystub.g.dart';
+
+@freezed
+class Paystub with _$Paystub {
+  factory Paystub({
+    @JsonKey(name: 'Id') String? id,
+    @JsonKey(name: 'CompanyCode') String? companyCode,
+    @JsonKey(name: 'FileName') String? fileName,
+    @JsonKey(name: 'DatePaid') DateTime? datePaid,
+  }) = _Paystub;
+  Paystub._();
+  String get link =>
+      '${Endpoint.storageUrl}/${companyCode!.toLowerCase()}/$fileName';
+  factory Paystub.fromJson(Map<String, dynamic> json) =>
+      _$PaystubFromJson(json);
+}

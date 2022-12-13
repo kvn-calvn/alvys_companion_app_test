@@ -5,11 +5,13 @@ class LargeNavButton extends StatelessWidget {
     Key? key,
     required this.title,
     required this.onPressed,
+    this.suffix,
     this.icon,
   }) : super(key: key);
 
   final String title;
   final Icon? icon;
+  final Widget? suffix;
   final void Function()? onPressed;
 
   @override
@@ -50,6 +52,7 @@ class LargeNavButton extends StatelessWidget {
                       ),
                     ),
                   ),
+                  suffix ?? const SizedBox.shrink(),
                 ],
               ),
             ),

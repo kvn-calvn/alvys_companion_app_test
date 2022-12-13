@@ -16,23 +16,19 @@ class SignInPage extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _SignInPageState();
 }
 
-class _SignInPageState extends ConsumerState<SignInPage>
-    with InputValidationMixin {
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+class _SignInPageState extends ConsumerState<SignInPage> {
   final TextEditingController phoneNumber = TextEditingController();
-
-  final formGlobalKey = GlobalKey<FormState>();
 
   var phoneNumberMaskFormatter = MaskTextInputFormatter(
       mask: '(###) ###-####',
       filter: {"#": RegExp(r'[0-9]')},
       type: MaskAutoCompletionType.lazy);
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => FocusScope.of(context).unfocus(),
       child: Scaffold(
-        key: scaffoldKey,
         appBar: AppBar(
           automaticallyImplyLeading: false,
           elevation: 0,
@@ -64,18 +60,19 @@ class _SignInPageState extends ConsumerState<SignInPage>
                   height: 16,
                 ),
                 TextField(
+                  autocorrect: false,
                   keyboardType: TextInputType.number,
                   inputFormatters: [phoneNumberMaskFormatter],
                   onChanged: ref.read(authProvider.notifier).setPhone,
                   textAlign: TextAlign.center,
                   autofocus: true,
                   decoration: const InputDecoration(hintText: "(###) ###-####"),
+                  buildCounter: (context,
+                      {required currentLength, required isFocused, maxLength}) {
+                    return Text(
+                        '${ref.watch(authProvider).value!.phone.length}/10');
+                  },
                 ),
-                // TextfieldInput(
-                //     hint: "Phone",
-                //     textfieldController: phoneNumber,
-                //     isFocus: true,
-                //     keyboardType: TextInputType.number),
                 const SizedBox(
                   height: 16,
                 ),
@@ -254,14 +251,4 @@ class ButtonStyle1 extends StatelessWidget {
       ),
     );
   }
-}
-
-mixin InputValidationMixin {
-  bool isPhoneNumberValid(String phoneNumber) => phoneNumber.length == 10;
-/*
-  bool isEmailValid(String email) {
-    Pattern pattern = r '^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regex =  RegExp(pattern);
-    return regex.hasMatch(email);
-  }*/
 }

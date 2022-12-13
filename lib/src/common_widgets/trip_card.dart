@@ -185,10 +185,9 @@ class TripCardDetail extends StatelessWidget {
       children: [
         Text(
           title.toUpperCase(),
-          style: Theme.of(context)
-              .textTheme
-              .bodyMedium!
-              .copyWith(color: Colors.grey, fontWeight: FontWeight.bold),
+          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
+              color: ColorManager.lightTextColor(Theme.of(context).brightness),
+              fontWeight: FontWeight.bold),
         ),
         Text(
           details,
