@@ -19,3 +19,7 @@ enum RouteName {
 }
 
 enum TripFilterType { processing, delivered }
+
+enum DocumentType { tripDocuments, personalDocuments, paystubs }
+
+enum Environment { dev, qa, sandbox }

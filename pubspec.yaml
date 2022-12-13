@@ -39,6 +39,9 @@ dependencies:
   pdf_viewer_plugin: ^2.0.1
   flutter_gen: ^5.1.0+1
   mask_text_input_formatter: ^2.4.0
+  share_plus: ^4.5.3
+  path_provider: ^2.0.11
+  cross_file: ^0.3.3+2
 
 dev_dependencies:
   flutter_test:

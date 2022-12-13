@@ -117,100 +117,100 @@ class AlvysTheme {
   //   displayLarge: const TextStyle(
   //       fontSize: 11, fontWeight: FontWeight.w400, wordSpacing: 1.5),
   // );
-  static TextTheme defaultTextTheme = const TextTheme(
-    displayLarge: TextStyle(
-      // height: 64,
-      fontSize: 57,
-      wordSpacing: 0,
-      fontWeight: FontWeight.w400,
-    ),
-    displayMedium: TextStyle(
-      // height: 52,
-      fontSize: 45,
-      wordSpacing: 0,
-      fontWeight: FontWeight.w400,
-    ),
-    displaySmall: TextStyle(
-      // height: 44,
-      fontSize: 36,
-      wordSpacing: 0,
-      fontWeight: FontWeight.w400,
-    ),
-    headlineLarge: TextStyle(
-      // height: 40,
-      fontSize: 30,
-      wordSpacing: 0,
-      fontWeight: FontWeight.w700,
-    ),
-    headlineMedium: TextStyle(
-      // height: 36,
-      fontSize: 28,
-      wordSpacing: 0,
-      fontWeight: FontWeight.w400,
-    ),
-    headlineSmall: TextStyle(
-      // height: 32,
-      fontSize: 24,
-      wordSpacing: 0,
-      fontWeight: FontWeight.w400,
-    ),
-    titleLarge: TextStyle(
-      // height: 28,
-      fontSize: 22,
-      wordSpacing: 0,
-      fontWeight: FontWeight.w700,
-    ),
-    titleMedium: TextStyle(
-      // height: 24,
-      fontSize: 18,
-      wordSpacing: 0.15,
-      fontWeight: FontWeight.w500,
-    ),
-    titleSmall: TextStyle(
-      // height: 20,
-      fontSize: 14,
-      wordSpacing: 0.1,
-      fontWeight: FontWeight.w500,
-    ),
-    labelLarge: TextStyle(
-        // height: 20,
-        fontSize: 16,
-        wordSpacing: 0.1,
-        fontWeight: FontWeight.w700,
-        color: Colors.grey),
-    labelMedium: TextStyle(
-      // height: 16,
-      fontSize: 12,
-      wordSpacing: 0.5,
-      fontWeight: FontWeight.w500,
-    ),
-    labelSmall: TextStyle(
-      // height: 16,
-      fontSize: 11,
-      wordSpacing: 0.5,
-      fontWeight: FontWeight.w500,
-    ),
-    bodyLarge: TextStyle(
-      // height: 24,
-      fontSize: 16,
-      wordSpacing: 0.15,
-      fontWeight: FontWeight.w600,
-    ),
-    bodyMedium: TextStyle(
-      // height: 20,
-      fontSize: 14,
-      wordSpacing: 0.25,
-      fontWeight: FontWeight.w400,
-    ),
-    bodySmall: TextStyle(
-      // height: 16,
-      fontSize: 12,
-      wordSpacing: 0.4,
-      fontWeight: FontWeight.w400,
-    ),
-  );
+  static TextTheme defaultTextTheme(Brightness brightness) => TextTheme(
+        displayLarge: const TextStyle(
+          // height: 64,
+          fontSize: 57,
+          wordSpacing: 0,
+          fontWeight: FontWeight.w400,
+        ),
+        displayMedium: const TextStyle(
+          // height: 52,
+          fontSize: 45,
+          wordSpacing: 0,
+          fontWeight: FontWeight.w400,
+        ),
+        displaySmall: const TextStyle(
+          // height: 44,
+          fontSize: 36,
+          wordSpacing: 0,
+          fontWeight: FontWeight.w400,
+        ),
+        headlineLarge: const TextStyle(
+          // height: 40,
+          fontSize: 30,
+          wordSpacing: 0,
+          fontWeight: FontWeight.w700,
+        ),
+        headlineMedium: const TextStyle(
+          // height: 36,
+          fontSize: 28,
+          wordSpacing: 0,
+          fontWeight: FontWeight.w400,
+        ),
+        headlineSmall: const TextStyle(
+          // height: 32,
+          fontSize: 24,
+          wordSpacing: 0,
+          fontWeight: FontWeight.w400,
+        ),
+        titleLarge: const TextStyle(
+          // height: 28,
+          fontSize: 22,
+          wordSpacing: 0,
+          fontWeight: FontWeight.w700,
+        ),
+        titleMedium: const TextStyle(
+          // height: 24,
+          fontSize: 18,
+          wordSpacing: 0.15,
+          fontWeight: FontWeight.w500,
+        ),
+        titleSmall: const TextStyle(
+          // height: 20,
+          fontSize: 14,
+          wordSpacing: 0.1,
+          fontWeight: FontWeight.w500,
+        ),
+        labelLarge: TextStyle(
+            // height: 20,
+            fontSize: 16,
+            wordSpacing: 0.1,
+            fontWeight: FontWeight.w700,
+            color: ColorManager.lightTextColor(brightness)),
+        labelMedium: const TextStyle(
+          // height: 16,
+          fontSize: 12,
+          wordSpacing: 0.5,
+          fontWeight: FontWeight.w500,
+        ),
+        labelSmall: const TextStyle(
+          // height: 16,
+          fontSize: 11,
+          wordSpacing: 0.5,
+          fontWeight: FontWeight.w500,
+        ),
+        bodyLarge: const TextStyle(
+          // height: 24,
+          fontSize: 16,
+          wordSpacing: 0.15,
+          fontWeight: FontWeight.w600,
+        ),
+        bodyMedium: const TextStyle(
+          // height: 20,
+          fontSize: 14,
+          wordSpacing: 0.25,
+          fontWeight: FontWeight.w400,
+        ),
+        bodySmall: const TextStyle(
+          // height: 16,
+          fontSize: 12,
+          wordSpacing: 0.4,
+          fontWeight: FontWeight.w400,
+        ),
+      );
   static TextTheme appTextTheme(double width, Brightness brightness) {
-    return GoogleFonts.poppinsTextTheme(defaultTextTheme.apply(
+    return GoogleFonts.poppinsTextTheme(defaultTextTheme(brightness).apply(
       fontSizeFactor: (width / 1000) * 2.3,
     ));
   }

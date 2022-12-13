@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-extension ListExt<T> on Iterable<T>? {
+extension ListExt<T, K> on Iterable<T>? {
   bool isInStatus(String test) {
     bool inStatus = false;
     if (this == null) return inStatus;
@@ -30,6 +30,15 @@ extension ListExt<T> on Iterable<T>? {
   bool get isNotNullOrEmpty {
     if (this == null) return false;
     return this!.isNotEmpty;
+  }
+
+  bool containsElement(T? element) {
+    if (this == null) return false;
+    if (element == null) return false;
+    for (T e in this!) {
+      if (e == element) return true;
+    }
+    return false;
   }
 }
 
@@ -73,6 +82,11 @@ extension StringExt on String? {
   String get numbersOnly {
     if (this == null) return '';
     return this!.replaceAll(RegExp(r'[^0-9]'), '');
+  }
+
+  String get currencyNumbersOnly {
+    if (this == null) return '';
+    return this!.replaceAll(RegExp(r'[^0-9 \.]'), '');
   }
 
   String get toPhoneNumberString {
