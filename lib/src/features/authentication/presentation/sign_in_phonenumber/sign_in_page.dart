@@ -62,11 +62,6 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                   textAlign: TextAlign.center,
                   autofocus: true,
                   decoration: const InputDecoration(hintText: "(###) ###-####"),
-                  buildCounter: (context,
-                      {required currentLength, required isFocused, maxLength}) {
-                    return Text(
-                        '${ref.watch(authProvider).value!.phone.length}/10');
-                  },
                 ),
                 const SizedBox(
                   height: 16,
