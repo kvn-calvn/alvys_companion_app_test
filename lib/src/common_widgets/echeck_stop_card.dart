@@ -50,7 +50,6 @@ class _ECheckStopCardState extends State<ECheckStopCard>
   late Animation<Color?> colorAnimation;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     animationController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 350));

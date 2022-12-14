@@ -11,8 +11,6 @@ import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../routing/routing_arguments.dart';
-
 class DocumentsPage extends ConsumerStatefulWidget {
   final DocumentType documentType;
   const DocumentsPage(this.documentType, {Key? key}) : super(key: key);

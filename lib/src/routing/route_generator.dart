@@ -1,15 +1,9 @@
-/*import 'package:alvys/app/pages/documents.dart';
-import 'package:alvys/app/pages/load_details.dart';
-import 'package:alvys/app/pages/load_list.dart';
-import 'package:alvys/app/pages/auth/phone_verification.dart';
-import 'package:alvys/app/pages/auth/sign_in.dart';*/
 import 'package:alvys3/src/features/echeck/presentation/echeck_page.dart';
 import 'package:alvys3/src/features/trips/presentation/stopdetails/stop_details_page.dart';
 import 'package:alvys3/src/features/trips/presentation/trip/filtered_trip_page.dart';
 import 'package:alvys3/src/features/trips/presentation/tripdetails/trip_details_page.dart';
 import 'package:alvys3/src/features/trips/presentation/trip/load_list_page.dart';
 import 'package:alvys3/src/routing/routes.dart';
-import 'package:alvys3/src/routing/routing_arguments.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
@@ -20,8 +14,6 @@ import '../features/authentication/presentation/verify_phonenumber/phone_verific
 
 class RouteGenerator {
   static Route<dynamic> generateRoute(RouteSettings settings) {
-    //final args = settings.name;
-
     switch (settings.name) {
       case Routes.landingRoute:
         return MaterialPageRoute(builder: (context) => const Landing());

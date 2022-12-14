@@ -3,7 +3,6 @@ import 'package:alvys3/src/features/documents/domain/paystub/paystub.dart';
 import 'package:alvys3/src/features/documents/domain/personal_document/personal_document.dart';
 import 'package:alvys3/src/network/api_client.dart';
 import 'package:alvys3/src/network/endpoints.dart';
-import 'package:flutter/foundation.dart';
 
 import '../../../../network/api_response.dart';
 import '../../../../network/network_info.dart';

@@ -1,8 +1,6 @@
 import 'package:alvys3/src/features/trips/domain/app_trip/app_trip.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'data.dart';
-
 part 'trip_details.freezed.dart';
 part 'trip_details.g.dart';
 

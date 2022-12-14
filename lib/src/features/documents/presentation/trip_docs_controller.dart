@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:alvys3/src/features/authentication/domain/models/driver_user/driver_user.dart';
 import 'package:alvys3/src/features/authentication/domain/models/driver_user/user_tenant.dart';
-import 'package:alvys3/src/features/authentication/presentation/auth_provider_controller.dart';
 import 'package:alvys3/src/features/documents/data/data_provider.dart';
 import 'package:alvys3/src/features/documents/domain/document_state/document_state.dart';
 import 'package:alvys3/src/features/trips/presentation/trip/trip_page_controller.dart';
@@ -10,10 +9,8 @@ import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-import '../../../network/api_response.dart';
 import '../../../routing/routing_arguments.dart';
 import '../data/repositories/documents_repository.dart';
-import '../domain/paystub/paystub.dart';
 
 class DocumentsNotifier
     extends AutoDisposeFamilyAsyncNotifier<DocumentState, DocumentType> {

@@ -1,18 +1,14 @@
 import 'dart:async';
-import 'dart:io';
 
-import 'package:alvys3/src/constants/text_styles.dart';
 import 'package:cross_file/cross_file.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
+
 import 'package:go_router/go_router.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:pdf_viewer_plugin/pdf_viewer_plugin.dart';
 import 'package:share_plus/share_plus.dart';
 
-import '../../../constants/color.dart';
 import '../../../routing/routing_arguments.dart';
 
 class PDFViewer extends StatefulWidget {

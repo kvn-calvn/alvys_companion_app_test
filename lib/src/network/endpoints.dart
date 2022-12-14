@@ -1,4 +1,3 @@
-import 'package:alvys3/app.dart';
 import 'package:alvys3/src/network/environment.dart';
 
 import '../utils/magic_strings.dart';

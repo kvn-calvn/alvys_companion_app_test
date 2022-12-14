@@ -1,5 +1,4 @@
 import 'package:alvys3/src/constants/color.dart';
-import 'package:alvys3/src/constants/text_styles.dart';
 import 'package:flutter/material.dart';
 
 class ButtonStyle1 extends StatelessWidget {

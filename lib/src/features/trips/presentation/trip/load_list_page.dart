@@ -3,14 +3,12 @@
 import 'package:alvys3/src/common_widgets/empty_view.dart';
 import 'package:alvys3/src/common_widgets/large_nav_button.dart';
 import 'package:alvys3/src/common_widgets/shimmers/trip_card_shimmer.dart';
-import 'package:alvys3/src/constants/color.dart';
 import 'package:alvys3/src/features/trips/presentation/trip/trip_page_controller.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../common_widgets/trip_card.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class LoadListPage extends ConsumerStatefulWidget {
   const LoadListPage({Key? key}) : super(key: key);

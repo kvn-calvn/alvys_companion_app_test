@@ -1,7 +1,6 @@
 // ignore_for_file: constant_identifier_names
 
 import 'package:alvys3/src/constants/api_routes.dart';
-import 'package:alvys3/src/network/dio_factory.dart';
 import 'package:alvys3/src/network/user_token_handler.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
