@@ -7,10 +7,11 @@ import 'package:flutter/material.dart';
 
 class AlvysTheme {
   static ThemeData mainTheme(Brightness brightness) {
+    final textTheme = appTextTheme(
+        MediaQueryData.fromWindow(WidgetsBinding.instance.window).size.width,
+        brightness);
     return ThemeData(
-      textTheme: appTextTheme(
-          MediaQueryData.fromWindow(WidgetsBinding.instance.window).size.width,
-          brightness),
+      textTheme: textTheme,
       brightness: brightness,
       primaryColor: brightness.isLight ? Colors.white : Colors.black,
       scaffoldBackgroundColor: ColorManager.scaffoldColor(brightness),
@@ -103,6 +104,9 @@ class AlvysTheme {
         surface: brightness.isLight ? Colors.white : Colors.black,
         onSurface: brightness.isLight ? Colors.black : Colors.white,
       ),
+      snackBarTheme: SnackBarThemeData(
+          backgroundColor: ColorManager.cardColor(brightness),
+          contentTextStyle: textTheme.bodyMedium),
     );
   }
 
@@ -200,7 +204,7 @@ class AlvysTheme {
       );
   static TextTheme appTextTheme(double width, Brightness brightness) {
     return GoogleFonts.poppinsTextTheme(defaultTextTheme(brightness).apply(
-      fontSizeFactor: (width / 1000) * 2.3,
+      fontSizeFactor: (width / 1000) * 2.55,
     ));
   }
 }

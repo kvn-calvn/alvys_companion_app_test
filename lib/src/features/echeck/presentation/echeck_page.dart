@@ -70,6 +70,7 @@ class _EcheckPageState extends ConsumerState<EcheckPage> {
                 itemCount: echecks!.length,
                 itemBuilder: (context, index) => EcheckCard(
                   eCheck: echecks[index],
+                  cancelECheck: (echeckNumber) {},
                 ),
               ),
       ),

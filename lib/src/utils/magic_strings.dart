@@ -28,3 +28,5 @@ enum DocumentType { tripDocuments, personalDocuments, paystubs, tripReport }
 enum Environment { dev, qa, sandbox }
 
 enum StorageKey { driverData, themeMode }
+
+enum EcheckOption { copy, cancel }

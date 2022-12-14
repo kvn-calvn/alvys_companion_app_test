@@ -1,10 +1,59 @@
+import 'package:alvys3/src/common_widgets/popup_dropdown.dart';
 import 'package:alvys3/src/features/trips/domain/app_trip/echeck.dart';
+import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import '../utils/extensions.dart';
 
 class EcheckCard extends StatelessWidget {
   final ECheck eCheck;
-  const EcheckCard({Key? key, required this.eCheck}) : super(key: key);
+  final Function(String echeckNumber) cancelECheck;
+  const EcheckCard({Key? key, required this.eCheck, required this.cancelECheck})
+      : super(key: key);
+
+  void showEcheckMenu(BuildContext context) {
+    showCustomPopup<EcheckOption>(
+      context: context,
+      onSelected: (value) {
+        switch (value) {
+          case EcheckOption.copy:
+            Clipboard.setData(ClipboardData(text: eCheck.expressCheckNumber));
+            SnackBar snackBar = SnackBar(
+              padding: const EdgeInsets.only(top: 10),
+              content: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: const [
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(vertical: 8.0, horizontal: 12),
+                    child: Text('E-Check number copied'),
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Divider(
+                    height: 0,
+                    thickness: 1.5,
+                  )
+                ],
+              ),
+              duration: const Duration(milliseconds: 2000),
+            );
+            ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            break;
+          case EcheckOption.cancel:
+            cancelECheck(eCheck.eCheckId!);
+            break;
+        }
+      },
+      items: (context) => EcheckOption.values
+          .map<AlvysPopupItem<EcheckOption>>(
+              (e) => AlvysPopupItem(value: e, child: Text(e.name.titleCase)))
+          .toList(),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +65,9 @@ class EcheckCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
-          onTap: () {},
+          onLongPress: () {
+            showEcheckMenu(context);
+          },
           child: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
             child: Row(
@@ -85,10 +136,13 @@ class EcheckCard extends StatelessWidget {
                   ],
                 ),
                 IconButton(
-                    constraints: const BoxConstraints(),
-                    splashRadius: 24,
-                    onPressed: () {},
-                    icon: const Icon(Icons.more_vert))
+                  constraints: const BoxConstraints(),
+                  splashRadius: 24,
+                  onPressed: () {
+                    showEcheckMenu(context);
+                  },
+                  icon: const Icon(Icons.more_vert),
+                )
               ],
             ),
           ),

@@ -29,7 +29,7 @@ final _shellNavigatorKey = GlobalKey<NavigatorState>();
 
 final routerProvider = Provider(
   (ref) => GoRouter(
-    initialLocation: ref.read(authProvider).value!.driver == null
+    initialLocation: ref.read(authProvider).value!.driver != null
         ? RouteName.signIn.toRoute
         : RouteName.trips.toRoute,
     debugLogDiagnostics: true,
