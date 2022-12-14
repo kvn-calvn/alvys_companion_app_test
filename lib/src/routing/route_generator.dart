@@ -3,7 +3,6 @@ import 'package:alvys/app/pages/load_details.dart';
 import 'package:alvys/app/pages/load_list.dart';
 import 'package:alvys/app/pages/auth/phone_verification.dart';
 import 'package:alvys/app/pages/auth/sign_in.dart';*/
-import 'package:alvys3/src/features/documents/presentation/trip_docs_page.dart';
 import 'package:alvys3/src/features/echeck/presentation/echeck_page.dart';
 import 'package:alvys3/src/features/trips/presentation/stopdetails/stop_details_page.dart';
 import 'package:alvys3/src/features/trips/presentation/trip/filtered_trip_page.dart';
@@ -14,6 +13,7 @@ import 'package:alvys3/src/routing/routing_arguments.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:page_transition/page_transition.dart';
+import '../features/documents/presentation/document_page.dart';
 import 'landing.dart';
 import '../features/authentication/presentation/sign_in_phonenumber/sign_in_page.dart';
 import '../features/authentication/presentation/verify_phonenumber/phone_verification_page.dart';
@@ -52,9 +52,8 @@ class RouteGenerator {
             type: PageTransitionType.rightToLeft);
 
       case Routes.tripDocumentsRoute:
-        final arguments = settings.arguments as TripDocsArguments;
         return PageTransition(
-            child: TripDocsPage(tripId: arguments.tripId),
+            child: const DocumentsPage(DocumentType.personalDocuments),
             type: PageTransitionType.rightToLeft);
 /*
       case Routes.pdfViewer:

@@ -69,7 +69,9 @@ class SettingsList extends StatelessWidget {
         ),
         LargeNavButton(
           title: "Trip Report",
-          onPressed: () {},
+          onPressed: () {
+            context.pushNamed(RouteName.tripReport.name);
+          },
         ),
         const SizedBox(
           height: 15,

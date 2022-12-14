@@ -15,6 +15,7 @@ abstract class DocumentsRepository {
   Future<ApiResponse<List<Paystub>>> getPaystubs(DriverUser user,
       [int top = 10]);
   Future<ApiResponse<List<PersonalDocument>>> getPersonalDocs();
+  Future<ApiResponse<List<PersonalDocument>>> getTripReportDocs();
 }
 
 class AppDocumentsRepository implements DocumentsRepository {
@@ -79,6 +80,33 @@ class AppDocumentsRepository implements DocumentsRepository {
                 .toListNotNull()
                 .map((x) => TripDocuments.fromJson(x))
                 .toList());
+      }
+      return ApiResponse(success: false, data: [], error: res.data["Error"]);
+    }
+    return ApiResponse(
+      success: false,
+      data: [],
+      error: "Network unavailable, check internet connection",
+    );
+  }
+
+  @override
+  Future<ApiResponse<List<PersonalDocument>>> getTripReportDocs() async {
+    Map<String, dynamic> data = {
+      "IncludeTypes": ["Trip Report"],
+      "ExcludeTypes": []
+    };
+    if (await network.isConnected) {
+      var res = await ApiClient.singleton.dio
+          .post(Endpoint.driverPersonalDocuments, data: data);
+      if (res.statusCode == 200) {
+        return ApiResponse(
+          success: true,
+          data: (res.data as List<dynamic>?)
+              .toListNotNull()
+              .map((x) => PersonalDocument.fromJson(x))
+              .toList(),
+        );
       }
       return ApiResponse(success: false, data: [], error: res.data["Error"]);
     }

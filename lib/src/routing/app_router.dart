@@ -1,11 +1,8 @@
 import 'package:alvys3/src/common_widgets/main_bottom_nav.dart';
 import 'package:alvys3/src/features/authentication/presentation/sign_in_phonenumber/sign_in_page.dart';
 import 'package:alvys3/src/features/authentication/presentation/verify_phonenumber/phone_verification_page.dart';
-import 'package:alvys3/src/features/documents/domain/personal_document/personal_document.dart';
-import 'package:alvys3/src/features/documents/presentation/paystubs_page.dart';
+import 'package:alvys3/src/features/documents/presentation/document_page.dart';
 import 'package:alvys3/src/features/documents/presentation/pdf_viewer.dart';
-import 'package:alvys3/src/features/documents/presentation/personal_docs_page.dart';
-import 'package:alvys3/src/features/documents/presentation/trip_docs_page.dart';
 import 'package:alvys3/src/features/echeck/presentation/echeck_page.dart';
 import 'package:alvys3/src/features/echeck/presentation/generate_echeck.dart';
 import 'package:alvys3/src/features/permission/location/presentation/request_location.dart';
@@ -24,7 +21,6 @@ import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:pdf_viewer_plugin/pdf_viewer_plugin.dart';
 
 import '../features/authentication/presentation/auth_provider_controller.dart';
 
@@ -134,10 +130,7 @@ final routerProvider = Provider(
                       name: RouteName.tripDocuments.name,
                       path: RouteName.tripDocuments.name,
                       builder: (context, state) {
-                        final tripId = state.queryParams['tripId']!;
-                        return TripDocsPage(
-                          tripId: tripId,
-                        );
+                        return const DocumentsPage(DocumentType.tripDocuments);
                       },
                       routes: <GoRoute>[
                         GoRoute(
@@ -191,7 +184,7 @@ final routerProvider = Provider(
                     name: RouteName.paystubs.name,
                     path: RouteName.paystubs.name,
                     builder: (context, state) {
-                      return const PaystubPage();
+                      return const DocumentsPage(DocumentType.paystubs);
                     },
                     // routes: [],
                   ),
@@ -199,7 +192,16 @@ final routerProvider = Provider(
                     name: RouteName.personalDocuments.name,
                     path: RouteName.personalDocuments.name,
                     builder: (context, state) {
-                      return const PersonalDocumentsPage();
+                      return const DocumentsPage(
+                          DocumentType.personalDocuments);
+                    },
+                    // routes: [],
+                  ),
+                  GoRoute(
+                    name: RouteName.tripReport.name,
+                    path: RouteName.tripReport.name,
+                    builder: (context, state) {
+                      return const DocumentsPage(DocumentType.tripReport);
                     },
                     // routes: [],
                   ),

@@ -1,0 +1,82 @@
+// ignore_for_file: library_private_types_in_public_api, no_leading_underscores_for_local_identifiers
+
+import 'package:alvys3/src/common_widgets/custom_bottom_sheet.dart';
+import 'package:alvys3/src/common_widgets/empty_view.dart';
+import 'package:alvys3/src/common_widgets/load_more_button.dart';
+import 'package:alvys3/src/common_widgets/shimmers/documents_shimmer.dart';
+import 'package:alvys3/src/features/documents/presentation/document_list.dart';
+import 'package:alvys3/src/features/documents/presentation/trip_docs_controller.dart';
+import 'package:alvys3/src/features/documents/presentation/upload_options.dart';
+import 'package:alvys3/src/utils/magic_strings.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../routing/routing_arguments.dart';
+
+class DocumentsPage extends ConsumerStatefulWidget {
+  final DocumentType documentType;
+  const DocumentsPage(this.documentType, {Key? key}) : super(key: key);
+
+  @override
+  _DocumentsPageState createState() => _DocumentsPageState();
+}
+
+class _DocumentsPageState extends ConsumerState<DocumentsPage> {
+  bool get showFAB {
+    switch (widget.documentType) {
+      case DocumentType.tripDocuments:
+      case DocumentType.personalDocuments:
+      case DocumentType.tripReport:
+        return true;
+      case DocumentType.paystubs:
+        return false;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final docsState = ref.watch(documentsProvider.call(widget.documentType));
+    final docsNotifier =
+        ref.watch(documentsProvider.call(widget.documentType).notifier);
+    return Scaffold(
+      appBar: AppBar(title: Text(docsNotifier.pageTitle)),
+      floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
+      floatingActionButton: showFAB
+          ? FloatingActionButton(
+              onPressed: () {
+                showCustomBottomSheet(context, const UploadOptions());
+              },
+              child: const Icon(Icons.cloud_upload),
+            )
+          : null,
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+        child: docsState.when(
+          loading: () => const DocumentsShimmer(),
+          error: (error, stack) => const EmptyView(
+              title: "Error occurred while loading documents", description: ''),
+          data: (data) {
+            return DocumentList(
+              documents: docsNotifier.documentThumbnails,
+              refreshFunction: () async {
+                await ref
+                    .read(documentsProvider.call(widget.documentType).notifier)
+                    .getDocuments();
+              },
+              emptyMessage: "No ${docsNotifier.pageTitle}",
+              extra: data.canLoadMore
+                  ? LoadMoreButton(loadMoreFunction: () async {
+                      await ref
+                          .read(documentsProvider
+                              .call(widget.documentType)
+                              .notifier)
+                          .loadMorePaystubs();
+                    })
+                  : null,
+            );
+          },
+        ),
+      ),
+    );
+  }
+}

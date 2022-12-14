@@ -29,7 +29,6 @@ class LargeNavButton extends StatelessWidget {
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
               child: Row(
-                mainAxisSize: MainAxisSize.max,
                 children: [
                   if (icon != null) icon!,
                   Padding(

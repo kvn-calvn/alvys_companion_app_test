@@ -121,3 +121,10 @@ extension EnumExtn on Enum {
   String get toTitleCase => name.titleCase;
   String get toRoute => "/$name";
 }
+
+extension DateTimeExtn on DateTime? {
+  bool get isNullOrAfterNow {
+    if (this == null) return true;
+    return DateTime.now().isAfter(this!);
+  }
+}
