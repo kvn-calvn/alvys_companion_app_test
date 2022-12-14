@@ -85,12 +85,21 @@ class _PDFViewerState extends State<PDFViewer> {
       ),
       body: Center(
         child: progress < 1
-            ? SizedBox(
-                height: 50,
-                width: 50,
-                child: CircularProgressIndicator(
-                  value: progress,
-                ),
+            ? Stack(
+                alignment: Alignment.center,
+                children: [
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height * 0.1,
+                    width: MediaQuery.of(context).size.height * 0.1,
+                    child: CircularProgressIndicator(
+                      value: progress,
+                      strokeWidth: 16,
+                    ),
+                  ),
+                  progress > 0
+                      ? Text('${(progress * 100).ceil()}')
+                      : const SizedBox.shrink(),
+                ],
               )
             : errorMessage.isNotEmpty
                 ? Center(

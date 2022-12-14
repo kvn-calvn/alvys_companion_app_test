@@ -30,8 +30,9 @@ class Endpoint {
   static String get mobileBaseApi => '${baseApi}mobilev2/';
   static String tripDocuments(String tripId) =>
       "${mobileBaseApi}getDocumentsByTrip/$tripId";
-
   static String driverPaystubs(String driverId, String companyCode,
           [int top = 10]) =>
       '${baseApi}billing/QueryPaystubData?UserId=$driverId&CompanyCode=$companyCode&Top=$top';
+  static String driverPersonalDocuments =
+      "${mobileBaseApi}GetMinifiedDocuments";
 }

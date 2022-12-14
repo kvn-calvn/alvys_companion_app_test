@@ -1,3 +1,4 @@
+import 'package:alvys3/src/features/documents/domain/personal_document/personal_document.dart';
 import 'package:alvys3/src/features/documents/domain/trip_documents/trip_documents.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -11,6 +12,7 @@ class DocumentState with _$DocumentState {
   factory DocumentState({
     @Default(<Paystub>[]) List<Paystub> paystubs,
     @Default(<TripDocuments>[]) List<TripDocuments> tripDocuments,
+    @Default(<PersonalDocument>[]) List<PersonalDocument> personalDocuments,
     @Default('') String filePath,
     @Default('') String title,
   }) = _DocumentState;

@@ -57,7 +57,9 @@ class SettingsList extends StatelessWidget {
         ),
         LargeNavButton(
           title: "My Documents",
-          onPressed: () {},
+          onPressed: () {
+            context.pushNamed(RouteName.personalDocuments.name);
+          },
         ),
         LargeNavButton(
           title: "Paystubs",

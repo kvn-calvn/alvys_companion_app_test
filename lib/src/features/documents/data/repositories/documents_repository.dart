@@ -1,5 +1,6 @@
 import 'package:alvys3/src/features/authentication/domain/models/driver_user/driver_user.dart';
 import 'package:alvys3/src/features/documents/domain/paystub/paystub.dart';
+import 'package:alvys3/src/features/documents/domain/personal_document/personal_document.dart';
 import 'package:alvys3/src/network/api_client.dart';
 import 'package:alvys3/src/network/endpoints.dart';
 import 'package:flutter/foundation.dart';
@@ -13,7 +14,7 @@ abstract class DocumentsRepository {
   Future<ApiResponse<List<TripDocuments>>> getTripDocs(String tripId);
   Future<ApiResponse<List<Paystub>>> getPaystubs(DriverUser user,
       [int top = 10]);
-  Future<ApiResponse<List<TripDocuments>>> getPersonalDocs(String tripId);
+  Future<ApiResponse<List<PersonalDocument>>> getPersonalDocs();
 }
 
 class AppDocumentsRepository implements DocumentsRepository {
@@ -45,10 +46,26 @@ class AppDocumentsRepository implements DocumentsRepository {
   }
 
   @override
-  Future<ApiResponse<List<TripDocuments>>> getPersonalDocs(
-      String tripId) async {
-    // TODO: implement getPersonalDocs
-    throw UnimplementedError();
+  Future<ApiResponse<List<PersonalDocument>>> getPersonalDocs() async {
+    if (await network.isConnected) {
+      var res =
+          await ApiClient.singleton.dio.get(Endpoint.driverPersonalDocuments);
+      if (res.statusCode == 200) {
+        return ApiResponse(
+          success: true,
+          data: (res.data as List<dynamic>?)
+              .toListNotNull()
+              .map((x) => PersonalDocument.fromJson(x))
+              .toList(),
+        );
+      }
+      return ApiResponse(success: false, data: [], error: res.data["Error"]);
+    }
+    return ApiResponse(
+      success: false,
+      data: [],
+      error: "Network unavailable, check internet connection",
+    );
   }
 
   @override

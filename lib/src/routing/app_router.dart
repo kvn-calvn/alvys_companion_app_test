@@ -1,8 +1,10 @@
 import 'package:alvys3/src/common_widgets/main_bottom_nav.dart';
 import 'package:alvys3/src/features/authentication/presentation/sign_in_phonenumber/sign_in_page.dart';
 import 'package:alvys3/src/features/authentication/presentation/verify_phonenumber/phone_verification_page.dart';
+import 'package:alvys3/src/features/documents/domain/personal_document/personal_document.dart';
 import 'package:alvys3/src/features/documents/presentation/paystubs_page.dart';
 import 'package:alvys3/src/features/documents/presentation/pdf_viewer.dart';
+import 'package:alvys3/src/features/documents/presentation/personal_docs_page.dart';
 import 'package:alvys3/src/features/documents/presentation/trip_docs_page.dart';
 import 'package:alvys3/src/features/echeck/presentation/echeck_page.dart';
 import 'package:alvys3/src/features/echeck/presentation/generate_echeck.dart';
@@ -190,6 +192,14 @@ final routerProvider = Provider(
                     path: RouteName.paystubs.name,
                     builder: (context, state) {
                       return const PaystubPage();
+                    },
+                    // routes: [],
+                  ),
+                  GoRoute(
+                    name: RouteName.personalDocuments.name,
+                    path: RouteName.personalDocuments.name,
+                    builder: (context, state) {
+                      return const PersonalDocumentsPage();
                     },
                     // routes: [],
                   ),
