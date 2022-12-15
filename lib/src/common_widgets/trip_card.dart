@@ -45,12 +45,12 @@ class TripCard extends ConsumerWidget {
                       children: [
                         Text(
                           'Trip# ${trip.tripNumber}',
-                          style: Theme.of(context).textTheme.titleMedium,
+                          style: Theme.of(context).textTheme.bodyMedium,
                         ),
                         Text(
                             NumberFormat.simpleCurrency()
                                 .format(trip.tripValue),
-                            style: Theme.of(context).textTheme.titleMedium),
+                            style: Theme.of(context).textTheme.bodyMedium),
                       ],
                     ),
                   ),
@@ -85,6 +85,12 @@ class TripCard extends ConsumerWidget {
                               Text(
                                 DateFormat('MMM d @ h:mm a', 'en_US')
                                     .formatNullDate(trip.pickupDate),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .copyWith(
+                                      color: ColorManager.lightgrey,
+                                    ),
                               ),
                             ],
                           ),
@@ -126,8 +132,16 @@ class TripCard extends ConsumerWidget {
                                           .bodyLarge!,
                                     ),
                                   )),
-                              Text(DateFormat('MMM d @ h:mm a', 'en_US')
-                                  .formatNullDate(trip.deliveryDate)),
+                              Text(
+                                DateFormat('MMM d @ h:mm a', 'en_US')
+                                    .formatNullDate(trip.deliveryDate),
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .copyWith(
+                                      color: ColorManager.lightgrey,
+                                    ),
+                              ),
                             ],
                           ),
                         ),
@@ -188,8 +202,8 @@ class TripCardDetail extends StatelessWidget {
         Text(
           title.toUpperCase(),
           style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-              color: ColorManager.lightTextColor(Theme.of(context).brightness),
-              fontWeight: FontWeight.bold),
+                color: ColorManager.lightgrey,
+              ),
         ),
         Text(
           details,

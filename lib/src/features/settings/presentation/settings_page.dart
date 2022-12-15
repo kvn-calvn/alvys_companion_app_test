@@ -75,8 +75,7 @@ class SettingsList extends StatelessWidget {
         LargeNavButton(
           title: "Change Theme",
           onPressed: () {
-            showCustomBottomSheet(context, const ThemeSwitcher(),
-                title: const Text('Change Theme'));
+            showCustomBottomSheet(context, const ThemeSwitcher());
           },
         ),
         LargeNavButton(

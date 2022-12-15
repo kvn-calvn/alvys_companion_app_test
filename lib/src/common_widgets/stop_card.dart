@@ -66,7 +66,7 @@ class StopCard extends ConsumerWidget {
                             children: [
                               Text(
                                 stop.companyName!,
-                                style: Theme.of(context).textTheme.labelLarge,
+                                style: Theme.of(context).textTheme.bodyLarge,
                               ),
                               Text(
                                 stop.street!,
@@ -79,7 +79,12 @@ class StopCard extends ConsumerWidget {
                               Text(
                                 DateFormat("MMM dd, yyyy @ hh:mm")
                                     .formatNullDate(stop.stopDate),
-                                style: Theme.of(context).textTheme.bodyMedium,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium!
+                                    .copyWith(
+                                      color: ColorManager.lightgrey,
+                                    ),
                               ),
                             ],
                           ),

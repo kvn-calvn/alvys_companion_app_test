@@ -55,6 +55,18 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                         borderRadius: BorderRadius.circular(4),
                       ),
                     ),
+                    if (widget.title != null) ...[
+                      const SizedBox(
+                        height: 17,
+                      ),
+                      DefaultTextStyle.merge(
+                        child: widget.title!,
+                        style: Theme.of(context)
+                            .textTheme
+                            .titleLarge!
+                            .copyWith(fontWeight: FontWeight.w300),
+                      ),
+                    ],
                     Flexible(
                       child: SingleChildScrollView(
                         child: widget.child,
@@ -63,13 +75,6 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                   ],
                 ),
               ),
-              if (widget.title != null)
-                DefaultTextStyle.merge(
-                    child: widget.title!,
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleLarge!
-                        .copyWith(fontWeight: FontWeight.w300))
             ],
           ),
         ),

@@ -76,7 +76,7 @@ class StopDetails extends ConsumerWidget {
                   children: [
                     Text(
                       'Location',
-                      style: Theme.of(context).textTheme.labelLarge,
+                      style: Theme.of(context).textTheme.bodyLarge,
                     ),
                     Text(
                       currentStop.companyName ?? "",
@@ -103,7 +103,7 @@ class StopDetails extends ConsumerWidget {
                       children: [
                         Text(
                           'Contact',
-                          style: Theme.of(context).textTheme.labelLarge,
+                          style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         Text(
                           currentStop.phone ?? "",
@@ -116,7 +116,7 @@ class StopDetails extends ConsumerWidget {
                       children: [
                         Text(
                           'Date',
-                          style: Theme.of(context).textTheme.labelLarge,
+                          style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         Text(
                           DateFormat.MEd()
@@ -136,7 +136,7 @@ class StopDetails extends ConsumerWidget {
                       children: [
                         Text(
                           'Check In',
-                          style: Theme.of(context).textTheme.labelLarge,
+                          style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         Text(
                           currentStop.timeRecord?.driver?.driverIn ?? '-',
@@ -149,7 +149,7 @@ class StopDetails extends ConsumerWidget {
                       children: [
                         Text(
                           'Check Out',
-                          style: Theme.of(context).textTheme.labelLarge,
+                          style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         Text(
                           currentStop.timeRecord?.driver?.out ?? '-',
@@ -162,7 +162,7 @@ class StopDetails extends ConsumerWidget {
                 const SizedBox(height: 20),
                 Text(
                   'Items',
-                  style: Theme.of(context).textTheme.labelLarge,
+                  style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 const SizedBox(height: 5),
                 ItemsWidget(
@@ -173,7 +173,7 @@ class StopDetails extends ConsumerWidget {
                   children: [
                     Text(
                       'Company Instruction',
-                      style: Theme.of(context).textTheme.labelLarge,
+                      style: Theme.of(context).textTheme.bodyLarge,
                     ),
                     Text(
                       currentStop.genInstructions.isNullOrEmpty
@@ -189,7 +189,7 @@ class StopDetails extends ConsumerWidget {
                   children: [
                     Text(
                       'Stop Instruction',
-                      style: Theme.of(context).textTheme.labelLarge,
+                      style: Theme.of(context).textTheme.bodyLarge,
                     ),
                     Text(
                       currentStop.instructions ?? '',
@@ -214,69 +214,75 @@ class ItemsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        for (var item in commodities)
-          Padding(
-            padding: const EdgeInsets.only(top: 5, bottom: 5),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  item.description ?? '',
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'UNITS',
-                          style: Theme.of(context).textTheme.labelLarge,
-                        ),
-                        Text(
-                          '${item.numUnits} ${item.unitType}',
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                      ],
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text(
-                          'PIECES',
-                          style: Theme.of(context).textTheme.labelLarge,
-                        ),
-                        Text(
-                          '${item.numPieces}',
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                      ],
-                    ),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          'WEIGHT',
-                          style: Theme.of(context).textTheme.labelLarge,
-                        ),
-                        Text(
-                          '${item.weight} ${item.weightType}',
-                          style: Theme.of(context).textTheme.bodyMedium,
-                        ),
-                      ],
-                    ),
-                  ],
-                )
-              ],
-            ),
-          )
-      ],
+    return Material(
+      color: Theme.of(context).cardColor,
+      borderRadius: BorderRadius.circular(12),
+      clipBehavior: Clip.antiAlias,
+      type: MaterialType.card,
+      child: Column(
+        children: [
+          for (var item in commodities)
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    item.description ?? '',
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            'UNITS',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          Text(
+                            '${item.numUnits} ${item.unitType}',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            'PIECES',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          Text(
+                            '${item.numPieces}',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            'WEIGHT',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                          Text(
+                            '${item.weight} ${item.weightType}',
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
+                        ],
+                      ),
+                    ],
+                  )
+                ],
+              ),
+            )
+        ],
+      ),
     );
   }
 }
