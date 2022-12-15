@@ -1,5 +1,7 @@
+import 'dart:async';
 import 'dart:convert';
 
+import 'package:alvys3/src/network/api_client.dart';
 import 'package:alvys3/src/utils/extensions.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:alvys3/src/utils/theme_handler.dart';
@@ -14,22 +16,31 @@ import 'app.dart';
 Future<void> main() async {
   //WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   //FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-  WidgetsFlutterBinding.ensureInitialized();
-  var storage = const FlutterSecureStorage();
-  String? driverData = await storage.read(key: StorageKey.driverData.name);
-  ThemeMode? appThemeMode = ThemeMode.values
-      .byNameOrNull(await storage.read(key: StorageKey.themeMode.name));
-  DriverUser? driverUser;
-  if (driverData != null) {
-    driverUser = DriverUser.fromJson(jsonDecode(driverData));
-  }
-  runApp(ProviderScope(
-    overrides: [
-      authProvider.overrideWith(() => AuthProviderNotifier(driver: driverUser)),
-      themeHandlerProvider
-          .overrideWith(() => ThemeHandlerNotifier(appThemeMode)),
-    ],
-    child: App(),
-  ));
+  // late GlobalKey<NavigatorState> navKey;
+
+  runZonedGuarded(() async {
+    WidgetsFlutterBinding.ensureInitialized();
+    GlobalKey<NavigatorState> navKey = GlobalKey<NavigatorState>();
+    var storage = const FlutterSecureStorage();
+    FlutterError.onError = (details) => showDialog(
+        context: navKey.currentState!.context,
+        builder: (context) => AlertDialog());
+    String? driverData = await storage.read(key: StorageKey.driverData.name);
+    ThemeMode? appThemeMode = ThemeMode.values
+        .byNameOrNull(await storage.read(key: StorageKey.themeMode.name));
+    DriverUser? driverUser;
+    if (driverData != null) {
+      driverUser = DriverUser.fromJson(jsonDecode(driverData));
+    }
+    runApp(ProviderScope(
+      overrides: [
+        authProvider
+            .overrideWith(() => AuthProviderNotifier(driver: driverUser)),
+        themeHandlerProvider
+            .overrideWith(() => ThemeHandlerNotifier(appThemeMode)),
+      ],
+      child: App(navKey, driverUser),
+    ));
+  }, (error, stack) {});
   //FlutterNativeSplash.remove();
 }

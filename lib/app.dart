@@ -1,3 +1,4 @@
+import 'package:alvys3/src/features/authentication/domain/models/driver_user/driver_user.dart';
 import 'package:alvys3/src/routing/app_router.dart';
 import 'package:alvys3/src/utils/app_theme.dart';
 import 'package:alvys3/src/utils/theme_handler.dart';
@@ -7,12 +8,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 //import './src/routing/route_generator.dart';
 
 class App extends ConsumerWidget {
-  //const App({Key? key}) : super(key: key);
-  const App._internal();
-
-  static const App instance = App._internal();
-  factory App() => instance;
-
+  const App(this.navKey, this.driver, {Key? key}) : super(key: key);
+  final GlobalKey<NavigatorState> navKey;
+  final DriverUser? driver;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(routerProvider);

@@ -1,9 +1,14 @@
 // ignore_for_file: constant_identifier_names
 
 import 'package:alvys3/src/constants/api_routes.dart';
+import 'package:alvys3/src/network/client_error/client_error.dart';
 import 'package:alvys3/src/network/user_token_handler.dart';
+import 'package:alvys3/src/utils/exceptions.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+import '../utils/magic_strings.dart';
 
 const String APPLICATION_JSON = "application/json";
 const String CONTENT_TYPE = "content-type";
@@ -36,34 +41,58 @@ class ApiClient {
         connectTimeout: 15000,
         sendTimeout: 15000,
         headers: headers));
-    if (kReleaseMode) {
-      //print("Release mode no logs.");
-    } else {
-      dio.interceptors.addAll({
-        DioApiInterCeptor(),
-        /*PrettyDioLogger(
+    dio.interceptors.clear();
+    dio.interceptors.addAll({
+      DioApiInterCeptor(),
+      /*PrettyDioLogger(
             requestHeader: false, requestBody: false, responseHeader: false)*/
-      });
-    }
+    });
     return dio;
   }
 }
 
 class DioApiInterCeptor extends Interceptor {
-  late final UserTokenHandle _userTokenHandle;
-
-  //DioApiInterCeptor(Dio dio);
-
-  dynamic requestInterceptor(RequestOptions options) async {
-    if (options.headers.containsKey("requiresToken")) {
-      //remove the auxiliary header
-      options.headers.remove("requiresToken");
-
-      var token = await _userTokenHandle.getLoginData();
-
-      options.headers.addAll({"Authorization": "Basic $token"});
-
-      return options;
+  @override
+  Future<void> onRequest(
+      RequestOptions options, RequestInterceptorHandler handler) async {
+    var storage = const FlutterSecureStorage();
+    String? driverToken = await storage.read(key: StorageKey.driverToken.name);
+    if (driverToken != null) {
+      options.headers.addAll({"Authorization": "Basic $driverToken"});
     }
+    super.onRequest(options, handler);
   }
+
+  @override
+  void onError(DioError err, ErrorInterceptorHandler handler) {
+    debugPrint(err.response?.statusCode.toString());
+    super.onError(err, handler);
+    throw ClientException('');
+    //debugPrint(err.response?.statusCode.toString());
+    if (err.response!.statusCode! == 400) {
+      throw ClientException('message');
+    }
+    try {
+      handler.next(err);
+    } catch (e) {
+      throw ClientException('message');
+    }
+
+    //debugPrint(err.response?.statusCode.toString());
+
+    super.onError(err, handler);
+  }
+
+  // dynamic requestInterceptor(RequestOptions options) async {
+  //   if (options.headers.containsKey("requiresToken")) {
+  //     //remove the auxiliary header
+  //     options.headers.remove("requiresToken");
+
+  //     var token = await _userTokenHandle.getLoginData();
+
+  //     options.headers.addAll({"Authorization": "Basic $token"});
+
+  //     return options;
+  //   }
+  // }
 }

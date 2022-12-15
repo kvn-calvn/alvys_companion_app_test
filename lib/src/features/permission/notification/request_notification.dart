@@ -56,7 +56,6 @@ class RequestNotification extends StatelessWidget {
                   onPressed: () {},
                   child: const Text(
                     'Not now',
-                    style: TextStyle(color: Colors.white),
                   ),
                 ),
               ],

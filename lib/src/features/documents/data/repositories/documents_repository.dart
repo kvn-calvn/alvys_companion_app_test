@@ -3,6 +3,7 @@ import 'package:alvys3/src/features/documents/domain/paystub/paystub.dart';
 import 'package:alvys3/src/features/documents/domain/personal_document/personal_document.dart';
 import 'package:alvys3/src/network/api_client.dart';
 import 'package:alvys3/src/network/endpoints.dart';
+import 'package:alvys3/src/utils/exceptions.dart';
 
 import '../../../../network/api_response.dart';
 import '../../../../network/network_info.dart';
@@ -71,7 +72,8 @@ class AppDocumentsRepository implements DocumentsRepository {
   @override
   Future<ApiResponse<List<TripDocuments>>> getTripDocs(String tripId) async {
     if (await network.isConnected) {
-      var res = await ApiClient().dio.get(Endpoint.tripDocuments(tripId));
+      var res =
+          await ApiClient.singleton.dio.get(Endpoint.tripDocuments(tripId));
       if (res.statusCode == 200) {
         return ApiResponse(
             success: true,
@@ -79,6 +81,9 @@ class AppDocumentsRepository implements DocumentsRepository {
                 .toListNotNull()
                 .map((x) => TripDocuments.fromJson(x))
                 .toList());
+      }
+      if (res.statusCode == 404) {
+        throw ClientException(res.data);
       }
       return ApiResponse(success: false, data: [], error: res.data["Error"]);
     }

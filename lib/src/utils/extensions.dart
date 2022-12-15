@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 extension ListExt<T, K> on Iterable<T>? {
   bool isInStatus(String test) {
@@ -136,5 +137,12 @@ extension EnumListExt<T extends Enum> on Iterable<T> {
       if (value.name == name) return value;
     }
     return null;
+  }
+}
+
+extension DateFormatEx on DateFormat {
+  String formatNullDate(DateTime? date) {
+    if (date == null) return '-';
+    return format(date);
   }
 }

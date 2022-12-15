@@ -5,6 +5,7 @@ import 'package:alvys3/src/features/authentication/domain/models/driver_user/use
 import 'package:alvys3/src/features/documents/data/data_provider.dart';
 import 'package:alvys3/src/features/documents/domain/document_state/document_state.dart';
 import 'package:alvys3/src/features/trips/presentation/trip/trip_page_controller.dart';
+import 'package:alvys3/src/utils/extensions.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -102,7 +103,7 @@ class DocumentsNotifier
       case DocumentType.paystubs:
         return state.value!.paystubs
             .map((doc) => PDFViewerArguments(
-                doc.link, DateFormat.yMEd().format(doc.datePaid!)))
+                doc.link, DateFormat.yMEd().formatNullDate(doc.datePaid!)))
             .toList();
       case DocumentType.tripReport:
         return state.value!.tripReports

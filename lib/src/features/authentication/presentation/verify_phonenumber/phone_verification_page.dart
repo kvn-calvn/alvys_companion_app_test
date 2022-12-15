@@ -21,8 +21,6 @@ class PhoneNumberVerificationPage extends ConsumerStatefulWidget {
 
 class _PhoneNumberVerificationPageState
     extends ConsumerState<PhoneNumberVerificationPage> {
-  final scaffoldKey = GlobalKey<ScaffoldState>();
-
   final pinController = TextEditingController();
   final focusNode = FocusNode();
   final formKey = GlobalKey<FormState>();
@@ -72,7 +70,6 @@ class _PhoneNumberVerificationPageState
     return GestureDetector(
       onTap: () => (focusNode.unfocus()),
       child: Scaffold(
-        key: scaffoldKey,
         appBar: AppBar(
           automaticallyImplyLeading: false,
           elevation: 0,

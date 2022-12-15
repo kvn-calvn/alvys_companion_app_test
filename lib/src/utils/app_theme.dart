@@ -50,7 +50,7 @@ class AlvysTheme {
                       .size
                       .width,
                   brightness)
-              .titleSmall!
+              .labelMedium!
               .copyWith(
                 fontWeight: FontWeight.bold,
               ),

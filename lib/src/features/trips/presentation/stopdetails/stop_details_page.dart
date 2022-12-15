@@ -6,6 +6,7 @@ import 'package:alvys3/src/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 import '../../domain/app_trip/m_comodity.dart';
 
@@ -118,7 +119,8 @@ class StopDetails extends ConsumerWidget {
                           style: Theme.of(context).textTheme.labelLarge,
                         ),
                         Text(
-                          currentStop.actualStopdate ?? "",
+                          DateFormat.MEd()
+                              .formatNullDate(currentStop.actualStopdate),
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],

@@ -1,0 +1,15 @@
+import 'package:dio/dio.dart';
+
+import '../network/client_error/client_error.dart';
+
+class ClientException implements Exception {
+  late ClientError message;
+  ClientException(dynamic message) {
+    this.message = ClientError.fromJson(message);
+  }
+}
+
+class AlvysDioError extends DioError {
+  AlvysDioError({required RequestOptions requestOptions})
+      : super(requestOptions: requestOptions);
+}

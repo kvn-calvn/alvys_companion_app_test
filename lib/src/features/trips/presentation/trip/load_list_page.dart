@@ -19,8 +19,6 @@ class LoadListPage extends ConsumerStatefulWidget {
 }
 
 class _LoadListPageState extends ConsumerState<LoadListPage> {
-  final scaffoldKey = GlobalKey<ScaffoldState>();
-
   String dropdownvalue = 'Online';
   var items = [
     'Online',
@@ -30,7 +28,6 @@ class _LoadListPageState extends ConsumerState<LoadListPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: scaffoldKey,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: const Text('Trips'),
@@ -75,11 +72,6 @@ class TripList extends ConsumerWidget {
     final tripsState = ref.watch(tripPageControllerProvider);
     return tripsState.when(loading: (() {
       return const TripListShimmer();
-
-      /*  SpinKitFoldingCube(
-              color: ColorManager.primary(Theme.of(context).brightness),
-              size: 50.0,
-            )*/
     }), error: (error, stack) {
       return const Text('Oops, something unexpected happened');
     }, data: (value) {

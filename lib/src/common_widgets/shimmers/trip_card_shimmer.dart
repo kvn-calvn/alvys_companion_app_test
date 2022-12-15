@@ -77,16 +77,13 @@ class TripCardShimmer extends ConsumerWidget {
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.7,
-                            child: FadeShimmer(
-                              millisecondsDelay: millisecondsDelay,
-                              height: 16,
-                              width: 100,
-                              radius: 5,
-                              highlightColor: const Color(0xffF9F9FB),
-                              baseColor: const Color(0xffE6E8EB),
-                            ),
+                          FadeShimmer(
+                            millisecondsDelay: millisecondsDelay,
+                            height: 16,
+                            width: 100,
+                            radius: 5,
+                            highlightColor: const Color(0xffF9F9FB),
+                            baseColor: const Color(0xffE6E8EB),
                           ),
                           const SizedBox(
                             height: 5,
@@ -123,16 +120,13 @@ class TripCardShimmer extends ConsumerWidget {
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          SizedBox(
-                            width: MediaQuery.of(context).size.width * 0.7,
-                            child: FadeShimmer(
-                              millisecondsDelay: millisecondsDelay,
-                              height: 16,
-                              width: 100,
-                              radius: 5,
-                              highlightColor: const Color(0xffF9F9FB),
-                              baseColor: const Color(0xffE6E8EB),
-                            ),
+                          FadeShimmer(
+                            millisecondsDelay: millisecondsDelay,
+                            height: 16,
+                            width: 100,
+                            radius: 5,
+                            highlightColor: const Color(0xffF9F9FB),
+                            baseColor: const Color(0xffE6E8EB),
                           ),
                           const SizedBox(
                             height: 5,

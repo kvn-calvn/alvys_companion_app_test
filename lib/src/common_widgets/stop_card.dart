@@ -1,10 +1,13 @@
 import 'package:alvys3/src/common_widgets/buttons.dart';
 import 'package:alvys3/src/constants/color.dart';
 import 'package:alvys3/src/features/trips/presentation/trip/trip_page_controller.dart';
+import 'package:alvys3/src/utils/exceptions.dart';
+import 'package:alvys3/src/utils/extensions.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
 import '../features/trips/domain/app_trip/stop.dart';
 
@@ -74,7 +77,8 @@ class StopCard extends ConsumerWidget {
                                 style: Theme.of(context).textTheme.bodyMedium,
                               ),
                               Text(
-                                'Jan 28, 2022 @ 15:00',
+                                DateFormat("MMM dd, yyyy @ hh:mm")
+                                    .formatNullDate(stop.stopDate),
                                 style: Theme.of(context).textTheme.bodyMedium,
                               ),
                             ],
@@ -83,9 +87,10 @@ class StopCard extends ConsumerWidget {
                       ],
                     ),
                   ),
-                  ButtonBar(
-                    buttonPadding: const EdgeInsetsDirectional.only(end: 12),
-                    alignment: MainAxisAlignment.start,
+                  Row(
+                    // buttonPadding: const EdgeInsetsDirectional.only(end: 12),
+                    // alignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       ButtonStyle2(
                           onPressAction: () => {debugPrint("")},
@@ -93,7 +98,10 @@ class StopCard extends ConsumerWidget {
                           isLoading: false,
                           isDisable: true),
                       ButtonStyle2(
-                          onPressAction: () => {debugPrint("")},
+                          onPressAction: () {
+                            debugPrint("");
+                            throw ClientException('message');
+                          },
                           title: "Check Out",
                           isLoading: false,
                           isDisable: false),

@@ -24,12 +24,13 @@ import 'package:go_router/go_router.dart';
 
 import '../features/authentication/presentation/auth_provider_controller.dart';
 
-//final _rootNavigatorKey = GlobalKey<NavigatorState>();
+// final _rootNavigatorKey = GlobalKey<NavigatorState>();
 final _shellNavigatorKey = GlobalKey<NavigatorState>();
 
-final routerProvider = Provider(
+Provider<GoRouter> routerProvider = Provider(
   (ref) => GoRouter(
-    initialLocation: ref.read(authProvider).value!.driver != null
+    //   navigatorKey: rootNavKey,
+    initialLocation: ref.watch(authProvider).value!.driver != null
         ? RouteName.signIn.toRoute
         : RouteName.trips.toRoute,
     debugLogDiagnostics: true,
@@ -70,7 +71,6 @@ final routerProvider = Provider(
         },
       ),
       ShellRoute(
-          navigatorKey: _shellNavigatorKey,
           builder: (context, state, child) {
             return MainBottomNav(child: child);
           },
@@ -130,7 +130,10 @@ final routerProvider = Provider(
                       name: RouteName.tripDocuments.name,
                       path: RouteName.tripDocuments.name,
                       builder: (context, state) {
-                        return const DocumentsPage(DocumentType.tripDocuments);
+                        return DocumentsPage(
+                          DocumentType.tripDocuments,
+                          key: state.pageKey,
+                        );
                       },
                       routes: <GoRoute>[
                         GoRoute(

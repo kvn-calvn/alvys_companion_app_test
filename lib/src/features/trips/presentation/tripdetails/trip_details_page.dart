@@ -21,13 +21,10 @@ class LoadDetailsPage extends ConsumerStatefulWidget {
 }
 
 class _LoadDetailsPageState extends ConsumerState<LoadDetailsPage> {
-  final scaffoldKey = GlobalKey<ScaffoldState>();
-
   @override
   Widget build(BuildContext context) {
     var trip = ref.watch(tripPageControllerProvider).value!.currentTrip;
     return Scaffold(
-      key: scaffoldKey,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text(

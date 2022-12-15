@@ -16,8 +16,6 @@ class EcheckPage extends ConsumerStatefulWidget {
 }
 
 class _EcheckPageState extends ConsumerState<EcheckPage> {
-  final scaffoldKey = GlobalKey<ScaffoldState>();
-
   @override
   void initState() {
     super.initState();
@@ -28,7 +26,6 @@ class _EcheckPageState extends ConsumerState<EcheckPage> {
     var echecks =
         ref.watch(tripPageControllerProvider).value!.currentTrip.eChecks;
     return Scaffold(
-      key: scaffoldKey,
       appBar: AppBar(
         title: const Text(
           'E-Checks',
