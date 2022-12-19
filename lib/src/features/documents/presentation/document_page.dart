@@ -37,7 +37,15 @@ class _DocumentsPageState extends ConsumerState<DocumentsPage> {
     final docsNotifier =
         ref.watch(documentsProvider.call(widget.documentType).notifier);
     return Scaffold(
-      appBar: AppBar(title: Text(docsNotifier.pageTitle)),
+      appBar: AppBar(
+        title: Text(
+          docsNotifier.pageTitle,
+          style: Theme.of(context)
+              .textTheme
+              .bodyLarge!
+              .copyWith(fontWeight: FontWeight.w700, fontSize: 18),
+        ),
+      ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
       floatingActionButton: showFAB
           ? FloatingActionButton(

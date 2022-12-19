@@ -24,7 +24,13 @@ class _StopDetailsPageState extends ConsumerState<StopDetailsPage> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         automaticallyImplyLeading: false,
-        title: const Text('Stop Details'),
+        title: Text(
+          'Stop Details',
+          style: Theme.of(context)
+              .textTheme
+              .bodyLarge!
+              .copyWith(fontWeight: FontWeight.w700, fontSize: 18),
+        ),
         centerTitle: true,
         leading: IconButton(
           // 1

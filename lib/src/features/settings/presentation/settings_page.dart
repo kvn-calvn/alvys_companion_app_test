@@ -19,7 +19,11 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text('Settings'),
+        title: Text('Settings',
+            style: Theme.of(context)
+                .textTheme
+                .bodyLarge!
+                .copyWith(fontWeight: FontWeight.w700, fontSize: 30)),
         centerTitle: false,
         elevation: 0,
       ),
@@ -46,7 +50,7 @@ class SettingsList extends StatelessWidget {
         ),
         ProfileNavButton(
           title: "Sandbox Driver",
-          profileImageUrl: 'https://via.placeholder.com/150',
+          profileImageUrl: 'https://i.pravatar.cc/300',
           onPressed: () {
             context.pushNamed(RouteName.profile.name);
           },

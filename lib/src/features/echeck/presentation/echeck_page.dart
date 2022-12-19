@@ -27,8 +27,12 @@ class _EcheckPageState extends ConsumerState<EcheckPage> {
         ref.watch(tripPageControllerProvider).value!.currentTrip.eChecks;
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           'E-Checks',
+          style: Theme.of(context)
+              .textTheme
+              .bodyLarge!
+              .copyWith(fontWeight: FontWeight.w700, fontSize: 18),
         ),
         leading: IconButton(
           // 1

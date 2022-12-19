@@ -28,8 +28,12 @@ class _GenerateEcheckState extends ConsumerState<GenerateEcheck> {
     return UnfocusWidget(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text(
+          title: Text(
             'Generate E-Check',
+            style: Theme.of(context)
+                .textTheme
+                .bodyLarge!
+                .copyWith(fontWeight: FontWeight.w700, fontSize: 18),
           ),
           leading: IconButton(
             icon: Icon(

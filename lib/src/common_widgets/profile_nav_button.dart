@@ -1,3 +1,4 @@
+import 'package:alvys3/src/common_widgets/avatar.dart';
 import 'package:flutter/material.dart';
 
 class ProfileNavButton extends StatelessWidget {
@@ -29,15 +30,7 @@ class ProfileNavButton extends StatelessWidget {
               child: Row(
                 mainAxisSize: MainAxisSize.max,
                 children: [
-                  CircleAvatar(
-                    radius: 30.0,
-                    backgroundColor: Colors.transparent,
-                    child: Image.network(
-                      profileImageUrl,
-                      errorBuilder: (context, error, stackTrace) =>
-                          const Icon(Icons.warning_rounded),
-                    ),
-                  ),
+                  Avatar(profileImageUrl: profileImageUrl),
                   Padding(
                     padding: const EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
                     child: Text(

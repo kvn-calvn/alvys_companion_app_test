@@ -29,6 +29,10 @@ class _LoadDetailsPageState extends ConsumerState<LoadDetailsPage> {
         automaticallyImplyLeading: false,
         title: Text(
           trip.tripNumber ?? '',
+          style: Theme.of(context)
+              .textTheme
+              .bodyLarge!
+              .copyWith(fontWeight: FontWeight.w700, fontSize: 18),
         ),
         leading: IconButton(
           icon: Icon(

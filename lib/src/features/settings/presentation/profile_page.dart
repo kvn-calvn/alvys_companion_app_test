@@ -1,3 +1,4 @@
+import 'package:alvys3/src/common_widgets/avatar.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -38,16 +39,8 @@ class ProfilePage extends StatelessWidget {
         child: ListView(children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircleAvatar(
-                radius: 50.0,
-                backgroundColor: Colors.transparent,
-                child: Image.network(
-                  'https://via.placeholder.com/150',
-                  errorBuilder: (context, error, stackTrace) =>
-                      const Icon(Icons.warning_rounded),
-                ),
-              ),
+            children: const [
+              Avatar(profileImageUrl: 'https://i.pravatar.cc/300')
             ],
           ),
           TextButton(onPressed: () {}, child: const Text("Edit Picture")),
