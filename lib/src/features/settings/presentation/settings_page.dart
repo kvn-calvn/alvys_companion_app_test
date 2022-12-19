@@ -19,11 +19,7 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: Text('Settings',
-            style: Theme.of(context)
-                .textTheme
-                .bodyLarge!
-                .copyWith(fontWeight: FontWeight.w700, fontSize: 30)),
+        title: const Text('Settings'),
         centerTitle: false,
         elevation: 0,
       ),

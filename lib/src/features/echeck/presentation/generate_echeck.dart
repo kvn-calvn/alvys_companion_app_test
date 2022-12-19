@@ -10,6 +10,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
+import '../../../utils/app_theme.dart';
+
 class GenerateEcheck extends ConsumerStatefulWidget {
   const GenerateEcheck({Key? key}) : super(key: key);
 
@@ -30,10 +32,7 @@ class _GenerateEcheckState extends ConsumerState<GenerateEcheck> {
         appBar: AppBar(
           title: Text(
             'Generate E-Check',
-            style: Theme.of(context)
-                .textTheme
-                .bodyLarge!
-                .copyWith(fontWeight: FontWeight.w700, fontSize: 18),
+            style: AlvysTheme.appbarTextStyle(context, true),
           ),
           leading: IconButton(
             icon: Icon(

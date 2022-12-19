@@ -5,6 +5,7 @@ import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import '../../../utils/app_theme.dart';
 import '../../../utils/extensions.dart';
 
 class EcheckPage extends ConsumerStatefulWidget {
@@ -29,10 +30,7 @@ class _EcheckPageState extends ConsumerState<EcheckPage> {
       appBar: AppBar(
         title: Text(
           'E-Checks',
-          style: Theme.of(context)
-              .textTheme
-              .bodyLarge!
-              .copyWith(fontWeight: FontWeight.w700, fontSize: 18),
+          style: AlvysTheme.appbarTextStyle(context, true),
         ),
         leading: IconButton(
           // 1

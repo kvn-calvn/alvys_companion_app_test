@@ -32,7 +32,7 @@ class AlvysTheme {
                     .size
                     .width,
                 brightness)
-            .headlineMedium!
+            .headlineLarge!
             .copyWith(
               fontWeight: FontWeight.bold,
               color: brightness.isLight ? Colors.black : Colors.white,
@@ -110,6 +110,12 @@ class AlvysTheme {
     );
   }
 
+  static TextStyle appbarTextStyle(BuildContext context, bool small) {
+    return small
+        ? Theme.of(context).textTheme.titleMedium!
+        : Theme.of(context).textTheme.headlineLarge!;
+  }
+
   static TextTheme defaultTextTheme(Brightness brightness) => TextTheme(
         displayLarge: const TextStyle(
           // height: 64,
@@ -157,7 +163,7 @@ class AlvysTheme {
           // height: 24,
           fontSize: 18,
           wordSpacing: 0.15,
-          fontWeight: FontWeight.w500,
+          fontWeight: FontWeight.w700,
         ),
         titleSmall: const TextStyle(
           // height: 20,

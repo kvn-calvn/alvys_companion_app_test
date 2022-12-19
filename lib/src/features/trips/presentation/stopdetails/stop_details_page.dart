@@ -8,6 +8,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
+import '../../../../utils/app_theme.dart';
 import '../../domain/app_trip/m_comodity.dart';
 
 class StopDetailsPage extends ConsumerStatefulWidget {
@@ -26,10 +27,7 @@ class _StopDetailsPageState extends ConsumerState<StopDetailsPage> {
         automaticallyImplyLeading: false,
         title: Text(
           'Stop Details',
-          style: Theme.of(context)
-              .textTheme
-              .bodyLarge!
-              .copyWith(fontWeight: FontWeight.w700, fontSize: 18),
+          style: AlvysTheme.appbarTextStyle(context, true),
         ),
         centerTitle: true,
         leading: IconButton(

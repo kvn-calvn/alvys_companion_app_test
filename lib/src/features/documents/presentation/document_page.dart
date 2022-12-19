@@ -11,6 +11,8 @@ import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../utils/app_theme.dart';
+
 class DocumentsPage extends ConsumerStatefulWidget {
   final DocumentType documentType;
   const DocumentsPage(this.documentType, {Key? key}) : super(key: key);
@@ -40,10 +42,7 @@ class _DocumentsPageState extends ConsumerState<DocumentsPage> {
       appBar: AppBar(
         title: Text(
           docsNotifier.pageTitle,
-          style: Theme.of(context)
-              .textTheme
-              .bodyLarge!
-              .copyWith(fontWeight: FontWeight.w700, fontSize: 18),
+          style: AlvysTheme.appbarTextStyle(context, true),
         ),
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,

@@ -4,6 +4,7 @@ import 'package:alvys3/src/common_widgets/large_nav_button.dart';
 import 'package:alvys3/src/common_widgets/stop_card.dart';
 import 'package:alvys3/src/constants/color.dart';
 import 'package:alvys3/src/features/trips/presentation/trip/trip_page_controller.dart';
+import 'package:alvys3/src/utils/app_theme.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -29,10 +30,7 @@ class _LoadDetailsPageState extends ConsumerState<LoadDetailsPage> {
         automaticallyImplyLeading: false,
         title: Text(
           trip.tripNumber ?? '',
-          style: Theme.of(context)
-              .textTheme
-              .bodyLarge!
-              .copyWith(fontWeight: FontWeight.w700, fontSize: 18),
+          style: AlvysTheme.appbarTextStyle(context, true),
         ),
         leading: IconButton(
           icon: Icon(
