@@ -1,8 +1,8 @@
 // ignore_for_file: constant_identifier_names
 
 import 'package:alvys3/src/constants/api_routes.dart';
-import 'package:alvys3/src/network/client_error/client_error.dart';
-import 'package:alvys3/src/network/user_token_handler.dart';
+//import 'package:alvys3/src/network/client_error/client_error.dart';
+//import 'package:alvys3/src/network/user_token_handler.dart';
 import 'package:alvys3/src/utils/exceptions.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/foundation.dart';
@@ -69,7 +69,7 @@ class DioApiInterCeptor extends Interceptor {
     super.onError(err, handler);
     throw ClientException('');
     //debugPrint(err.response?.statusCode.toString());
-    if (err.response!.statusCode! == 400) {
+    /*  if (err.response!.statusCode! == 400) {
       throw ClientException('message');
     }
     try {
@@ -80,7 +80,7 @@ class DioApiInterCeptor extends Interceptor {
 
     //debugPrint(err.response?.statusCode.toString());
 
-    super.onError(err, handler);
+    super.onError(err, handler);*/
   }
 
   // dynamic requestInterceptor(RequestOptions options) async {

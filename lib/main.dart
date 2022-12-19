@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:alvys3/src/network/api_client.dart';
 import 'package:alvys3/src/utils/extensions.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:alvys3/src/utils/theme_handler.dart';
@@ -24,7 +23,7 @@ Future<void> main() async {
     var storage = const FlutterSecureStorage();
     FlutterError.onError = (details) => showDialog(
         context: navKey.currentState!.context,
-        builder: (context) => AlertDialog());
+        builder: (context) => const AlertDialog());
     String? driverData = await storage.read(key: StorageKey.driverData.name);
     ThemeMode? appThemeMode = ThemeMode.values
         .byNameOrNull(await storage.read(key: StorageKey.themeMode.name));

@@ -25,7 +25,7 @@ import 'package:go_router/go_router.dart';
 import '../features/authentication/presentation/auth_provider_controller.dart';
 
 // final _rootNavigatorKey = GlobalKey<NavigatorState>();
-final _shellNavigatorKey = GlobalKey<NavigatorState>();
+//final _shellNavigatorKey = GlobalKey<NavigatorState>();
 
 Provider<GoRouter> routerProvider = Provider(
   (ref) => GoRouter(
