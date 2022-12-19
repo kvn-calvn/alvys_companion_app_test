@@ -7,6 +7,7 @@ import 'package:alvys3/src/features/echeck/presentation/echeck_page.dart';
 import 'package:alvys3/src/features/echeck/presentation/generate_echeck.dart';
 import 'package:alvys3/src/features/permission/location/presentation/request_location.dart';
 import 'package:alvys3/src/features/permission/notification/request_notification.dart';
+import 'package:alvys3/src/features/settings/presentation/about_page.dart';
 import 'package:alvys3/src/features/settings/presentation/profile_page.dart';
 import 'package:alvys3/src/features/settings/presentation/settings_page.dart';
 import 'package:alvys3/src/features/trips/presentation/stopdetails/stop_details_page.dart';
@@ -205,6 +206,14 @@ Provider<GoRouter> routerProvider = Provider(
                     path: RouteName.tripReport.name,
                     builder: (context, state) {
                       return const DocumentsPage(DocumentType.tripReport);
+                    },
+                    // routes: [],
+                  ),
+                  GoRoute(
+                    name: RouteName.about.name,
+                    path: RouteName.about.name,
+                    builder: (context, state) {
+                      return const AboutPage();
                     },
                     // routes: [],
                   ),

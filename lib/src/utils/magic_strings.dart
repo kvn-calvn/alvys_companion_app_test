@@ -1,4 +1,5 @@
 enum RouteName {
+  about,
   landing,
   signIn,
   verify,
