@@ -112,7 +112,10 @@ class AlvysTheme {
 
   static TextStyle appbarTextStyle(BuildContext context, bool small) {
     return small
-        ? Theme.of(context).textTheme.titleMedium!
+        ? Theme.of(context)
+            .textTheme
+            .titleMedium!
+            .copyWith(fontWeight: FontWeight.w700)
         : Theme.of(context).textTheme.headlineLarge!;
   }
 
@@ -163,7 +166,7 @@ class AlvysTheme {
           // height: 24,
           fontSize: 18,
           wordSpacing: 0.15,
-          fontWeight: FontWeight.w700,
+          fontWeight: FontWeight.w500,
         ),
         titleSmall: const TextStyle(
           // height: 20,
