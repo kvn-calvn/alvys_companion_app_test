@@ -73,6 +73,7 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                 ),
                 ref.watch(authProvider).isLoading
                     ? SpinKitFoldingCube(
+                        size: 30,
                         color: Theme.of(context).colorScheme.primary,
                       )
                     : ButtonStyle1(
