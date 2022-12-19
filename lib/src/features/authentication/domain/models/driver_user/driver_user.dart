@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:alvys3/src/features/trips/domain/app_trip/driver.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'address.dart';
@@ -30,7 +33,8 @@ class DriverUser with _$DriverUser {
     @JsonKey(name: "UserTenants")
         List<UserTenant> userTenants,
   }) = _DriverUser;
-
+  DriverUser._();
   factory DriverUser.fromJson(Map<String, dynamic> json) =>
       _$DriverUserFromJson(json);
+  String toStringJson() => jsonEncode(this);
 }

@@ -5,7 +5,8 @@ import '../network/client_error/client_error.dart';
 class ClientException implements Exception {
   late ClientError message;
   ClientException(dynamic message) {
-    this.message = ClientError.fromJson(message);
+    this.message =
+        (message is ClientError) ? message : ClientError.fromJson(message);
   }
 }
 

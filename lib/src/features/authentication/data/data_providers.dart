@@ -3,6 +3,8 @@ import 'package:alvys3/src/features/authentication/data/repositories/auth_reposi
 import 'package:alvys3/src/network/network_module.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'auth_repository.dart';
+
 final authRemoteDataSourceImpl = Provider<AuthRemoteDataSourceImpl>(
     (ref) => AuthRemoteDataSourceImpl(ref.watch(apiClient)));
 
@@ -10,4 +12,9 @@ final authRepositoryImplProvider = Provider<AuthRepositoryImpl>((ref) {
   final networkInfo = ref.watch(networkInfoProvider);
   final datasource = ref.watch(authRemoteDataSourceImpl);
   return AuthRepositoryImpl(datasource, networkInfo);
+});
+
+final authRepoProvider = Provider<AvysAuthRepository>((ref) {
+  final networkInfo = ref.watch(networkInfoProvider);
+  return AvysAuthRepository(networkInfo);
 });

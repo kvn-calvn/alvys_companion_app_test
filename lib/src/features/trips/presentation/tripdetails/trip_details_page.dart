@@ -110,13 +110,13 @@ class TripDetails extends ConsumerWidget {
                     LargeNavButton(
                       title: 'E-Checks',
                       onPressed: () {
-                        context.pushNamed(RouteName.eCheck.name);
+                        context.goNamed(RouteName.eCheck.name);
                       },
                     ),
                     LargeNavButton(
                       title: 'Documents',
                       onPressed: () {
-                        context.pushNamed(RouteName.tripDocuments.name,
+                        context.goNamed(RouteName.tripDocuments.name,
                             queryParams: {
                               'tripNumber': value.currentTrip.tripNumber,
                               'tripId': value.currentTrip.id

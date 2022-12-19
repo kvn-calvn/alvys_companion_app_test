@@ -102,7 +102,7 @@ extension StringExt on String? {
       case 11:
         return "${newNumber[0]} (${newNumber.substring(1, 4)}) ${newNumber.substring(4, 7)}-${newNumber.substring(7, 11)}";
       default:
-        throw Exception("Not a valid phone number");
+        return '';
     }
   }
 }

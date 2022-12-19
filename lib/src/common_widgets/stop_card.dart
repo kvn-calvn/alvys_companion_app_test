@@ -1,6 +1,7 @@
 import 'package:alvys3/src/common_widgets/buttons.dart';
 import 'package:alvys3/src/constants/color.dart';
 import 'package:alvys3/src/features/trips/presentation/trip/trip_page_controller.dart';
+import 'package:alvys3/src/network/client_error/client_error.dart';
 import 'package:alvys3/src/utils/exceptions.dart';
 import 'package:alvys3/src/utils/extensions.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
@@ -105,7 +106,7 @@ class StopCard extends ConsumerWidget {
                       ButtonStyle2(
                           onPressAction: () {
                             debugPrint("");
-                            throw ClientException('message');
+                            throw ClientException(ClientError(title: 'test'));
                           },
                           title: "Check Out",
                           isLoading: false,

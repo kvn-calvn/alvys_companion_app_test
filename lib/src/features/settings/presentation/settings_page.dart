@@ -3,8 +3,10 @@ import 'package:alvys3/src/common_widgets/large_nav_button.dart';
 import 'package:alvys3/src/common_widgets/profile_nav_button.dart';
 import 'package:alvys3/src/common_widgets/theme_switcher.dart';
 import 'package:alvys3/src/common_widgets/url_nav_button.dart';
+import 'package:alvys3/src/features/authentication/presentation/auth_provider_controller.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -32,13 +34,13 @@ class _SettingsPageState extends State<SettingsPage> {
   }
 }
 
-class SettingsList extends StatelessWidget {
+class SettingsList extends ConsumerWidget {
   const SettingsList({
     Key? key,
   }) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return ListView(
       scrollDirection: Axis.vertical,
       children: [
@@ -88,7 +90,9 @@ class SettingsList extends StatelessWidget {
         const UrlNavButton(title: "Help", url: "https://alvys.com/help/"),
         LargeNavButton(
           title: "Sign Out",
-          onPressed: () {},
+          onPressed: () {
+            ref.read(authProvider.notifier).signOut(context);
+          },
         ),
       ],
     );

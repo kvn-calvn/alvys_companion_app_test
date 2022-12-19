@@ -18,7 +18,7 @@ class RouteGenerator {
       case Routes.landingRoute:
         return MaterialPageRoute(builder: (context) => const Landing());
       case Routes.signInRoute:
-        return MaterialPageRoute(builder: (context) => const SignInPage());
+        return MaterialPageRoute(builder: (context) => SignInPage());
       case Routes.verifyRoute:
         return PageTransition(
             child: const PhoneNumberVerificationPage(),

@@ -11,103 +11,105 @@ class AlvysTheme {
         MediaQueryData.fromWindow(WidgetsBinding.instance.window).size.width,
         brightness);
     return ThemeData(
-      textTheme: textTheme,
-      brightness: brightness,
-      primaryColor: brightness.isLight ? Colors.white : Colors.black,
-      scaffoldBackgroundColor: ColorManager.scaffoldColor(brightness),
-      appBarTheme: AppBarTheme(
-        centerTitle: true,
-        iconTheme: IconThemeData(
-          color: brightness.isLight
-              ? Colors.black
-              : Colors.white, //change your color here
-        ),
-        systemOverlayStyle: SystemUiOverlayStyle(
-          statusBarBrightness: brightness,
-        ),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
-        titleTextStyle: appTextTheme(
-                MediaQueryData.fromWindow(WidgetsBinding.instance.window)
-                    .size
-                    .width,
-                brightness)
-            .headlineLarge!
-            .copyWith(
-              fontWeight: FontWeight.bold,
-              color: brightness.isLight ? Colors.black : Colors.white,
-            ),
-      ),
-      buttonTheme: const ButtonThemeData(textTheme: ButtonTextTheme.primary),
-      elevatedButtonTheme: ElevatedButtonThemeData(
-        style: ElevatedButton.styleFrom(
-          backgroundColor: ColorManager.primary(brightness),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
+        textTheme: textTheme,
+        brightness: brightness,
+        primaryColor: brightness.isLight ? Colors.white : Colors.black,
+        scaffoldBackgroundColor: ColorManager.scaffoldColor(brightness),
+        appBarTheme: AppBarTheme(
+          centerTitle: true,
+          iconTheme: IconThemeData(
+            color: brightness.isLight
+                ? Colors.black
+                : Colors.white, //change your color here
           ),
-          textStyle: appTextTheme(
+          systemOverlayStyle: SystemUiOverlayStyle(
+            statusBarBrightness: brightness,
+          ),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          titleTextStyle: appTextTheme(
                   MediaQueryData.fromWindow(WidgetsBinding.instance.window)
                       .size
                       .width,
                   brightness)
-              .labelMedium!
+              .headlineLarge!
               .copyWith(
                 fontWeight: FontWeight.bold,
+                color: brightness.isLight ? Colors.black : Colors.white,
               ),
         ),
-      ),
-      cardColor: ColorManager.cardColor(brightness),
-      bottomNavigationBarTheme: BottomNavigationBarThemeData(
-        backgroundColor: ColorManager.cardColor(brightness),
-        selectedItemColor: ColorManager.primary(brightness),
-        unselectedItemColor: Colors.grey,
-      ),
-      inputDecorationTheme: InputDecorationTheme(
-        isDense: true,
-        fillColor: brightness.isLight ? Colors.white : ColorManager.lightgrey2,
-        filled: true,
-        border: AlvysOutlineBorder(brightness),
-      ),
-      textSelectionTheme: TextSelectionThemeData(
-        cursorColor: ColorManager.primary(brightness),
-        selectionHandleColor: ColorManager.primary(brightness),
-        selectionColor: ColorManager.primary(brightness).withOpacity(0.5),
-      ),
-      radioTheme: RadioThemeData(
-        fillColor: AlvysMaterialStateColor(brightness),
-      ),
-      cardTheme: CardTheme(
-        elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
-      ),
-      progressIndicatorTheme: ProgressIndicatorThemeData(
-        color: ColorManager.primary(brightness),
-      ),
-      indicatorColor: ColorManager.primary(brightness),
-      floatingActionButtonTheme: FloatingActionButtonThemeData(
-        backgroundColor: ColorManager.primary(brightness),
-        foregroundColor: Colors.white,
-      ),
-      iconTheme: IconThemeData(
-        color: brightness.isLight ? Colors.black : Colors.white,
-      ),
-      colorScheme: ColorScheme(
-        brightness: brightness,
-        primary: ColorManager.primary(brightness),
-        onPrimary: Colors.white,
-        secondary: Colors.grey,
-        onSecondary: brightness.isLight ? Colors.black : Colors.white,
-        error: Colors.red,
-        onError: Colors.white,
-        background: brightness.isLight ? Colors.white : Colors.black,
-        onBackground: brightness.isLight ? Colors.black : Colors.white,
-        surface: brightness.isLight ? Colors.white : Colors.black,
-        onSurface: brightness.isLight ? Colors.black : Colors.white,
-      ),
-      snackBarTheme: SnackBarThemeData(
+        buttonTheme: const ButtonThemeData(textTheme: ButtonTextTheme.primary),
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: ColorManager.primary(brightness),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            textStyle: appTextTheme(
+                    MediaQueryData.fromWindow(WidgetsBinding.instance.window)
+                        .size
+                        .width,
+                    brightness)
+                .labelMedium!
+                .copyWith(
+                  fontWeight: FontWeight.bold,
+                ),
+          ),
+        ),
+        cardColor: ColorManager.cardColor(brightness),
+        bottomNavigationBarTheme: BottomNavigationBarThemeData(
           backgroundColor: ColorManager.cardColor(brightness),
-          contentTextStyle: textTheme.bodyMedium),
-    );
+          selectedItemColor: ColorManager.primary(brightness),
+          unselectedItemColor: Colors.grey,
+        ),
+        inputDecorationTheme: InputDecorationTheme(
+          isDense: true,
+          fillColor:
+              brightness.isLight ? Colors.white : ColorManager.lightgrey2,
+          filled: true,
+          border: AlvysOutlineBorder(brightness),
+        ),
+        textSelectionTheme: TextSelectionThemeData(
+          cursorColor: ColorManager.primary(brightness),
+          selectionHandleColor: ColorManager.primary(brightness),
+          selectionColor: ColorManager.primary(brightness).withOpacity(0.5),
+        ),
+        radioTheme: RadioThemeData(
+          fillColor: AlvysMaterialStateColor(brightness),
+        ),
+        cardTheme: CardTheme(
+          elevation: 2,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        ),
+        progressIndicatorTheme: ProgressIndicatorThemeData(
+          color: ColorManager.primary(brightness),
+        ),
+        indicatorColor: ColorManager.primary(brightness),
+        floatingActionButtonTheme: FloatingActionButtonThemeData(
+          backgroundColor: ColorManager.primary(brightness),
+          foregroundColor: Colors.white,
+        ),
+        iconTheme: IconThemeData(
+          color: brightness.isLight ? Colors.black : Colors.white,
+        ),
+        colorScheme: ColorScheme(
+          brightness: brightness,
+          primary: ColorManager.primary(brightness),
+          onPrimary: Colors.white,
+          secondary: Colors.grey,
+          onSecondary: brightness.isLight ? Colors.black : Colors.white,
+          error: Colors.red,
+          onError: Colors.white,
+          background: brightness.isLight ? Colors.white : Colors.black,
+          onBackground: brightness.isLight ? Colors.black : Colors.white,
+          surface: brightness.isLight ? Colors.white : Colors.black,
+          onSurface: brightness.isLight ? Colors.black : Colors.white,
+        ),
+        snackBarTheme: SnackBarThemeData(
+            backgroundColor: ColorManager.cardColor(brightness),
+            contentTextStyle: textTheme.bodyMedium),
+        dialogTheme: DialogTheme(contentTextStyle: textTheme.labelMedium));
   }
 
   static TextStyle appbarTextStyle(BuildContext context, bool small) {

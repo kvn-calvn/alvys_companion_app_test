@@ -1,17 +1,27 @@
 import 'dart:async';
+import 'dart:convert';
 
+import 'package:alvys3/src/features/authentication/data/auth_repository.dart';
+import 'package:alvys3/src/features/authentication/data/data_providers.dart';
 import 'package:alvys3/src/features/authentication/domain/models/auth_state/auth_state.dart';
 import 'package:alvys3/src/features/authentication/domain/models/driver_user/driver_user.dart';
 import 'package:alvys3/src/utils/extensions.dart';
+import 'package:alvys3/src/utils/magic_strings.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:go_router/go_router.dart';
 
 class AuthProviderNotifier extends AsyncNotifier<AuthState> {
   final DriverUser? driver;
-
+  late AuthRepository authRepo;
   AuthProviderNotifier({this.driver});
   @override
   FutureOr<AuthState> build() {
-    return AuthState(driver: driver, driverLoggedIn: driver != null);
+    authRepo = ref.watch(authRepoProvider);
+    state = AsyncValue.data(
+        AuthState(driver: driver, driverLoggedIn: driver != null));
+    return state.value!;
   }
 
   void setUserTenantCompanyCode(String? companyCode) {
@@ -19,7 +29,7 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> {
         state.value!.copyWith(userTenantCompanyCode: companyCode));
   }
 
-  void setPhone(String p) {
+  void setPhone(String? p) {
     state = AsyncValue.data(state.value!.copyWith(phone: p.numbersOnly));
   }
 
@@ -36,6 +46,49 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> {
   void logOutDriver() {
     state = AsyncValue.data(state.value!
         .copyWith(phone: '', verificationCode: '', driverLoggedIn: false));
+  }
+
+  Future<void> verifyDriver(BuildContext context, bool mounted) async {
+    state = const AsyncValue.loading();
+    var driverRes = await authRepo.verifyDriverCode(
+        state.value!.phone, state.value!.verificationCode, () {
+      state = AsyncValue.data(state.value!);
+    });
+    var storage = const FlutterSecureStorage();
+    state = AsyncValue.data(state.value!.copyWith(driver: driverRes.data));
+    await storage.write(
+        key: StorageKey.driverData.name, value: driverRes.data!.toStringJson());
+    await storage.write(
+      key: StorageKey.driverToken.name,
+      value: base64.encode(
+        utf8.encode("${driverRes.data!.userName}:${driverRes.data!.appToken}"),
+      ),
+    );
+
+    if (mounted) context.goNamed(RouteName.locationPermission.name);
+    state = AsyncValue.data(state.value!);
+  }
+
+  Future<void> signInDriver(BuildContext context, bool mounted) async {
+    state = const AsyncValue.loading();
+    await authRepo.signInDriverByPhone(state.value!.phone, () {
+      state = AsyncValue.data(state.value!);
+    });
+
+    if (mounted) context.pushNamed(RouteName.verify.name);
+    state = AsyncValue.data(state.value!);
+  }
+
+  Future<void> resendCode() async {
+    await authRepo.signInDriverByPhone(state.value!.phone);
+  }
+
+  Future<void> signOut(BuildContext context) async {
+    GoRouter.of(context).goNamed(RouteName.signIn.name);
+    var storage = const FlutterSecureStorage();
+
+    await storage.delete(key: StorageKey.driverData.name);
+    await storage.delete(key: StorageKey.driverToken.name);
   }
 }
 

@@ -23,3 +23,15 @@ class ErrorScreen extends StatelessWidget {
     );
   }
 }
+
+class ErrorFunctionHandler {
+  Function? onError;
+
+  ErrorFunctionHandler._inst();
+  static final ErrorFunctionHandler _instance = ErrorFunctionHandler._inst();
+  static ErrorFunctionHandler get instance => _instance;
+  void executeOnError() {
+    onError?.call();
+    onError = null;
+  }
+}

@@ -8,13 +8,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 //import './src/routing/route_generator.dart';
 
 class App extends ConsumerWidget {
-  const App(this.navKey, this.driver, {Key? key}) : super(key: key);
-  final GlobalKey<NavigatorState> navKey;
+  const App(this.driver, {Key? key}) : super(key: key);
   final DriverUser? driver;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final router = ref.watch(routerProvider);
+    final router = ref.read(routerProvider);
     return MaterialApp.router(
+      useInheritedMediaQuery: true,
       themeMode: ref.watch(themeHandlerProvider),
       theme: AlvysTheme.mainTheme(Brightness.light),
       darkTheme: AlvysTheme.mainTheme(Brightness.dark),

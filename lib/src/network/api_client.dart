@@ -29,8 +29,8 @@ class ApiClient {
     Map<String, String> headers = {
       CONTENT_TYPE: APPLICATION_JSON,
       ACCEPT: APPLICATION_JSON,
-      AUTHORIZATION:
-          'Basic Y1JleVdBeTUyZ2c6YlVkbkxURmxNMkU0WW1RMExURTJOMlF0TkRrNE9TMWhPVGczTFRKa1pqSTVZV00yTWpWbE1DMDFTR1pK',
+      // AUTHORIZATION:
+      //     'Basic Y1JleVdBeTUyZ2c6YlVkbkxURmxNMkU0WW1RMExURTJOMlF0TkRrNE9TMWhPVGczTFRKa1pqSTVZV00yTWpWbE1DMDFTR1pK',
       //AUTHORIZATION: 'Basic c1UxN1pnRVEyUWc6UWxSaUxUbGxZVFV4TTJabUxXUTRNRFl0TkdZNVlTMWlNVGt3TFRFeU1EWmlZemM0T1dFNE1DMHlOSFZv',
       DEFAULT_LANGUAGE: "en" // todo get lang from app prefs
     };
@@ -41,6 +41,7 @@ class ApiClient {
         connectTimeout: 15000,
         sendTimeout: 15000,
         headers: headers));
+
     dio.interceptors.clear();
     dio.interceptors.addAll({
       DioApiInterCeptor(),
@@ -60,27 +61,41 @@ class DioApiInterCeptor extends Interceptor {
     if (driverToken != null) {
       options.headers.addAll({"Authorization": "Basic $driverToken"});
     }
+    print(options.headers);
     super.onRequest(options, handler);
   }
 
   @override
   void onError(DioError err, ErrorInterceptorHandler handler) {
-    debugPrint(err.response?.statusCode.toString());
-    super.onError(err, handler);
-    throw ClientException('');
-    //debugPrint(err.response?.statusCode.toString());
-    /*  if (err.response!.statusCode! == 400) {
-      throw ClientException('message');
-    }
-    try {
-      handler.next(err);
-    } catch (e) {
-      throw ClientException('message');
+    if (err.response!.statusCode == 500) {
+      super.onError(err, handler);
+    } else {
+      handler.resolve(err.response!);
     }
 
+    // super.onError(err, handler);
+    //  throw ClientException('');
     //debugPrint(err.response?.statusCode.toString());
+    // if (err.response!.statusCode! == 400) {
+    //   throw ClientException('message');
+    // }
+    // try {
+    //   handler.next(err);
+    // } catch (e) {
+    //   throw ClientException('message');
+    // }
 
-    super.onError(err, handler);*/
+    // //debugPrint(err.response?.statusCode.toString());
+
+    // super.onError(err, handler);
+  }
+
+  @override
+  void onResponse(Response response, ResponseInterceptorHandler handler) {
+    if (response.statusCode! == 400) {
+      throw ClientException(response.data);
+    }
+    super.onResponse(response, handler);
   }
 
   // dynamic requestInterceptor(RequestOptions options) async {

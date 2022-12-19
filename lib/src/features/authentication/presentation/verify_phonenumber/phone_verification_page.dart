@@ -1,10 +1,12 @@
 import 'package:alvys3/src/common_widgets/buttons.dart';
+import 'package:alvys3/src/common_widgets/unfocus_widget.dart';
 import 'package:alvys3/src/constants/color.dart';
 import 'package:alvys3/src/utils/extensions.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pinput/pinput.dart';
 
@@ -63,12 +65,10 @@ class _PhoneNumberVerificationPageState
           ),
         ),
       );
+  static int length = 6;
   @override
   Widget build(BuildContext context) {
-    const length = 5;
-
-    return GestureDetector(
-      onTap: () => (focusNode.unfocus()),
+    return UnfocusWidget(
       child: Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -132,8 +132,10 @@ class _PhoneNumberVerificationPageState
                     inputFormatters: [
                       FilteringTextInputFormatter.allow(RegExp('[0-9]')),
                     ],
-                    onCompleted: (pin) {
-                      setState(() => showError = pin != '5555');
+                    onCompleted: (pin) async {
+                      await ref
+                          .read(authProvider.notifier)
+                          .verifyDriver(context, mounted);
                     },
                     focusedPinTheme: defaultPinTheme(context).copyWith(
                       decoration: defaultPinTheme(context).decoration!.copyWith(
@@ -154,29 +156,38 @@ class _PhoneNumberVerificationPageState
                   const SizedBox(
                     height: 20,
                   ),
-                  ButtonStyle1(
-                      isDisable: ref
-                              .watch(authProvider)
-                              .value!
-                              .verificationCode
-                              .length !=
-                          5,
-                      onPressAction: () {
-                        //context.goNamed('Trips');
-                        context.goNamed(RouteName.locationPermission.name);
-                      },
-                      title: "Verify",
-                      isLoading: false),
-                  SizedBox(
-                    width: double.infinity,
-                    child: TextButton(
-                      onPressed: () {},
-                      child: const Text(
-                        'Resend Code',
-                        style: TextStyle(color: Colors.blue),
+                  if (ref.watch(authProvider).isLoading)
+                    SpinKitFoldingCube(
+                      color: Theme.of(context).colorScheme.primary,
+                    )
+                  else ...[
+                    ButtonStyle1(
+                        isDisable: ref
+                                .watch(authProvider)
+                                .value!
+                                .verificationCode
+                                .length !=
+                            6,
+                        onPressAction: () async {
+                          await ref
+                              .read(authProvider.notifier)
+                              .verifyDriver(context, mounted);
+                        },
+                        title: "Verify",
+                        isLoading: false),
+                    SizedBox(
+                      width: double.infinity,
+                      child: TextButton(
+                        onPressed: () {
+                          ref.read(authProvider.notifier).resendCode();
+                        },
+                        child: const Text(
+                          'Resend Code',
+                          style: TextStyle(color: Colors.blue),
+                        ),
                       ),
                     ),
-                  ),
+                  ]
 
                   /*Consumer(
                   builder: ((context, ref, _) {

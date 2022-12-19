@@ -34,4 +34,10 @@ class Endpoint {
       '${baseApi}billing/QueryPaystubData?UserId=$driverId&CompanyCode=$companyCode&Top=$top';
   static String driverPersonalDocuments =
       "${mobileBaseApi}GetMinifiedDocuments";
+  static String driverUserData(String id) => "${baseApi}newusers/GetUser/$id";
+  static String loginByPhone(String phone) => '${mobileBaseApi}Login/$phone';
+  static String registerByPhone(String phone) =>
+      '${mobileBaseApi}RegisterDriver/$phone';
+  static String verify(String phone, String code) =>
+      '${mobileBaseApi}AuthenticateUser/$phone/$code';
 }
