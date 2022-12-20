@@ -164,12 +164,12 @@ class AlvysTheme {
           wordSpacing: 0,
           fontWeight: FontWeight.w700,
         ),
-        titleMedium: const TextStyle(
-          // height: 24,
-          fontSize: 18,
-          wordSpacing: 0.15,
-          fontWeight: FontWeight.w500,
-        ),
+        titleMedium: TextStyle(
+            // height: 24,
+            fontSize: 18,
+            wordSpacing: 0.15,
+            fontWeight: FontWeight.w500,
+            color: ColorManager.greyColorScheme1(brightness)),
         titleSmall: const TextStyle(
           // height: 20,
           fontSize: 14,
@@ -181,7 +181,7 @@ class AlvysTheme {
             fontSize: 16,
             wordSpacing: 0.1,
             fontWeight: FontWeight.w700,
-            color: ColorManager.lightTextColor(brightness)),
+            color: ColorManager.greyColorScheme1(brightness)),
         labelMedium: const TextStyle(
           // height: 16,
           fontSize: 12,
@@ -200,12 +200,12 @@ class AlvysTheme {
           wordSpacing: 0.15,
           fontWeight: FontWeight.w600,
         ),
-        bodyMedium: const TextStyle(
-          // height: 20,
-          fontSize: 14,
-          wordSpacing: 0.25,
-          fontWeight: FontWeight.w400,
-        ),
+        bodyMedium: TextStyle(
+            // height: 20,
+            fontSize: 14,
+            wordSpacing: 0.25,
+            fontWeight: FontWeight.w400,
+            color: ColorManager.greyColorScheme1(brightness)),
         bodySmall: const TextStyle(
           // height: 16,
           fontSize: 12,

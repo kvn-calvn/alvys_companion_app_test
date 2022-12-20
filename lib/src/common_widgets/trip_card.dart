@@ -83,15 +83,9 @@ class TripCard extends ConsumerWidget {
                                         Theme.of(context).textTheme.bodyLarge),
                               ),
                               Text(
-                                DateFormat('MMM d @ h:mm a', 'en_US')
-                                    .formatNullDate(trip.pickupDate),
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium!
-                                    .copyWith(
-                                      color: ColorManager.lightgrey,
-                                    ),
-                              ),
+                                  DateFormat('MMM d @ h:mm a', 'en_US')
+                                      .formatNullDate(trip.pickupDate),
+                                  style: Theme.of(context).textTheme.caption),
                             ],
                           ),
                         ),
@@ -139,7 +133,7 @@ class TripCard extends ConsumerWidget {
                                     .textTheme
                                     .bodyMedium!
                                     .copyWith(
-                                      color: ColorManager.lightgrey,
+                                      color: ColorManager.greyColorScheme2,
                                     ),
                               ),
                             ],
@@ -199,12 +193,7 @@ class TripCardDetail extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Text(
-          title.toUpperCase(),
-          style: Theme.of(context).textTheme.bodyMedium!.copyWith(
-                color: ColorManager.lightgrey,
-              ),
-        ),
+        Text(title.toUpperCase(), style: Theme.of(context).textTheme.caption),
         Text(
           details,
         ),

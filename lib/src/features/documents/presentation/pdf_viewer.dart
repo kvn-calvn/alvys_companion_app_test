@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:alvys3/src/utils/app_theme.dart';
 import 'package:cross_file/cross_file.dart';
 import 'package:dio/dio.dart';
 
@@ -60,6 +61,7 @@ class _PDFViewerState extends State<PDFViewer> {
         title: Text(
           widget.arguments.title,
           textAlign: TextAlign.start,
+          style: AlvysTheme.appbarTextStyle(context, true),
         ),
         leading: IconButton(
           icon: Icon(

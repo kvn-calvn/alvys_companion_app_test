@@ -115,7 +115,7 @@ class _ECheckStopCardState extends State<ECheckStopCard>
                                     .textTheme
                                     .bodyMedium!
                                     .copyWith(
-                                      color: ColorManager.lightgrey,
+                                      color: ColorManager.greyColorScheme2,
                                     ),
                               ),
                             ],

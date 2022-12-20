@@ -14,8 +14,9 @@ class RequestLocation extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          title: const Text(
+          title: Text(
             'Location Permission',
+            style: Theme.of(context).textTheme.titleMedium,
           ),
           centerTitle: true,
           elevation: 0,
@@ -39,7 +40,7 @@ class RequestLocation extends StatelessWidget {
                       ? 'Alvys driver companion collects your location data to enable real time driver location tracking even when the app is closed or not in use.'
                       : 'Alvys uses your location data to track the movement of loads you have been assigned.',
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.labelLarge,
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 const SizedBox(
                   height: 30,

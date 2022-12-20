@@ -33,7 +33,7 @@ class FilteredTripPage extends ConsumerWidget {
           icon: Icon(
             Icons.adaptive.arrow_back,
           ),
-          color: ColorManager.darkgrey,
+          color: ColorManager.greyColorScheme1(Theme.of(context).brightness),
           onPressed: () {
             Navigator.of(context).maybePop();
           },

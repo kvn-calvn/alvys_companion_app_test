@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:alvys3/src/common_widgets/url_nav_button.dart';
+import 'package:alvys3/src/utils/app_theme.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
@@ -13,7 +14,10 @@ class AboutPage extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text('About'),
+        title: Text(
+          'About',
+          style: AlvysTheme.appbarTextStyle(context, true),
+        ),
         centerTitle: true,
         elevation: 0,
         leading: IconButton(

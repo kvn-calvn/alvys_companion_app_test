@@ -1,4 +1,5 @@
 import 'package:alvys3/src/common_widgets/avatar.dart';
+import 'package:alvys3/src/utils/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -11,7 +12,10 @@ class ProfilePage extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         automaticallyImplyLeading: false,
-        title: const Text('Profile'),
+        title: Text(
+          'Profile',
+          style: AlvysTheme.appbarTextStyle(context, true),
+        ),
         centerTitle: true,
         leading: IconButton(
           // 1

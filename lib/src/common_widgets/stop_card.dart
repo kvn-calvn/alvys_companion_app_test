@@ -78,15 +78,9 @@ class StopCard extends ConsumerWidget {
                                 style: Theme.of(context).textTheme.bodyMedium,
                               ),
                               Text(
-                                DateFormat("MMM dd, yyyy @ hh:mm")
-                                    .formatNullDate(stop.stopDate),
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium!
-                                    .copyWith(
-                                      color: ColorManager.lightgrey,
-                                    ),
-                              ),
+                                  DateFormat("MMM dd, yyyy @ hh:mm")
+                                      .formatNullDate(stop.stopDate),
+                                  style: Theme.of(context).textTheme.caption),
                             ],
                           ),
                         ),

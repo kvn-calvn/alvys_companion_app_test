@@ -37,11 +37,12 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                 const SizedBox(
                   height: 25,
                 ),
-                Text(
-                  'Enter your 10 digit phone number',
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.headlineLarge,
-                ),
+                Text('Enter your 10 digit phone number',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.headlineLarge!.copyWith(
+                          color: ColorManager.greyColorScheme1(
+                              Theme.of(context).brightness),
+                        )),
                 const SizedBox(
                   height: 20,
                 ),

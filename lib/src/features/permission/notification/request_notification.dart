@@ -13,8 +13,9 @@ class RequestNotification extends StatelessWidget {
     return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
-          title: const Text(
+          title: Text(
             'Notification Permission',
+            style: Theme.of(context).textTheme.titleMedium,
           ),
           centerTitle: true,
           elevation: 0,
@@ -34,9 +35,9 @@ class RequestNotification extends StatelessWidget {
                   height: 30,
                 ),
                 Text(
-                  'Get notified when you are assigned a load and other critical updates.',
+                  'Get notified when you are assigned a trip and other critical updates.',
                   textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.labelLarge,
+                  style: Theme.of(context).textTheme.bodyMedium,
                 ),
                 const SizedBox(
                   height: 30,
