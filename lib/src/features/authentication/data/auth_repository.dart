@@ -64,15 +64,15 @@ class AvysAuthRepository implements AuthRepository {
           );
         case 400:
           ErrorFunctionHandler.instance.onError = onError;
-          throw ClientException(registerRes.data);
+          throw AlvysClientException(registerRes.data);
         case 417:
           ErrorFunctionHandler.instance.onError = onError;
-          throw ClientException(ClientError(
+          throw AlvysClientException(ClientError(
             title: "Failed to find user",
             content: registerRes.data['ErrorMessage'].toString(),
           ));
         default:
-          throw ClientException(ClientError(
+          throw AlvysClientException(ClientError(
             title: "Error",
             content: 'An error has occured, try again',
           ));
@@ -101,15 +101,15 @@ class AvysAuthRepository implements AuthRepository {
         );
       case 400:
         ErrorFunctionHandler.instance.onError = onError;
-        throw ClientException(verifyRes.data);
+        throw AlvysClientException(verifyRes.data);
       case 417:
         ErrorFunctionHandler.instance.onError = onError;
-        throw ClientException(ClientError(
+        throw AlvysClientException(ClientError(
           title: "Failed to find user",
           content: verifyRes.data['ErrorMessage'].toString(),
         ));
       default:
-        throw ClientException(ClientError(
+        throw AlvysClientException(ClientError(
           title: "Error",
           content: 'An error has occured, try again',
         ));

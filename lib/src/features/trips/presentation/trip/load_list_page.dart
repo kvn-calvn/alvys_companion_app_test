@@ -41,7 +41,7 @@ class _LoadListPageState extends ConsumerState<LoadListPage> {
               return DropdownMenuItem(
                 value: items,
                 onTap: () {
-                  throw ClientException(
+                  throw AlvysClientException(
                       ClientError(title: 'test', content: ''));
                   // ref.read(tripPageControllerProvider.notifier).getTrips();
                 },

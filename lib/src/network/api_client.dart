@@ -89,7 +89,7 @@ class DioApiInterCeptor extends Interceptor {
   @override
   void onResponse(Response response, ResponseInterceptorHandler handler) {
     if (response.statusCode! == 400) {
-      throw ClientException(response.data);
+      throw AlvysClientException(response.data);
     }
     super.onResponse(response, handler);
   }

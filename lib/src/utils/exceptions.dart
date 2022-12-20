@@ -2,9 +2,9 @@ import 'package:dio/dio.dart';
 
 import '../network/client_error/client_error.dart';
 
-class ClientException implements Exception {
+class AlvysClientException implements Exception {
   late ClientError message;
-  ClientException(dynamic message) {
+  AlvysClientException(dynamic message) {
     this.message =
         (message is ClientError) ? message : ClientError.fromJson(message);
   }

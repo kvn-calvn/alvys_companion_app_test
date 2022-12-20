@@ -20,8 +20,8 @@ class GlobalErrorHandler {
 
   static void _handleError(Object error, Function handleDefault) {
     switch (error.runtimeType) {
-      case ClientException:
-        var e = error as ClientException;
+      case AlvysClientException:
+        var e = error as AlvysClientException;
         showDialog(
             context: ErrorFunctionHandler.instance.navKey.currentState!.context,
             builder: (context) => AlertDialog(

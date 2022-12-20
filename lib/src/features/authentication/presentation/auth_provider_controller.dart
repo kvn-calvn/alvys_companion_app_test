@@ -89,8 +89,16 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> {
     GoRouter.of(context).goNamed(RouteName.signIn.name);
     var storage = const FlutterSecureStorage();
     ref.read(bottomNavIndexProvider.notifier).update((state) => 0);
+    resetFields();
     await storage.delete(key: StorageKey.driverData.name);
     await storage.delete(key: StorageKey.driverToken.name);
+  }
+
+  void resetFields() {
+    state = AsyncValue.data(state.value!.copyWith(
+      phone: '',
+      verificationCode: '',
+    ));
   }
 }
 

@@ -107,7 +107,8 @@ class StopCard extends ConsumerWidget {
                       ButtonStyle2(
                         onPressAction: () {
                           debugPrint("");
-                          throw ClientException(ClientError(title: 'test'));
+                          throw AlvysClientException(
+                              ClientError(title: 'test'));
                         },
                         title: "Check Out",
                         isLoading: false,

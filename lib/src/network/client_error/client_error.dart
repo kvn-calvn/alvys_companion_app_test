@@ -9,7 +9,7 @@ class ClientError with _$ClientError {
     @JsonKey(name: "Title") String? title,
     @JsonKey(name: "Content") String? content,
   }) = _ClientError;
-
+  ClientError._();
   factory ClientError.fromJson(Map<String, dynamic> json) =>
       _$ClientErrorFromJson(json);
 }

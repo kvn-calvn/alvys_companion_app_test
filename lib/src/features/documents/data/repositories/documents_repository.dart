@@ -83,7 +83,7 @@ class AppDocumentsRepository implements DocumentsRepository {
                 .toList());
       }
       if (res.statusCode == 404) {
-        throw ClientException(res.data);
+        throw AlvysClientException(res.data);
       }
       return ApiResponse(success: false, data: [], error: res.data["Error"]);
     }
