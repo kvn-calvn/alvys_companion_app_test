@@ -1,4 +1,3 @@
-import 'package:alvys3/main.dart';
 import 'package:alvys3/src/common_widgets/main_bottom_nav.dart';
 import 'package:alvys3/src/features/authentication/presentation/sign_in_phonenumber/sign_in_page.dart';
 import 'package:alvys3/src/features/authentication/presentation/verify_phonenumber/phone_verification_page.dart';
@@ -15,8 +14,6 @@ import 'package:alvys3/src/features/trips/presentation/stopdetails/stop_details_
 import 'package:alvys3/src/features/trips/presentation/trip/filtered_trip_page.dart';
 import 'package:alvys3/src/features/trips/presentation/trip/load_list_page.dart';
 import 'package:alvys3/src/features/trips/presentation/tripdetails/trip_details_page.dart';
-import 'package:alvys3/src/network/error_handler.dart';
-import 'package:alvys3/src/routing/dialog_page.dart';
 import 'package:alvys3/src/routing/error_page.dart';
 import 'package:alvys3/src/routing/landing.dart';
 import 'package:alvys3/src/routing/routing_arguments.dart';

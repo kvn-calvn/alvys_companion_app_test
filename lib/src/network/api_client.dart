@@ -1,11 +1,8 @@
 // ignore_for_file: constant_identifier_names
 
 import 'package:alvys3/src/constants/api_routes.dart';
-//import 'package:alvys3/src/network/client_error/client_error.dart';
-//import 'package:alvys3/src/network/user_token_handler.dart';
 import 'package:alvys3/src/utils/exceptions.dart';
 import 'package:dio/dio.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../utils/magic_strings.dart';
@@ -61,7 +58,6 @@ class DioApiInterCeptor extends Interceptor {
     if (driverToken != null) {
       options.headers.addAll({"Authorization": "Basic $driverToken"});
     }
-    print(options.headers);
     super.onRequest(options, handler);
   }
 

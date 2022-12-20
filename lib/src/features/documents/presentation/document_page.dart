@@ -7,8 +7,6 @@ import 'package:alvys3/src/common_widgets/shimmers/documents_shimmer.dart';
 import 'package:alvys3/src/features/documents/presentation/document_list.dart';
 import 'package:alvys3/src/features/documents/presentation/trip_docs_controller.dart';
 import 'package:alvys3/src/features/documents/presentation/upload_options.dart';
-import 'package:alvys3/src/network/client_error/client_error.dart';
-import 'package:alvys3/src/utils/exceptions.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -61,7 +59,6 @@ class _DocumentsPageState extends ConsumerState<DocumentsPage> {
         child: docsState.when(
           loading: () => const DocumentsShimmer(),
           error: (error, stack) {
-            throw ClientException(ClientError(title: "test"));
             return const EmptyView(
                 title: "Error occurred while loading documents",
                 description: '');

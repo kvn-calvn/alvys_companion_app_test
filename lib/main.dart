@@ -5,7 +5,6 @@ import 'package:alvys3/src/utils/extensions.dart';
 import 'package:alvys3/src/utils/global_error_handler.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:alvys3/src/utils/theme_handler.dart';
-import 'package:go_router/go_router.dart';
 
 import 'src/features/authentication/domain/models/driver_user/driver_user.dart';
 import 'src/features/authentication/presentation/auth_provider_controller.dart';
@@ -13,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'app.dart';
-import 'src/utils/exceptions.dart';
 
 Future<void> main() async {
   //WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -43,7 +41,6 @@ Future<void> main() async {
       child: App(driverUser),
     ));
   }, (error, stack) {
-    print('called');
     GlobalErrorHandler.handle(null, false, error, stack);
   });
   //FlutterNativeSplash.remove();
