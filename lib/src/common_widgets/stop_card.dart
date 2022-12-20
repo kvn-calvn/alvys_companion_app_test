@@ -96,26 +96,31 @@ class StopCard extends ConsumerWidget {
                   Row(
                     // buttonPadding: const EdgeInsetsDirectional.only(end: 12),
                     // alignment: MainAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       ButtonStyle2(
-                          onPressAction: () => {debugPrint("")},
-                          title: "Checked In",
-                          isLoading: false,
-                          isDisable: true),
+                        onPressAction: () => {debugPrint("")},
+                        title: "Checked In",
+                        isLoading: false,
+                        isDisable: true,
+                      ),
+                      const SizedBox(width: 5),
                       ButtonStyle2(
-                          onPressAction: () {
-                            debugPrint("");
-                            throw ClientException(ClientError(title: 'test'));
-                          },
-                          title: "Check Out",
-                          isLoading: false,
-                          isDisable: false),
+                        onPressAction: () {
+                          debugPrint("");
+                          throw ClientException(ClientError(title: 'test'));
+                        },
+                        title: "Check Out",
+                        isLoading: false,
+                        isDisable: false,
+                      ),
+                      const SizedBox(width: 5),
                       ButtonStyle2(
-                          onPressAction: () => {debugPrint("")},
-                          title: "E-Check",
-                          isLoading: false,
-                          isDisable: false),
+                        onPressAction: () => {debugPrint("")},
+                        title: "E-Check",
+                        isLoading: false,
+                        isDisable: false,
+                      ),
+                      const SizedBox(width: 5),
                     ],
                   ),
                   const SizedBox(height: 4),

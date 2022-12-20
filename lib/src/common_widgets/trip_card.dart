@@ -74,7 +74,7 @@ class TripCard extends ConsumerWidget {
                             children: [
                               ConstrainedBox(
                                 constraints: BoxConstraints(
-                                  maxWidth: constraints.maxWidth * 0.8,
+                                  maxWidth: constraints.maxWidth * 0.78,
                                 ),
                                 child: Text(
                                     '${trip.firstStopAddress}'
@@ -121,7 +121,7 @@ class TripCard extends ConsumerWidget {
                                       0, 0, 10, 0),
                                   child: ConstrainedBox(
                                     constraints: BoxConstraints(
-                                      maxWidth: constraints.maxWidth * 0.8,
+                                      maxWidth: constraints.maxWidth * 0.78,
                                     ),
                                     child: Text(
                                       '${trip.lastStopAddress}'

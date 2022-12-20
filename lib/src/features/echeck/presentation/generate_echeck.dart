@@ -20,7 +20,7 @@ class GenerateEcheck extends ConsumerStatefulWidget {
 }
 
 class _GenerateEcheckState extends ConsumerState<GenerateEcheck> {
-  final formGlobalKey = GlobalKey<FormState>();
+  GlobalKey<FormState> formGlobalKey = GlobalKey<FormState>();
   var amountMaskFormatter = MaskTextInputFormatter(
       mask: '\$####',
       filter: {"#": RegExp(r'[0-9\.]')},

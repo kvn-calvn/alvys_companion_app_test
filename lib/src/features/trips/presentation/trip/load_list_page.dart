@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../common_widgets/trip_card.dart';
+import '../../../../network/client_error/client_error.dart';
+import '../../../../utils/exceptions.dart';
 
 class LoadListPage extends ConsumerStatefulWidget {
   const LoadListPage({Key? key}) : super(key: key);
@@ -39,6 +41,8 @@ class _LoadListPageState extends ConsumerState<LoadListPage> {
               return DropdownMenuItem(
                 value: items,
                 onTap: () {
+                  throw ClientException(
+                      ClientError(title: 'test', content: ''));
                   // ref.read(tripPageControllerProvider.notifier).getTrips();
                 },
                 child: Text(

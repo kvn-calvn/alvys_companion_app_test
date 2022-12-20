@@ -15,6 +15,7 @@ import 'package:alvys3/src/features/trips/presentation/stopdetails/stop_details_
 import 'package:alvys3/src/features/trips/presentation/trip/filtered_trip_page.dart';
 import 'package:alvys3/src/features/trips/presentation/trip/load_list_page.dart';
 import 'package:alvys3/src/features/trips/presentation/tripdetails/trip_details_page.dart';
+import 'package:alvys3/src/network/error_handler.dart';
 import 'package:alvys3/src/routing/dialog_page.dart';
 import 'package:alvys3/src/routing/error_page.dart';
 import 'package:alvys3/src/routing/landing.dart';
@@ -28,11 +29,11 @@ import 'package:go_router/go_router.dart';
 import '../features/authentication/presentation/auth_provider_controller.dart';
 
 // final _rootNavigatorKey = GlobalKey<NavigatorState>();
-final _shellNavigatorKey = GlobalKey<NavigatorState>();
+GlobalKey<NavigatorState> _shellNavigatorKey = GlobalKey<NavigatorState>();
 
 Provider<GoRouter> routerProvider = Provider(
   (ref) => GoRouter(
-    navigatorKey: navKey,
+    navigatorKey: ErrorFunctionHandler.instance.navKey,
     initialLocation: ref.read(authProvider).value!.driver == null
         ? RouteName.signIn.toRoute
         : RouteName.trips.toRoute,
@@ -74,7 +75,7 @@ Provider<GoRouter> routerProvider = Provider(
         },
       ),
       ShellRoute(
-          // navigatorKey: _shellNavigatorKey,
+          navigatorKey: _shellNavigatorKey,
           builder: (context, state, child) {
             return MainBottomNav(child: child);
           },
@@ -83,8 +84,7 @@ Provider<GoRouter> routerProvider = Provider(
               name: RouteName.trips.name,
               path: RouteName.trips.toRoute,
               pageBuilder: (context, state) => CustomTransitionPage(
-                  key: state.pageKey,
-                  child: LoadListPage(key: state.pageKey),
+                  child: const LoadListPage(),
                   transitionDuration: Duration.zero,
                   transitionsBuilder:
                       (context, animation, secondaryAnimation, child) => child),
@@ -111,9 +111,7 @@ Provider<GoRouter> routerProvider = Provider(
                   name: RouteName.tripDetails.name,
                   path: RouteName.tripDetails.name,
                   builder: (context, state) {
-                    return LoadDetailsPage(
-                      key: state.pageKey,
-                    );
+                    return const LoadDetailsPage();
                   },
                   routes: <GoRoute>[
                     GoRoute(
@@ -134,9 +132,8 @@ Provider<GoRouter> routerProvider = Provider(
                       name: RouteName.tripDocuments.name,
                       path: RouteName.tripDocuments.name,
                       builder: (context, state) {
-                        return DocumentsPage(
+                        return const DocumentsPage(
                           DocumentType.tripDocuments,
-                          key: state.pageKey,
                         );
                       },
                       routes: <GoRoute>[
@@ -224,7 +221,6 @@ Provider<GoRouter> routerProvider = Provider(
           ])
     ],
     errorPageBuilder: (context, state) => MaterialPage(
-      key: state.pageKey,
       child: ErrorScreen(
         exception: state.error,
       ),

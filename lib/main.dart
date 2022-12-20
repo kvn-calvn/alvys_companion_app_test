@@ -15,17 +15,17 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'app.dart';
 import 'src/utils/exceptions.dart';
 
-late GlobalKey<NavigatorState> navKey;
 Future<void> main() async {
   //WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   //FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
   runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
-    navKey = GlobalKey<NavigatorState>();
     var storage = const FlutterSecureStorage();
-    FlutterError.onError = (details) =>
-        GlobalErrorHandler.handle(navKey, details.exception, details.stack);
+    FlutterError.onError = (details) {
+      GlobalErrorHandler.handle(details, true);
+    };
+
     String? driverData = await storage.read(key: StorageKey.driverData.name);
     ThemeMode? appThemeMode = ThemeMode.values
         .byNameOrNull(await storage.read(key: StorageKey.themeMode.name));
@@ -43,7 +43,8 @@ Future<void> main() async {
       child: App(driverUser),
     ));
   }, (error, stack) {
-    GlobalErrorHandler.handle(navKey, error, stack);
+    print('called');
+    GlobalErrorHandler.handle(null, false, error, stack);
   });
   //FlutterNativeSplash.remove();
 }

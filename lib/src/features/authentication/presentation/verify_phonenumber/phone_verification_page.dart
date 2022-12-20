@@ -25,7 +25,7 @@ class _PhoneNumberVerificationPageState
     extends ConsumerState<PhoneNumberVerificationPage> {
   final pinController = TextEditingController();
   final focusNode = FocusNode();
-  final formKey = GlobalKey<FormState>();
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   void initState() {

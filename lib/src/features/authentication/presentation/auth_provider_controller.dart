@@ -12,6 +12,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 
+import '../../../common_widgets/main_bottom_nav.dart';
+
 class AuthProviderNotifier extends AsyncNotifier<AuthState> {
   final DriverUser? driver;
   late AuthRepository authRepo;
@@ -86,7 +88,7 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> {
   Future<void> signOut(BuildContext context) async {
     GoRouter.of(context).goNamed(RouteName.signIn.name);
     var storage = const FlutterSecureStorage();
-
+    ref.read(bottomNavIndexProvider.notifier).update((state) => 0);
     await storage.delete(key: StorageKey.driverData.name);
     await storage.delete(key: StorageKey.driverToken.name);
   }

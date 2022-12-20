@@ -73,7 +73,7 @@ class AppDocumentsRepository implements DocumentsRepository {
   Future<ApiResponse<List<TripDocuments>>> getTripDocs(String tripId) async {
     if (await network.isConnected) {
       var res =
-          await ApiClient.singleton.dio.get('Endpoint.tripDocuments(tripId)');
+          await ApiClient.singleton.dio.get(Endpoint.tripDocuments(tripId));
       if (res.statusCode == 200) {
         return ApiResponse(
             success: true,

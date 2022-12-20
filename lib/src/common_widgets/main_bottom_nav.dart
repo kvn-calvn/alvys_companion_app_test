@@ -40,15 +40,13 @@ class _MainBottomNavState extends ConsumerState<MainBottomNav> {
         },
         items: const [
           BottomNavigationBarItem(
-              icon: Icon(
-                Alvys3Icons.homeIco,
-              ),
-              label: 'Trips'),
+            icon: Icon(Alvys3Icons.homeIco),
+            label: 'Trips',
+          ),
           BottomNavigationBarItem(
-              icon: Icon(
-                Icons.settings,
-              ),
-              label: 'Settings'),
+            icon: Icon(Icons.settings),
+            label: 'Settings',
+          ),
         ],
       ),
     );
