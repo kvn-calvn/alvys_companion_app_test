@@ -60,12 +60,8 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                         height: 17,
                       ),
                       DefaultTextStyle.merge(
-                        child: widget.title!,
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleLarge!
-                            .copyWith(fontWeight: FontWeight.w300),
-                      ),
+                          child: widget.title!,
+                          style: Theme.of(context).textTheme.titleLarge),
                     ],
                     Flexible(
                       child: SingleChildScrollView(

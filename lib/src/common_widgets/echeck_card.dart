@@ -92,15 +92,12 @@ class EcheckCard extends StatelessWidget {
                                   .textTheme
                                   .titleMedium!
                                   .copyWith(
-                                      color: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge!
-                                          .color,
-                                      letterSpacing: 2,
-                                      decoration: eCheck.isCanceled
-                                          ? TextDecoration.lineThrough
-                                          : TextDecoration.none,
-                                      decorationThickness: 2),
+                                    letterSpacing: 2,
+                                    decoration: eCheck.isCanceled
+                                        ? TextDecoration.lineThrough
+                                        : TextDecoration.none,
+                                    decorationThickness: 2,
+                                  ),
                             ),
                           )
                         ],
@@ -109,27 +106,16 @@ class EcheckCard extends StatelessWidget {
                     const Text(
                       'Funds Available',
                     ),
-                    Text(
-                      '\$${eCheck.amount?.toStringAsFixed(2)}',
-                      style: Theme.of(context).textTheme.bodyLarge!.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
-                    ),
+                    Text('\$${eCheck.amount?.toStringAsFixed(2)}',
+                        style: Theme.of(context).textTheme.bodyLarge),
                     Padding(
                       padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            eCheck.reason!,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium!
-                                .copyWith(
-                                  color: const Color(0xFF95A1AC),
-                                ),
-                          )
+                          Text(eCheck.reason!,
+                              style: Theme.of(context).textTheme.caption)
                         ],
                       ),
                     ),

@@ -31,13 +31,7 @@ class LargeNavButton extends StatelessWidget {
               child: Row(
                 children: [
                   if (icon != null) icon!,
-                  Text(
-                    title,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge!
-                        .copyWith(fontWeight: FontWeight.bold),
-                  ),
+                  Text(title, style: Theme.of(context).textTheme.bodyLarge),
                   const Spacer(),
                   const Icon(
                     Icons.arrow_forward_ios,

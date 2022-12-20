@@ -110,14 +110,9 @@ class _ECheckStopCardState extends State<ECheckStopCard>
                                 style: Theme.of(context).textTheme.bodyLarge,
                               ),
                               Text(
-                                "${widget.city}, ${widget.state} ${widget.zip}",
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium!
-                                    .copyWith(
-                                      color: ColorManager.greyColorScheme2,
-                                    ),
-                              ),
+                                  "${widget.city}, ${widget.state} ${widget.zip}",
+                                  style:
+                                      Theme.of(context).textTheme.bodyMedium),
                             ],
                           ),
                         ],

@@ -140,12 +140,12 @@ class AlvysTheme {
           wordSpacing: 0,
           fontWeight: FontWeight.w400,
         ),
-        headlineLarge: const TextStyle(
-          // height: 40,
-          fontSize: 30,
-          wordSpacing: 0,
-          fontWeight: FontWeight.w700,
-        ),
+        headlineLarge: TextStyle(
+            // height: 40,
+            fontSize: 30,
+            wordSpacing: 0,
+            fontWeight: FontWeight.w700,
+            color: ColorManager.greyColorScheme1(brightness)),
         headlineMedium: const TextStyle(
           // height: 36,
           fontSize: 28,

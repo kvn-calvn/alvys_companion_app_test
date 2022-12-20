@@ -33,13 +33,8 @@ class ProfileNavButton extends StatelessWidget {
                   Avatar(profileImageUrl: profileImageUrl),
                   Padding(
                     padding: const EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
-                    child: Text(
-                      title,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyLarge!
-                          .copyWith(fontWeight: FontWeight.bold),
-                    ),
+                    child: Text(title,
+                        style: Theme.of(context).textTheme.bodyLarge),
                   ),
                   const Expanded(
                     child: Align(

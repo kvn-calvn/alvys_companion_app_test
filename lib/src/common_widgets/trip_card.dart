@@ -127,15 +127,10 @@ class TripCard extends ConsumerWidget {
                                     ),
                                   )),
                               Text(
-                                DateFormat('MMM d @ h:mm a', 'en_US')
-                                    .formatNullDate(trip.deliveryDate),
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium!
-                                    .copyWith(
-                                      color: ColorManager.greyColorScheme2,
-                                    ),
-                              ),
+                                  DateFormat('MMM d @ h:mm a', 'en_US')
+                                      .formatNullDate(trip.deliveryDate),
+                                  style:
+                                      Theme.of(context).textTheme.bodyMedium!),
                             ],
                           ),
                         ),
