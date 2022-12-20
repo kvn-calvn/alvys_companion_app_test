@@ -25,6 +25,7 @@ class _SignInPageState extends ConsumerState<SignInPage> {
   Widget build(BuildContext context) {
     return UnfocusWidget(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(),
         body: SafeArea(
           child: Padding(

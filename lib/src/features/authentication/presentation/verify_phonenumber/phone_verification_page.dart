@@ -69,6 +69,7 @@ class _PhoneNumberVerificationPageState
   Widget build(BuildContext context) {
     return UnfocusWidget(
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
           automaticallyImplyLeading: false,
           elevation: 0,

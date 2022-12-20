@@ -1,4 +1,5 @@
 import 'package:alvys3/src/common_widgets/echeck_card.dart';
+import 'package:alvys3/src/common_widgets/empty_view.dart';
 import 'package:alvys3/src/constants/color.dart';
 import 'package:alvys3/src/features/trips/presentation/trip/trip_page_controller.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
@@ -59,12 +60,8 @@ class _EcheckPageState extends ConsumerState<EcheckPage> {
               .refreshCurrentTrip();
         },
         child: echecks.isNullOrEmpty
-            ? const SingleChildScrollView(
-                physics: AlwaysScrollableScrollPhysics(),
-                child: Center(
-                  child: Text("No Echecks on this Trip"),
-                ),
-              )
+            ? const EmptyView(
+                title: 'No E-checks', description: 'No Echecks on this Trip')
             : ListView.builder(
                 itemCount: echecks!.length,
                 itemBuilder: (context, index) => EcheckCard(
