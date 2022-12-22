@@ -58,11 +58,11 @@ class EcheckCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(10, 12, 10, 12),
+      padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 12),
       child: Material(
         elevation: 2.5,
         color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(8),
+        borderRadius: BorderRadius.circular(10),
         clipBehavior: Clip.antiAlias,
         child: InkWell(
           onLongPress: () {

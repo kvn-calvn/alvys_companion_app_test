@@ -23,7 +23,9 @@ class DocumentList extends StatelessWidget {
     return RefreshIndicator(
       onRefresh: refreshFunction,
       child: documents.isEmpty
-          ? EmptyView(title: emptyMessage, description: '')
+          ? EmptyView(
+              title: emptyMessage,
+              description: 'Uploaded documents will appear here.')
           : ListView(
               children: [
                 ...documents

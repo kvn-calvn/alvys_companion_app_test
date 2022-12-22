@@ -63,6 +63,7 @@ class _EcheckPageState extends ConsumerState<EcheckPage> {
             ? const EmptyView(
                 title: 'No E-checks', description: 'No Echecks on this Trip')
             : ListView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 itemCount: echecks!.length,
                 itemBuilder: (context, index) => EcheckCard(
                   eCheck: echecks[index],

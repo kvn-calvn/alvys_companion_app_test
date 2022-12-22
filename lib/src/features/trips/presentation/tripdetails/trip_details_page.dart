@@ -1,5 +1,6 @@
 // ignore_for_file: no_leading_underscores_for_local_identifiers
 
+import 'package:alvys3/src/common_widgets/empty_view.dart';
 import 'package:alvys3/src/common_widgets/large_nav_button.dart';
 import 'package:alvys3/src/common_widgets/stop_card.dart';
 import 'package:alvys3/src/constants/color.dart';
@@ -54,7 +55,7 @@ class _LoadDetailsPageState extends ConsumerState<LoadDetailsPage> {
         elevation: 0,
       ),
       body: const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 16.0),
+        padding: EdgeInsets.symmetric(horizontal: 0.0),
         child: TripDetails(),
       ),
     );
@@ -87,7 +88,25 @@ class TripDetails extends ConsumerWidget {
               ],
             );
           } else {
-            return const Text("There are no stops on this trip.");
+            return Container(
+              alignment: Alignment.center,
+              child: Center(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    const SizedBox(
+                      height: 100,
+                    ),
+                    Text(
+                      "No Stops",
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                    Text("There are no stops on this trip.",
+                        style: Theme.of(context).textTheme.bodyText2)
+                  ],
+                ),
+              ),
+            );
           }
         }
 
@@ -97,140 +116,146 @@ class TripDetails extends ConsumerWidget {
                 .read(tripPageControllerProvider.notifier)
                 .refreshCurrentTrip();
           },
-          child: ListView(scrollDirection: Axis.vertical, children: [
-            Column(
-              mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.start,
+          child: ListView(
+              scrollDirection: Axis.vertical,
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
               children: [
                 Column(
                   mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    LargeNavButton(
-                      title: 'E-Checks',
-                      onPressed: () {
-                        context.goNamed(RouteName.eCheck.name);
-                      },
-                    ),
-                    LargeNavButton(
-                      title: 'Documents',
-                      onPressed: () {
-                        context.goNamed(RouteName.tripDocuments.name,
-                            queryParams: {
-                              'tripNumber': value.currentTrip.tripNumber,
-                              'tripId': value.currentTrip.id
-                            });
-                      },
-                    ),
                     Column(
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Padding(
-                          padding: const EdgeInsetsDirectional.fromSTEB(
-                              15, 10, 15, 0),
-                          child: Wrap(
-                            spacing: 5,
-                            runSpacing: 5,
-                            children: [
-                              if (equipment.isNotNullOrEmpty) ...[
-                                Chip(
-                                  label: Text(
-                                    value.currentTrip.equipment!,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium!
-                                        .copyWith(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                  ),
-                                  backgroundColor: const Color(0xFFBBDEFB),
-                                ),
-                              ],
-                              if (value.currentTrip.totalWeight != null) ...[
-                                Chip(
-                                  label: Text(
-                                    '${value.currentTrip.totalWeight}lbs',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium!
-                                        .copyWith(
-                                          color: Colors.black,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                  ),
-                                  backgroundColor: const Color(0xFFBBDEFB),
-                                ),
-                              ],
-                              if (value.currentTrip.temperature != null) ...[
-                                Chip(
-                                    label: Text(
-                                      '${value.currentTrip.temperature!.toStringAsFixed(2)}°F',
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium!
-                                          .copyWith(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold),
-                                    ),
-                                    backgroundColor: const Color(0xFFBBDEFB)),
-                              ],
-                              if (value.currentTrip.totalMiles != null) ...[
-                                Chip(
-                                  label: Text(
-                                    '${value.currentTrip.totalMiles!.toStringAsFixed(2)} mi',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium!
-                                        .copyWith(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold),
-                                  ),
-                                  backgroundColor: const Color(0xFFBBDEFB),
-                                ),
-                              ],
-                              if (value
-                                  .currentTrip.trailerNum.isNotNullOrEmpty) ...[
-                                Chip(
-                                  label: Text(
-                                    'Trailer ${value.currentTrip.trailerNum}',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium!
-                                        .copyWith(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold),
-                                  ),
-                                  backgroundColor: const Color(0xFFBBDEFB),
-                                ),
-                              ],
-                              if (value.currentTrip.paidMiles != null) ...[
-                                Chip(
-                                  label: Text(
-                                    'Pay \$${value.currentTrip.paidMiles!.toStringAsFixed(2)}',
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium!
-                                        .copyWith(
-                                            color: Colors.black,
-                                            fontWeight: FontWeight.bold),
-                                  ),
-                                  backgroundColor: const Color(0xFFBBDEFB),
-                                ),
-                              ],
-                            ],
-                          ),
+                        LargeNavButton(
+                          title: 'E-Checks',
+                          onPressed: () {
+                            context.goNamed(RouteName.eCheck.name);
+                          },
                         ),
+                        LargeNavButton(
+                          title: 'Documents',
+                          onPressed: () {
+                            context.goNamed(RouteName.tripDocuments.name,
+                                queryParams: {
+                                  'tripNumber': value.currentTrip.tripNumber,
+                                  'tripId': value.currentTrip.id
+                                });
+                          },
+                        ),
+                        Column(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  15, 10, 15, 0),
+                              child: Wrap(
+                                spacing: 5,
+                                runSpacing: 5,
+                                children: [
+                                  if (equipment.isNotNullOrEmpty) ...[
+                                    Chip(
+                                      label: Text(
+                                        value.currentTrip.equipment!,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .copyWith(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                      ),
+                                      backgroundColor: const Color(0xFFBBDEFB),
+                                    ),
+                                  ],
+                                  if (value.currentTrip.totalWeight !=
+                                      null) ...[
+                                    Chip(
+                                      label: Text(
+                                        '${value.currentTrip.totalWeight}lbs',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .copyWith(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                      ),
+                                      backgroundColor: const Color(0xFFBBDEFB),
+                                    ),
+                                  ],
+                                  if (value.currentTrip.temperature !=
+                                      null) ...[
+                                    Chip(
+                                        label: Text(
+                                          '${value.currentTrip.temperature!.toStringAsFixed(2)}°F',
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .bodyMedium!
+                                              .copyWith(
+                                                  color: Colors.black,
+                                                  fontWeight: FontWeight.bold),
+                                        ),
+                                        backgroundColor:
+                                            const Color(0xFFBBDEFB)),
+                                  ],
+                                  if (value.currentTrip.totalMiles != null) ...[
+                                    Chip(
+                                      label: Text(
+                                        '${value.currentTrip.totalMiles!.toStringAsFixed(2)} mi',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .copyWith(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold),
+                                      ),
+                                      backgroundColor: const Color(0xFFBBDEFB),
+                                    ),
+                                  ],
+                                  if (value.currentTrip.trailerNum
+                                      .isNotNullOrEmpty) ...[
+                                    Chip(
+                                      label: Text(
+                                        'Trailer ${value.currentTrip.trailerNum}',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .copyWith(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold),
+                                      ),
+                                      backgroundColor: const Color(0xFFBBDEFB),
+                                    ),
+                                  ],
+                                  if (value.currentTrip.paidMiles != null) ...[
+                                    Chip(
+                                      label: Text(
+                                        'Pay \$${value.currentTrip.paidMiles!.toStringAsFixed(2)}',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!
+                                            .copyWith(
+                                                color: Colors.black,
+                                                fontWeight: FontWeight.bold),
+                                      ),
+                                      backgroundColor: const Color(0xFFBBDEFB),
+                                    ),
+                                  ],
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                        _stopList(),
                       ],
                     ),
-                    _stopList(),
                   ],
-                ),
-              ],
-            )
-          ]),
+                )
+              ]),
         );
       },
     );

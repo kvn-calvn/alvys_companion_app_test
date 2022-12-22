@@ -55,7 +55,7 @@ class _DocumentsPageState extends ConsumerState<DocumentsPage> {
             )
           : null,
       body: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: 12.0),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
         child: docsState.when(
           loading: () => const DocumentsShimmer(),
           error: (error, stack) {

@@ -34,28 +34,30 @@ class _LoadListPageState extends ConsumerState<LoadListPage> {
         automaticallyImplyLeading: false,
         title: const Text('Trips'),
         actions: [
-          DropdownButton(
-            value: dropdownvalue,
-            icon: const Icon(Icons.keyboard_arrow_down),
-            items: items.map((String items) {
-              return DropdownMenuItem(
-                value: items,
-                onTap: () {
-                  throw AlvysClientException(
-                      ClientError(title: 'test', content: ''));
-                  // ref.read(tripPageControllerProvider.notifier).getTrips();
-                },
-                child: Text(
-                  items,
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-              );
-            }).toList(),
-            onChanged: (String? value) {
-              setState(() {
-                dropdownvalue = value!;
-              });
-            },
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: DropdownButton(
+              value: dropdownvalue,
+              icon: const Icon(Icons.keyboard_arrow_down),
+              items: items.map((String items) {
+                return DropdownMenuItem(
+                  value: items,
+                  onTap: () {
+                    /*  throw AlvysClientException(
+                        ClientError(title: 'test', content: ''));*/
+                  },
+                  child: Text(
+                    items,
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                );
+              }).toList(),
+              onChanged: (String? value) {
+                setState(() {
+                  dropdownvalue = value!;
+                });
+              },
+            ),
           ),
         ],
         centerTitle: false,
@@ -80,7 +82,7 @@ class TripList extends ConsumerWidget {
       return const Text('Oops, something unexpected happened');
     }, data: (value) {
       return Padding(
-        padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
         child: Column(
           children: [
             if (value.deliveredTrips.isNotEmpty)
@@ -99,6 +101,7 @@ class TripList extends ConsumerWidget {
                 },
                 child: value.activeTrips.isNotEmpty
                     ? ListView(
+                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
                         children: value.activeTrips
                             .map((trip) => TripCard(trip: trip))
                             .toList(),
