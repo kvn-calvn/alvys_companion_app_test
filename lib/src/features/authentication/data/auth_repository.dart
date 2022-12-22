@@ -118,6 +118,7 @@ class AvysAuthRepository implements AuthRepository {
 
   @override
   Future<ApiResponse<DriverUser>> updateDriverUser() {
+    // ignore: todo
     // TODO: implement updateDriverUser
     throw UnimplementedError();
   }

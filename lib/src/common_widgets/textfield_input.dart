@@ -34,9 +34,9 @@ class TextfieldInput extends StatelessWidget {
       decoration: InputDecoration(
         hintText: hint,
         filled: true,
-        fillColor: ColorManager.darkgrey,
+        //fillColor: ColorManager.g,
         enabledBorder: OutlineInputBorder(
-          borderSide: BorderSide(width: .5, color: ColorManager.lightgrey),
+          //borderSide: BorderSide(width: .5, color: ColorManager.lightgrey),
           borderRadius: BorderRadius.circular(15),
         ),
         focusedBorder: OutlineInputBorder(
