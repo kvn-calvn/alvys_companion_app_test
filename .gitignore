@@ -9,6 +9,10 @@
 .history
 .svn/
 
+#Ignore build runner generated files
+*.g.dart
+*.freezed.dart
+
 # IntelliJ related
 *.iml
 *.ipr
@@ -45,3 +49,4 @@ app.*.map.json
 /android/app/profile
 /android/app/release
 *.lock
+.env

@@ -8,9 +8,7 @@ import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../common_widgets/trip_card.dart';
-import '../../../../network/client_error/client_error.dart';
-import '../../../../utils/exceptions.dart';
+import 'package:alvys3/src/common_widgets/trip_card.dart';
 
 class LoadListPage extends ConsumerStatefulWidget {
   const LoadListPage({Key? key}) : super(key: key);
