@@ -4,12 +4,12 @@ import 'flavor_config.dart';
 
 void main() {
   FlavorConfig(
-      flavor: Flavor.qa,
-      env: "QA",
-      baseUrl: "https://alvysapi-qa.azurewebsites.net/api/mobilev2/",
+      flavor: Flavor.prod,
+      env: "PROD",
+      baseUrl: "https://api.alvys.com/api/mobilev2/",
       androidGeniusScanSDKKey: Env.androidGeniusScanSDKKey,
       iosGeniusScanSDKKey: Env.iOSGeniusScanSDKKey,
-      azureTelemetryKey: Env.azureTelemetryKeyQA,
+      azureTelemetryKey: Env.azureTelemetryKeyPROD,
       gMapsKey: Env.gMapsKey,
       hereMapsKey: Env.hereMapsKey);
 
