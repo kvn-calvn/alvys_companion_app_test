@@ -6,21 +6,43 @@
     "configurations": [
         
         {
-            "name": "Alvys3",
+            "name": "Debug Alvys3 Dev",
             "request": "launch",
-            "type": "dart"
+            "type": "dart",
+            "flutterMode":"debug",
+            "program": "lib/dev.dart",
+            "args": ["--flavor", "dev"],
+        },
+        {
+            "name": "Debug Alvys3 QA",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode":"debug",
+            "program": "lib/qa.dart",
+            "args": ["--flavor", "qa"],
+        },
+        {
+            "name": "Debug Alvys3 Prod",
+            "request": "launch",
+            "type": "dart",
+            "flutterMode":"debug",
+            "program": "lib/prod.dart",
+            "args": ["--flavor", "prod"],
         },
         {
             "name": "Alvys3 (profile mode)",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "profile"
+            "flutterMode": "profile",
+            "args": ["--flavor", "prod"],
         },
         {
-            "name": "Alvys3 (release mode)",
+            "name": "Release Alvys3 Prod",
             "request": "launch",
             "type": "dart",
-            "flutterMode": "release"
+            "flutterMode": "release",
+            "program": "lib/prod.dart",
+            "args": ["--flavor", "prod"],
         }
     ]
 }
