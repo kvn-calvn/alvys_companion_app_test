@@ -5,7 +5,7 @@ import 'flavor_config.dart';
 void main() {
   FlavorConfig(
       flavor: Flavor.prod,
-      env: Flavor.prod.toString().toUpperCase(),
+      env: Flavor.prod.name.toUpperCase(),
       baseUrl: "https://api.alvys.com/api/mobilev2/",
       androidGeniusScanSDKKey: Env.androidGeniusScanSDKKey,
       iosGeniusScanSDKKey: Env.iOSGeniusScanSDKKey,
