@@ -3,7 +3,7 @@ import 'package:alvys3/src/features/authentication/domain/models/driver_user/dri
 import 'package:alvys3/src/features/documents/domain/paystub/paystub.dart';
 import 'package:alvys3/src/features/documents/domain/personal_document/personal_document.dart';
 import 'package:alvys3/src/network/api_client.dart';
-import 'package:alvys3/src/network/endpoints.dart';
+//import 'package:alvys3/src/network/endpoints.dart';
 import 'package:alvys3/src/utils/exceptions.dart';
 
 import '../../../../network/api_response.dart';

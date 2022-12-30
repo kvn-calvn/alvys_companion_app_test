@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:alvys3/flavor_config.dart';
+//import 'package:alvys3/flavor_config.dart';
 import 'package:alvys3/src/common_widgets/url_nav_button.dart';
 import 'package:alvys3/src/utils/app_theme.dart';
 import 'package:device_info_plus/device_info_plus.dart';
