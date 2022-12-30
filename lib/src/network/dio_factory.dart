@@ -28,7 +28,7 @@ class DioFactory {
     };
 
     dio.options = BaseOptions(
-        baseUrl: ApiRoutes.baseUrl,
+        //baseUrl: ApiRoutes.baseUrl,
         connectTimeout: _timeOut,
         receiveTimeout: _timeOut,
         headers: headers);

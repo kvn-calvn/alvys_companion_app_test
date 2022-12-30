@@ -4,6 +4,8 @@ import 'package:alvys3/src/constants/api_routes.dart';
 import 'package:alvys3/src/utils/exceptions.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:alvys3/flavor_config.dart';
+import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 import '../utils/magic_strings.dart';
 
@@ -33,7 +35,7 @@ class ApiClient {
     };
 
     var dio = Dio(BaseOptions(
-        baseUrl: ApiRoutes.baseUrl,
+        //baseUrl: FlavorConfig.instance!.baseUrl,
         receiveTimeout: 15000, // 15 seconds
         connectTimeout: 15000,
         sendTimeout: 15000,
@@ -42,8 +44,8 @@ class ApiClient {
     dio.interceptors.clear();
     dio.interceptors.addAll({
       DioApiInterCeptor(),
-      /*PrettyDioLogger(
-            requestHeader: false, requestBody: false, responseHeader: false)*/
+      PrettyDioLogger(
+          requestHeader: false, requestBody: false, responseHeader: false)
     });
     return dio;
   }

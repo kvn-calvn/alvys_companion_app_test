@@ -17,20 +17,22 @@ class TripsRemoteDataSourceImpl implements TripsRemoteDataSource {
 
   @override
   Future<Trips> getTrips() async {
-    var res = await _apiClient.dio.get(ApiRoutes.trips);
+    var res =
+        await _apiClient.dio.get(ApiRoutes.mobileBaseApi + ApiRoutes.trips);
     return Trips.fromJson(res.data);
   }
 
   @override
   Future<TripDetails> getTripDetails(String tripId) async {
-    var res = await _apiClient.dio.get(ApiRoutes.tripdetails + tripId);
+    var res = await _apiClient.dio
+        .get(ApiRoutes.mobileBaseApi + ApiRoutes.tripdetails + tripId);
     return TripDetails.fromJson(res.data);
   }
 
   @override
   Future<StopDetails> getStopDetails(String stopId, String tripId) async {
-    var res =
-        await _apiClient.dio.get('${ApiRoutes.stopdetails}$tripId/$stopId');
+    var res = await _apiClient.dio.get(
+        '${ApiRoutes.mobileBaseApi}${ApiRoutes.stopdetails}$tripId/$stopId');
     return StopDetails.fromJson(res.data);
   }
 }

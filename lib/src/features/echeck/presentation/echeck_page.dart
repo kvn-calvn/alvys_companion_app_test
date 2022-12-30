@@ -61,7 +61,8 @@ class _EcheckPageState extends ConsumerState<EcheckPage> {
         },
         child: echecks.isNullOrEmpty
             ? const EmptyView(
-                title: 'No E-checks', description: 'No Echecks on this Trip')
+                title: 'No E-Checks',
+                description: 'Generated E-Checks will appear here.')
             : ListView.builder(
                 padding: const EdgeInsets.symmetric(horizontal: 16.0),
                 itemCount: echecks!.length,

@@ -84,11 +84,14 @@ class TripList extends ConsumerWidget {
         child: Column(
           children: [
             if (value.deliveredTrips.isNotEmpty)
-              LargeNavButton(
-                title: "Delivered",
-                onPressed: () {
-                  context.pushNamed(RouteName.delivered.name);
-                },
+              Padding(
+                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                child: LargeNavButton(
+                  title: "Delivered",
+                  onPressed: () {
+                    context.pushNamed(RouteName.delivered.name);
+                  },
+                ),
               ),
             Expanded(
               child: RefreshIndicator(

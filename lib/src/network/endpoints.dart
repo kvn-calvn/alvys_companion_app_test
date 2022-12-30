@@ -1,7 +1,6 @@
-import 'package:alvys3/src/network/environment.dart';
+/*import 'package:alvys3/src/network/environment.dart';
 
 import '../utils/magic_strings.dart';
-
 class Endpoint {
   static String get storageUrl {
     switch (AppEnvironment.environment) {
@@ -40,4 +39,4 @@ class Endpoint {
       '${mobileBaseApi}RegisterDriver/$phone';
   static String verify(String phone, String code) =>
       '${mobileBaseApi}AuthenticateUser/$phone/$code';
-}
+}*/

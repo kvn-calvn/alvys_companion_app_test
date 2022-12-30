@@ -5,7 +5,11 @@ enum Flavor { dev, prod, qa }
 class FlavorConfig {
   final Flavor flavor;
   final String env;
+  final String rawApiBase;
   final String baseUrl;
+  final String storageUrl;
+  final String mobileBaseApi;
+
   final String gMapsKey;
   final String hereMapsKey;
   final String iosGeniusScanSDKKey;
@@ -16,8 +20,11 @@ class FlavorConfig {
 
   factory FlavorConfig(
       {required Flavor flavor,
-      required String baseUrl,
       required String env,
+      required String rawApiBase,
+      required String baseUrl,
+      required String storageUrl,
+      required String mobileBaseApi,
       required String gMapsKey,
       required String hereMapsKey,
       required String iosGeniusScanSDKKey,
@@ -25,8 +32,11 @@ class FlavorConfig {
       required String azureTelemetryKey}) {
     _instance ??= FlavorConfig._internal(
         flavor,
-        baseUrl,
         env,
+        rawApiBase,
+        baseUrl,
+        storageUrl,
+        mobileBaseApi,
         gMapsKey,
         hereMapsKey,
         iosGeniusScanSDKKey,
@@ -37,8 +47,11 @@ class FlavorConfig {
 
   FlavorConfig._internal(
     this.flavor,
-    this.baseUrl,
     this.env,
+    this.rawApiBase,
+    this.baseUrl,
+    this.storageUrl,
+    this.mobileBaseApi,
     this.gMapsKey,
     this.hereMapsKey,
     this.iosGeniusScanSDKKey,

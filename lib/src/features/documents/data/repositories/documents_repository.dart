@@ -1,3 +1,4 @@
+import 'package:alvys3/src/constants/api_routes.dart';
 import 'package:alvys3/src/features/authentication/domain/models/driver_user/driver_user.dart';
 import 'package:alvys3/src/features/documents/domain/paystub/paystub.dart';
 import 'package:alvys3/src/features/documents/domain/personal_document/personal_document.dart';
@@ -26,8 +27,8 @@ class AppDocumentsRepository implements DocumentsRepository {
   Future<ApiResponse<List<Paystub>>> getPaystubs(DriverUser user,
       [int top = 10]) async {
     if (await network.isConnected) {
-      var res = await ApiClient.singleton.dio.get(Endpoint.driverPaystubs(
-          user.id!, user.userTenants.first.companyCode!, top));
+      var res = await ApiClient.singleton.dio.get(
+          '${ApiRoutes.baseUrl}billing/QueryPaystubData?UserId=${user.id!}&CompanyCode=${user.userTenants.first.companyCode!}&Top=$top');
       if (res.statusCode == 200) {
         return ApiResponse(
           success: true,
@@ -49,8 +50,8 @@ class AppDocumentsRepository implements DocumentsRepository {
   @override
   Future<ApiResponse<List<PersonalDocument>>> getPersonalDocs() async {
     if (await network.isConnected) {
-      var res =
-          await ApiClient.singleton.dio.get(Endpoint.driverPersonalDocuments);
+      var res = await ApiClient.singleton.dio
+          .get('${ApiRoutes.mobileBaseApi}${ApiRoutes.minifiedDocuments}');
       if (res.statusCode == 200) {
         return ApiResponse(
           success: true,
@@ -72,8 +73,8 @@ class AppDocumentsRepository implements DocumentsRepository {
   @override
   Future<ApiResponse<List<TripDocuments>>> getTripDocs(String tripId) async {
     if (await network.isConnected) {
-      var res =
-          await ApiClient.singleton.dio.get(Endpoint.tripDocuments(tripId));
+      var res = await ApiClient.singleton.dio
+          .get(ApiRoutes.mobileBaseApi + ApiRoutes.tripdocs + tripId);
       if (res.statusCode == 200) {
         return ApiResponse(
             success: true,
@@ -101,8 +102,9 @@ class AppDocumentsRepository implements DocumentsRepository {
       "ExcludeTypes": []
     };
     if (await network.isConnected) {
-      var res = await ApiClient.singleton.dio
-          .post(Endpoint.driverPersonalDocuments, data: data);
+      var res = await ApiClient.singleton.dio.post(
+          '${ApiRoutes.mobileBaseApi}${ApiRoutes.minifiedDocuments}',
+          data: data);
       if (res.statusCode == 200) {
         return ApiResponse(
           success: true,
