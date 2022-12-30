@@ -61,7 +61,7 @@ class FlavorConfig {
 
   static FlavorConfig? get instance => _instance;
 
-  static bool isDevelopment() => _instance!.flavor == Flavor.dev;
-  static bool isProduction() => _instance!.flavor == Flavor.prod;
-  static bool isQa() => _instance!.flavor == Flavor.qa;
+  static bool get isDevelopment => _instance!.flavor == Flavor.dev;
+  static bool get isProduction => _instance!.flavor == Flavor.prod;
+  static bool get isQa => _instance!.flavor == Flavor.qa;
 }

@@ -1,19 +1,28 @@
 import 'package:alvys3/flavor_config.dart';
+import 'package:alvys3/src/features/authentication/domain/models/driver_user/driver_user.dart';
 
 class ApiRoutes {
-  static final String baseUrl = FlavorConfig.instance!.baseUrl;
-  static final String mobileBaseApi = FlavorConfig.instance!.mobileBaseApi;
-  static final String storageUrl = FlavorConfig.instance!.storageUrl;
-  static const String phoneNumber = 'login/';
-  static const String registerPhoneNumber = 'registerdriver/';
-  static const String userData = 'driveruserdata/';
-  static const String verify = 'authenticateuser';
-  static const String trips = 'gettrips/';
-  static const String tripdetails = 'gettripdetail/';
-  static const String tripdocs = 'getdocumentsbytrip/';
-  static const String minifiedDocuments = 'getminifieddocuments/';
-  static const String tripechecks = 'getechecksbytrip/';
-  static const String stopdetails = 'getstopdetail/';
-  static const String getEchecksByTrip = 'getechecksbytrip/';
-  static const String queryExpressNumber = 'comcheckenquiry/';
+  static String get baseUrl => FlavorConfig.instance!.baseUrl;
+  static String get rawBaseUrl => FlavorConfig.instance!.rawApiBase;
+  static String get mobileBaseApi => FlavorConfig.instance!.mobileBaseApi;
+  static String get storageUrl => FlavorConfig.instance!.storageUrl;
+  static String phoneNumber(String phone) => '${mobileBaseApi}Login/$phone';
+  static String registerPhoneNumber(String phone) =>
+      '${mobileBaseApi}registerdriver/$phone';
+  static String userData(String userId) => '${baseUrl}driveruserdata/$userId';
+  static String verify(String phone, String code) =>
+      '${mobileBaseApi}authenticateuser/$phone/$code';
+  static String trips = '${mobileBaseApi}gettrips/';
+  static String tripDetails(String tripId) =>
+      '${mobileBaseApi}gettripdetail/$tripId';
+  static String tripDocs(String tripId) =>
+      '${mobileBaseApi}getdocumentsbytrip/$tripId';
+  static String minifiedDocuments = '${mobileBaseApi}getminifieddocuments/';
+  // static String tripEchecks = 'getechecksbytrip/';
+  static String stopdetails(String tripId, String stopId) =>
+      '${mobileBaseApi}getstopdetail/$tripId/$stopId';
+  // static String getEchecksByTrip = 'getechecksbytrip/';
+  // static String queryExpressNumber = 'comcheckenquiry/';
+  static String driverPaystubs(DriverUser user, int top) =>
+      '${baseUrl}billing/QueryPaystubData?UserId=${user.id!}&CompanyCode=${user.userTenants.first.companyCode!}&Top=$top';
 }

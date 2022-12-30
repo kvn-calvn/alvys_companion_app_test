@@ -13,7 +13,7 @@ class TripDocsRemoteDataSourceImpl implements TripDocsRemoteDataSource {
 
   @override
   Future<List<TripDocuments>> getTripDocs(String tripId) async {
-    var res = await _apiClient.dio.get(ApiRoutes.tripdocs + tripId);
+    var res = await _apiClient.dio.get(ApiRoutes.tripDocs(tripId));
 
     return (res.data['Data'] as List<dynamic>?)
         .toListNotNull()

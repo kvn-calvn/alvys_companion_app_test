@@ -14,7 +14,7 @@ class Paystub with _$Paystub {
   }) = _Paystub;
   Paystub._();
   String get link =>
-      '${ApiRoutes.storageUrl}/${companyCode!.toLowerCase()}/$fileName';
+      '${ApiRoutes.storageUrl}${companyCode!.toLowerCase()}/$fileName';
   factory Paystub.fromJson(Map<String, dynamic> json) =>
       _$PaystubFromJson(json);
 }

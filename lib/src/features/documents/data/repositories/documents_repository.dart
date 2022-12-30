@@ -27,8 +27,8 @@ class AppDocumentsRepository implements DocumentsRepository {
   Future<ApiResponse<List<Paystub>>> getPaystubs(DriverUser user,
       [int top = 10]) async {
     if (await network.isConnected) {
-      var res = await ApiClient.singleton.dio.get(
-          '${ApiRoutes.baseUrl}billing/QueryPaystubData?UserId=${user.id!}&CompanyCode=${user.userTenants.first.companyCode!}&Top=$top');
+      var res = await ApiClient.singleton.dio
+          .get(ApiRoutes.driverPaystubs(user, top));
       if (res.statusCode == 200) {
         return ApiResponse(
           success: true,
@@ -50,8 +50,7 @@ class AppDocumentsRepository implements DocumentsRepository {
   @override
   Future<ApiResponse<List<PersonalDocument>>> getPersonalDocs() async {
     if (await network.isConnected) {
-      var res = await ApiClient.singleton.dio
-          .get('${ApiRoutes.mobileBaseApi}${ApiRoutes.minifiedDocuments}');
+      var res = await ApiClient.singleton.dio.get(ApiRoutes.minifiedDocuments);
       if (res.statusCode == 200) {
         return ApiResponse(
           success: true,
@@ -73,8 +72,7 @@ class AppDocumentsRepository implements DocumentsRepository {
   @override
   Future<ApiResponse<List<TripDocuments>>> getTripDocs(String tripId) async {
     if (await network.isConnected) {
-      var res = await ApiClient.singleton.dio
-          .get(ApiRoutes.mobileBaseApi + ApiRoutes.tripdocs + tripId);
+      var res = await ApiClient.singleton.dio.get(ApiRoutes.tripDocs(tripId));
       if (res.statusCode == 200) {
         return ApiResponse(
             success: true,

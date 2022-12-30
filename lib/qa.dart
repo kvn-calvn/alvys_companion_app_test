@@ -10,7 +10,7 @@ void main() {
     rawApiBase: "alvysapi-qa.azurewebsites.net",
     baseUrl: "https://alvysapi-qa.azurewebsites.net/api/",
     mobileBaseApi: 'https://alvysapi-qa.azurewebsites.net/api/mobilev2/',
-    storageUrl: "https://alvysqastorage.blob.core.windows.net",
+    storageUrl: "https://alvysqastorage.blob.core.windows.net/",
     androidGeniusScanSDKKey: Env.androidGeniusScanSDKKey,
     iosGeniusScanSDKKey: Env.iOSGeniusScanSDKKey,
     azureTelemetryKey: Env.azureTelemetryKeyQA,

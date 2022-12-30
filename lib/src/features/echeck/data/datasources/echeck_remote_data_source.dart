@@ -14,14 +14,14 @@ class EcheckRemoteDataSourceImpl implements EcheckRemoteDataSource {
 
   @override
   Future<EcheckList> getEchecksByTripId(String tripId) async {
-    var res = await _apiClient.dio.get(ApiRoutes.getEchecksByTrip + tripId);
+    var res = await _apiClient.dio.get('ApiRoutes.getEchecksByTrip' + tripId);
     return EcheckList.fromJson(res.data);
   }
 
   @override
   Future<EcheckQuery> queryExpressNumber(String expressCheckNumber) async {
     var res = await _apiClient.dio
-        .get(ApiRoutes.queryExpressNumber + expressCheckNumber);
+        .get('ApiRoutes.queryExpressNumber' + expressCheckNumber);
     return EcheckQuery.fromJson(res.data);
   }
 }

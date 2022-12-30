@@ -26,8 +26,7 @@ class AvysAuthRepository implements AuthRepository {
   @override
   Future<ApiResponse<DriverUser>> getDriverUser(String id) async {
     if (await network.isConnected) {
-      var res = await ApiClient.singleton.dio
-          .get('${ApiRoutes.baseUrl}${ApiRoutes.userData}$id');
+      var res = await ApiClient.singleton.dio.get(ApiRoutes.userData(id));
       if (res.statusCode == 200) {
         return ApiResponse(
           success: true,
@@ -54,12 +53,11 @@ class AvysAuthRepository implements AuthRepository {
       [Function? onError]) async {
     var loginRes =
         //await ApiClient.singleton.dio.get(Endpoint.loginByPhone(phone));
-        await ApiClient.singleton.dio
-            .get('${ApiRoutes.mobileBaseApi}${ApiRoutes.phoneNumber}$phone');
+        await ApiClient.singleton.dio.get(ApiRoutes.phoneNumber(phone));
 
     if (loginRes.statusCode != 200) {
-      var registerRes = await ApiClient.singleton.dio.get(
-          '${ApiRoutes.mobileBaseApi}${ApiRoutes.registerPhoneNumber}$phone');
+      var registerRes = await ApiClient.singleton.dio
+          .get(ApiRoutes.registerPhoneNumber(phone));
       switch (registerRes.statusCode) {
         case 200:
           return ApiResponse(
@@ -96,8 +94,7 @@ class AvysAuthRepository implements AuthRepository {
       [Function? onError]) async {
     var verifyRes =
         //await ApiClient.singleton.dio.get(Endpoint.verify(phone, code));
-        await ApiClient.singleton.dio
-            .get('${ApiRoutes.mobileBaseApi}${ApiRoutes.verify}/$phone/$code');
+        await ApiClient.singleton.dio.get(ApiRoutes.verify(phone, code));
 
     switch (verifyRes.statusCode) {
       case 200:
