@@ -1,10 +1,12 @@
 import 'dart:io';
 
+import 'package:alvys3/flavor_config.dart';
 import 'package:alvys3/src/common_widgets/url_nav_button.dart';
 import 'package:alvys3/src/utils/app_theme.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class AboutPage extends StatelessWidget {
   const AboutPage({Key? key}) : super(key: key);
@@ -111,6 +113,17 @@ class AboutPageBody extends StatelessWidget {
                   return const Text('');
                 },
               ),
+        FutureBuilder<PackageInfo>(
+            future: PackageInfo.fromPlatform(),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                return Text(
+                    'App Version: ${snapshot.data!.version} (${snapshot.data!.buildNumber})');
+              }
+
+              return const Text('');
+            }),
+        //Text(FlavorConfig.instance!.flavor.name.toUpperCase()),
       ]),
     );
   }
