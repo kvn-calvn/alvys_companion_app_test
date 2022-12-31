@@ -39,7 +39,7 @@ class FilteredTripPage extends ConsumerWidget {
           },
         ),
       ),
-      backgroundColor: const Color(0xFFF1F4F8),
+      //backgroundColor: const Color(0xFFF1F4F8),
       body: SafeArea(
           child: RefreshIndicator(
         onRefresh: () async {

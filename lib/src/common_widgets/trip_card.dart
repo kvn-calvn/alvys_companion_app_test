@@ -85,7 +85,8 @@ class TripCard extends ConsumerWidget {
                               Text(
                                   DateFormat('MMM d @ h:mm a', 'en_US')
                                       .formatNullDate(trip.pickupDate),
-                                  style: Theme.of(context).textTheme.caption),
+                                  style:
+                                      Theme.of(context).textTheme.bodyMedium!),
                             ],
                           ),
                         ),
