@@ -11,6 +11,8 @@ Then run the following command:
 $ flutter pub get && flutter pub run build_runner build --delete-conflicting-outputs
 ```
 
+*A .env file is git-ignored, you'll need to request it from a mobile developer and put in the project root.*
+
 
 This project contains 3 flavors:
 - development
