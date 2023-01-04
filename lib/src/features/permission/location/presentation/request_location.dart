@@ -3,14 +3,16 @@ import 'package:alvys3/custom_icons/alvys3_icons.dart';
 import 'package:alvys3/src/common_widgets/buttons.dart';
 import 'package:alvys3/src/constants/color.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
+import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class RequestLocation extends StatelessWidget {
   const RequestLocation({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, [bool mounted = true]) {
     return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -49,15 +51,45 @@ class RequestLocation extends StatelessWidget {
                   title: "Continue",
                   isLoading: false,
                   isDisable: false,
-                  onPressAction: () {
-                    context.goNamed(RouteName.notificationPermission.name);
+                  onPressAction: () async {
+                    var requestLocationResult =
+                        await Permission.locationAlways.request();
+                    var notificationPermStatus =
+                        await Permission.notification.status;
+
+                    if (requestLocationResult.isDenied ||
+                        requestLocationResult.isPermanentlyDenied) {
+                      debugPrint('Location request denied');
+                      AppSettings.openLocationSettings();
+                    }
+
+                    if (requestLocationResult.isGranted) {
+                      if (notificationPermStatus.isDenied ||
+                          notificationPermStatus.isPermanentlyDenied) {
+                        if (!mounted) return;
+                        context.goNamed(RouteName.notificationPermission.name);
+                      }
+                    }
+
+                    //context.goNamed(RouteName.notificationPermission.name);
                   },
                 ),
                 const SizedBox(
                   height: 10,
                 ),
                 TextButton(
-                  onPressed: () {},
+                  onPressed: () async {
+                    var notificationPermStatus =
+                        await Permission.notification.status;
+                    if (notificationPermStatus.isGranted ||
+                        notificationPermStatus.isDenied) {
+                      if (!mounted) return;
+                      context.goNamed(RouteName.trips.name);
+                    } else {
+                      if (!mounted) return;
+                      context.goNamed(RouteName.notificationPermission.name);
+                    }
+                  },
                   child: const Text(
                     'Not now',
                   ),

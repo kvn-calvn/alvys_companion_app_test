@@ -11,6 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import '../../../common_widgets/main_bottom_nav.dart';
 
@@ -67,7 +68,28 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> {
       ),
     );
 
-    if (mounted) context.goNamed(RouteName.locationPermission.name);
+    var locationStatus = await Permission.location.status;
+    var notificationStatus = await Permission.notification.status;
+
+    if (locationStatus.isPermanentlyDenied || locationStatus.isDenied) {
+      if (mounted) context.goNamed(RouteName.locationPermission.name);
+    } else if (notificationStatus.isDenied ||
+        notificationStatus.isPermanentlyDenied) {
+      if (mounted) context.goNamed(RouteName.notificationPermission.name);
+    } else {
+      debugPrint("GO_STRAIGHT_HOME");
+/*
+      if (Platform.isIOS) {
+        PlatformChannel.getNotification(user.phone);
+      } else if (Platform.isAndroid) {
+        AlvysNotficationHub.startNotificationService(
+            user.phone,
+            ServiceGlobals.notificationHubUrl,
+            ServiceGlobals.notificationHubName);
+      }*/
+      if (mounted) context.goNamed(RouteName.trips.name);
+    }
+
     state = AsyncValue.data(state.value!);
   }
 

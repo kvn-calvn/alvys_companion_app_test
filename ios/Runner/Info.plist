@@ -49,5 +49,13 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSLocationAlwaysUsageDescription</key>
+	<string>Your location service is used to track the load you have been assigned to carry.</string>
+	<key>NSLocationUsageDescription</key>
+	<string>Your location service is used to track the load you have been assigned to carry.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Your location service is used to track the load you have been assigned to carry.</string>
+	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+	<string>Your location service is used to track the load you have been assigned to carry.</string>
 </dict>
 </plist>
