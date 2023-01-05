@@ -52,6 +52,9 @@ class RequestNotification extends StatelessWidget {
                     var requestNotificationResult =
                         await Permission.notification.request();
 
+                    debugPrint(
+                        'Notification status $requestNotificationResult');
+
                     if (requestNotificationResult.isPermanentlyDenied) {
                       debugPrint('Notification request isPermanentlyDenied');
                       AppSettings.openNotificationSettings();
@@ -62,8 +65,8 @@ class RequestNotification extends StatelessWidget {
                       if (!mounted) return;
                       context.goNamed(RouteName.trips.name);
                     }
-                    if (!mounted) return;
-                    context.goNamed(RouteName.trips.name);
+                    /*if (!mounted) return;
+                    context.goNamed(RouteName.trips.name);*/
                   },
                 ),
                 const SizedBox(

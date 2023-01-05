@@ -53,7 +53,9 @@ class RequestLocation extends StatelessWidget {
                   isDisable: false,
                   onPressAction: () async {
                     var requestLocationResult =
-                        await Permission.locationAlways.request();
+                        await Permission.location.request();
+                    await Permission.locationAlways.request();
+
                     var notificationPermStatus =
                         await Permission.notification.status;
 

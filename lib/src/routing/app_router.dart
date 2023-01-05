@@ -34,7 +34,7 @@ Provider<GoRouter> routerProvider = Provider(
     initialLocation: ref.read(authProvider).value!.driver == null
         ? RouteName.signIn.toRoute
         : RouteName.trips.toRoute,
-    debugLogDiagnostics: true,
+    debugLogDiagnostics: false,
     routes: [
       GoRoute(
         name: RouteName.landing.name,
