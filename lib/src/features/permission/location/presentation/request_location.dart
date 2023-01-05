@@ -57,19 +57,26 @@ class RequestLocation extends StatelessWidget {
                     var notificationPermStatus =
                         await Permission.notification.status;
 
-                    if (requestLocationResult.isDenied ||
-                        requestLocationResult.isPermanentlyDenied) {
-                      debugPrint('Location request denied');
-                      AppSettings.openLocationSettings();
+                    if (requestLocationResult.isPermanentlyDenied) {
+                      debugPrint('Location request was denied');
+                      //AppSettings.openLocationSettings();
                     }
 
+                    debugPrint("Notification status: $notificationPermStatus");
+
+                    if (notificationPermStatus.isDenied) {
+                      if (!mounted) return;
+                      context.goNamed(RouteName.notificationPermission.name);
+                    }
+
+                    /*
                     if (requestLocationResult.isGranted) {
                       if (notificationPermStatus.isDenied ||
                           notificationPermStatus.isPermanentlyDenied) {
                         if (!mounted) return;
                         context.goNamed(RouteName.notificationPermission.name);
                       }
-                    }
+                    }*/
 
                     //context.goNamed(RouteName.notificationPermission.name);
                   },

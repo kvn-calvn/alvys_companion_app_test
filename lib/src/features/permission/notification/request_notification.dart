@@ -61,13 +61,9 @@ class RequestNotification extends StatelessWidget {
                       //Register driver phone number to notification service then navigate to home
                       if (!mounted) return;
                       context.goNamed(RouteName.trips.name);
-                    } else {
-                      debugPrint("Notification granted.");
-                      if (!mounted) return;
-                      context.goNamed(RouteName.trips.name);
                     }
-
-                    //context.goNamed(RouteName.notificationPermission.name);
+                    if (!mounted) return;
+                    context.goNamed(RouteName.trips.name);
                   },
                 ),
                 const SizedBox(

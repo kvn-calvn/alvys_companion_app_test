@@ -44,8 +44,8 @@ class ApiClient {
     dio.interceptors.clear();
     dio.interceptors.addAll({
       DioApiInterCeptor(),
-      PrettyDioLogger(
-          requestHeader: false, requestBody: false, responseHeader: false)
+      /*  PrettyDioLogger(
+          requestHeader: false, requestBody: false, responseHeader: false)*/
     });
     return dio;
   }
