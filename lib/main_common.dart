@@ -5,7 +5,6 @@ import 'package:alvys3/src/utils/extensions.dart';
 import 'package:alvys3/src/utils/global_error_handler.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:alvys3/src/utils/theme_handler.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 
 import 'src/features/authentication/domain/models/driver_user/driver_user.dart';
 import 'src/features/authentication/presentation/auth_provider_controller.dart';
@@ -13,7 +12,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'app.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 Future<void> mainCommon() async {
   //WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -33,16 +31,6 @@ Future<void> mainCommon() async {
     if (driverData != null) {
       driverUser = DriverUser.fromJson(jsonDecode(driverData));
     }
-
-    await Firebase.initializeApp();
-
-    await FirebaseMessaging.instance
-        .setForegroundNotificationPresentationOptions(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
-
     runApp(ProviderScope(
       overrides: [
         authProvider

@@ -1,4 +1,4 @@
-package com.alvys.driver
+package io.alvys.app.alvys3
 
 import io.flutter.embedding.android.FlutterActivity
 
