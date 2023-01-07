@@ -69,18 +69,10 @@ class RequestLocation extends StatelessWidget {
                     if (notificationPermStatus.isDenied) {
                       if (!mounted) return;
                       context.goNamed(RouteName.notificationPermission.name);
+                    } else {
+                      if (!mounted) return;
+                      context.goNamed(RouteName.trips.name);
                     }
-
-                    /*
-                    if (requestLocationResult.isGranted) {
-                      if (notificationPermStatus.isDenied ||
-                          notificationPermStatus.isPermanentlyDenied) {
-                        if (!mounted) return;
-                        context.goNamed(RouteName.notificationPermission.name);
-                      }
-                    }*/
-
-                    //context.goNamed(RouteName.notificationPermission.name);
                   },
                 ),
                 const SizedBox(
