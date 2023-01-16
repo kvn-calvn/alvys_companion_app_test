@@ -28,11 +28,6 @@ class TripPageController extends AutoDisposeAsyncNotifier<TripListState> {
     }
   }
 
-  void setCurrentTrip(String tripId) =>
-      state = AsyncValue.data(state.value!.copyWith(tripId: tripId));
-  void setCurrentStop(String stopId) =>
-      state = AsyncValue.data(state.value!.copyWith(stopId: stopId));
-
   Future<void> refreshTrips() async {
     final result = await _tripRepositoryImpl.getTrips();
     if (result.success) {
@@ -41,9 +36,8 @@ class TripPageController extends AutoDisposeAsyncNotifier<TripListState> {
     }
   }
 
-  Future<void> refreshCurrentTrip() async {
-    final result =
-        await _tripRepositoryImpl.getTripDetails(state.value!.tripId!);
+  Future<void> refreshCurrentTrip(String tripId) async {
+    final result = await _tripRepositoryImpl.getTripDetails(tripId);
     if (result.success) {
       var dataToGet = result.data!.data;
       int index = state.value!.trips

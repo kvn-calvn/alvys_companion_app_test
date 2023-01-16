@@ -57,13 +57,13 @@ class SettingsList extends ConsumerWidget {
         LargeNavButton(
           title: "My Documents",
           onPressed: () {
-            context.pushNamed(RouteName.personalDocuments.name);
+            context.goNamed(RouteName.personalDocuments.name);
           },
         ),
         LargeNavButton(
           title: "Paystubs",
           onPressed: () {
-            context.pushNamed(RouteName.paystubs.name);
+            context.goNamed(RouteName.paystubs.name);
           },
         ),
         LargeNavButton(

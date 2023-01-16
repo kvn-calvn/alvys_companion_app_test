@@ -3,6 +3,7 @@ import 'package:alvys3/src/features/authentication/presentation/sign_in_phonenum
 import 'package:alvys3/src/features/authentication/presentation/verify_phonenumber/phone_verification_page.dart';
 import 'package:alvys3/src/features/documents/presentation/document_page.dart';
 import 'package:alvys3/src/features/documents/presentation/pdf_viewer.dart';
+import 'package:alvys3/src/features/documents/presentation/trip_docs_controller.dart';
 import 'package:alvys3/src/features/echeck/presentation/echeck_page.dart';
 import 'package:alvys3/src/features/echeck/presentation/generate_echeck.dart';
 import 'package:alvys3/src/features/permission/location/presentation/request_location.dart';
@@ -13,6 +14,7 @@ import 'package:alvys3/src/features/settings/presentation/settings_page.dart';
 import 'package:alvys3/src/features/trips/presentation/stopdetails/stop_details_page.dart';
 import 'package:alvys3/src/features/trips/presentation/trip/filtered_trip_page.dart';
 import 'package:alvys3/src/features/trips/presentation/trip/load_list_page.dart';
+import 'package:alvys3/src/features/trips/presentation/trip/trip_page_controller.dart';
 import 'package:alvys3/src/features/trips/presentation/tripdetails/trip_details_page.dart';
 import 'package:alvys3/src/routing/error_page.dart';
 import 'package:alvys3/src/routing/landing.dart';
@@ -26,7 +28,7 @@ import 'package:go_router/go_router.dart';
 import '../features/authentication/presentation/auth_provider_controller.dart';
 
 // final _rootNavigatorKey = GlobalKey<NavigatorState>();
-GlobalKey<NavigatorState> _shellNavigatorKey = GlobalKey<NavigatorState>();
+// GlobalKey<NavigatorState> _shellNavigatorKey = GlobalKey<NavigatorState>();
 
 Provider<GoRouter> routerProvider = Provider(
   (ref) => GoRouter(
@@ -71,8 +73,27 @@ Provider<GoRouter> routerProvider = Provider(
           return const RequestNotification();
         },
       ),
+
+      /// tablet shellRoute
       ShellRoute(
-          navigatorKey: _shellNavigatorKey,
+        builder: (context, state, child) {
+          return MainBottomNav(child: child);
+        },
+        routes: [
+          GoRoute(
+            name: RouteName.tabletTrips.name,
+            path: RouteName.tabletTrips.toRoute,
+            pageBuilder: (context, state) => CustomTransitionPage(
+                child: const LoadListPage(),
+                transitionDuration: Duration.zero,
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) => child),
+          ),
+        ],
+      ),
+
+      ///phone shell route
+      ShellRoute(
           builder: (context, state, child) {
             return MainBottomNav(child: child);
           },
@@ -81,10 +102,11 @@ Provider<GoRouter> routerProvider = Provider(
               name: RouteName.trips.name,
               path: RouteName.trips.toRoute,
               pageBuilder: (context, state) => CustomTransitionPage(
-                  child: const LoadListPage(),
-                  transitionDuration: Duration.zero,
-                  transitionsBuilder:
-                      (context, animation, secondaryAnimation, child) => child),
+                child: const LoadListPage(),
+                transitionDuration: Duration.zero,
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) => child,
+              ),
               routes: [
                 GoRoute(
                   name: RouteName.delivered.name,
@@ -106,31 +128,35 @@ Provider<GoRouter> routerProvider = Provider(
                 ),
                 GoRoute(
                   name: RouteName.tripDetails.name,
-                  path: RouteName.tripDetails.name,
+                  path: ':tripId',
                   builder: (context, state) {
-                    return const LoadDetailsPage();
+                    return LoadDetailsPage(state.params['tripId']!);
                   },
                   routes: <GoRoute>[
                     GoRoute(
-                      name: RouteName.eCheck.name,
-                      path: RouteName.eCheck.name,
-                      builder: (context, state) {
-                        return const EcheckPage();
-                      },
-                    ),
+                        name: RouteName.eCheck.name,
+                        path: RouteName.eCheck.name,
+                        builder: (context, state) {
+                          return EcheckPage(state.params['tripId']!);
+                        },
+                        routes: [
+                          GoRoute(
+                            name: RouteName.generateEcheck.name,
+                            path: RouteName.generateEcheck.name,
+                            builder: (context, state) {
+                              return GenerateEcheck(state.params['tripId']!);
+                            },
+                          ),
+                        ]),
                     GoRoute(
-                      name: RouteName.generateEcheck.name,
-                      path: RouteName.generateEcheck.name,
+                      name: RouteName.documentList.name,
+                      path: RouteName.documentList.name,
                       builder: (context, state) {
-                        return const GenerateEcheck();
-                      },
-                    ),
-                    GoRoute(
-                      name: RouteName.tripDocuments.name,
-                      path: RouteName.tripDocuments.name,
-                      builder: (context, state) {
-                        return const DocumentsPage(
-                          DocumentType.tripDocuments,
+                        return DocumentsPage(
+                          DocumentsArgs(
+                            DocumentType.tripDocuments,
+                            state.params['tripId'],
+                          ),
                         );
                       },
                       routes: <GoRoute>[
@@ -149,9 +175,10 @@ Provider<GoRouter> routerProvider = Provider(
                     ),
                     GoRoute(
                       name: RouteName.stopDetails.name,
-                      path: RouteName.stopDetails.name,
+                      path: ':stopId',
                       builder: (context, state) {
-                        return const StopDetailsPage();
+                        return StopDetailsPage(
+                            state.params['tripId']!, state.params['stopId']!);
                       },
                     ),
                   ],
@@ -185,7 +212,8 @@ Provider<GoRouter> routerProvider = Provider(
                     name: RouteName.paystubs.name,
                     path: RouteName.paystubs.name,
                     builder: (context, state) {
-                      return const DocumentsPage(DocumentType.paystubs);
+                      return DocumentsPage(
+                          DocumentsArgs(DocumentType.paystubs, null));
                     },
                     // routes: [],
                   ),
@@ -193,8 +221,8 @@ Provider<GoRouter> routerProvider = Provider(
                     name: RouteName.personalDocuments.name,
                     path: RouteName.personalDocuments.name,
                     builder: (context, state) {
-                      return const DocumentsPage(
-                          DocumentType.personalDocuments);
+                      return DocumentsPage(
+                          DocumentsArgs(DocumentType.personalDocuments, null));
                     },
                     // routes: [],
                   ),
@@ -202,7 +230,8 @@ Provider<GoRouter> routerProvider = Provider(
                     name: RouteName.tripReport.name,
                     path: RouteName.tripReport.name,
                     builder: (context, state) {
-                      return const DocumentsPage(DocumentType.tripReport);
+                      return DocumentsPage(
+                          DocumentsArgs(DocumentType.tripReport, null));
                     },
                     // routes: [],
                   ),

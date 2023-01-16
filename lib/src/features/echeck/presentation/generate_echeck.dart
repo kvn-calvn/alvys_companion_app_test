@@ -13,7 +13,8 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import '../../../utils/app_theme.dart';
 
 class GenerateEcheck extends ConsumerStatefulWidget {
-  const GenerateEcheck({Key? key}) : super(key: key);
+  final String tripId;
+  const GenerateEcheck(this.tripId, {Key? key}) : super(key: key);
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _GenerateEcheckState();
@@ -86,7 +87,7 @@ class _GenerateEcheckState extends ConsumerState<GenerateEcheck> {
                   for (Stop stop in ref
                       .watch(tripPageControllerProvider)
                       .value!
-                      .currentTrip
+                      .getTrip(widget.tripId)
                       .stops!)
                     ECheckStopCard(
                       stopId: stop.stopId!,

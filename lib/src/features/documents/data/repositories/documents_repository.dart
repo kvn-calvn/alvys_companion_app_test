@@ -100,9 +100,8 @@ class AppDocumentsRepository implements DocumentsRepository {
       "ExcludeTypes": []
     };
     if (await network.isConnected) {
-      var res = await ApiClient.singleton.dio.post(
-          '${ApiRoutes.mobileBaseApi}${ApiRoutes.minifiedDocuments}',
-          data: data);
+      var res = await ApiClient.singleton.dio
+          .post(ApiRoutes.minifiedDocuments, data: data);
       if (res.statusCode == 200) {
         return ApiResponse(
           success: true,

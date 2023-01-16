@@ -8,8 +8,6 @@ part 'trip_list_state.freezed.dart';
 class TripListState with _$TripListState {
   factory TripListState({
     @Default([]) List<AppTrip> trips,
-    String? tripId,
-    String? stopId,
   }) = _TripListState;
   const TripListState._();
   List<AppTrip> get deliveredTrips =>
@@ -20,8 +18,10 @@ class TripListState with _$TripListState {
       .where((element) => element.status!
           .isInStatus(["TONU", "Released", "Invoiced", "Completed", "Queued"]))
       .toList();
-  AppTrip get currentTrip =>
-      trips.firstWhere((element) => element.id! == tripId);
-  Stop get currentStop =>
-      currentTrip.stops!.firstWhere((element) => element.stopId == stopId);
+
+  AppTrip getTrip(String tripId) =>
+      trips.firstWhere((element) => element.id! == tripId,
+          orElse: () => AppTrip(id: '-', tripNumber: '...'));
+  Stop getStop(String tripId, String stopId) =>
+      getTrip(tripId).stops!.firstWhere((element) => element.stopId == stopId);
 }

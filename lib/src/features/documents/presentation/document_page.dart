@@ -14,8 +14,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../utils/app_theme.dart';
 
 class DocumentsPage extends ConsumerStatefulWidget {
-  final DocumentType documentType;
-  const DocumentsPage(this.documentType, {Key? key}) : super(key: key);
+  final DocumentsArgs args;
+
+  const DocumentsPage(this.args, {Key? key}) : super(key: key);
 
   @override
   _DocumentsPageState createState() => _DocumentsPageState();
@@ -23,7 +24,7 @@ class DocumentsPage extends ConsumerStatefulWidget {
 
 class _DocumentsPageState extends ConsumerState<DocumentsPage> {
   bool get showFAB {
-    switch (widget.documentType) {
+    switch (widget.args.documentType) {
       case DocumentType.tripDocuments:
       case DocumentType.personalDocuments:
       case DocumentType.tripReport:
@@ -35,9 +36,9 @@ class _DocumentsPageState extends ConsumerState<DocumentsPage> {
 
   @override
   Widget build(BuildContext context) {
-    final docsState = ref.watch(documentsProvider.call(widget.documentType));
+    final docsState = ref.watch(documentsProvider.call(widget.args));
     final docsNotifier =
-        ref.watch(documentsProvider.call(widget.documentType).notifier);
+        ref.watch(documentsProvider.call(widget.args).notifier);
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -59,25 +60,30 @@ class _DocumentsPageState extends ConsumerState<DocumentsPage> {
         child: docsState.when(
           loading: () => const DocumentsShimmer(),
           error: (error, stack) {
-            return const EmptyView(
-                title: "Error occurred while loading documents",
-                description: '');
+            return RefreshIndicator(
+              onRefresh: () async {
+                await ref
+                    .read(documentsProvider.call(widget.args).notifier)
+                    .getDocuments();
+              },
+              child: const EmptyView(
+                  title: "Error occurred while loading documents",
+                  description: ''),
+            );
           },
           data: (data) {
             return DocumentList(
               documents: docsNotifier.documentThumbnails,
               refreshFunction: () async {
                 await ref
-                    .read(documentsProvider.call(widget.documentType).notifier)
+                    .read(documentsProvider.call(widget.args).notifier)
                     .getDocuments();
               },
               emptyMessage: "No ${docsNotifier.pageTitle}",
               extra: data.canLoadMore
                   ? LoadMoreButton(loadMoreFunction: () async {
                       await ref
-                          .read(documentsProvider
-                              .call(widget.documentType)
-                              .notifier)
+                          .read(documentsProvider.call(widget.args).notifier)
                           .loadMorePaystubs();
                     })
                   : null,

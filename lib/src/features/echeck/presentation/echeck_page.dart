@@ -10,7 +10,8 @@ import '../../../utils/app_theme.dart';
 import '../../../utils/extensions.dart';
 
 class EcheckPage extends ConsumerStatefulWidget {
-  const EcheckPage({Key? key}) : super(key: key);
+  final String tripId;
+  const EcheckPage(this.tripId, {Key? key}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
@@ -25,8 +26,11 @@ class _EcheckPageState extends ConsumerState<EcheckPage> {
 
   @override
   Widget build(BuildContext context) {
-    var echecks =
-        ref.watch(tripPageControllerProvider).value!.currentTrip.eChecks;
+    var echecks = ref
+        .watch(tripPageControllerProvider)
+        .value!
+        .getTrip(widget.tripId)
+        .eChecks;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -48,7 +52,9 @@ class _EcheckPageState extends ConsumerState<EcheckPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          GoRouter.of(context).pushNamed(RouteName.generateEcheck.name);
+          context.goNamed(RouteName.generateEcheck.name, params: {
+            'tripId': widget.tripId,
+          });
         },
         backgroundColor: ColorManager.primary(Theme.of(context).brightness),
         child: const Icon(Icons.attach_money, color: Colors.white),
@@ -57,7 +63,7 @@ class _EcheckPageState extends ConsumerState<EcheckPage> {
         onRefresh: () async {
           await ref
               .read(tripPageControllerProvider.notifier)
-              .refreshCurrentTrip();
+              .refreshCurrentTrip(widget.tripId);
         },
         child: echecks.isNullOrEmpty
             ? const EmptyView(

@@ -1,4 +1,5 @@
 enum RouteName {
+  // phone
   about,
   landing,
   signIn,
@@ -10,7 +11,7 @@ enum RouteName {
   processing,
   tripDetails,
   eCheck,
-  tripDocuments,
+  documentList,
   documentView,
   stopDetails,
   settings,
@@ -19,7 +20,11 @@ enum RouteName {
   generateEcheck,
   paystubs,
   personalDocuments,
-  tripReport
+  tripReport,
+
+  /// tablet routes
+  tabletTrips,
+  tabletTripDetails,
 }
 
 enum TripFilterType { processing, delivered }

@@ -26,10 +26,8 @@ class TripCard extends ConsumerWidget {
           elevation: 4,
           child: InkWell(
             onTap: () {
-              ref
-                  .read(tripPageControllerProvider.notifier)
-                  .setCurrentTrip(trip.id!);
-              context.pushNamed(RouteName.tripDetails.name);
+              context.goNamed(RouteName.tripDetails.name,
+                  params: {'tripId': trip.id!});
             },
             child: Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(15, 5, 15, 5),

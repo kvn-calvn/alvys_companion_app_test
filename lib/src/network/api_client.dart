@@ -88,14 +88,6 @@ class DioApiInterCeptor extends Interceptor {
     // super.onError(err, handler);
   }
 
-  @override
-  void onResponse(Response response, ResponseInterceptorHandler handler) {
-    if (response.statusCode! == 400) {
-      throw AlvysClientException(response.data);
-    }
-    super.onResponse(response, handler);
-  }
-
   // dynamic requestInterceptor(RequestOptions options) async {
   //   if (options.headers.containsKey("requiresToken")) {
   //     //remove the auxiliary header

@@ -12,7 +12,9 @@ import '../../../../utils/app_theme.dart';
 import '../../domain/app_trip/m_comodity.dart';
 
 class StopDetailsPage extends ConsumerStatefulWidget {
-  const StopDetailsPage({Key? key}) : super(key: key);
+  final String tripId;
+  final String stopId;
+  const StopDetailsPage(this.tripId, this.stopId, {Key? key}) : super(key: key);
 
   @override
   ConsumerState<StopDetailsPage> createState() => _StopDetailsPageState();
@@ -41,16 +43,20 @@ class _StopDetailsPageState extends ConsumerState<StopDetailsPage> {
         ),
         elevation: 0,
       ),
-      body: const Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
-        child: StopDetails(),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
+        child: StopDetails(widget.tripId, widget.stopId),
       ),
     );
   }
 }
 
 class StopDetails extends ConsumerWidget {
-  const StopDetails({
+  final String tripId;
+  final String stopId;
+  const StopDetails(
+    this.tripId,
+    this.stopId, {
     Key? key,
   }) : super(key: key);
 
@@ -66,12 +72,12 @@ class StopDetails extends ConsumerWidget {
         error: (error, stack) =>
             Text('Oops, something unexpected happened, $stack'),
         data: (value) {
-          var currentStop = value.currentStop;
+          var currentStop = value.getStop(tripId, stopId);
           return RefreshIndicator(
             onRefresh: () async {
               await ref
                   .read(tripPageControllerProvider.notifier)
-                  .refreshCurrentTrip();
+                  .refreshCurrentTrip(tripId);
             },
             child: ListView(
               children: [
@@ -143,7 +149,8 @@ class StopDetails extends ConsumerWidget {
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         Text(
-                          currentStop.timeRecord?.driver?.driverIn ?? '-',
+                          DateFormat.MEd().formatNullDate(
+                              currentStop.timeRecord?.driver?.timeIn),
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
@@ -156,7 +163,8 @@ class StopDetails extends ConsumerWidget {
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         Text(
-                          currentStop.timeRecord?.driver?.out ?? '-',
+                          DateFormat.MEd().formatNullDate(
+                              currentStop.timeRecord?.driver?.timeOut),
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],

@@ -13,13 +13,20 @@ import 'package:intl/intl.dart';
 import '../../../routing/routing_arguments.dart';
 import '../data/repositories/documents_repository.dart';
 
+class DocumentsArgs {
+  final DocumentType documentType;
+  final String? tripId;
+
+  DocumentsArgs(this.documentType, this.tripId);
+}
+
 class DocumentsNotifier
-    extends AutoDisposeFamilyAsyncNotifier<DocumentState, DocumentType> {
+    extends AutoDisposeFamilyAsyncNotifier<DocumentState, DocumentsArgs> {
   late AppDocumentsRepository docRepo;
   int top = 10;
 
   @override
-  FutureOr<DocumentState> build(DocumentType arg) async {
+  FutureOr<DocumentState> build(DocumentsArgs arg) async {
     docRepo = ref.watch(documentsRepositoryProvider);
     state = AsyncValue.data(DocumentState());
     await init();
@@ -32,10 +39,9 @@ class DocumentsNotifier
   }
 
   Future<void> getDocuments() async {
-    switch (arg) {
+    switch (arg.documentType) {
       case DocumentType.tripDocuments:
-        String tripId = ref.read(tripPageControllerProvider).value!.tripId!;
-        var res = await docRepo.getTripDocs(tripId);
+        var res = await docRepo.getTripDocs(arg.tripId!);
         state =
             AsyncValue.data(state.value!.copyWith(tripDocuments: res.data!));
         break;
@@ -68,7 +74,7 @@ class DocumentsNotifier
   }
 
   String get pageTitle {
-    switch (arg) {
+    switch (arg.documentType) {
       case DocumentType.tripDocuments:
         return 'Trip Documents';
       case DocumentType.personalDocuments:
@@ -81,7 +87,7 @@ class DocumentsNotifier
   }
 
   Future<void> loadMorePaystubs() async {
-    if (arg == DocumentType.paystubs && state.value!.canLoadMore) {
+    if (arg.documentType == DocumentType.paystubs && state.value!.canLoadMore) {
       top += 10;
       await getPaystubs();
       if (state.value!.paystubs.length < top) {
@@ -91,7 +97,7 @@ class DocumentsNotifier
   }
 
   List<PDFViewerArguments> get documentThumbnails {
-    switch (arg) {
+    switch (arg.documentType) {
       case DocumentType.tripDocuments:
         return state.value!.tripDocuments
             .map((doc) => PDFViewerArguments(doc.link!, doc.type!))
@@ -114,4 +120,4 @@ class DocumentsNotifier
 }
 
 final documentsProvider = AutoDisposeAsyncNotifierProviderFamily<
-    DocumentsNotifier, DocumentState, DocumentType>(DocumentsNotifier.new);
+    DocumentsNotifier, DocumentState, DocumentsArgs>(DocumentsNotifier.new);
