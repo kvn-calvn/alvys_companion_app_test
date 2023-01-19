@@ -63,5 +63,9 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NHAppDelegateForwarderEnabled</key>
+	<false/>
+	<key>NHUserNotificationCenterDelegateForwarderEnabled</key>
+	<false/>
 </dict>
 </plist>

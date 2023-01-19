@@ -1,11 +1,11 @@
 // ignore_for_file: constant_identifier_names
 
 //import 'package:alvys3/src/constants/api_routes.dart';
-import 'package:alvys3/src/utils/exceptions.dart';
+//import 'package:alvys3/src/utils/exceptions.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 //import 'package:alvys3/flavor_config.dart';
-import 'package:pretty_dio_logger/pretty_dio_logger.dart';
+//import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
 import '../utils/magic_strings.dart';
 
