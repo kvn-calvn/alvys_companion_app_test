@@ -17,6 +17,7 @@ import WindowsAzureMessaging
       let FVC: FlutterViewController = window?.rootViewController as! FlutterViewController
       let platformChannel = FlutterMethodChannel(name: "PlatformChannel", binaryMessenger: FVC as! FlutterBinaryMessenger)
 
+      self.NHRegisterattion(driverID: "DR2517416430384499875")
       
       platformChannel.setMethodCallHandler { (call, result) in
          let method = call.method
