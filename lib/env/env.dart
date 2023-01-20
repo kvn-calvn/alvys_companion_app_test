@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:envied/envied.dart';
 
 part 'env.g.dart';
@@ -18,4 +21,7 @@ abstract class Env {
   static final azureTelemetryKeyPROD = _Env.azureTelemetryKeyPROD;
   @EnviedField(varName: 'AZURETELEMETRYKEY_QA', obfuscate: true)
   static final azureTelemetryKeyQA = _Env.azureTelemetryKeyQA;
+
+  static String get geniusScanKey =>
+      Platform.isAndroid ? androidGeniusScanSDKKey : iOSGeniusScanSDKKey;
 }

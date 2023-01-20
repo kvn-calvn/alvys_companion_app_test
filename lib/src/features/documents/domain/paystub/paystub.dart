@@ -10,6 +10,7 @@ class Paystub with _$Paystub {
     @JsonKey(name: 'Id') String? id,
     @JsonKey(name: 'CompanyCode') String? companyCode,
     @JsonKey(name: 'FileName') String? fileName,
+    @JsonKey(name: 'TenantCompanyName') String? tenantCompanyName,
     @JsonKey(name: 'DatePaid') DateTime? datePaid,
   }) = _Paystub;
   Paystub._();

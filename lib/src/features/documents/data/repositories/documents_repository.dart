@@ -1,28 +1,32 @@
+import 'dart:async';
+import 'dart:io';
+
 import 'package:alvys3/src/constants/api_routes.dart';
 import 'package:alvys3/src/features/authentication/domain/models/driver_user/driver_user.dart';
 import 'package:alvys3/src/features/documents/domain/paystub/paystub.dart';
-import 'package:alvys3/src/features/documents/domain/personal_document/personal_document.dart';
 import 'package:alvys3/src/network/api_client.dart';
 //import 'package:alvys3/src/network/endpoints.dart';
 import 'package:alvys3/src/utils/exceptions.dart';
 
 import '../../../../network/api_response.dart';
 import '../../../../network/network_info.dart';
-import '../../domain/trip_documents/trip_documents.dart';
+import '../../domain/app_documents/app_documents.dart';
 import '../../../../utils/extensions.dart';
 
 abstract class DocumentsRepository {
-  Future<ApiResponse<List<TripDocuments>>> getTripDocs(String tripId);
+  Future<ApiResponse<List<AppDocuments>>> getTripDocs(String tripId);
   Future<ApiResponse<List<Paystub>>> getPaystubs(DriverUser user,
       [int top = 10]);
-  Future<ApiResponse<List<PersonalDocument>>> getPersonalDocs();
-  Future<ApiResponse<List<PersonalDocument>>> getTripReportDocs();
+  Future<ApiResponse<List<AppDocuments>>> getPersonalDocs();
+  Future<ApiResponse<List<AppDocuments>>> getTripReportDocs();
+  Future<ApiResponse<String>> uploadDocuments(
+      String companyCode, File document);
 }
 
 class AppDocumentsRepository implements DocumentsRepository {
   final NetworkInfoImpl network;
-
-  AppDocumentsRepository(this.network);
+  final FileUploadProgressNotifier fileProgress;
+  AppDocumentsRepository(this.network, this.fileProgress);
   @override
   Future<ApiResponse<List<Paystub>>> getPaystubs(DriverUser user,
       [int top = 10]) async {
@@ -48,7 +52,7 @@ class AppDocumentsRepository implements DocumentsRepository {
   }
 
   @override
-  Future<ApiResponse<List<PersonalDocument>>> getPersonalDocs() async {
+  Future<ApiResponse<List<AppDocuments>>> getPersonalDocs() async {
     if (await network.isConnected) {
       var res = await ApiClient.singleton.dio.get(ApiRoutes.minifiedDocuments);
       if (res.statusCode == 200) {
@@ -56,7 +60,7 @@ class AppDocumentsRepository implements DocumentsRepository {
           success: true,
           data: (res.data as List<dynamic>?)
               .toListNotNull()
-              .map((x) => PersonalDocument.fromJson(x))
+              .map((x) => AppDocuments.fromJson(x))
               .toList(),
         );
       }
@@ -70,7 +74,7 @@ class AppDocumentsRepository implements DocumentsRepository {
   }
 
   @override
-  Future<ApiResponse<List<TripDocuments>>> getTripDocs(String tripId) async {
+  Future<ApiResponse<List<AppDocuments>>> getTripDocs(String tripId) async {
     if (await network.isConnected) {
       var res = await ApiClient.singleton.dio.get(ApiRoutes.tripDocs(tripId));
       if (res.statusCode == 200) {
@@ -78,7 +82,7 @@ class AppDocumentsRepository implements DocumentsRepository {
             success: true,
             data: (res.data['Data'] as List<dynamic>?)
                 .toListNotNull()
-                .map((x) => TripDocuments.fromJson(x))
+                .map((x) => AppDocuments.fromJson(x))
                 .toList());
       }
       if (res.statusCode == 404) {
@@ -94,7 +98,7 @@ class AppDocumentsRepository implements DocumentsRepository {
   }
 
   @override
-  Future<ApiResponse<List<PersonalDocument>>> getTripReportDocs() async {
+  Future<ApiResponse<List<AppDocuments>>> getTripReportDocs() async {
     Map<String, dynamic> data = {
       "IncludeTypes": ["Trip Report"],
       "ExcludeTypes": []
@@ -107,7 +111,7 @@ class AppDocumentsRepository implements DocumentsRepository {
           success: true,
           data: (res.data as List<dynamic>?)
               .toListNotNull()
-              .map((x) => PersonalDocument.fromJson(x))
+              .map((x) => AppDocuments.fromJson(x))
               .toList(),
         );
       }
@@ -118,5 +122,23 @@ class AppDocumentsRepository implements DocumentsRepository {
       data: [],
       error: "Network unavailable, check internet connection",
     );
+  }
+
+  @override
+  Future<ApiResponse<String>> uploadDocuments(
+      String companyCode, File document) {
+    // TODO: implement uploadDocuments
+    throw UnimplementedError();
+  }
+
+  Future<void> progressTest() async {
+    Timer.periodic(const Duration(milliseconds: 1), (timer) {
+      fileProgress.updateProgress(1000, timer.tick);
+
+      if (timer.tick == 1000) {
+        timer.cancel();
+      }
+    });
+    await Future.delayed(const Duration(milliseconds: 10000));
   }
 }

@@ -57,7 +57,7 @@ class SettingsList extends ConsumerWidget {
         LargeNavButton(
           title: "My Documents",
           onPressed: () {
-            context.goNamed(RouteName.personalDocuments.name);
+            context.goNamed(RouteName.personalDocumentsList.name);
           },
         ),
         LargeNavButton(
@@ -69,7 +69,7 @@ class SettingsList extends ConsumerWidget {
         LargeNavButton(
           title: "Trip Report",
           onPressed: () {
-            context.pushNamed(RouteName.tripReport.name);
+            context.pushNamed(RouteName.tripReportDocumentList.name);
           },
         ),
         const SizedBox(

@@ -50,7 +50,13 @@ class _DocumentsPageState extends ConsumerState<DocumentsPage> {
       floatingActionButton: showFAB
           ? FloatingActionButton(
               onPressed: () {
-                showCustomBottomSheet(context, const UploadOptions());
+                showCustomBottomSheet(
+                  context,
+                  UploadOptions(
+                    documentType: widget.args.documentType,
+                    tripId: widget.args.tripId ?? "",
+                  ),
+                );
               },
               child: const Icon(Icons.cloud_upload),
             )

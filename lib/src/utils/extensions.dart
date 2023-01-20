@@ -121,6 +121,7 @@ extension BrightnessExtn on Brightness {
 extension EnumExtn on Enum {
   String get toTitleCase => name.titleCase;
   String get toRoute => "/$name";
+  String get toUpperCase => name.toUpperCase();
 }
 
 extension DateTimeExtn on DateTime? {
@@ -144,5 +145,15 @@ extension DateFormatEx on DateFormat {
   String formatNullDate(DateTime? date) {
     if (date == null) return '-';
     return format(date);
+  }
+}
+
+extension MapExtn<T> on Map<T, dynamic> {
+  Map<T, dynamic> get removeNulls {
+    Map<T, dynamic> returnMap = {};
+    forEach((key, value) {
+      if (value != null) returnMap[key] = value;
+    });
+    return returnMap;
   }
 }

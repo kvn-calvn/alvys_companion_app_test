@@ -1,16 +1,16 @@
 import 'dart:async';
 
-import 'package:alvys3/src/features/authentication/domain/models/driver_user/driver_user.dart';
-import 'package:alvys3/src/features/authentication/domain/models/driver_user/user_tenant.dart';
-import 'package:alvys3/src/features/documents/data/data_provider.dart';
-import 'package:alvys3/src/features/documents/domain/document_state/document_state.dart';
-import 'package:alvys3/src/features/trips/presentation/trip/trip_page_controller.dart';
 import 'package:alvys3/src/utils/extensions.dart';
-import 'package:alvys3/src/utils/magic_strings.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../routing/routing_arguments.dart';
+import '../../authentication/domain/models/driver_user/driver_user.dart';
+import '../../authentication/domain/models/driver_user/user_tenant.dart';
+import '../data/data_provider.dart';
+import '../domain/document_state/document_state.dart';
+import 'package:alvys3/src/utils/magic_strings.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../data/repositories/documents_repository.dart';
 
 class DocumentsArgs {
@@ -42,13 +42,11 @@ class DocumentsNotifier
     switch (arg.documentType) {
       case DocumentType.tripDocuments:
         var res = await docRepo.getTripDocs(arg.tripId!);
-        state =
-            AsyncValue.data(state.value!.copyWith(tripDocuments: res.data!));
+        state = AsyncValue.data(state.value!.copyWith(documentList: res.data!));
         break;
       case DocumentType.personalDocuments:
         var res = await docRepo.getPersonalDocs();
-        state = AsyncValue.data(
-            state.value!.copyWith(personalDocuments: res.data!));
+        state = AsyncValue.data(state.value!.copyWith(documentList: res.data!));
         break;
       case DocumentType.paystubs:
         await getPaystubs();
@@ -58,7 +56,7 @@ class DocumentsNotifier
         break;
       case DocumentType.tripReport:
         var res = await docRepo.getTripReportDocs();
-        state = AsyncValue.data(state.value!.copyWith(tripReports: res.data!));
+        state = AsyncValue.data(state.value!.copyWith(documentList: res.data!));
         break;
     }
   }
@@ -86,6 +84,22 @@ class DocumentsNotifier
     }
   }
 
+  List<PDFViewerArguments> get documentThumbnails {
+    switch (arg.documentType) {
+      case DocumentType.tripDocuments:
+      case DocumentType.personalDocuments:
+      case DocumentType.tripReport:
+        return state.value!.documentList
+            .map((doc) => PDFViewerArguments(doc.link!, doc.type!, doc))
+            .toList();
+      case DocumentType.paystubs:
+        return state.value!.paystubs
+            .map((doc) => PDFViewerArguments(
+                doc.link, DateFormat.yMEd().formatNullDate(doc.datePaid!), doc))
+            .toList();
+    }
+  }
+
   Future<void> loadMorePaystubs() async {
     if (arg.documentType == DocumentType.paystubs && state.value!.canLoadMore) {
       top += 10;
@@ -93,28 +107,6 @@ class DocumentsNotifier
       if (state.value!.paystubs.length < top) {
         state = AsyncValue.data(state.value!.copyWith(canLoadMore: false));
       }
-    }
-  }
-
-  List<PDFViewerArguments> get documentThumbnails {
-    switch (arg.documentType) {
-      case DocumentType.tripDocuments:
-        return state.value!.tripDocuments
-            .map((doc) => PDFViewerArguments(doc.link!, doc.type!))
-            .toList();
-      case DocumentType.personalDocuments:
-        return state.value!.personalDocuments
-            .map((doc) => PDFViewerArguments(doc.link!, doc.type!))
-            .toList();
-      case DocumentType.paystubs:
-        return state.value!.paystubs
-            .map((doc) => PDFViewerArguments(
-                doc.link, DateFormat.yMEd().formatNullDate(doc.datePaid!)))
-            .toList();
-      case DocumentType.tripReport:
-        return state.value!.tripReports
-            .map((doc) => PDFViewerArguments(doc.link!, doc.type!))
-            .toList();
     }
   }
 }

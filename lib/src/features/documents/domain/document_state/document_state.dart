@@ -1,5 +1,4 @@
-import 'package:alvys3/src/features/documents/domain/personal_document/personal_document.dart';
-import 'package:alvys3/src/features/documents/domain/trip_documents/trip_documents.dart';
+import 'package:alvys3/src/features/documents/domain/app_documents/app_documents.dart';
 import 'package:alvys3/src/utils/extensions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -12,9 +11,7 @@ part 'document_state.g.dart';
 class DocumentState with _$DocumentState {
   factory DocumentState({
     @Default(<Paystub>[]) List<Paystub> paystubs,
-    @Default(<TripDocuments>[]) List<TripDocuments> tripDocuments,
-    @Default(<PersonalDocument>[]) List<PersonalDocument> personalDocuments,
-    @Default(<PersonalDocument>[]) List<PersonalDocument> tripReports,
+    @Default(<AppDocuments>[]) List<AppDocuments> documentList,
     @Default(false) bool canLoadMore,
     @Default('') String filePath,
     @Default('') String title,

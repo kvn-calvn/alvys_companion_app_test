@@ -1,10 +1,12 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:alvys3/env/env.dart';
 import 'package:alvys3/src/utils/extensions.dart';
 import 'package:alvys3/src/utils/global_error_handler.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:alvys3/src/utils/theme_handler.dart';
+import 'package:flutter_genius_scan/flutter_genius_scan.dart';
 
 import 'src/features/authentication/domain/models/driver_user/driver_user.dart';
 import 'src/features/authentication/presentation/auth_provider_controller.dart';
@@ -14,11 +16,9 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'app.dart';
 
 Future<void> mainCommon() async {
-  //WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  //FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
-
   runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
+    //await FlutterGeniusScan.setLicenceKey(Env.geniusScanKey);
     var storage = const FlutterSecureStorage();
     FlutterError.onError = (details) {
       GlobalErrorHandler.handle(details, true);

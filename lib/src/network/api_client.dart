@@ -3,6 +3,7 @@
 //import 'package:alvys3/src/constants/api_routes.dart';
 import 'package:alvys3/src/utils/exceptions.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 //import 'package:alvys3/flavor_config.dart';
 import 'package:pretty_dio_logger/pretty_dio_logger.dart';
@@ -101,3 +102,17 @@ class DioApiInterCeptor extends Interceptor {
   //   }
   // }
 }
+
+class FileUploadProgressNotifier extends Notifier<double> {
+  @override
+  double build() {
+    return 0;
+  }
+
+  void updateProgress(num total, num current) {
+    state = current / total;
+  }
+}
+
+final fileUploadProvider = NotifierProvider<FileUploadProgressNotifier, double>(
+    FileUploadProgressNotifier.new);

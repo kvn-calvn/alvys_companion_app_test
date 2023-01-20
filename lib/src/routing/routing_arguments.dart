@@ -30,8 +30,9 @@ class TripDocsArguments {
   const TripDocsArguments({required this.tripId});
 }
 
-class PDFViewerArguments {
+class PDFViewerArguments<T> {
   final String docUrl;
   final String title;
-  const PDFViewerArguments(this.docUrl, this.title);
+  final T documentData;
+  const PDFViewerArguments(this.docUrl, this.title, this.documentData);
 }

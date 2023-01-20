@@ -31,8 +31,10 @@ class StopCard extends ConsumerWidget {
           clipBehavior: Clip.antiAlias,
           child: InkWell(
             onTap: () {
-              context.goNamed(RouteName.stopDetails.name,
-                  params: {'tripId': tripId, 'stopId': stop.stopId!});
+              context.goNamed(RouteName.stopDetails.name, params: {
+                ParamType.tripId.name: tripId,
+                ParamType.stopId.name: stop.stopId!
+              });
             },
             child: Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(15, 5, 15, 5),

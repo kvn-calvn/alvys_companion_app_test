@@ -135,14 +135,14 @@ class TripDetails extends ConsumerWidget {
                           title: 'E-Checks',
                           onPressed: () {
                             context.goNamed(RouteName.eCheck.name,
-                                params: {'tripId': tripId});
+                                params: {ParamType.tripId.name: tripId});
                           },
                         ),
                         LargeNavButton(
                           title: 'Documents',
                           onPressed: () {
-                            context.goNamed(RouteName.documentList.name,
-                                params: {'tripId': trip.id!});
+                            context.goNamed(RouteName.tripDocumentList.name,
+                                params: {ParamType.tripId.name: trip.id!});
                           },
                         ),
                         Column(

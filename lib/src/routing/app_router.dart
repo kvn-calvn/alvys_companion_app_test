@@ -4,6 +4,7 @@ import 'package:alvys3/src/features/authentication/presentation/verify_phonenumb
 import 'package:alvys3/src/features/documents/presentation/document_page.dart';
 import 'package:alvys3/src/features/documents/presentation/pdf_viewer.dart';
 import 'package:alvys3/src/features/documents/presentation/trip_docs_controller.dart';
+import 'package:alvys3/src/features/documents/presentation/upload_documents.dart';
 import 'package:alvys3/src/features/echeck/presentation/echeck_page.dart';
 import 'package:alvys3/src/features/echeck/presentation/generate_echeck.dart';
 import 'package:alvys3/src/features/permission/location/presentation/request_location.dart';
@@ -26,6 +27,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../features/authentication/presentation/auth_provider_controller.dart';
+import '../features/documents/presentation/upload_documents_controller.dart';
 
 // final _rootNavigatorKey = GlobalKey<NavigatorState>();
 // GlobalKey<NavigatorState> _shellNavigatorKey = GlobalKey<NavigatorState>();
@@ -130,32 +132,35 @@ Provider<GoRouter> routerProvider = Provider(
                   name: RouteName.tripDetails.name,
                   path: ':tripId',
                   builder: (context, state) {
-                    return LoadDetailsPage(state.params['tripId']!);
+                    return LoadDetailsPage(
+                        state.params[ParamType.tripId.name]!);
                   },
                   routes: <GoRoute>[
                     GoRoute(
                         name: RouteName.eCheck.name,
                         path: RouteName.eCheck.name,
                         builder: (context, state) {
-                          return EcheckPage(state.params['tripId']!);
+                          return EcheckPage(
+                              state.params[ParamType.tripId.name]!);
                         },
                         routes: [
                           GoRoute(
                             name: RouteName.generateEcheck.name,
                             path: RouteName.generateEcheck.name,
                             builder: (context, state) {
-                              return GenerateEcheck(state.params['tripId']!);
+                              return GenerateEcheck(
+                                  state.params[ParamType.tripId.name]!);
                             },
                           ),
                         ]),
                     GoRoute(
-                      name: RouteName.documentList.name,
-                      path: RouteName.documentList.name,
+                      name: RouteName.tripDocumentList.name,
+                      path: RouteName.tripDocumentList.name,
                       builder: (context, state) {
                         return DocumentsPage(
                           DocumentsArgs(
                             DocumentType.tripDocuments,
-                            state.params['tripId'],
+                            state.params[ParamType.tripId.name],
                           ),
                         );
                       },
@@ -170,7 +175,20 @@ Provider<GoRouter> routerProvider = Provider(
                               arguments: args,
                             );
                           },
-                        )
+                        ),
+                        GoRoute(
+                          name: RouteName.uploadTripDocument.name,
+                          path: RouteName.uploadTripDocument.name,
+                          builder: (context, state) {
+                            final args = state.extra! as UploadType;
+
+                            return UploadDocuments(
+                              args: UploadDocumentArgs(
+                                  uploadType: args,
+                                  documentType: DocumentType.tripDocuments),
+                            );
+                          },
+                        ),
                       ],
                     ),
                     GoRoute(
@@ -178,7 +196,8 @@ Provider<GoRouter> routerProvider = Provider(
                       path: ':stopId',
                       builder: (context, state) {
                         return StopDetailsPage(
-                            state.params['tripId']!, state.params['stopId']!);
+                            state.params[ParamType.tripId.name]!,
+                            state.params[ParamType.stopId.name]!);
                       },
                     ),
                   ],
@@ -218,22 +237,52 @@ Provider<GoRouter> routerProvider = Provider(
                     // routes: [],
                   ),
                   GoRoute(
-                    name: RouteName.personalDocuments.name,
-                    path: RouteName.personalDocuments.name,
+                    name: RouteName.personalDocumentsList.name,
+                    path: RouteName.personalDocumentsList.name,
                     builder: (context, state) {
                       return DocumentsPage(
                           DocumentsArgs(DocumentType.personalDocuments, null));
                     },
-                    // routes: [],
+                    routes: [
+                      GoRoute(
+                        name: RouteName.uploadPersonalDocument.name,
+                        path: RouteName.uploadPersonalDocument.name,
+                        builder: (context, state) {
+                          final args = state.extra! as UploadType;
+
+                          return UploadDocuments(
+                            args: UploadDocumentArgs(
+                              uploadType: args,
+                              documentType: DocumentType.personalDocuments,
+                            ),
+                          );
+                        },
+                      ),
+                    ],
                   ),
                   GoRoute(
-                    name: RouteName.tripReport.name,
-                    path: RouteName.tripReport.name,
+                    name: RouteName.tripReportDocumentList.name,
+                    path: RouteName.tripReportDocumentList.name,
                     builder: (context, state) {
                       return DocumentsPage(
                           DocumentsArgs(DocumentType.tripReport, null));
                     },
-                    // routes: [],
+                    routes: [
+                      GoRoute(
+                        name: RouteName.uploadTripReport.name,
+                        path: RouteName.uploadTripReport.name,
+                        builder: (context, state) {
+                          final args = state.extra! as UploadType;
+
+                          return UploadDocuments(
+                            args: UploadDocumentArgs(
+                              uploadType: args,
+                              documentType: DocumentType.tripReport,
+                            ),
+                          );
+                        },
+                      ),
+                    ],
                   ),
                   GoRoute(
                     name: RouteName.about.name,

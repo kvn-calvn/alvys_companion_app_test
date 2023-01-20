@@ -11,7 +11,8 @@ enum RouteName {
   processing,
   tripDetails,
   eCheck,
-  documentList,
+  tripDocumentList,
+  uploadTripDocument,
   documentView,
   stopDetails,
   settings,
@@ -19,8 +20,10 @@ enum RouteName {
   editProfile,
   generateEcheck,
   paystubs,
-  personalDocuments,
-  tripReport,
+  personalDocumentsList,
+  uploadPersonalDocument,
+  tripReportDocumentList,
+  uploadTripReport,
 
   /// tablet routes
   tabletTrips,
@@ -36,3 +39,7 @@ enum Environment { dev, qa, sandbox }
 enum StorageKey { driverData, themeMode, driverToken }
 
 enum EcheckOption { copy, cancel }
+
+enum UploadType { camera, gallery }
+
+enum ParamType { tripId, stopId }

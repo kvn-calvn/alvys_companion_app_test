@@ -6,7 +6,7 @@ import '../../../common_widgets/large_nav_button.dart';
 import '../../../routing/routing_arguments.dart';
 import '../../../utils/magic_strings.dart';
 
-class DocumentList extends StatelessWidget {
+class DocumentList<T> extends StatelessWidget {
   const DocumentList(
       {Key? key,
       required this.documents,
@@ -14,7 +14,7 @@ class DocumentList extends StatelessWidget {
       required this.emptyMessage,
       this.extra})
       : super(key: key);
-  final List<PDFViewerArguments> documents;
+  final List<PDFViewerArguments<T>> documents;
   final Future<void> Function() refreshFunction;
   final String emptyMessage;
   final Widget? extra;
