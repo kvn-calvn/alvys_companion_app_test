@@ -41,6 +41,7 @@ class SettingsList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var userState = ref.watch(authProvider);
     return ListView(
       scrollDirection: Axis.vertical,
       children: [
@@ -48,7 +49,7 @@ class SettingsList extends ConsumerWidget {
           height: 10,
         ),
         ProfileNavButton(
-          title: "Sandbox Driver",
+          title: userState.value!.driver!.name!,
           profileImageUrl: 'https://i.pravatar.cc/300',
           onPressed: () {
             context.pushNamed(RouteName.profile.name);

@@ -85,6 +85,7 @@ class _DocumentsPageState extends ConsumerState<DocumentsPage> {
                     .read(documentsProvider.call(widget.args).notifier)
                     .getDocuments();
               },
+              tripId: widget.args.tripId ?? "",
               emptyMessage: "No ${docsNotifier.pageTitle}",
               extra: data.canLoadMore
                   ? LoadMoreButton(loadMoreFunction: () async {

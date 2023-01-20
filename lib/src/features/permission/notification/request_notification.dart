@@ -52,21 +52,25 @@ class RequestNotification extends StatelessWidget {
                     var requestNotificationResult =
                         await Permission.notification.request();
 
-                    debugPrint(
-                        'Notification status $requestNotificationResult');
-
                     if (requestNotificationResult.isPermanentlyDenied) {
-                      debugPrint('Notification request isPermanentlyDenied');
+                      showDialog(
+                          context: context,
+                          builder: (context) {
+                            return AlertDialog(
+                              content: Text(
+                                  'You have this app\'s location permession to permanently denied. Open location settings to change it.'),
+                              actions: [
+                                TextButton(onPressed: () {}, child: Text(''))
+                              ],
+                            );
+                          });
                       AppSettings.openNotificationSettings();
                     }
 
                     if (requestNotificationResult.isGranted) {
-                      //Register driver phone number to notification service then navigate to home
                       if (!mounted) return;
                       context.goNamed(RouteName.trips.name);
                     }
-                    /*if (!mounted) return;
-                    context.goNamed(RouteName.trips.name);*/
                   },
                 ),
                 const SizedBox(

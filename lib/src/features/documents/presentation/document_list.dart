@@ -12,9 +12,11 @@ class DocumentList<T> extends StatelessWidget {
       required this.documents,
       required this.refreshFunction,
       required this.emptyMessage,
-      this.extra})
+      this.extra,
+      required this.tripId})
       : super(key: key);
   final List<PDFViewerArguments<T>> documents;
+  final String tripId;
   final Future<void> Function() refreshFunction;
   final String emptyMessage;
   final Widget? extra;

@@ -63,11 +63,12 @@ class DocumentsNotifier
 
   Future<void> getPaystubs() async {
     var res = await docRepo.getPaystubs(
-        DriverUser(
-          id: '05e697bc147e45d984028d80db0db6f3',
-          userTenants: [UserTenant(companyCode: "TR058")],
-        ),
-        top = top);
+      DriverUser(
+        id: '05e697bc147e45d984028d80db0db6f3',
+        userTenants: [UserTenant(companyCode: "TR058")],
+      ),
+      top = top,
+    );
     state = AsyncValue.data(state.value!.copyWith(paystubs: res.data!));
   }
 

@@ -1,5 +1,5 @@
 enum RouteName {
-  // phone
+  /// phone routes
   about,
   landing,
   signIn,
@@ -28,6 +28,9 @@ enum RouteName {
   /// tablet routes
   tabletTrips,
   tabletTripDetails,
+  tabletStopDetails,
+  tabletSettings,
+  tabletDocumentView,
 }
 
 enum TripFilterType { processing, delivered }
