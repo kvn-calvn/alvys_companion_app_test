@@ -37,7 +37,8 @@ class DocumentList<T> extends StatelessWidget {
                         title: doc.title,
                         onPressed: () {
                           context.pushNamed(RouteName.documentView.name,
-                              extra: doc);
+                              extra: doc,
+                              params: {ParamType.tripId.name: tripId});
                         },
                       ),
                     )
