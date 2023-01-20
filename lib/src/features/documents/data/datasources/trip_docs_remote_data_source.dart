@@ -1,5 +1,4 @@
 import 'package:alvys3/src/constants/api_routes.dart';
-import 'package:alvys3/src/features/documents/domain/trip_documents/trip_documents.dart';
 import 'package:alvys3/src/features/documents/domain/app_documents/app_documents.dart';
 import 'package:alvys3/src/network/api_client.dart';
 import '../../../../utils/extensions.dart';
