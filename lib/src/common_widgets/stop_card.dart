@@ -1,6 +1,5 @@
 import 'package:alvys3/src/common_widgets/buttons.dart';
 import 'package:alvys3/src/constants/color.dart';
-import 'package:alvys3/src/features/trips/presentation/trip/trip_page_controller.dart';
 import 'package:alvys3/src/network/client_error/client_error.dart';
 import 'package:alvys3/src/utils/exceptions.dart';
 import 'package:alvys3/src/utils/extensions.dart';

@@ -3,7 +3,6 @@ import 'package:alvys3/custom_icons/alvys3_icons.dart';
 import 'package:alvys3/src/common_widgets/buttons.dart';
 import 'package:alvys3/src/constants/color.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
-import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
