@@ -21,6 +21,18 @@ abstract class Env {
   static final azureTelemetryKeyPROD = _Env.azureTelemetryKeyPROD;
   @EnviedField(varName: 'AZURETELEMETRYKEY_QA', obfuscate: true)
   static final azureTelemetryKeyQA = _Env.azureTelemetryKeyQA;
+  @EnviedField(varName: 'HUB_NAME_QA', obfuscate: false)
+  static const hubNameQA = _Env.hubNameQA;
+  @EnviedField(varName: 'CONNECTION_STRING_QA', obfuscate: true)
+  static final connectionStringQA = _Env.connectionStringQA;
+  @EnviedField(varName: 'HUB_NAME_PROD', obfuscate: false)
+  static const hubNameProd = _Env.hubNameProd;
+  @EnviedField(varName: 'CONNECTION_STRING_PROD', obfuscate: true)
+  static final connectionStringProd = _Env.connectionStringProd;
+  @EnviedField(varName: 'HUB_NAME_DEV', obfuscate: false)
+  static const hubNameDEV = _Env.hubNameDEV;
+  @EnviedField(varName: 'CONNECTION_STRING_DEV', obfuscate: true)
+  static final connectionStringDev = _Env.connectionStringDev;
 
   static String get geniusScanKey =>
       Platform.isAndroid ? androidGeniusScanSDKKey : iOSGeniusScanSDKKey;

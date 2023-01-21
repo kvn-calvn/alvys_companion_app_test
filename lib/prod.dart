@@ -6,17 +6,20 @@ import 'flavor_config.dart';
 
 void main() {
   FlavorConfig(
-      flavor: Flavor.prod,
-      env: Flavor.prod.toUpperCase,
-      rawApiBase: "api.alvys.com",
-      baseUrl: "https://api.alvys.com/api/",
-      mobileBaseApi: 'https://api.alvys.com/api/mobilev2/',
-      storageUrl: "https://alvyssandboxstorage.blob.core.windows.net/",
-      androidGeniusScanSDKKey: Env.androidGeniusScanSDKKey,
-      iosGeniusScanSDKKey: Env.iOSGeniusScanSDKKey,
-      azureTelemetryKey: Env.azureTelemetryKeyPROD,
-      gMapsKey: Env.gMapsKey,
-      hereMapsKey: Env.hereMapsKey);
+    flavor: Flavor.prod,
+    env: Flavor.prod.toUpperCase,
+    rawApiBase: "api.alvys.com",
+    baseUrl: "https://api.alvys.com/api/",
+    mobileBaseApi: 'https://api.alvys.com/api/mobilev2/',
+    storageUrl: "https://alvyssandboxstorage.blob.core.windows.net/",
+    androidGeniusScanSDKKey: Env.androidGeniusScanSDKKey,
+    iosGeniusScanSDKKey: Env.iOSGeniusScanSDKKey,
+    azureTelemetryKey: Env.azureTelemetryKeyPROD,
+    gMapsKey: Env.gMapsKey,
+    hereMapsKey: Env.hereMapsKey,
+    hubName: Env.hubNameProd,
+    connectionString: Env.connectionStringProd,
+  );
 
   mainCommon();
 }

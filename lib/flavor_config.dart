@@ -15,33 +15,41 @@ class FlavorConfig {
   final String iosGeniusScanSDKKey;
   final String androidGeniusScanSDKKey;
   final String azureTelemetryKey;
+  final String hubName;
+  final String connectionString;
 
   static FlavorConfig? _instance;
 
-  factory FlavorConfig(
-      {required Flavor flavor,
-      required String env,
-      required String rawApiBase,
-      required String baseUrl,
-      required String storageUrl,
-      required String mobileBaseApi,
-      required String gMapsKey,
-      required String hereMapsKey,
-      required String iosGeniusScanSDKKey,
-      required String androidGeniusScanSDKKey,
-      required String azureTelemetryKey}) {
+  factory FlavorConfig({
+    required Flavor flavor,
+    required String env,
+    required String rawApiBase,
+    required String baseUrl,
+    required String storageUrl,
+    required String mobileBaseApi,
+    required String gMapsKey,
+    required String hereMapsKey,
+    required String iosGeniusScanSDKKey,
+    required String androidGeniusScanSDKKey,
+    required String azureTelemetryKey,
+    required String hubName,
+    required String connectionString,
+  }) {
     _instance ??= FlavorConfig._internal(
-        flavor,
-        env,
-        rawApiBase,
-        baseUrl,
-        storageUrl,
-        mobileBaseApi,
-        gMapsKey,
-        hereMapsKey,
-        iosGeniusScanSDKKey,
-        androidGeniusScanSDKKey,
-        azureTelemetryKey);
+      flavor,
+      env,
+      rawApiBase,
+      baseUrl,
+      storageUrl,
+      mobileBaseApi,
+      gMapsKey,
+      hereMapsKey,
+      iosGeniusScanSDKKey,
+      androidGeniusScanSDKKey,
+      azureTelemetryKey,
+      hubName,
+      connectionString,
+    );
     return _instance!;
   }
 
@@ -57,6 +65,8 @@ class FlavorConfig {
     this.iosGeniusScanSDKKey,
     this.androidGeniusScanSDKKey,
     this.azureTelemetryKey,
+    this.hubName,
+    this.connectionString,
   );
 
   static FlavorConfig? get instance => _instance;

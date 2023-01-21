@@ -17,6 +17,8 @@ void main() {
     azureTelemetryKey: Env.azureTelemetryKeyDEV,
     gMapsKey: Env.gMapsKey,
     hereMapsKey: Env.hereMapsKey,
+    hubName: Env.hubNameDEV,
+    connectionString: Env.connectionStringDev,
   );
 
   mainCommon();
