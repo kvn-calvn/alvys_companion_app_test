@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'package:alvys3/custom_icons/alvys3_icons.dart';
+import 'package:alvys3/flavor_config.dart';
 import 'package:alvys3/src/common_widgets/buttons.dart';
 import 'package:alvys3/src/constants/color.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
+import 'package:alvys3/src/utils/platform_channel.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -68,6 +70,15 @@ class RequestLocation extends StatelessWidget {
                     if (notificationPermStatus.isDenied) {
                       if (!mounted) return;
                       context.goNamed(RouteName.notificationPermission.name);
+                    }
+
+                    if (notificationPermStatus.isGranted) {
+                      if (!mounted) return;
+                      PlatformChannel.getNotification(
+                          "DR",
+                          FlavorConfig.instance!.hubName,
+                          FlavorConfig.instance!.connectionString);
+                      context.goNamed(RouteName.trips.name);
                     }
 
                     /*

@@ -15,7 +15,7 @@ import WindowsAzureMessaging
 
       
       let FVC: FlutterViewController = window?.rootViewController as! FlutterViewController
-      let platformChannel = FlutterMethodChannel(name: "PlatformChannel", binaryMessenger: FVC as! FlutterBinaryMessenger)
+      let platformChannel = FlutterMethodChannel(name: "PLATFORM_CHANNEL", binaryMessenger: FVC as! FlutterBinaryMessenger)
 
       self.NHRegisterattion(driverID: "DR2517416430384499875")
       
@@ -26,7 +26,7 @@ import WindowsAzureMessaging
          switch method {
              
          case "registerForNotification":
-             self.NHRegisterattion(driverID: args["driverId"] as? String)
+             self.NHRegisterattion(driverID: args["driverId"] as? String, hubName: args["hubName"] as? String, connectionString: args["connectionString"] as? String)
          case "unregisterNotification":
              MSNotificationHub.clearTags()
              MSNotificationHub.setEnabled(false)

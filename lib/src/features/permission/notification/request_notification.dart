@@ -1,17 +1,23 @@
 import 'package:alvys3/custom_icons/alvys3_icons.dart';
+import 'package:alvys3/flavor_config.dart';
 import 'package:alvys3/src/common_widgets/buttons.dart';
 import 'package:alvys3/src/constants/color.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
+import 'package:alvys3/src/utils/platform_channel.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:alvys3/src/features/authentication/presentation/auth_provider_controller.dart';
 
-class RequestNotification extends StatelessWidget {
+class RequestNotification extends ConsumerWidget {
   const RequestNotification({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context, [bool mounted = true]) {
+  Widget build(BuildContext context, WidgetRef ref, [bool mounted = true]) {
+    var userState = ref.watch(authProvider);
+
     return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -57,7 +63,7 @@ class RequestNotification extends StatelessWidget {
                           context: context,
                           builder: (context) {
                             return AlertDialog(
-                              content: Text(
+                              content: const Text(
                                   'You have this app\'s location permession to permanently denied. Open location settings to change it.'),
                               actions: [
                                 TextButton(onPressed: () {}, child: Text(''))
@@ -69,6 +75,12 @@ class RequestNotification extends StatelessWidget {
 
                     if (requestNotificationResult.isGranted) {
                       if (!mounted) return;
+
+                      PlatformChannel.getNotification(
+                          "DR",
+                          FlavorConfig.instance!.hubName,
+                          FlavorConfig.instance!.connectionString);
+
                       context.goNamed(RouteName.trips.name);
                     }
                   },
