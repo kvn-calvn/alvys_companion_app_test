@@ -17,7 +17,6 @@ import WindowsAzureMessaging
       let FVC: FlutterViewController = window?.rootViewController as! FlutterViewController
       let platformChannel = FlutterMethodChannel(name: "PLATFORM_CHANNEL", binaryMessenger: FVC as! FlutterBinaryMessenger)
 
-      self.NHRegisterattion(driverID: "DR2517416430384499875")
       
       platformChannel.setMethodCallHandler { (call, result) in
          let method = call.method
@@ -30,6 +29,21 @@ import WindowsAzureMessaging
          case "unregisterNotification":
              MSNotificationHub.clearTags()
              MSNotificationHub.setEnabled(false)
+         case "startLocationTracking":
+             print("\n\nSTART_TRACKING\n\n")
+              
+              guard let args = call.arguments as? Dictionary<String, Any> else {return}
+              print("TRACKING_ARGS: ")
+              print(args)
+              
+              LocationManager.shared.setUpLocation()
+              LocationManager.shared.driverId = (args["DriverId"] as? String)
+              LocationManager.shared.loadNumber = (args["tripNumber"] as? String)
+              LocationManager.shared.tripId = (args["tripId"] as? String)
+              LocationManager.shared.driverName = (args["DriverName"] as? String)
+              LocationManager.shared.url = (args["url"] as? String)
+              LocationManager.shared.companyCode = (args["companyCode"] as? String)
+              LocationManager.shared.token = (args["token"] as? String)
          default:
              result(FlutterMethodNotImplemented)
          }
@@ -41,7 +55,7 @@ import WindowsAzureMessaging
     return super.application(application, didFinishLaunchingWithOptions: launchOptions)
   }
     
-    func NHRegisterattion(driverID: String?) {
+    func NHRegisterattion(driverID: String?, hubName: String?, connectionString: String?) {
     
         guard let driverId = driverID  else {return}
         

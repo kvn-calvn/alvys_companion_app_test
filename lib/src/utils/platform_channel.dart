@@ -18,4 +18,23 @@ class PlatformChannel {
       );
     }
   }
+
+  static void startLocationTracking(
+      String driverName,
+      String driverID,
+      String tripNumber,
+      String tripId,
+      String token,
+      String url,
+      String companyCode) async {
+    await platform.invokeMethod('startLocationTracking', <String, dynamic>{
+      'DriverName': driverName,
+      'DriverId': driverID,
+      'tripNumber': tripNumber,
+      'tripId': tripId,
+      'companyCode': companyCode,
+      'token': token,
+      'url': url
+    });
+  }
 }

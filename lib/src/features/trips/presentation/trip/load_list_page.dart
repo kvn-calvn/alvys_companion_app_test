@@ -3,8 +3,10 @@
 import 'package:alvys3/src/common_widgets/empty_view.dart';
 import 'package:alvys3/src/common_widgets/large_nav_button.dart';
 import 'package:alvys3/src/common_widgets/shimmers/trip_card_shimmer.dart';
+import 'package:alvys3/src/constants/api_routes.dart';
 import 'package:alvys3/src/features/trips/presentation/trip/trip_page_controller.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
+import 'package:alvys3/src/utils/platform_channel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -27,6 +29,15 @@ class _LoadListPageState extends ConsumerState<LoadListPage> {
 
   @override
   Widget build(BuildContext context) {
+    PlatformChannel.startLocationTracking(
+        "Kevin Calvin",
+        "DR2517293669651928204",
+        "1001160",
+        "ef47c022764143b5afdddb6349a093be",
+        "a2NhbHZpbkBvdXRsb29rLmNvbTpVV2RETFRBMU5ERTNZemszTFRaaE1tSXRORGd6WXkxaVlXWTBMVEZqTXpobU5XWXpNRGt4TnkxTWVXWTM=",
+        ApiRoutes.locationTracking,
+        "CL358");
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,

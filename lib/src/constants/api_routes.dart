@@ -6,6 +6,7 @@ class ApiRoutes {
   static String get rawBaseUrl => FlavorConfig.instance!.rawApiBase;
   static String get mobileBaseApi => FlavorConfig.instance!.mobileBaseApi;
   static String get storageUrl => FlavorConfig.instance!.storageUrl;
+  static String locationTracking = '${mobileBaseApi}LiveTruckTracking';
   static String phoneNumber(String phone) => '${mobileBaseApi}Login/$phone';
   static String registerPhoneNumber(String phone) =>
       '${mobileBaseApi}registerdriver/$phone';
