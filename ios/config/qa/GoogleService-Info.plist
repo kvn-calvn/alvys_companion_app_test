@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>459046327856-355fm7i3b6qmkutapu8v4kcr8870qe4n.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.459046327856-355fm7i3b6qmkutapu8v4kcr8870qe4n</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAhue_HTrZiQWQclE6BWKJS8mU18unX7to</string>
+	<key>GCM_SENDER_ID</key>
+	<string>459046327856</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>io.alvys.app.qa</string>
+	<key>PROJECT_ID</key>
+	<string>alvys-1e881</string>
+	<key>STORAGE_BUCKET</key>
+	<string>alvys-1e881.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:459046327856:ios:43e55ebb1f35f60447fff5</string>
+	<key>DATABASE_URL</key>
+	<string>https://alvys-1e881.firebaseio.com</string>
+</dict>
+</plist>
