@@ -56,28 +56,15 @@ import WindowsAzureMessaging
   }
     
     func NHRegisterattion(driverID: String?, hubName: String?, connectionString: String?) {
-    
-        guard let driverId = driverID  else {return}
         
-        if let path = Bundle.main.path(forResource: "NHSettings", ofType: "plist") {
-            if let configValues = NSDictionary(contentsOfFile: path) {
-               
-               var connectionString: String?
-               var hubName: String?
-                
-                connectionString = configValues["CONNECTION_STRING"] as? String
-                hubName = configValues["HUB_NAME"] as? String
-          
-                if (!(connectionString ?? "").isEmpty && !(hubName ?? "").isEmpty && !(driverID ?? "").isEmpty){
-                    let hubOptions = MSNotificationHubOptions(withOptions: [.alert, .badge, .sound])!
+        if (!(connectionString ?? "").isEmpty && !(hubName ?? "").isEmpty && !(driverID ?? "").isEmpty){
+            let hubOptions = MSNotificationHubOptions(withOptions: [.alert, .badge, .sound])!
 
-                    MSNotificationHub.start(connectionString: connectionString!, hubName: hubName!,options: hubOptions)
-                    MSNotificationHub.addTags([driverID!])
-                    MSNotificationHub.setEnabled(true)
-                }else {
-                    print("Values missing to register NH\n\n")
-                }
-            }
+            MSNotificationHub.start(connectionString: connectionString!, hubName: hubName!,options: hubOptions)
+            MSNotificationHub.addTags([driverID!])
+            MSNotificationHub.setEnabled(true)
+        }else {
+            print("Values missing to register NH\n\n")
         }
     }
     override
