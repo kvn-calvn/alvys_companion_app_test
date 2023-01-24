@@ -13,6 +13,7 @@ enum RouteName {
   eCheck,
   tripDocumentList,
   uploadTripDocument,
+  tripDocumentView,
   documentView,
   stopDetails,
   settings,

@@ -1,3 +1,4 @@
+import 'package:alvys3/src/features/documents/presentation/trip_docs_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
@@ -13,10 +14,10 @@ class DocumentList<T> extends StatelessWidget {
       required this.refreshFunction,
       required this.emptyMessage,
       this.extra,
-      required this.tripId})
+      required this.args})
       : super(key: key);
   final List<PDFViewerArguments<T>> documents;
-  final String tripId;
+  final DocumentsArgs args;
   final Future<void> Function() refreshFunction;
   final String emptyMessage;
   final Widget? extra;
@@ -30,19 +31,26 @@ class DocumentList<T> extends StatelessWidget {
               description: 'Uploaded documents will appear here.')
           : ListView(
               children: [
-                ...documents
-                    .map(
-                      (doc) => LargeNavButton(
-                        icon: const Icon(Icons.insert_drive_file),
-                        title: doc.title,
-                        onPressed: () {
-                          context.pushNamed(RouteName.documentView.name,
+                for (var doc in documents)
+                  LargeNavButton(
+                    icon: const Icon(Icons.insert_drive_file),
+                    title: doc.title,
+                    onPressed: () {
+                      switch (args.documentType) {
+                        case DocumentType.tripDocuments:
+                          context.pushNamed(RouteName.tripDocumentView.name,
                               extra: doc,
-                              params: {ParamType.tripId.name: tripId});
-                        },
-                      ),
-                    )
-                    .toList(),
+                              params: {ParamType.tripId.name: args.tripId!});
+                          break;
+                        case DocumentType.personalDocuments:
+                        case DocumentType.paystubs:
+                        case DocumentType.tripReport:
+                          context.pushNamed(RouteName.documentView.name,
+                              extra: doc);
+                          break;
+                      }
+                    },
+                  ),
                 extra ?? const SizedBox.shrink()
               ],
             ),

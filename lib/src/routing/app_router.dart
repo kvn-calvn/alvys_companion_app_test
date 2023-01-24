@@ -166,8 +166,8 @@ Provider<GoRouter> routerProvider = Provider(
                       },
                       routes: <GoRoute>[
                         GoRoute(
-                          name: RouteName.documentView.name,
-                          path: RouteName.documentView.name,
+                          name: RouteName.tripDocumentView.name,
+                          path: RouteName.tripDocumentView.name,
                           builder: (context, state) {
                             final args = state.extra! as PDFViewerArguments;
 
@@ -291,6 +291,17 @@ Provider<GoRouter> routerProvider = Provider(
                       return const AboutPage();
                     },
                     // routes: [],
+                  ),
+                  GoRoute(
+                    name: RouteName.documentView.name,
+                    path: RouteName.documentView.name,
+                    builder: (context, state) {
+                      final args = state.extra! as PDFViewerArguments;
+
+                      return PDFViewer(
+                        arguments: args,
+                      );
+                    },
                   ),
                 ]),
           ])
