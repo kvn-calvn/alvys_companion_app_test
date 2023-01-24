@@ -13,8 +13,16 @@ abstract class Env {
   static final hereMapsKey = _Env.hereMapsKey;
   @EnviedField(varName: 'IOS_GENIUSSCANSDKKEY', obfuscate: true)
   static final iOSGeniusScanSDKKey = _Env.iOSGeniusScanSDKKey;
+  @EnviedField(varName: 'IOS_GENIUSSCANSDKKEY_DEV', obfuscate: true)
+  static final iOSGeniusScanSDKKeyDev = _Env.iOSGeniusScanSDKKeyDev;
+  @EnviedField(varName: 'IOS_GENIUSSCANSDKKEY_QA', obfuscate: true)
+  static final iOSGeniusScanSDKKeyQA = _Env.iOSGeniusScanSDKKeyQA;
   @EnviedField(varName: 'ANDROID_GENIUSSCANSDKKEY', obfuscate: true)
   static final androidGeniusScanSDKKey = _Env.androidGeniusScanSDKKey;
+  @EnviedField(varName: 'ANDROID_GENIUSSCANSDKKEY_DEV', obfuscate: true)
+  static final androidGeniusScanSDKKeyDev = _Env.androidGeniusScanSDKKeyDev;
+  @EnviedField(varName: 'ANDROID_GENIUSSCANSDKKEY_QA', obfuscate: true)
+  static final androidGeniusScanSDKKeyQA = _Env.androidGeniusScanSDKKeyQA;
   @EnviedField(varName: 'AZURETELEMETRYKEY_DEV', obfuscate: true)
   static final azureTelemetryKeyDEV = _Env.azureTelemetryKeyDEV;
   @EnviedField(varName: 'AZURETELEMETRYKEY_PROD', obfuscate: true)
