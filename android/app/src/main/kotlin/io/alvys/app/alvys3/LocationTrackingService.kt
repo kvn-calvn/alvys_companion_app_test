@@ -87,7 +87,7 @@ class LocationTrackingService: Service() {
         val pendingIntent: PendingIntent = PendingIntent.getActivity(
             this,
             1,
-            notificationIntent, 0
+            notificationIntent, PendingIntent.FLAG_IMMUTABLE
         )
         val notification: Notification = Notification.Builder(this, "CHANNEL_ID_01")
             .setContentTitle(getString(R.string.app_name))
