@@ -1,5 +1,6 @@
 package io.alvys.app.alvys3
 
+import android.content.Intent
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
@@ -9,6 +10,8 @@ class MainActivity: FlutterActivity() {
 
 
 override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+    val locationTrackingServiceIntent = Intent(this, LocationTrackingService::class.java)
+
     super.configureFlutterEngine(flutterEngine)
     val messenger = flutterEngine.dartExecutor.binaryMessenger
     MethodChannel(messenger, "PLATFORM_CHANNEL")
@@ -22,6 +25,11 @@ override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
                     NotificationHub.start(this.application, hubName, connectionString)
                     NotificationHub.addTag(driverId)
                     NotificationHub.setEnabled(true)
+
+                }
+                "startLocationTracking" -> {
+
+                    context.startService(locationTrackingServiceIntent)
 
                 }
            
