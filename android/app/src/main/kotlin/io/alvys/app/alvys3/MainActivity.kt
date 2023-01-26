@@ -23,6 +23,7 @@ class MainActivity : FlutterActivity() {
                         val connectionString: String? = call.argument<String>("connectionString")
                         val hubName: String? = call.argument<String>("hubName")
 
+                        NotificationHub.setListener(NHNotificationListener())
                         NotificationHub.start(this.application, hubName, connectionString)
                         NotificationHub.addTag(driverPhone)
                         NotificationHub.setEnabled(true)
