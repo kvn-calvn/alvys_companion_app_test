@@ -29,14 +29,6 @@ class _LoadListPageState extends ConsumerState<LoadListPage> {
 
   @override
   Widget build(BuildContext context) {
-    PlatformChannel.startLocationTracking(
-        "Kevin Calvin",
-        "DR2517293669651928204",
-        "1001160",
-        "ef47c022764143b5afdddb6349a093be",
-        "a2NhbHZpbkBvdXRsb29rLmNvbTpVV2RETFRBMU5ERTNZemszTFRaaE1tSXRORGd6WXkxaVlXWTBMVEZqTXpobU5XWXpNRGt4TnkxTWVXWTM=",
-        ApiRoutes.locationTracking,
-        "CL358");
 
     return Scaffold(
       appBar: AppBar(
@@ -48,19 +40,29 @@ class _LoadListPageState extends ConsumerState<LoadListPage> {
             child: DropdownButton(
               value: dropdownvalue,
               icon: const Icon(Icons.keyboard_arrow_down),
-              items: items.map((String items) {
-                return DropdownMenuItem(
-                  value: items,
+              items: [
+                DropdownMenuItem(
+                  value: "Online",
                   onTap: () {
-                    /*  throw AlvysClientException(
-                        ClientError(title: 'test', content: ''));*/
+                    //Check if user is on an active trip then start tracking if not dialog show that they are not on an active trip therefore they will remain offline.
                   },
                   child: Text(
-                    items,
+                    "Online",
                     style: Theme.of(context).textTheme.titleMedium,
                   ),
-                );
-              }).toList(),
+                ),
+                DropdownMenuItem(
+                  value: "Offline",
+                  onTap: () {
+                    //Stop location tracking when offline.
+                    PlatformChannel.stopLocationTracking();
+                  },
+                  child: Text(
+                    "Offline",
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                )
+              ],
               onChanged: (String? value) {
                 setState(() {
                   dropdownvalue = value!;

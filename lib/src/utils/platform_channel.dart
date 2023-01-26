@@ -5,10 +5,10 @@ class PlatformChannel {
   static const platform = MethodChannel('PLATFORM_CHANNEL');
 
   static void getNotification(
-      String driverID, String hubName, String connectionString) async {
+      String driverPhone, String hubName, String connectionString) async {
     try {
       await platform.invokeMethod('registerForNotification', <String, String>{
-        'driverId': driverID,
+        'driverPhone': driverPhone,
         'hubName': hubName,
         'connectionString': connectionString
       });
@@ -36,5 +36,15 @@ class PlatformChannel {
       'token': token,
       'url': url
     });
+  }
+
+  static void stopLocationTracking() async {
+    try {
+      await platform.invokeMethod("stopLocationTracking");
+    } on PlatformException catch (e) {
+      debugPrint(
+        "Invoke stopLocationTracking unsuccessful: \n $e",
+      );
+    }
   }
 }

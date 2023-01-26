@@ -76,8 +76,10 @@ class RequestNotification extends ConsumerWidget {
                     if (requestNotificationResult.isGranted) {
                       if (!mounted) return;
 
+                      debugPrint("PHONE_NUMBER: ${userState.value!.driver!.phone!}");
+
                       PlatformChannel.getNotification(
-                          "DR",
+                          userState.value!.driver!.phone!,
                           FlavorConfig.instance!.hubName,
                           FlavorConfig.instance!.connectionString);
 

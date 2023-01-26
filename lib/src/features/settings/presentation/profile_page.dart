@@ -1,13 +1,19 @@
 import 'package:alvys3/src/common_widgets/avatar.dart';
+import 'package:alvys3/src/features/authentication/presentation/auth_provider_controller.dart';
 import 'package:alvys3/src/utils/app_theme.dart';
+import 'package:alvys3/src/utils/extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
-class ProfilePage extends StatelessWidget {
+class ProfilePage extends ConsumerWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context,  WidgetRef ref) {
+    var userState = ref.watch(authProvider);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
@@ -56,7 +62,7 @@ class ProfilePage extends StatelessWidget {
                 style: Theme.of(context).textTheme.labelLarge,
               ),
               Text(
-                'Sandbox Driver',
+                userState.value!.driver!.name!,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(
@@ -67,7 +73,7 @@ class ProfilePage extends StatelessWidget {
                 style: Theme.of(context).textTheme.labelLarge,
               ),
               Text(
-                'sandbox@alvys.com',
+                  userState.value!.driver!.email!,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(
@@ -78,7 +84,7 @@ class ProfilePage extends StatelessWidget {
                 style: Theme.of(context).textTheme.labelLarge,
               ),
               Text(
-                '9094623310',
+                  userState.value!.driver!.phone!,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(
@@ -89,7 +95,7 @@ class ProfilePage extends StatelessWidget {
                 style: Theme.of(context).textTheme.labelLarge,
               ),
               Text(
-                'Calvin Logistics, Archerhub',
+                  userState.value!.driver!.userTenants!.last.companyCode!,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(
@@ -100,11 +106,12 @@ class ProfilePage extends StatelessWidget {
                 style: Theme.of(context).textTheme.labelLarge,
               ),
               Text(
-                '123 Melrose St',
+                  userState.value!.driver!.address!.street!,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               Text(
-                'Brooklyn, NY 11206',
+                "${userState.value!.driver!.address!.city}, ${userState.value!.driver!.address!.state!} ${userState.value!.driver!.address!.zip!}"
+               ,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(
@@ -115,7 +122,7 @@ class ProfilePage extends StatelessWidget {
                 style: Theme.of(context).textTheme.labelLarge,
               ),
               Text(
-                'LC546987',
+                  userState.value!.driver!.driversLicenceNumber!,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(
@@ -126,7 +133,8 @@ class ProfilePage extends StatelessWidget {
                 style: Theme.of(context).textTheme.labelLarge,
               ),
               Text(
-                'Aug 16, 2023',
+                DateFormat('MMM d, yyyy', 'en_US')
+                    .formatNullDate(userState.value!.driver!.driversLicenceExpirationDate),
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(
@@ -137,7 +145,7 @@ class ProfilePage extends StatelessWidget {
                 style: Theme.of(context).textTheme.labelLarge,
               ),
               Text(
-                '-',
+                userState.value!.driver!.driversLicenceState!,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
             ],
