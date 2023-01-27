@@ -3,7 +3,6 @@
 import 'package:alvys3/src/common_widgets/empty_view.dart';
 import 'package:alvys3/src/common_widgets/large_nav_button.dart';
 import 'package:alvys3/src/common_widgets/shimmers/trip_card_shimmer.dart';
-import 'package:alvys3/src/constants/api_routes.dart';
 import 'package:alvys3/src/features/trips/presentation/trip/trip_page_controller.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:alvys3/src/utils/platform_channel.dart';
@@ -29,7 +28,6 @@ class _LoadListPageState extends ConsumerState<LoadListPage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,

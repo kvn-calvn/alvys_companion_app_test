@@ -23,7 +23,7 @@ class EmptyView extends StatelessWidget {
                   title,
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
-                Text(description, style: Theme.of(context).textTheme.bodyText2)
+                Text(description, style: Theme.of(context).textTheme.bodyMedium)
               ],
             ),
           ),

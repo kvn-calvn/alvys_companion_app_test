@@ -11,7 +11,7 @@ class ProfilePage extends ConsumerWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context,  WidgetRef ref) {
+  Widget build(BuildContext context, WidgetRef ref) {
     var userState = ref.watch(authProvider);
 
     return Scaffold(
@@ -73,7 +73,7 @@ class ProfilePage extends ConsumerWidget {
                 style: Theme.of(context).textTheme.labelLarge,
               ),
               Text(
-                  userState.value!.driver!.email!,
+                userState.value!.driver!.email!,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(
@@ -84,7 +84,7 @@ class ProfilePage extends ConsumerWidget {
                 style: Theme.of(context).textTheme.labelLarge,
               ),
               Text(
-                  userState.value!.driver!.phone!,
+                userState.value!.driver!.phone!,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(
@@ -95,7 +95,7 @@ class ProfilePage extends ConsumerWidget {
                 style: Theme.of(context).textTheme.labelLarge,
               ),
               Text(
-                  userState.value!.driver!.userTenants!.last.companyCode!,
+                userState.value!.driver!.userTenants.last.companyCode!,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(
@@ -106,12 +106,11 @@ class ProfilePage extends ConsumerWidget {
                 style: Theme.of(context).textTheme.labelLarge,
               ),
               Text(
-                  userState.value!.driver!.address!.street!,
+                userState.value!.driver!.address!.street!,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               Text(
-                "${userState.value!.driver!.address!.city}, ${userState.value!.driver!.address!.state!} ${userState.value!.driver!.address!.zip!}"
-               ,
+                "${userState.value!.driver!.address!.city}, ${userState.value!.driver!.address!.state!} ${userState.value!.driver!.address!.zip!}",
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(
@@ -122,7 +121,7 @@ class ProfilePage extends ConsumerWidget {
                 style: Theme.of(context).textTheme.labelLarge,
               ),
               Text(
-                  userState.value!.driver!.driversLicenceNumber!,
+                userState.value!.driver!.driversLicenceNumber!,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(
@@ -133,8 +132,8 @@ class ProfilePage extends ConsumerWidget {
                 style: Theme.of(context).textTheme.labelLarge,
               ),
               Text(
-                DateFormat('MMM d, yyyy', 'en_US')
-                    .formatNullDate(userState.value!.driver!.driversLicenceExpirationDate),
+                DateFormat('MMM d, yyyy', 'en_US').formatNullDate(
+                    userState.value!.driver!.driversLicenceExpirationDate),
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(

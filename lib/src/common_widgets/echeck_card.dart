@@ -115,7 +115,7 @@ class EcheckCard extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           Text(eCheck.reason!,
-                              style: Theme.of(context).textTheme.caption)
+                              style: Theme.of(context).textTheme.bodySmall)
                         ],
                       ),
                     ),

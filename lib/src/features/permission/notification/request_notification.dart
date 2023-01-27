@@ -66,7 +66,8 @@ class RequestNotification extends ConsumerWidget {
                               content: const Text(
                                   'You have this app\'s location permession to permanently denied. Open location settings to change it.'),
                               actions: [
-                                TextButton(onPressed: () {}, child: Text(''))
+                                TextButton(
+                                    onPressed: () {}, child: const Text(''))
                               ],
                             );
                           });
@@ -76,7 +77,8 @@ class RequestNotification extends ConsumerWidget {
                     if (requestNotificationResult.isGranted) {
                       if (!mounted) return;
 
-                      debugPrint("PHONE_NUMBER: ${userState.value!.driver!.phone!}");
+                      debugPrint(
+                          "PHONE_NUMBER: ${userState.value!.driver!.phone!}");
 
                       PlatformChannel.getNotification(
                           userState.value!.driver!.phone!,

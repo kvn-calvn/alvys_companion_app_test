@@ -104,7 +104,7 @@ class TripDetails extends ConsumerWidget {
                       style: Theme.of(context).textTheme.bodyLarge,
                     ),
                     Text("There are no stops on this trip.",
-                        style: Theme.of(context).textTheme.bodyText2)
+                        style: Theme.of(context).textTheme.bodyMedium)
                   ],
                 ),
               ),

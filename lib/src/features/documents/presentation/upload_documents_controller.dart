@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:alvys3/src/common_widgets/file_upload_progress_dialog.dart';
 import 'package:alvys3/src/features/documents/domain/genius_scan_config/genius_scan_config.dart';
 import 'package:alvys3/src/features/documents/domain/upload_documents_state/upload_documents_state.dart';
-import 'package:alvys3/src/features/documents/presentation/trip_docs_controller.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_genius_scan/flutter_genius_scan.dart';

@@ -7,7 +7,7 @@ showCustomPopup<T>(
     bool useRootNavigator = true}) async {
   final RenderBox button = context.findRenderObject() as RenderBox;
   final RenderBox overlay =
-      Overlay.of(context)?.context.findRenderObject() as RenderBox;
+      Overlay.of(context).context.findRenderObject() as RenderBox;
   var position = RelativeRect.fromRect(
     Rect.fromPoints(
       button.localToGlobal(const Offset(0, 0), ancestor: overlay),

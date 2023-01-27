@@ -79,7 +79,7 @@ class StopCard extends ConsumerWidget {
                               Text(
                                   DateFormat("MMM dd, yyyy @ hh:mm")
                                       .formatNullDate(stop.stopDate),
-                                  style: Theme.of(context).textTheme.caption),
+                                  style: Theme.of(context).textTheme.bodySmall),
                             ],
                           ),
                         ),
