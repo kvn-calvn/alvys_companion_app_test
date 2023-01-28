@@ -27,7 +27,7 @@ apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
     compileSdkVersion flutter.compileSdkVersion
-
+    namespace = "io.alvys.app.alvys3"
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
@@ -101,6 +101,9 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:21.0.1'
     //Coroutines to make the HTTP requests asynchronous(In the background thread)
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
+    // Gson to convert raw JSON to pretty JSON
+    implementation 'com.google.code.gson:gson:2.8.9'
+
 
 
 }

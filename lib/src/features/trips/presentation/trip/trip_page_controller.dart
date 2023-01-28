@@ -1,11 +1,14 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:alvys3/src/constants/api_routes.dart';
+import 'package:alvys3/src/features/authentication/presentation/auth_provider_controller.dart';
 import 'package:alvys3/src/features/trips/data/data_provider.dart';
 import 'package:alvys3/src/features/trips/data/trip_repository_impl.dart';
 import 'package:alvys3/src/features/trips/domain/app_trip/app_trip.dart';
 import 'package:alvys3/src/features/trips/domain/app_trip/trip_list_state.dart';
 import 'package:alvys3/src/utils/platform_channel.dart';
+import 'package:alvys3/src/utils/utils.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../utils/extensions.dart';
@@ -50,16 +53,23 @@ class TripPageController extends AutoDisposeAsyncNotifier<TripListState> {
     state = AsyncValue.data(TripListState());
     await getTrips();
 
-    if (state.value!.trips.isNotEmpty) {
+    if (state.value!.trips.isNotEmpty && state.value!.activeTrips.isNotEmpty) {
       debugPrint("Calling startLocationTracking channel");
+      var userState = ref.watch(authProvider);
+
+      var authToken = Utils.base64String(
+          "${userState.value!.driver!.userName!}:${userState.value!.driver!.appToken!}");
+
       PlatformChannel.startLocationTracking(
-          "Kevin Calvin",
-          "DR2517293669651928204",
-          "1001160",
-          "ef47c022764143b5afdddb6349a093be",
-          "a2NhbHZpbkBvdXRsb29rLmNvbTpVV2RETFRBMU5ERTNZemszTFRaaE1tSXRORGd6WXkxaVlXWTBMVEZqTXpobU5XWXpNRGt4TnkxTWVXWTM=",
+          userState.value!.driver!.name!,
+          state.value!.activeTrips.first.driver1Id!,
+          state.value!.activeTrips.first.tripNumber!,
+          state.value!.activeTrips.first.id!,
+          authToken,
           ApiRoutes.locationTracking,
-          "CL358");
+          state.value!.activeTrips.first.companyCode!);
+    } else {
+      debugPrint("No trackable trips.");
     }
 
     return state.value!;

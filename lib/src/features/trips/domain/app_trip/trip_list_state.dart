@@ -13,7 +13,7 @@ class TripListState with _$TripListState {
   List<AppTrip> get deliveredTrips =>
       trips.where((element) => element.status == "Delivered").toList();
   List<AppTrip> get activeTrips =>
-      trips.where((element) => element.isTripActive!).toList();
+      trips.where((element) => element.isTripActive! && element.status == "Dispatched").toList();
   List<AppTrip> get processingTrips => trips
       .where((element) => element.status!
           .isInStatus(["TONU", "Released", "Invoiced", "Completed", "Queued"]))

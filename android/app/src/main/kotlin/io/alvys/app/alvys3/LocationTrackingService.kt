@@ -1,21 +1,26 @@
 package io.alvys.app.alvys3
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.*
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
+import android.os.Binder
 import android.os.IBinder
 import android.os.Looper
 import android.util.Log
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.*
+import org.json.JSONObject
 
 
 class LocationTrackingService : Service() {
-    private val UPDATE_INTERVAL_IN_MILLISECONDS = 5000
+    private val UPDATE_INTERVAL_IN_MILLISECONDS = 900000 //Every 15mins
     private var mFusedLocationClient: FusedLocationProviderClient? = null
     private var locationRequest: LocationRequest? = null
+    private val localBinder = MyLocalBinder()
+    private var driverInfo = JSONObject()
 
     override fun onCreate() {
         super.onCreate()
@@ -28,6 +33,18 @@ class LocationTrackingService : Service() {
             super.onLocationResult(locationResult)
             val currentLocation: Location? = locationResult.lastLocation
             if (currentLocation != null) {
+                val driverName = driverInfo.get("DriverName").toString()
+                val token = driverInfo.get("token").toString()
+                val tripNumber = driverInfo.get("tripNumber").toString()
+                val tripId = driverInfo.get("tripId").toString()
+                val companyCode = driverInfo.get("companyCode").toString()
+                val driverId = driverInfo.get("DriverId").toString()
+                val url = driverInfo.get("url").toString()
+                val lat = currentLocation.latitude
+                val lng = currentLocation.longitude
+                val speed = "${((currentLocation.speed)*3600/1000)} km/h"
+
+                PostUserLocation().sendLocation(driverName,driverId,tripNumber,tripId,lat, lng,url,token, companyCode, speed)
                 Log.d("Locations", "${currentLocation.latitude}" + " " + currentLocation.longitude)
             }
             //Share/Publish Location
@@ -51,12 +68,9 @@ class LocationTrackingService : Service() {
         mFusedLocationClient!!.removeLocationUpdates(locationCallback)
         super.onDestroy()
     }
-
+    @SuppressLint("MissingPermission")
     private fun startLocationUpdates() {
-        if (ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
                 this,
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
@@ -69,11 +83,13 @@ class LocationTrackingService : Service() {
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
             return
+        }else {
+            mFusedLocationClient!!.requestLocationUpdates(
+                locationRequest!!,
+                locationCallback, Looper.myLooper()
+            )
         }
-        mFusedLocationClient!!.requestLocationUpdates(
-            locationRequest!!,
-            locationCallback, Looper.myLooper()
-        )
+
     }
 
     private fun prepareForegroundNotification() {
@@ -91,16 +107,28 @@ class LocationTrackingService : Service() {
             notificationIntent, PendingIntent.FLAG_IMMUTABLE
         )
         val notification: Notification = Notification.Builder(this, "CHANNEL_ID_01")
-            .setContentTitle(getString(R.string.app_name))
+            //.setContentTitle(getString(R.string.app_name))
             .setContentTitle("Your location will be tracked when assigned a trip.")
-            .setSmallIcon(R.mipmap.ic_launcher)
+            //.setSmallIcon("")
             .setContentIntent(pendingIntent)
             .build()
         startForeground(1, notification)
     }
 
-    override fun onBind(intent: Intent?): IBinder? {
-        return null
+    override fun onBind(intent: Intent?): IBinder {
+
+        val driverInfoString = intent?.getStringExtra("DRIVER-INFO").toString()
+        driverInfo = JSONObject(driverInfoString)
+
+        Log.d("ONBIND_INTENT",  driverInfo.get("url").toString())
+        Log.d("ONBIND_INTENT", "$driverInfoString")
+        return localBinder
+    }
+
+    inner class MyLocalBinder : Binder() {
+        fun getService() : LocationTrackingService {
+            return this@LocationTrackingService
+        }
     }
 
     private fun initData() {
