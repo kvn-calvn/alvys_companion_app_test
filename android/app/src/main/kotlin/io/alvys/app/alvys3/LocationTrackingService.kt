@@ -17,6 +17,7 @@ import org.json.JSONObject
 
 class LocationTrackingService : Service() {
     private val UPDATE_INTERVAL_IN_MILLISECONDS = 900000 //Every 15mins
+    private val MAX_UPDATE_DELAY_MILLISECONDS = 900000 //Every 15mins
     private var mFusedLocationClient: FusedLocationProviderClient? = null
     private var locationRequest: LocationRequest? = null
     private val localBinder = MyLocalBinder()
@@ -135,9 +136,9 @@ class LocationTrackingService : Service() {
 
         locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 10000)
             .apply {
-                setWaitForAccurateLocation(false)
+                setWaitForAccurateLocation(true)
                 setMinUpdateIntervalMillis(UPDATE_INTERVAL_IN_MILLISECONDS.toLong())
-                setMaxUpdateDelayMillis(100000)
+                setMaxUpdateDelayMillis(MAX_UPDATE_DELAY_MILLISECONDS.toLong())
             }.build()
 
         mFusedLocationClient =

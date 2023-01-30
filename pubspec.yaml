@@ -46,7 +46,7 @@ dependencies:
   package_info_plus: ^3.0.2
   permission_handler: ^10.2.0
   app_settings: ^4.1.8
-  flutter_genius_scan: ^4.7.4
+  flutter_genius_scan: ^4.8.0
   image_picker: ^0.8.6
 
 dev_dependencies:
