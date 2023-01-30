@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:alvys3/src/constants/api_routes.dart';
 import 'package:alvys3/src/features/authentication/presentation/auth_provider_controller.dart';

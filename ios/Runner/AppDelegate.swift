@@ -25,7 +25,7 @@ import WindowsAzureMessaging
          switch method {
              
          case "registerForNotification":
-             self.NHRegisterattion(driverID: args["driverPhone"] as? String, hubName: args["hubName"] as? String, connectionString: args["connectionString"] as? String)
+             self.NHRegisterattion(driverPhone: args["driverPhone"] as? String, hubName: args["hubName"] as? String, connectionString: args["connectionString"] as? String)
          case "unregisterNotification":
              MSNotificationHub.clearTags()
              MSNotificationHub.setEnabled(false)
@@ -57,7 +57,7 @@ import WindowsAzureMessaging
     
     func NHRegisterattion(driverPhone: String?, hubName: String?, connectionString: String?) {
         
-        if (!(connectionString ?? "").isEmpty && !(hubName ?? "").isEmpty && !(driverID ?? "").isEmpty){
+        if (!(connectionString ?? "").isEmpty && !(hubName ?? "").isEmpty && !(driverPhone ?? "").isEmpty){
             let hubOptions = MSNotificationHubOptions(withOptions: [.alert, .badge, .sound])!
 
             MSNotificationHub.start(connectionString: connectionString!, hubName: hubName!,options: hubOptions)

@@ -81,7 +81,7 @@ class LocationManager: NSObject, CLLocationManagerDelegate {
             let elapsed = time.timeIntervalSince(initialTime)
             
             //Record location every 15mins (900Seconds)
-            if elapsed > 3 {
+            if elapsed > 900 {
                 
                 //Check if any of the properties have a null value
                 if let driverId = driverId, let companyCode = companyCode, let loadNumber = loadNumber, let tripId = tripId, let driverName = driverName, let urlData = url  {
