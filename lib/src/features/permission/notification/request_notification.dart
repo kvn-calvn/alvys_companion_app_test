@@ -59,18 +59,20 @@ class RequestNotification extends ConsumerWidget {
                         await Permission.notification.request();
 
                     if (requestNotificationResult.isPermanentlyDenied) {
-                      showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              content: const Text(
-                                  'You have this app\'s location permession to permanently denied. Open location settings to change it.'),
-                              actions: [
-                                TextButton(
-                                    onPressed: () {}, child: const Text(''))
-                              ],
-                            );
-                          });
+                      if (mounted) {
+                        showDialog(
+                            context: context,
+                            builder: (context) {
+                              return AlertDialog(
+                                content: const Text(
+                                    'You have this app\'s location permession to permanently denied. Open location settings to change it.'),
+                                actions: [
+                                  TextButton(
+                                      onPressed: () {}, child: const Text(''))
+                                ],
+                              );
+                            });
+                      }
                       AppSettings.openNotificationSettings();
                     }
 
