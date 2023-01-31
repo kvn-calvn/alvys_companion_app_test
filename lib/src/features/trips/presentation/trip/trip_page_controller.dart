@@ -9,6 +9,8 @@ import 'package:alvys3/src/features/trips/domain/app_trip/trip_list_state.dart';
 import 'package:alvys3/src/utils/platform_channel.dart';
 import 'package:alvys3/src/utils/utils.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../utils/extensions.dart';
 
@@ -51,6 +53,9 @@ class TripPageController extends AutoDisposeAsyncNotifier<TripListState> {
     _tripRepositoryImpl = ref.read(tripRepositoryImplProvider);
     state = AsyncValue.data(TripListState());
     await getTrips();
+
+
+
 
     if (state.value!.trips.isNotEmpty && state.value!.activeTrips.isNotEmpty) {
       debugPrint("Calling startLocationTracking channel");

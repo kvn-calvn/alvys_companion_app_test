@@ -2,6 +2,7 @@
 
 import 'package:alvys3/src/common_widgets/empty_view.dart';
 import 'package:alvys3/src/common_widgets/large_nav_button.dart';
+import 'package:alvys3/src/common_widgets/permission_dialog.dart';
 import 'package:alvys3/src/common_widgets/shimmers/trip_card_shimmer.dart';
 import 'package:alvys3/src/common_widgets/trip_card.dart';
 import 'package:alvys3/src/features/trips/presentation/trip/trip_page_controller.dart';
@@ -10,6 +11,7 @@ import 'package:alvys3/src/utils/platform_channel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class LoadListPage extends ConsumerStatefulWidget {
   const LoadListPage({Key? key}) : super(key: key);
@@ -25,6 +27,33 @@ class _LoadListPageState extends ConsumerState<LoadListPage> {
     'Online',
     'Offline',
   ];
+
+  @override
+  void initState() {
+    super.initState();
+    debugPrint("Called initstate");
+
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      checkLocationPermission(context);
+    });
+  }
+
+  Future<void> checkLocationPermission(BuildContext context) async {
+    if (await Permission.location.isGranted) {
+      if (context.mounted) {
+        await showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return const PermissionDialog(
+              title: "Alvys wants to use your location",
+              description:
+                  "Alvys uses your location data to track the movement of loads you have been assigned.",
+            );
+          },
+        );
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
