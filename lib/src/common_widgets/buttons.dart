@@ -6,8 +6,8 @@ class ButtonStyle1 extends StatelessWidget {
       {Key? key,
       required this.onPressAction,
       required this.title,
-      required this.isLoading,
-      required this.isDisable})
+      this.isLoading = false,
+      this.isDisable = false})
       : super(key: key);
 
   final Function onPressAction;
@@ -18,12 +18,8 @@ class ButtonStyle1 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ElevatedButton(
-      onPressed: isDisable ? null : () => onPressAction(),
-      /*onPressed: () {
-                    Navigator.pushNamed(context, '/verifyphone');
-                  },*/
+      onPressed: isLoading || isDisable ? null : () => onPressAction(),
       style: ElevatedButton.styleFrom(
-        textStyle: Theme.of(context).textTheme.titleLarge,
         minimumSize: const Size.fromHeight(60),
         backgroundColor: ColorManager.primary(Theme.of(context).brightness),
         shape: RoundedRectangleBorder(
@@ -32,6 +28,10 @@ class ButtonStyle1 extends StatelessWidget {
       ),
       child: Text(
         isLoading ? "Loading.." : title,
+        style: Theme.of(context)
+            .textTheme
+            .labelLarge!
+            .copyWith(color: Colors.white),
       ),
     );
   }

@@ -8,6 +8,7 @@ import 'package:alvys3/src/common_widgets/trip_card.dart';
 import 'package:alvys3/src/features/trips/presentation/trip/trip_page_controller.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:alvys3/src/utils/platform_channel.dart';
+import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -39,15 +40,22 @@ class _LoadListPageState extends ConsumerState<LoadListPage> {
   }
 
   Future<void> checkLocationPermission(BuildContext context) async {
-    if (await Permission.location.isGranted) {
+    if (await Permission.location.isPermanentlyDenied ||
+        await Permission.location.isDenied) {
       if (context.mounted) {
         await showDialog(
           context: context,
           builder: (BuildContext context) {
-            return const PermissionDialog(
-              title: "Alvys wants to use your location",
+            return PermissionDialog(
+              title: "Alvys wants to use your location.",
               description:
                   "Alvys uses your location data to track the movement of loads you have been assigned.",
+              allowAction: () {
+                AppSettings.openLocationSettings();
+              },
+              notNowAction: () {
+                GoRouter.of(context).pop();
+              },
             );
           },
         );

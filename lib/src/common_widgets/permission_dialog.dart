@@ -1,14 +1,20 @@
 import 'dart:ui';
 
-import 'package:alvys3/src/common_widgets/button_style1.dart';
+import 'package:alvys3/src/common_widgets/buttons.dart';
 import 'package:flutter/material.dart';
 
 class PermissionDialog extends StatefulWidget {
   const PermissionDialog(
-      {Key? key, required this.title, required this.description})
+      {Key? key,
+      required this.title,
+      required this.description,
+      required this.allowAction,
+      required this.notNowAction})
       : super(key: key);
 
   final String title, description;
+  final Function allowAction;
+  final Function notNowAction;
 
   @override
   State<PermissionDialog> createState() => _PermissionDialogState();
@@ -34,11 +40,11 @@ class _PermissionDialogState extends State<PermissionDialog> {
     return Stack(
       children: <Widget>[
         Container(
-          constraints: const BoxConstraints(minWidth: 100, maxWidth: 300),
-          padding: const EdgeInsets.all(30),
+          constraints: const BoxConstraints(minWidth: 100, maxWidth: 350),
+          padding: const EdgeInsets.all(25),
           decoration: BoxDecoration(
             shape: BoxShape.rectangle,
-            color: Colors.white,
+            color: Theme.of(context).cardColor,
             borderRadius: BorderRadius.circular(Constants.padding),
           ),
           child: Column(
@@ -46,15 +52,15 @@ class _PermissionDialogState extends State<PermissionDialog> {
             children: <Widget>[
               Text(
                 widget.title,
-                style:
-                    const TextStyle(fontSize: 14, fontWeight: FontWeight.w600),
+                style: Theme.of(context).textTheme.titleMedium,
+                textAlign: TextAlign.center,
               ),
               const SizedBox(
                 height: 15,
               ),
               Text(
                 widget.description,
-                style: const TextStyle(fontSize: 14),
+                style: Theme.of(context).textTheme.bodyMedium,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(
