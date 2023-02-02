@@ -39,12 +39,20 @@ class GlobalErrorHandler {
         //ErrorFunctionHandler.instance.executeOnError();
 
         showDialog(
-            context: ErrorFunctionHandler.instance.navKey.currentState!.context,
-            builder: (context) => AlertDialog(
-                  title: Text(e.message.title!),
-                  content: Text(e.message.content!),
-                )).then(
-            (value) => ErrorFunctionHandler.instance.executeOnError());
+          useRootNavigator: true,
+          context: ErrorFunctionHandler.instance.navKey.currentState!.context,
+          builder: (context) => AppDialog(
+            title: 'Error',
+            description: '${e.message.content}',
+            actions: [
+              AppDialogAction(
+                label: 'OK',
+                action: () => Navigator.pop(context),
+                primary: true,
+              )
+            ],
+          ),
+        ).then((value) => ErrorFunctionHandler.instance.executeOnError());
 
         break;
       default:
