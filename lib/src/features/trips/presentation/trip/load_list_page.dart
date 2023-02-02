@@ -2,7 +2,7 @@
 
 import 'package:alvys3/src/common_widgets/empty_view.dart';
 import 'package:alvys3/src/common_widgets/large_nav_button.dart';
-import 'package:alvys3/src/common_widgets/permission_dialog.dart';
+import 'package:alvys3/src/common_widgets/app_dialog.dart';
 import 'package:alvys3/src/common_widgets/shimmers/trip_card_shimmer.dart';
 import 'package:alvys3/src/common_widgets/trip_card.dart';
 import 'package:alvys3/src/features/trips/presentation/trip/trip_page_controller.dart';
@@ -46,14 +46,16 @@ class _LoadListPageState extends ConsumerState<LoadListPage> {
         await showDialog(
           context: context,
           builder: (BuildContext context) {
-            return PermissionDialog(
+            return AppDialog(
               title: "Alvys wants to use your location.",
               description:
                   "Alvys uses your location data to track the movement of loads you have been assigned.",
-              allowAction: () {
+              action1Label: 'Allow',
+              action1: () {
                 AppSettings.openLocationSettings();
               },
-              notNowAction: () {
+              action2Label: "Not Now",
+              action2: () {
                 GoRouter.of(context).pop();
               },
             );

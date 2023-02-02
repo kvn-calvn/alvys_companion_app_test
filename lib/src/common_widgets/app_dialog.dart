@@ -3,24 +3,23 @@ import 'dart:ui';
 import 'package:alvys3/src/common_widgets/buttons.dart';
 import 'package:flutter/material.dart';
 
-class PermissionDialog extends StatefulWidget {
-  const PermissionDialog(
-      {Key? key,
-      required this.title,
-      required this.description,
-      required this.allowAction,
-      required this.notNowAction})
-      : super(key: key);
+class AppDialog extends StatelessWidget {
+  const AppDialog({
+    Key? key,
+    required this.title,
+    required this.description,
+    required this.action1Label,
+    required this.action1,
+    this.action2Label,
+    this.action2,
+  }) : super(key: key);
 
   final String title, description;
-  final Function allowAction;
-  final Function notNowAction;
+  final String action1Label;
+  final String? action2Label;
+  final Function() action1;
+  final Function()? action2;
 
-  @override
-  State<PermissionDialog> createState() => _PermissionDialogState();
-}
-
-class _PermissionDialogState extends State<PermissionDialog> {
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -51,7 +50,7 @@ class _PermissionDialogState extends State<PermissionDialog> {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Text(
-                widget.title,
+                title,
                 style: Theme.of(context).textTheme.titleMedium,
                 textAlign: TextAlign.center,
               ),
@@ -59,23 +58,23 @@ class _PermissionDialogState extends State<PermissionDialog> {
                 height: 15,
               ),
               Text(
-                widget.description,
+                description,
                 style: Theme.of(context).textTheme.bodyMedium,
                 textAlign: TextAlign.center,
               ),
               const SizedBox(
                 height: 22,
               ),
-              ButtonStyle1(onPressAction: () {}, title: "Allow"),
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-                child: const Text(
-                  "Don't Allow",
-                  style: TextStyle(fontSize: 12),
-                ),
-              )
+              ButtonStyle1(onPressAction: action1, title: action1Label),
+              if (action2 != null && action2Label != null) ...[
+                TextButton(
+                  onPressed: action2!,
+                  child: Text(
+                    action2Label!,
+                    style: const TextStyle(fontSize: 12),
+                  ),
+                )
+              ]
             ],
           ),
         ),
