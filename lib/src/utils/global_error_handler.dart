@@ -1,3 +1,4 @@
+import 'package:alvys3/src/common_widgets/snack_bar.dart';
 import 'package:alvys3/src/routing/error_page.dart';
 import 'package:alvys3/src/utils/exceptions.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,11 @@ class GlobalErrorHandler {
     switch (error.runtimeType) {
       case AlvysClientException:
         var e = error as AlvysClientException;
+        /*SnackBarWrapper.snackBar(
+            context: ErrorFunctionHandler.instance.navKey.currentState!.context,
+            isSuccess: false,
+            msg: e.message.title!);*/
+
         showDialog(
             context: ErrorFunctionHandler.instance.navKey.currentState!.context,
             builder: (context) => AlertDialog(

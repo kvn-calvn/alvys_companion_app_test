@@ -9,10 +9,12 @@ class ColorManager {
   static Color greyColorScheme2 = const Color(0XFF7C7C7C);
 
   static Color lightgrey2 = const Color(0XFF232323);
+  static Color success = const Color(0XFF00AF54);
+  static Color failure = const Color(0XFFE03616);
   static Color lightBackground = const Color(0XFFF1F4F8);
   static Color pickupColor = const Color(0XFF2991C2);
   static Color deliveryColor = const Color(0XFFF08080);
-  static Color cancelColor = const Color(0XFFFF0000);
+  static Color cancelColor = const Color(0XFFE03616);
   static Color white = Colors.white;
   static Color cardColor(Brightness brightness) =>
       brightness.isLight ? Colors.white : const Color(0XFF232323);

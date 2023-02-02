@@ -1,7 +1,6 @@
 import 'package:alvys3/src/common_widgets/buttons.dart';
+import 'package:alvys3/src/common_widgets/snack_bar.dart';
 import 'package:alvys3/src/constants/color.dart';
-import 'package:alvys3/src/network/client_error/client_error.dart';
-import 'package:alvys3/src/utils/exceptions.dart';
 import 'package:alvys3/src/utils/extensions.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
@@ -99,9 +98,10 @@ class StopCard extends ConsumerWidget {
                       const SizedBox(width: 5),
                       ButtonStyle2(
                         onPressAction: () {
-                          debugPrint("");
-                          throw AlvysClientException(
-                              ClientError(title: 'test'));
+                          SnackBarWrapper.snackBar(
+                              msg: "Checked In",
+                              context: context,
+                              isSuccess: true);
                         },
                         title: "Check Out",
                         isLoading: false,

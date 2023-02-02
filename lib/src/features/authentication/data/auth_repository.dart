@@ -71,12 +71,12 @@ class AvysAuthRepository implements AuthRepository {
         case 417:
           ErrorFunctionHandler.instance.onError = onError;
           throw AlvysClientException(ClientError(
-            title: "Failed to find user",
+            title: "Account not found",
             content: registerRes.data['ErrorMessage'].toString(),
           ));
         default:
           throw AlvysClientException(ClientError(
-            title: "Error",
+            title: "An error has occured",
             content: 'An error has occured, try again',
           ));
       }
