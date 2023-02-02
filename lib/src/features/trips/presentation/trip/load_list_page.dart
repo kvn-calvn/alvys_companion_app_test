@@ -42,7 +42,7 @@ class _LoadListPageState extends ConsumerState<LoadListPage> {
   Future<void> checkLocationPermission(BuildContext context) async {
     if (await Permission.location.isPermanentlyDenied ||
         await Permission.location.isDenied) {
-      if (context.mounted) {
+      if (mounted) {
         await showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -50,14 +50,14 @@ class _LoadListPageState extends ConsumerState<LoadListPage> {
               title: "Alvys wants to use your location.",
               description:
                   "Alvys uses your location data to track the movement of loads you have been assigned.",
-              action1Label: 'Allow',
-              action1: () {
-                AppSettings.openLocationSettings();
-              },
-              action2Label: "Not Now",
-              action2: () {
-                GoRouter.of(context).pop();
-              },
+              actions: [
+                AppDialogAction(
+                    label: 'Allow',
+                    action: AppSettings.openLocationSettings,
+                    primary: true),
+                AppDialogAction(
+                    label: 'Not Now', action: GoRouter.of(context).pop),
+              ],
             );
           },
         );

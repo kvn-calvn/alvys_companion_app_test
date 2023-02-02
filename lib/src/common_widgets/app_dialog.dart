@@ -3,22 +3,25 @@ import 'dart:ui';
 import 'package:alvys3/src/common_widgets/buttons.dart';
 import 'package:flutter/material.dart';
 
+class AppDialogAction {
+  final String label;
+  final bool primary;
+  final void Function() action;
+
+  AppDialogAction(
+      {required this.label, required this.action, this.primary = false});
+}
+
 class AppDialog extends StatelessWidget {
-  const AppDialog({
-    Key? key,
-    required this.title,
-    required this.description,
-    required this.action1Label,
-    required this.action1,
-    this.action2Label,
-    this.action2,
-  }) : super(key: key);
+  const AppDialog(
+      {Key? key,
+      required this.title,
+      required this.description,
+      required this.actions})
+      : super(key: key);
 
   final String title, description;
-  final String action1Label;
-  final String? action2Label;
-  final Function() action1;
-  final Function()? action2;
+  final List<AppDialogAction> actions;
 
   @override
   Widget build(BuildContext context) {
@@ -65,16 +68,17 @@ class AppDialog extends StatelessWidget {
               const SizedBox(
                 height: 22,
               ),
-              ButtonStyle1(onPressAction: action1, title: action1Label),
-              if (action2 != null && action2Label != null) ...[
-                TextButton(
-                  onPressed: action2!,
-                  child: Text(
-                    action2Label!,
-                    style: const TextStyle(fontSize: 12),
-                  ),
-                )
-              ]
+              for (var action in actions)
+                action.primary
+                    ? ButtonStyle1(
+                        onPressAction: action.action, title: action.label)
+                    : TextButton(
+                        onPressed: action.action,
+                        child: Text(
+                          action.label,
+                          style: const TextStyle(fontSize: 12),
+                        ),
+                      )
             ],
           ),
         ),
