@@ -56,7 +56,6 @@ class TripPageController extends AutoDisposeAsyncNotifier<TripListState> {
     await getTrips();
 
     if (state.value!.trips.isNotEmpty && state.value!.activeTrips.isNotEmpty) {
-      debugPrint("Calling startLocationTracking channel");
       var userState = ref.watch(authProvider);
 
       var authToken = Utils.base64String(

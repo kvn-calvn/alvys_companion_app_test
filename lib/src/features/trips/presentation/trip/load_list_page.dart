@@ -32,8 +32,6 @@ class _LoadListPageState extends ConsumerState<LoadListPage> {
   @override
   void initState() {
     super.initState();
-    debugPrint("Called initstate");
-
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       checkLocationPermission(context);
     });
