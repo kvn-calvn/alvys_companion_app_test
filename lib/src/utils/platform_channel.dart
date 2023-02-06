@@ -27,6 +27,7 @@ class PlatformChannel {
       String token,
       String url,
       String companyCode) async {
+    debugPrint("START_LOCATION_TRACKING_MC_CALLED");
     await platform.invokeMethod('startLocationTracking', <String, dynamic>{
       'DriverName': driverName,
       'DriverId': driverID,

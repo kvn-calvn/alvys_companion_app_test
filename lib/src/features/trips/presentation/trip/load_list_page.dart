@@ -53,7 +53,10 @@ class _LoadListPageState extends ConsumerState<LoadListPage> {
               actions: [
                 AppDialogAction(
                     label: 'Allow',
-                    action: AppSettings.openLocationSettings,
+                    action: () {
+                      AppSettings.openLocationSettings()
+                          .then((value) => GoRouter.of(context).pop());
+                    },
                     primary: true),
                 AppDialogAction(
                     label: 'Not Now', action: GoRouter.of(context).pop),

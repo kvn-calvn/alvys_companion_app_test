@@ -12,6 +12,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../../../../utils/extensions.dart';
 
 class TripPageController extends AutoDisposeAsyncNotifier<TripListState> {
@@ -54,24 +55,22 @@ class TripPageController extends AutoDisposeAsyncNotifier<TripListState> {
     state = AsyncValue.data(TripListState());
     await getTrips();
 
-
-
-
     if (state.value!.trips.isNotEmpty && state.value!.activeTrips.isNotEmpty) {
       debugPrint("Calling startLocationTracking channel");
       var userState = ref.watch(authProvider);
 
       var authToken = Utils.base64String(
           "${userState.value!.driver!.userName!}:${userState.value!.driver!.appToken!}");
-
-      PlatformChannel.startLocationTracking(
-          userState.value!.driver!.name!,
-          state.value!.activeTrips.first.driver1Id!,
-          state.value!.activeTrips.first.tripNumber!,
-          state.value!.activeTrips.first.id!,
-          authToken,
-          ApiRoutes.locationTracking,
-          state.value!.activeTrips.first.companyCode!);
+      if (await Permission.location.isGranted) {
+        PlatformChannel.startLocationTracking(
+            userState.value!.driver!.name!,
+            state.value!.activeTrips.first.driver1Id!,
+            state.value!.activeTrips.first.tripNumber!,
+            state.value!.activeTrips.first.id!,
+            authToken,
+            ApiRoutes.locationTracking,
+            state.value!.activeTrips.first.companyCode!);
+      }
     } else {
       debugPrint("No trackable trips.");
     }
