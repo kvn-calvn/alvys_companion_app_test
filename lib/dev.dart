@@ -6,21 +6,20 @@ import 'flavor_config.dart';
 
 void main() {
   FlavorConfig(
-      flavor: Flavor.dev,
-      env: Flavor.dev.toUpperCase,
-      rawApiBase: "devapi.alvys.com",
-      baseUrl: "https://devapi.alvys.com/api/",
-      mobileBaseApi: 'https://devapi.alvys.com/api/mobilev2/',
-      storageUrl: "https://alvysstorage.blob.core.windows.net/",
-      androidGeniusScanSDKKey: Env.androidGeniusScanSDKKeyDev,
-      iosGeniusScanSDKKey: Env.iOSGeniusScanSDKKeyDev,
-      azureTelemetryKey: Env.azureTelemetryKeyDEV,
-      gMapsKey: Env.gMapsKey,
-      hereMapsKey: Env.hereMapsKey,
-      hubName: "Alvys_Dev", //Env.hubNameDEV,
-      connectionString:
-          "Endpoint=sb://Tivoli-NS.servicebus.windows.net/;SharedAccessKeyName=DefaultListenSharedAccessSignature;SharedAccessKey=BjwxrU0hUwVh4SrNB5CSMeGYDdqJDkdNlzJtUrNHqAk=" //Env.connectionStringDev,
-      );
+    flavor: Flavor.dev,
+    env: Flavor.dev.toUpperCase,
+    rawApiBase: "devapi.alvys.com",
+    baseUrl: "https://devapi.alvys.com/api/",
+    mobileBaseApi: 'https://devapi.alvys.com/api/mobilev2/',
+    storageUrl: "https://alvysstorage.blob.core.windows.net/",
+    androidGeniusScanSDKKey: Env.androidGeniusScanSDKKeyDev,
+    iosGeniusScanSDKKey: Env.iOSGeniusScanSDKKeyDev,
+    azureTelemetryKey: Env.azureTelemetryKeyDEV,
+    gMapsKey: Env.gMapsKey,
+    hereMapsKey: Env.hereMapsKey,
+    hubName: Env.hubNameDEV,
+    connectionString: Env.connectionStringDev,
+  );
 
   mainCommon();
 }
