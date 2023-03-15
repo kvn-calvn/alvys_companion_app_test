@@ -1,7 +1,7 @@
 import 'package:alvys3/src/common_widgets/echeck_card.dart';
 import 'package:alvys3/src/common_widgets/empty_view.dart';
 import 'package:alvys3/src/constants/color.dart';
-import 'package:alvys3/src/features/trips/presentation/trip/trip_page_controller.dart';
+import 'package:alvys3/src/features/trips/presentation/controller/trip_page_controller.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -26,11 +26,8 @@ class _EcheckPageState extends ConsumerState<EcheckPage> {
 
   @override
   Widget build(BuildContext context) {
-    var echecks = ref
-        .watch(tripPageControllerProvider)
-        .value!
-        .getTrip(widget.tripId)
-        .eChecks;
+    var echecks =
+        ref.watch(tripControllerProvider).value!.getTrip(widget.tripId).eChecks;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -62,7 +59,7 @@ class _EcheckPageState extends ConsumerState<EcheckPage> {
       body: RefreshIndicator(
         onRefresh: () async {
           await ref
-              .read(tripPageControllerProvider.notifier)
+              .read(tripControllerProvider.notifier)
               .refreshCurrentTrip(widget.tripId);
         },
         child: echecks.isNullOrEmpty

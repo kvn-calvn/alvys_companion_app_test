@@ -5,7 +5,7 @@ import 'package:alvys3/src/common_widgets/large_nav_button.dart';
 import 'package:alvys3/src/common_widgets/app_dialog.dart';
 import 'package:alvys3/src/common_widgets/shimmers/trip_card_shimmer.dart';
 import 'package:alvys3/src/common_widgets/trip_card.dart';
-import 'package:alvys3/src/features/trips/presentation/trip/trip_page_controller.dart';
+import 'package:alvys3/src/features/trips/presentation/controller/trip_page_controller.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:alvys3/src/utils/platform_channel.dart';
 import 'package:app_settings/app_settings.dart';
@@ -124,7 +124,7 @@ class TripList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final tripsState = ref.watch(tripPageControllerProvider);
+    final tripsState = ref.watch(tripControllerProvider);
     return tripsState.when(loading: (() {
       return const TripListShimmer();
     }), error: (error, stack) {
@@ -148,7 +148,7 @@ class TripList extends ConsumerWidget {
               child: RefreshIndicator(
                 onRefresh: () async {
                   await ref
-                      .read(tripPageControllerProvider.notifier)
+                      .read(tripControllerProvider.notifier)
                       .refreshTrips();
                 },
                 child: value.activeTrips.isNotEmpty

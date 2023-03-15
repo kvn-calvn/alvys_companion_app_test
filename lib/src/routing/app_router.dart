@@ -12,11 +12,11 @@ import 'package:alvys3/src/features/permission/notification/request_notification
 import 'package:alvys3/src/features/settings/presentation/about_page.dart';
 import 'package:alvys3/src/features/settings/presentation/profile_page.dart';
 import 'package:alvys3/src/features/settings/presentation/settings_page.dart';
-import 'package:alvys3/src/features/trips/presentation/stopdetails/stop_details_page.dart';
-import 'package:alvys3/src/features/trips/presentation/trip/filtered_trip_page.dart';
-import 'package:alvys3/src/features/trips/presentation/trip/load_list_page.dart';
+import 'package:alvys3/src/features/trips/presentation/pages/stop_details_page.dart';
+import 'package:alvys3/src/features/trips/presentation/pages/filtered_trip_page.dart';
+import 'package:alvys3/src/features/trips/presentation/pages/trips_page.dart';
 //import 'package:alvys3/src/features/trips/presentation/trip/trip_page_controller.dart';
-import 'package:alvys3/src/features/trips/presentation/tripdetails/trip_details_page.dart';
+import 'package:alvys3/src/features/trips/presentation/pages/trip_details_page.dart';
 import 'package:alvys3/src/routing/error_page.dart';
 import 'package:alvys3/src/routing/landing.dart';
 import 'package:alvys3/src/routing/routing_arguments.dart';

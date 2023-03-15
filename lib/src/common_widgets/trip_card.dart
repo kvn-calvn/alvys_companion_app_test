@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
 
-import '../features/trips/domain/app_trip/app_trip.dart';
+import '../features/trips/domain/model/app_trip/app_trip.dart';
 
 class TripCard extends ConsumerWidget {
   const TripCard({Key? key, required this.trip}) : super(key: key);

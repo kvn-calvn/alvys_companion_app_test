@@ -1,4 +1,4 @@
-import 'package:alvys3/src/features/trips/domain/app_trip/app_trip.dart';
+import 'package:alvys3/src/features/trips/domain/model/app_trip/app_trip.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'trip_details.freezed.dart';

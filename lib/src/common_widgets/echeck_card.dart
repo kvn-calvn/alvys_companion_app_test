@@ -1,5 +1,5 @@
 import 'package:alvys3/src/common_widgets/popup_dropdown.dart';
-import 'package:alvys3/src/features/trips/domain/app_trip/echeck.dart';
+import 'package:alvys3/src/features/trips/domain/model/app_trip/echeck.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

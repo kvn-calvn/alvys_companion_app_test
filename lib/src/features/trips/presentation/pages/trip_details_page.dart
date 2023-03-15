@@ -3,7 +3,7 @@
 import 'package:alvys3/src/common_widgets/large_nav_button.dart';
 import 'package:alvys3/src/common_widgets/stop_card.dart';
 import 'package:alvys3/src/constants/color.dart';
-import 'package:alvys3/src/features/trips/presentation/trip/trip_page_controller.dart';
+import 'package:alvys3/src/features/trips/presentation/controller/trip_page_controller.dart';
 import 'package:alvys3/src/utils/app_theme.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
@@ -25,8 +25,7 @@ class LoadDetailsPage extends ConsumerStatefulWidget {
 class _LoadDetailsPageState extends ConsumerState<LoadDetailsPage> {
   @override
   Widget build(BuildContext context) {
-    var trip =
-        ref.watch(tripPageControllerProvider).value!.getTrip(widget.tripId);
+    var trip = ref.watch(tripControllerProvider).value!.getTrip(widget.tripId);
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -69,7 +68,7 @@ class TripDetails extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final tripDetailsState = ref.watch(tripPageControllerProvider);
+    final tripDetailsState = ref.watch(tripControllerProvider);
 
     return tripDetailsState.when(
       loading: () => SpinKitFoldingCube(
@@ -115,7 +114,7 @@ class TripDetails extends ConsumerWidget {
         return RefreshIndicator(
           onRefresh: () async {
             await ref
-                .read(tripPageControllerProvider.notifier)
+                .read(tripControllerProvider.notifier)
                 .refreshCurrentTrip(tripId);
           },
           child: ListView(

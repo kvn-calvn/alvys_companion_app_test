@@ -1,4 +1,4 @@
-import 'package:alvys3/src/features/trips/domain/app_trip/payable_driver.dart';
+import 'package:alvys3/src/features/trips/domain/model/app_trip/payable_driver.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'echeck.dart';

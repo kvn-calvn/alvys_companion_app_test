@@ -3,7 +3,7 @@
 import 'package:alvys3/src/common_widgets/empty_view.dart';
 import 'package:alvys3/src/common_widgets/trip_card.dart';
 import 'package:alvys3/src/constants/color.dart';
-import 'package:alvys3/src/features/trips/presentation/trip/trip_page_controller.dart';
+import 'package:alvys3/src/features/trips/presentation/controller/trip_page_controller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../utils/extensions.dart';
 import 'package:flutter/material.dart';
@@ -19,8 +19,8 @@ class FilteredTripPage extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var trips = filterType == TripFilterType.delivered
-        ? ref.watch(tripPageControllerProvider).value!.deliveredTrips
-        : ref.watch(tripPageControllerProvider).value!.processingTrips;
+        ? ref.watch(tripControllerProvider).value!.deliveredTrips
+        : ref.watch(tripControllerProvider).value!.processingTrips;
     return Scaffold(
       key: key,
       appBar: AppBar(
@@ -43,7 +43,7 @@ class FilteredTripPage extends ConsumerWidget {
       body: SafeArea(
           child: RefreshIndicator(
         onRefresh: () async {
-          await ref.read(tripPageControllerProvider.notifier).refreshTrips();
+          await ref.read(tripControllerProvider.notifier).refreshTrips();
         },
         child: trips.isNotEmpty
             ? ListView(

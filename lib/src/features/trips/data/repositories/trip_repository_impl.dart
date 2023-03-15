@@ -1,8 +1,8 @@
-import 'package:alvys3/src/features/trips/data/trip_repository.dart';
-import 'package:alvys3/src/features/trips/data/trips_remote_data_source.dart';
-import 'package:alvys3/src/features/trips/domain/stop_details/stop_details.dart';
-import 'package:alvys3/src/features/trips/domain/trip_details/trip_details.dart';
-import 'package:alvys3/src/features/trips/domain/trips/trips.dart';
+import 'package:alvys3/src/features/trips/domain/repositories/trip_repository.dart';
+import 'package:alvys3/src/features/trips/data/datasource/trips_remote_datasource.dart';
+//import 'package:alvys3/src/features/trips/domain/model/stop_details/stop_details.dart';
+import 'package:alvys3/src/features/trips/domain/model/trip_details/trip_details.dart';
+import 'package:alvys3/src/features/trips/domain/model/trips/trips.dart';
 import 'package:alvys3/src/network/api_response.dart';
 import 'package:alvys3/src/network/error_handler.dart';
 import 'package:alvys3/src/network/network_info.dart';
@@ -58,7 +58,7 @@ class TripRepositoryImpl implements TripRepository {
       );
     }
   }
-
+/*
   @override
   Future<ApiResponse<StopDetails>> getStopDetails(
       String tripId, String stopId) async {
@@ -80,4 +80,5 @@ class TripRepositoryImpl implements TripRepository {
       );
     }
   }
+*/
 }

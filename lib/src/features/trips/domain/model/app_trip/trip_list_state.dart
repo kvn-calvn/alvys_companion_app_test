@@ -1,6 +1,6 @@
 import 'app_trip.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import '../../../../utils/extensions.dart';
+import '../../../../../utils/extensions.dart';
 import 'stop.dart';
 part 'trip_list_state.freezed.dart';
 
@@ -12,8 +12,10 @@ class TripListState with _$TripListState {
   const TripListState._();
   List<AppTrip> get deliveredTrips =>
       trips.where((element) => element.status == "Delivered").toList();
-  List<AppTrip> get activeTrips =>
-      trips.where((element) => element.isTripActive! && element.status == "Dispatched").toList();
+  List<AppTrip> get activeTrips => trips
+      .where(
+          (element) => element.isTripActive! && element.status == "Dispatched")
+      .toList();
   List<AppTrip> get processingTrips => trips
       .where((element) => element.status!
           .isInStatus(["TONU", "Released", "Invoiced", "Completed", "Queued"]))
