@@ -3,7 +3,7 @@ import 'package:alvys3/src/utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../domain/echeck_state/echeck_state.dart';
+import '../../domain/echeck_state/echeck_state.dart';
 
 class EcheckPageController extends AutoDisposeAsyncNotifier<ECheckState> {
   final List<String> reasons = [

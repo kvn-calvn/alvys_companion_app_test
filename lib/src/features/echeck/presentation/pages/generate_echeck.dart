@@ -2,7 +2,7 @@ import 'package:alvys3/src/common_widgets/echeck_stop_card.dart';
 import 'package:alvys3/src/common_widgets/unfocus_widget.dart';
 import 'package:alvys3/src/constants/color.dart';
 import 'package:alvys3/src/features/authentication/presentation/sign_in_phonenumber/sign_in_page.dart';
-import 'package:alvys3/src/features/echeck/presentation/echeck_page_controller.dart';
+import 'package:alvys3/src/features/echeck/presentation/controller/echeck_page_controller.dart';
 import 'package:alvys3/src/features/trips/domain/model/app_trip/stop.dart';
 import 'package:alvys3/src/features/trips/presentation/controller/trip_page_controller.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
-import '../../../utils/app_theme.dart';
+import '../../../../utils/app_theme.dart';
 
 class GenerateEcheck extends ConsumerStatefulWidget {
   final String tripId;
