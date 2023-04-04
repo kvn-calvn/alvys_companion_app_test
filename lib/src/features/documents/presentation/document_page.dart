@@ -1,13 +1,13 @@
 // ignore_for_file: library_private_types_in_public_api, no_leading_underscores_for_local_identifiers
 
-import 'package:alvys3/src/common_widgets/custom_bottom_sheet.dart';
-import 'package:alvys3/src/common_widgets/empty_view.dart';
-import 'package:alvys3/src/common_widgets/load_more_button.dart';
-import 'package:alvys3/src/common_widgets/shimmers/documents_shimmer.dart';
-import 'package:alvys3/src/features/documents/presentation/document_list.dart';
-import 'package:alvys3/src/features/documents/presentation/trip_docs_controller.dart';
-import 'package:alvys3/src/features/documents/presentation/upload_options.dart';
-import 'package:alvys3/src/utils/magic_strings.dart';
+import '../../../common_widgets/custom_bottom_sheet.dart';
+import '../../../common_widgets/empty_view.dart';
+import '../../../common_widgets/load_more_button.dart';
+import '../../../common_widgets/shimmers/documents_shimmer.dart';
+import 'document_list.dart';
+import 'trip_docs_controller.dart';
+import 'upload_options.dart';
+import '../../../utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

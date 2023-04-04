@@ -15,8 +15,8 @@ class AuthState with _$AuthState {
     @Default('') String verificationCode,
     @Default(false) bool driverLoggedIn,
   }) = _AuthState;
-  UserTenant get currentUserTenant => driver!.userTenants
-      .firstWhere((element) => element.companyCode == userTenantCompanyCode);
+  UserTenant currentUserTenant(String companyCode) => driver!.userTenants
+      .firstWhere((element) => element.companyCode == companyCode);
   factory AuthState.fromJson(Map<String, dynamic> json) =>
       _$AuthStateFromJson(json);
 }

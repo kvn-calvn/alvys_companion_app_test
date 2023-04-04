@@ -18,8 +18,7 @@ class LoadListPage extends ConsumerStatefulWidget {
   const LoadListPage({Key? key}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
-  _LoadListPageState createState() => _LoadListPageState();
+  ConsumerState<LoadListPage> createState() => _LoadListPageState();
 }
 
 class _LoadListPageState extends ConsumerState<LoadListPage> {

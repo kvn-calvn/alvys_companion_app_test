@@ -1,12 +1,19 @@
 import 'package:alvys3/src/common_widgets/app_dialog.dart';
-import 'package:alvys3/src/common_widgets/snack_bar.dart';
-import 'package:alvys3/src/routing/error_page.dart';
+import 'package:alvys3/src/features/authentication/presentation/auth_provider_controller.dart';
 import 'package:alvys3/src/utils/exceptions.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+final globalErrorHandlerProvider = Provider<GlobalErrorHandler>((ref) {
+  return GlobalErrorHandler(ref: ref);
+});
 
 class GlobalErrorHandler {
-  static void handle(FlutterErrorDetails? details, bool flutterError,
+  final ProviderRef<GlobalErrorHandler> ref;
+  GlobalKey<NavigatorState> navKey =
+      GlobalKey<NavigatorState>(debugLabel: "MainNavKey");
+  GlobalErrorHandler({required this.ref});
+  void handle(FlutterErrorDetails? details, bool flutterError,
       [Object? error, StackTrace? trace]) {
     _handleError(
       flutterError ? details!.exception : error!,
@@ -21,7 +28,8 @@ class GlobalErrorHandler {
     );
   }
 
-  static void _handleError(Object error, Function handleDefault) {
+  void _handleError(Object error, Function handleDefault) {
+    print(error.runtimeType);
     switch (error.runtimeType) {
       case AlvysClientException:
         var e = error as AlvysClientException;
@@ -40,7 +48,7 @@ class GlobalErrorHandler {
 
         showDialog(
           useRootNavigator: true,
-          context: ErrorFunctionHandler.instance.navKey.currentState!.context,
+          context: navKey.currentState!.context,
           builder: (context) => AppDialog(
             title: 'Error',
             description: '${e.message.content}',
@@ -52,11 +60,18 @@ class GlobalErrorHandler {
               )
             ],
           ),
-        ).then((value) => ErrorFunctionHandler.instance.executeOnError());
+        ).then((value) => executeOnError(e.controllerType));
 
         break;
       default:
         handleDefault.call();
+    }
+  }
+
+  void executeOnError(Type t) {
+    switch (t) {
+      case AuthProviderNotifier:
+        ref.read(authProvider.notifier).onError();
     }
   }
 }

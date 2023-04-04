@@ -13,7 +13,7 @@ import '../../../../network/network_info.dart';
 import '../../domain/app_documents/app_documents.dart';
 import '../../../../utils/extensions.dart';
 
-abstract class DocumentsRepository {
+abstract class DocumentsRepository<T> {
   Future<ApiResponse<List<AppDocuments>>> getTripDocs(String tripId);
   Future<ApiResponse<List<Paystub>>> getPaystubs(DriverUser user,
       [int top = 10]);
@@ -23,7 +23,7 @@ abstract class DocumentsRepository {
       String companyCode, File document);
 }
 
-class AppDocumentsRepository implements DocumentsRepository {
+class AppDocumentsRepository<T> implements DocumentsRepository<T> {
   final NetworkInfoImpl network;
   final FileUploadProgressNotifier fileProgress;
   AppDocumentsRepository(this.network, this.fileProgress);
@@ -86,7 +86,7 @@ class AppDocumentsRepository implements DocumentsRepository {
                 .toList());
       }
       if (res.statusCode == 404) {
-        throw AlvysClientException(res.data);
+        throw AlvysClientException(res.data, T);
       }
       return ApiResponse(success: false, data: [], error: res.data["Error"]);
     }
@@ -127,18 +127,6 @@ class AppDocumentsRepository implements DocumentsRepository {
   @override
   Future<ApiResponse<String>> uploadDocuments(
       String companyCode, File document) {
-    // TODO: implement uploadDocuments
     throw UnimplementedError();
-  }
-
-  Future<void> progressTest() async {
-    Timer.periodic(const Duration(milliseconds: 1), (timer) {
-      fileProgress.updateProgress(1000, timer.tick);
-
-      if (timer.tick == 1000) {
-        timer.cancel();
-      }
-    });
-    await Future.delayed(const Duration(milliseconds: 10000));
   }
 }

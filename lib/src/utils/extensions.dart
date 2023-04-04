@@ -41,6 +41,15 @@ extension ListExt<T, K> on Iterable<T>? {
     }
     return false;
   }
+
+  T? firstOrNull(bool Function(T e) test) {
+    if (this == null) return null;
+    try {
+      return this!.firstWhere(test);
+    } on StateError catch (_) {
+      return null;
+    }
+  }
 }
 
 extension StringExt on String? {

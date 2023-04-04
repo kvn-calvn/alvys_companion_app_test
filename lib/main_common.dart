@@ -5,7 +5,9 @@ import 'package:alvys3/src/utils/extensions.dart';
 import 'package:alvys3/src/utils/global_error_handler.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:alvys3/src/utils/theme_handler.dart';
+import 'package:flutter_genius_scan/flutter_genius_scan.dart';
 
+import 'env/env.dart';
 import 'src/features/authentication/domain/models/driver_user/driver_user.dart';
 import 'src/features/authentication/presentation/auth_provider_controller.dart';
 import 'package:flutter/material.dart';
@@ -14,32 +16,41 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'app.dart';
 
 Future<void> mainCommon() async {
+  late ProviderContainer container;
   runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
-    //await FlutterGeniusScan.setLicenceKey(Env.geniusScanKey);
+    await FlutterGeniusScan.setLicenceKey(Env.geniusScanKey);
     var storage = const FlutterSecureStorage();
-    FlutterError.onError = (details) {
-      GlobalErrorHandler.handle(details, true);
-    };
-
     String? driverData = await storage.read(key: StorageKey.driverData.name);
     ThemeMode? appThemeMode = ThemeMode.values
         .byNameOrNull(await storage.read(key: StorageKey.themeMode.name));
     DriverUser? driverUser;
-    if (driverData != null) {
-      driverUser = DriverUser.fromJson(jsonDecode(driverData));
-    }
-    runApp(ProviderScope(
+    container = ProviderContainer(
       overrides: [
         authProvider
             .overrideWith(() => AuthProviderNotifier(driver: driverUser)),
         themeHandlerProvider
             .overrideWith(() => ThemeHandlerNotifier(appThemeMode)),
       ],
+    );
+    FlutterError.onError = (details) {
+      container.read(globalErrorHandlerProvider).handle(details, true);
+    };
+    FlutterError.demangleStackTrace = (details) {
+      return details;
+    };
+
+    if (driverData != null) {
+      driverUser = DriverUser.fromJson(jsonDecode(driverData));
+    }
+    runApp(UncontrolledProviderScope(
+      container: container,
       child: App(driverUser),
     ));
   }, (error, stack) {
-    GlobalErrorHandler.handle(null, false, error, stack);
+    container
+        .read(globalErrorHandlerProvider)
+        .handle(null, false, error, stack);
   });
   //FlutterNativeSplash.remove();
 }

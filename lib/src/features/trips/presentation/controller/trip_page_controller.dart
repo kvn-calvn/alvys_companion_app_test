@@ -60,6 +60,8 @@ class TripController extends _$TripController {
     }
   }
 
+  AppTrip? getTrip(String tripID) => state.value!.getTrip(tripID);
+
   Future<void> refreshTrips() async {
     final result = await _tripRepositoryImpl.getTrips();
     if (result.success) {

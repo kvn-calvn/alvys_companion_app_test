@@ -14,7 +14,7 @@ class GeniusScanConfig with _$GeniusScanConfig {
     @Default('letter') String pdfPageSize,
     String? pdfMaxScanDimension,
     String? jpegQuality,
-    String? postProcessingActions,
+    List<String>? postProcessingActions,
     @Default(false) bool flashButtonHidden,
     String? defaultFlashMode,
     String? foregroundColor,
@@ -37,9 +37,10 @@ class GeniusScanConfig with _$GeniusScanConfig {
         defaultFilter: 'photo',
         sourceImageUrl: 'file://$path',
       );
+
   @override
   Map<String, dynamic> toJson() {
-    return super.toJson().removeNulls;
+    return toJson().removeNulls;
   }
 }
 

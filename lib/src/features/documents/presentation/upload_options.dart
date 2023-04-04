@@ -1,3 +1,5 @@
+import 'package:alvys3/custom_icons/alvys3_icons.dart';
+import 'package:alvys3/src/features/documents/presentation/upload_documents_controller.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -53,6 +55,57 @@ class UploadOptions extends ConsumerWidget {
           )
         ],
       ),
+    );
+  }
+}
+
+class DocumentUploadButton extends ConsumerWidget {
+  final void Function(WidgetRef ref) onTap;
+  final IconData icon;
+  final String title;
+  const DocumentUploadButton({
+    super.key,
+    required this.onTap,
+    required this.icon,
+    required this.title,
+  });
+  static DocumentUploadButton upload(UploadDocumentArgs args) =>
+      DocumentUploadButton(
+          onTap: (ref) {}, icon: Alvys3Icons.upload, title: 'Upload');
+  static DocumentUploadButton add(UploadDocumentArgs args) =>
+      DocumentUploadButton(
+        onTap: (ref) async {
+          await ref
+              .read(uploadDocumentsController.call(args).notifier)
+              .startScan();
+        },
+        icon: Alvys3Icons.add,
+        title: 'Upload',
+      );
+  static DocumentUploadButton delete(UploadDocumentArgs args) =>
+      DocumentUploadButton(
+          onTap: (ref) {}, icon: Alvys3Icons.delete, title: 'Upload');
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Material(
+          shape: const CircleBorder(),
+          child: InkWell(
+            onTap: () {
+              onTap(ref);
+            },
+            child: Container(
+              padding: const EdgeInsets.all(16.0),
+              child: Icon(
+                icon,
+              ),
+            ),
+          ),
+        ),
+        Text(title)
+      ],
     );
   }
 }

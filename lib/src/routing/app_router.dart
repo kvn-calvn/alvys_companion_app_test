@@ -21,6 +21,7 @@ import 'package:alvys3/src/routing/error_page.dart';
 import 'package:alvys3/src/routing/landing.dart';
 import 'package:alvys3/src/routing/routing_arguments.dart';
 import 'package:alvys3/src/utils/extensions.dart';
+import 'package:alvys3/src/utils/global_error_handler.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -34,7 +35,7 @@ import '../features/documents/presentation/upload_documents_controller.dart';
 
 Provider<GoRouter> routerProvider = Provider(
   (ref) => GoRouter(
-    navigatorKey: ErrorFunctionHandler.instance.navKey,
+    navigatorKey: ref.read(globalErrorHandlerProvider).navKey,
     initialLocation: ref.read(authProvider).value!.driver == null
         ? RouteName.signIn.toRoute
         : RouteName.trips.toRoute,
@@ -83,14 +84,24 @@ Provider<GoRouter> routerProvider = Provider(
         },
         routes: [
           GoRoute(
-            name: RouteName.tabletTrips.name,
-            path: RouteName.tabletTrips.toRoute,
-            pageBuilder: (context, state) => CustomTransitionPage(
-                child: const LoadListPage(),
-                transitionDuration: Duration.zero,
-                transitionsBuilder:
-                    (context, animation, secondaryAnimation, child) => child),
-          ),
+              name: RouteName.tabletTrips.name,
+              path: RouteName.tabletTrips.toRoute,
+              pageBuilder: (context, state) => CustomTransitionPage(
+                  child: const LoadListPage(),
+                  transitionDuration: Duration.zero,
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) => child),
+              routes: [
+                // GoRoute(
+                //   name: RouteName.delivered.name,
+                //   path: RouteName.delivered.name,
+                //   builder: (context, state) {
+                //     return const FilteredTripPage(
+                //       filterType: TripFilterType.delivered,
+                //     );
+                //   },
+                // ),
+              ]),
         ],
       ),
 

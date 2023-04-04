@@ -22,7 +22,8 @@ class ApiRoutes {
   // static String tripEchecks = 'getechecksbytrip/';
   static String stopdetails(String tripId, String stopId) =>
       '${mobileBaseApi}getstopdetail/$tripId/$stopId';
-  // static String getEchecksByTrip = 'getechecksbytrip/';
+  static String getEchecksByTrip(String tripId) =>
+      '${mobileBaseApi}GetEChecksByTrip/$tripId';
   // static String queryExpressNumber = 'comcheckenquiry/';
   static String driverPaystubs(DriverUser user, int top) =>
       '${baseUrl}billing/QueryPaystubData?UserId=${user.id!}&CompanyCode=${user.userTenants.first.companyCode!}&Top=$top';

@@ -5,6 +5,8 @@ import 'package:alvys3/src/features/authentication/data/auth_repository.dart';
 import 'package:alvys3/src/features/authentication/data/data_providers.dart';
 import 'package:alvys3/src/features/authentication/domain/models/auth_state/auth_state.dart';
 import 'package:alvys3/src/features/authentication/domain/models/driver_user/driver_user.dart';
+import 'package:alvys3/src/features/authentication/domain/models/driver_user/user_tenant.dart';
+import 'package:alvys3/src/utils/exceptions.dart';
 import 'package:alvys3/src/utils/extensions.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
@@ -15,13 +17,14 @@ import 'package:permission_handler/permission_handler.dart';
 
 import '../../../common_widgets/main_bottom_nav.dart';
 
-class AuthProviderNotifier extends AsyncNotifier<AuthState> {
+class AuthProviderNotifier extends AsyncNotifier<AuthState>
+    implements IAppErrorHandler {
   final DriverUser? driver;
-  late AuthRepository authRepo;
+  late AuthRepository<AuthProviderNotifier> authRepo;
   AuthProviderNotifier({this.driver});
   @override
   FutureOr<AuthState> build() {
-    authRepo = ref.watch(authRepoProvider);
+    authRepo = ref.read(authRepoProvider);
     state = AsyncValue.data(
         AuthState(driver: driver, driverLoggedIn: driver != null));
     return state.value!;
@@ -54,9 +57,7 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> {
   Future<void> verifyDriver(BuildContext context, bool mounted) async {
     state = const AsyncValue.loading();
     var driverRes = await authRepo.verifyDriverCode(
-        state.value!.phone, state.value!.verificationCode, () {
-      state = AsyncValue.data(state.value!);
-    });
+        state.value!.phone, state.value!.verificationCode);
     var storage = const FlutterSecureStorage();
     state = AsyncValue.data(state.value!.copyWith(driver: driverRes.data));
     await storage.write(
@@ -95,9 +96,7 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> {
 
   Future<void> signInDriver(BuildContext context, bool mounted) async {
     state = const AsyncValue.loading();
-    await authRepo.signInDriverByPhone(state.value!.phone, () {
-      state = AsyncValue.data(state.value!);
-    });
+    await authRepo.signInDriverByPhone(state.value!.phone);
 
     if (mounted) context.pushNamed(RouteName.verify.name);
     state = AsyncValue.data(state.value!);
@@ -122,7 +121,20 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> {
       verificationCode: '',
     ));
   }
+
+  List<String> get tenantCompanyCodes => state.value!.driver!.userTenants
+      .map<String>((e) => e.companyCode!)
+      .toList();
+
+  UserTenant? getCurrentUserTenant(String companyCode) =>
+      state.value!.driver!.userTenants
+          .firstOrNull((element) => element.companyCode == companyCode);
+
+  @override
+  FutureOr<void> onError() {
+    state = AsyncValue.data(state.value!);
+  }
 }
 
 var authProvider = AsyncNotifierProvider<AuthProviderNotifier, AuthState>(
-    () => AuthProviderNotifier(driver: null));
+    AuthProviderNotifier.new);

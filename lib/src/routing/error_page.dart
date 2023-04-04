@@ -23,17 +23,3 @@ class ErrorScreen extends StatelessWidget {
     );
   }
 }
-
-class ErrorFunctionHandler {
-  Function? onError;
-  GlobalKey<NavigatorState> navKey =
-      GlobalKey<NavigatorState>(debugLabel: "MainNavKey");
-  ErrorFunctionHandler._inst();
-  factory ErrorFunctionHandler() => _instance;
-  static final ErrorFunctionHandler _instance = ErrorFunctionHandler._inst();
-  static ErrorFunctionHandler get instance => _instance;
-  void executeOnError() {
-    onError?.call();
-    onError = null;
-  }
-}

@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:alvys3/src/features/documents/presentation/upload_documents_controller.dart';
+import 'package:alvys3/src/features/documents/presentation/upload_options.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -21,12 +22,21 @@ class _UploadDocumentsState extends ConsumerState<UploadDocuments> {
     final uploadDocsNotifier =
         ref.watch(uploadDocumentsController.call(widget.args).notifier);
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => uploadDocsNotifier.uploadFile(context, mounted),
-        child: const Icon(Icons.upload_file),
-      ),
       body: Stack(
         children: [
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                DocumentUploadButton.add(widget.args),
+                DocumentUploadButton.delete(widget.args),
+                DocumentUploadButton.upload(widget.args)
+              ],
+            ),
+          ),
           PageView.builder(
             itemCount: uploadDocsState.pages.length,
             itemBuilder: (context, index) =>
