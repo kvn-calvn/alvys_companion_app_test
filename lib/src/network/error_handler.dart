@@ -19,6 +19,8 @@ enum DataSource {
   CACHE_ERROR,
   NO_INTERNET_CONNECTION,
   EXPECTATION_FAILED,
+  BAD_CERTIFICATE,
+  CONNECTION_ERROR,
   DEFAULT
 }
 
@@ -42,13 +44,13 @@ class ErrorHandler implements Exception {
 
   Failure _handleError(DioError error) {
     switch (error.type) {
-      case DioErrorType.connectTimeout:
+      case DioErrorType.connectionTimeout:
         return DataSource.CONNECT_TIMEOUT.getFailure();
       case DioErrorType.sendTimeout:
         return DataSource.SEND_TIMEOUT.getFailure();
       case DioErrorType.receiveTimeout:
         return DataSource.RECEIVE_TIMEOUT.getFailure();
-      case DioErrorType.response:
+      case DioErrorType.badResponse:
         switch (error.response?.statusCode) {
           case ResponseCode.BAD_REQUEST:
             return DataSource.BAD_REQUEST.getFailure();
@@ -67,8 +69,13 @@ class ErrorHandler implements Exception {
         }
       case DioErrorType.cancel:
         return DataSource.CANCEL.getFailure();
-      case DioErrorType.other:
+      case DioErrorType.unknown:
         return DataSource.DEFAULT.getFailure();
+
+      case DioErrorType.badCertificate:
+        return DataSource.BAD_CERTIFICATE.getFailure();
+      case DioErrorType.connectionError:
+        return DataSource.CONNECTION_ERROR.getFailure();
     }
   }
 }

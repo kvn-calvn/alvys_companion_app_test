@@ -37,9 +37,9 @@ class ApiClient {
 
     var dio = Dio(BaseOptions(
         //baseUrl: FlavorConfig.instance!.baseUrl,
-        receiveTimeout: 15000, // 15 seconds
-        connectTimeout: 15000,
-        sendTimeout: 15000,
+        receiveTimeout: const Duration(seconds: 15),
+        connectTimeout: const Duration(seconds: 15),
+        sendTimeout: const Duration(seconds: 15),
         headers: headers));
 
     dio.interceptors.clear();

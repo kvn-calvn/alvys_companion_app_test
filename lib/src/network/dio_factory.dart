@@ -18,7 +18,6 @@ class DioFactory {
 
   Future<Dio> getDio() async {
     Dio dio = Dio();
-    int _timeOut = 60 * 1000; // 1 min
 
     Map<String, String> headers = {
       CONTENT_TYPE: APPLICATION_JSON,
@@ -29,8 +28,8 @@ class DioFactory {
 
     dio.options = BaseOptions(
         //baseUrl: ApiRoutes.baseUrl,
-        connectTimeout: _timeOut,
-        receiveTimeout: _timeOut,
+        connectTimeout: const Duration(minutes: 1),
+        receiveTimeout: const Duration(minutes: 1),
         headers: headers);
 
     if (kReleaseMode) {
