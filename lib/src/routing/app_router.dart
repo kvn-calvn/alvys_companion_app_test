@@ -84,24 +84,14 @@ Provider<GoRouter> routerProvider = Provider(
         },
         routes: [
           GoRoute(
-              name: RouteName.tabletTrips.name,
-              path: RouteName.tabletTrips.toRoute,
-              pageBuilder: (context, state) => CustomTransitionPage(
-                  child: const LoadListPage(),
-                  transitionDuration: Duration.zero,
-                  transitionsBuilder:
-                      (context, animation, secondaryAnimation, child) => child),
-              routes: [
-                // GoRoute(
-                //   name: RouteName.delivered.name,
-                //   path: RouteName.delivered.name,
-                //   builder: (context, state) {
-                //     return const FilteredTripPage(
-                //       filterType: TripFilterType.delivered,
-                //     );
-                //   },
-                // ),
-              ]),
+            name: RouteName.tabletTrips.name,
+            path: RouteName.tabletTrips.toRoute,
+            pageBuilder: (context, state) => CustomTransitionPage(
+                child: const LoadListPage(),
+                transitionDuration: Duration.zero,
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) => child),
+          ),
         ],
       ),
 

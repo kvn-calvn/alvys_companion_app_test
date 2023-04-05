@@ -29,7 +29,6 @@ class GlobalErrorHandler {
   }
 
   void _handleError(Object error, Function handleDefault) {
-    print(error.runtimeType);
     switch (error.runtimeType) {
       case AlvysClientException:
         var e = error as AlvysClientException;
@@ -72,6 +71,7 @@ class GlobalErrorHandler {
     switch (t) {
       case AuthProviderNotifier:
         ref.read(authProvider.notifier).onError();
+        break;
     }
   }
 }

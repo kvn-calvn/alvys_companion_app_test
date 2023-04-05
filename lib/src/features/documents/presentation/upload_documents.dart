@@ -37,7 +37,16 @@ class _UploadDocumentsState extends ConsumerState<UploadDocuments> {
               ],
             ),
           ),
+          Positioned(
+            bottom: MediaQuery.of(context).size.height * 0.1,
+            child: Material(
+              child: Text(
+                '${uploadDocsNotifier.pageController.page!.floor()}/${uploadDocsState.pages.length}',
+              ),
+            ),
+          ),
           PageView.builder(
+            controller: uploadDocsNotifier.pageController,
             itemCount: uploadDocsState.pages.length,
             itemBuilder: (context, index) =>
                 Image.file(File(uploadDocsState.pages[index])),
