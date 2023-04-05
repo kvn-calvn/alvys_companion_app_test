@@ -25,15 +25,20 @@ class _AlvysDropdownState<T> extends State<AlvysDropdown<T>> {
   late T currentItem;
   GlobalKey actionKey = LabeledGlobalKey('alvysdropdown');
   bool isOpen = false;
+  late int currentlySelected;
   @override
   void initState() {
     super.initState();
     currentItem = widget.items.first;
+    currentlySelected = widget.items.indexOf(currentItem);
   }
 
   List<Widget> get getItems =>
       widget.items.mapList<Widget>((e, index, last) => DecoratedBox(
             decoration: BoxDecoration(
+                color: index == currentlySelected
+                    ? Theme.of(context).colorScheme.secondary.withOpacity(0.2)
+                    : Theme.of(context).cardColor,
                 border: Border(
                     bottom: last
                         ? BorderSide.none
@@ -44,6 +49,7 @@ class _AlvysDropdownState<T> extends State<AlvysDropdown<T>> {
               onTap: () {
                 setState(() {
                   currentItem = e;
+                  currentlySelected = widget.items.indexOf(e);
                 });
                 widget.onItemTap(e);
 
