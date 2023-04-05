@@ -21,8 +21,6 @@ class EcheckRemoteDataSourceImpl implements EcheckRemoteDataSource {
 
   @override
   Future<EcheckQuery> queryExpressNumber(String expressCheckNumber) async {
-    var res = await _apiClient.dio
-        .get('ApiRoutes.queryExpressNumber' + expressCheckNumber);
-    return EcheckQuery.fromJson(res.data);
+    throw UnimplementedError();
   }
 }

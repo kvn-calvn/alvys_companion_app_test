@@ -21,12 +21,15 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<
   late AppDocumentsRepository docRepo;
   late TripController trips;
   late AuthProviderNotifier userData;
+  late PageController pageController;
   ImagePicker picker = ImagePicker();
+
   @override
   build(arg) {
-    docRepo = ref.watch(documentsRepositoryProvider);
-    trips = ref.watch(tripControllerProvider.notifier);
-    userData = ref.watch(authProvider.notifier);
+    pageController = PageController();
+    docRepo = ref.read(documentsRepositoryProvider);
+    trips = ref.read(tripControllerProvider.notifier);
+    userData = ref.read(authProvider.notifier);
     startScan();
     return UploadDocumentsState();
   }
@@ -66,15 +69,15 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<
     }
   }
 
-  void removePage(int index) {
+  void removePage() {
     if (state.pages.isNotEmpty) return;
     var pages = state.pages;
-    pages.removeAt(index);
+    pages.removeAt(pageController.page!.floor());
     state = state.copyWith(pages: pages);
   }
 
   Future<void> uploadFile(BuildContext context, bool mounted) async {
-    //generate document before senfing
+    //generate document before sending
     showDocumentProgressDialog(context);
 
     if (mounted) Navigator.of(context, rootNavigator: true).pop();

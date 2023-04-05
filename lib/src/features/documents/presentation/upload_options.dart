@@ -84,7 +84,13 @@ class DocumentUploadButton extends ConsumerWidget {
       );
   static DocumentUploadButton delete(UploadDocumentArgs args) =>
       DocumentUploadButton(
-          onTap: (ref) {}, icon: Alvys3Icons.delete, title: 'Upload');
+          onTap: (ref) {
+            ref
+                .read(uploadDocumentsController.call(args).notifier)
+                .removePage();
+          },
+          icon: Alvys3Icons.delete,
+          title: 'Upload');
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
