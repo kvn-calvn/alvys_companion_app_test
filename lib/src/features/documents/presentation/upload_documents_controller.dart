@@ -21,20 +21,23 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<
   late AppDocumentsRepository docRepo;
   late TripController trips;
   late AuthProviderNotifier userData;
-  late PageController pageController;
   ImagePicker picker = ImagePicker();
+  bool isScanning = false;
 
   @override
-  build(arg) {
-    pageController = PageController();
+  UploadDocumentsState build(UploadDocumentArgs arg) {
     docRepo = ref.read(documentsRepositoryProvider);
     trips = ref.read(tripControllerProvider.notifier);
     userData = ref.read(authProvider.notifier);
-    startScan();
-    return UploadDocumentsState();
+    state = UploadDocumentsState(documentType: dropDownOptions.first);
+
+    //startScan();
+    return state;
   }
 
   Future<void> startScan() async {
+    if (isScanning) return;
+    isScanning = true;
     GeniusScanConfig config;
     switch (arg.uploadType) {
       case UploadType.camera:
@@ -67,13 +70,22 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<
       debugPrint('$e');
       state = state;
     }
+    isScanning = false;
   }
 
   void removePage() {
-    if (state.pages.isNotEmpty) return;
-    var pages = state.pages;
-    pages.removeAt(pageController.page!.floor());
+    if (state.pages.isEmpty) return;
+    var pages = List<String>.from(state.pages);
+    pages.removeAt(state.pageNumber);
     state = state.copyWith(pages: pages);
+  }
+
+  void updatePageNumber(int index) {
+    state = state.copyWith(pageNumber: index);
+  }
+
+  void updateDocumentType(UploadDocumentOptions doc) {
+    state = state.copyWith(documentType: doc);
   }
 
   Future<void> uploadFile(BuildContext context, bool mounted) async {
@@ -83,7 +95,10 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<
     if (mounted) Navigator.of(context, rootNavigator: true).pop();
   }
 
+  bool get shouldShowDeleteAndUploadButton => state.pages.isNotEmpty;
+
   List<UploadDocumentOptions> get dropDownOptions {
+    debugPrint(arg.tripId);
     switch (arg.documentType) {
       case DocumentType.tripDocuments:
         var trip = trips.getTrip(arg.tripId!);

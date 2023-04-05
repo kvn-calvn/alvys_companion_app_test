@@ -124,6 +124,8 @@ class TripList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final tripsState = ref.watch(tripControllerProvider);
+    tripsState.isLoading;
+    tripsState.value!;
     return tripsState.when(loading: (() {
       return const TripListShimmer();
     }), error: (error, stack) {

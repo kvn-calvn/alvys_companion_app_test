@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:alvys3/src/common_widgets/alvys_dropdown.dart';
 import 'package:alvys3/src/features/documents/presentation/upload_documents_controller.dart';
 import 'package:alvys3/src/features/documents/presentation/upload_options.dart';
 import 'package:flutter/material.dart';
@@ -24,32 +25,52 @@ class _UploadDocumentsState extends ConsumerState<UploadDocuments> {
     return Scaffold(
       body: Stack(
         children: [
+          PageView.builder(
+            onPageChanged: uploadDocsNotifier.updatePageNumber,
+            itemCount: uploadDocsState.pages.length,
+            itemBuilder: (context, index) =>
+                Image.file(File(uploadDocsState.pages[index])),
+          ),
           Positioned(
-            bottom: 0,
+            bottom: 20,
             left: 0,
             right: 0,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
                 DocumentUploadButton.add(widget.args),
-                DocumentUploadButton.delete(widget.args),
-                DocumentUploadButton.upload(widget.args)
+                if (uploadDocsNotifier.shouldShowDeleteAndUploadButton) ...[
+                  DocumentUploadButton.delete(widget.args),
+                  DocumentUploadButton.upload(widget.args)
+                ],
               ],
             ),
           ),
-          Positioned(
-            bottom: MediaQuery.of(context).size.height * 0.1,
-            child: Material(
-              child: Text(
-                '${uploadDocsNotifier.pageController.page!.floor()}/${uploadDocsState.pages.length}',
+          if (uploadDocsNotifier.shouldShowDeleteAndUploadButton)
+            Positioned(
+              bottom: MediaQuery.of(context).size.height * 0.2,
+              left: 0,
+              right: 0,
+              child: Material(
+                child: Text(
+                  '${uploadDocsState.pageNumber + 1}/${uploadDocsState.pages.length}',
+                ),
               ),
             ),
-          ),
-          PageView.builder(
-            controller: uploadDocsNotifier.pageController,
-            itemCount: uploadDocsState.pages.length,
-            itemBuilder: (context, index) =>
-                Image.file(File(uploadDocsState.pages[index])),
+          Positioned(
+            top: 30,
+            left: 0,
+            right: 0,
+            child: SafeArea(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: AlvysDropdown<UploadDocumentOptions>(
+                  items: uploadDocsNotifier.dropDownOptions,
+                  onItemTap: uploadDocsNotifier.updateDocumentType,
+                  dropDownTitle: (item) => item.title,
+                ),
+              ),
+            ),
           ),
         ],
       ),

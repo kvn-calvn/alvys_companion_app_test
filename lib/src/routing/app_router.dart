@@ -182,9 +182,9 @@ Provider<GoRouter> routerProvider = Provider(
                           path: RouteName.uploadTripDocument.name,
                           builder: (context, state) {
                             final args = state.extra! as UploadType;
-
                             return UploadDocuments(
                               args: UploadDocumentArgs(
+                                  tripId: state.params[ParamType.tripId.name]!,
                                   uploadType: args,
                                   documentType: DocumentType.tripDocuments),
                             );

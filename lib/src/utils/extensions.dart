@@ -50,6 +50,15 @@ extension ListExt<T, K> on Iterable<T>? {
       return null;
     }
   }
+
+  List<J> mapList<J>(J Function(T e, int index, bool isLast) toElement) {
+    List<J> items = [];
+    if (isNullOrEmpty) return items;
+    for (var i = 0; i < this!.length; i++) {
+      items.add(toElement(this!.elementAt(i), i, i == this!.length - 1));
+    }
+    return items;
+  }
 }
 
 extension StringExt on String? {
@@ -165,4 +174,30 @@ extension MapExtn<T> on Map<T, dynamic> {
     });
     return returnMap;
   }
+}
+
+extension KeyExtensions on GlobalKey {
+  KeyData getKeyPosition(BuildContext context) {
+    final RenderBox button = currentContext!.findRenderObject() as RenderBox;
+    final RenderBox overlay =
+        Overlay.of(context).context.findRenderObject() as RenderBox;
+    return KeyData(
+        RelativeRect.fromRect(
+          Rect.fromPoints(
+            button.localToGlobal(button.size.topLeft(Offset.zero),
+                ancestor: overlay),
+            button.localToGlobal(button.size.bottomRight(Offset.zero),
+                ancestor: overlay),
+          ),
+          Offset.zero & overlay.size,
+        ),
+        button.size);
+  }
+}
+
+class KeyData {
+  final RelativeRect rect;
+  final Size size;
+
+  KeyData(this.rect, this.size);
 }

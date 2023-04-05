@@ -33,7 +33,6 @@ class UploadOptions extends ConsumerWidget {
             title: const Text('Camera'),
             onTap: () {
               Navigator.of(context, rootNavigator: true).pop();
-
               context.goNamed(
                 route,
                 extra: UploadType.camera,
@@ -75,12 +74,13 @@ class DocumentUploadButton extends ConsumerWidget {
   static DocumentUploadButton add(UploadDocumentArgs args) =>
       DocumentUploadButton(
         onTap: (ref) async {
+          debugPrint('adding');
           await ref
               .read(uploadDocumentsController.call(args).notifier)
               .startScan();
         },
         icon: Alvys3Icons.add,
-        title: 'Upload',
+        title: 'Add',
       );
   static DocumentUploadButton delete(UploadDocumentArgs args) =>
       DocumentUploadButton(
@@ -90,7 +90,7 @@ class DocumentUploadButton extends ConsumerWidget {
                 .removePage();
           },
           icon: Alvys3Icons.delete,
-          title: 'Upload');
+          title: 'Delete');
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(
@@ -98,11 +98,12 @@ class DocumentUploadButton extends ConsumerWidget {
       children: [
         Material(
           shape: const CircleBorder(),
+          clipBehavior: Clip.antiAlias,
           child: InkWell(
             onTap: () {
               onTap(ref);
             },
-            child: Container(
+            child: Padding(
               padding: const EdgeInsets.all(16.0),
               child: Icon(
                 icon,
