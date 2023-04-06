@@ -7,6 +7,7 @@ import 'package:alvys3/src/features/documents/domain/paystub/paystub.dart';
 import 'package:alvys3/src/network/api_client.dart';
 //import 'package:alvys3/src/network/endpoints.dart';
 import 'package:alvys3/src/utils/exceptions.dart';
+import 'package:dio/dio.dart';
 
 import '../../../../network/api_response.dart';
 import '../../../../network/network_info.dart';
@@ -20,7 +21,7 @@ abstract class DocumentsRepository<T> {
   Future<ApiResponse<List<AppDocuments>>> getPersonalDocs();
   Future<ApiResponse<List<AppDocuments>>> getTripReportDocs();
   Future<ApiResponse<String>> uploadDocuments(
-      String companyCode, File document);
+      String companyCode, List<File> document);
 }
 
 class AppDocumentsRepository<T> implements DocumentsRepository<T> {
@@ -126,7 +127,28 @@ class AppDocumentsRepository<T> implements DocumentsRepository<T> {
 
   @override
   Future<ApiResponse<String>> uploadDocuments(
-      String companyCode, File document) {
-    throw UnimplementedError();
+      String companyCode, List<File> documents) async {
+    if (await network.isConnected) {
+      var data = FormData();
+      data.files.add(
+          MapEntry('file', await MultipartFile.fromFile(documents.first.path)));
+      var res = await ApiClient.singleton.dio.post(
+        ApiRoutes.tripDocumentUpload,
+        onSendProgress: (count, total) =>
+            fileProgress.updateProgress(total, count),
+      );
+      if (res.statusCode == 200) {
+        return ApiResponse(
+          success: true,
+          data: res.data.toString(),
+        );
+      }
+      return ApiResponse(success: false, data: '', error: res.data["Error"]);
+    }
+    return ApiResponse(
+      success: false,
+      data: '',
+      error: "Network unavailable, check internet connection",
+    );
   }
 }

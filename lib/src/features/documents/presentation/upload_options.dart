@@ -97,7 +97,13 @@ class DocumentUploadButton extends ConsumerWidget {
   });
   static DocumentUploadButton upload(UploadDocumentArgs args) =>
       DocumentUploadButton(
-          onTap: (ref) {}, icon: Alvys3Icons.upload, title: 'Upload');
+          onTap: (ref) async {
+            await ref
+                .read(uploadDocumentsController.call(args).notifier)
+                .uploadFile();
+          },
+          icon: Alvys3Icons.upload,
+          title: 'Upload');
   static DocumentUploadButton add(UploadDocumentArgs args) =>
       DocumentUploadButton(
         onTap: (ref) async {
@@ -126,6 +132,7 @@ class DocumentUploadButton extends ConsumerWidget {
         Material(
           shape: const CircleBorder(),
           clipBehavior: Clip.antiAlias,
+          elevation: 4,
           child: InkWell(
             onTap: () {
               onTap(ref);
@@ -138,6 +145,7 @@ class DocumentUploadButton extends ConsumerWidget {
             ),
           ),
         ),
+        const SizedBox(height: 5),
         Text(title)
       ],
     );

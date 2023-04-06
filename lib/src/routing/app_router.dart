@@ -184,6 +184,7 @@ Provider<GoRouter> routerProvider = Provider(
                             final args = state.extra! as UploadType;
                             return UploadDocuments(
                               args: UploadDocumentArgs(
+                                  context: context,
                                   tripId: state.params[ParamType.tripId.name]!,
                                   uploadType: args,
                                   documentType: DocumentType.tripDocuments),
@@ -253,6 +254,7 @@ Provider<GoRouter> routerProvider = Provider(
 
                           return UploadDocuments(
                             args: UploadDocumentArgs(
+                              context: context,
                               uploadType: args,
                               documentType: DocumentType.personalDocuments,
                             ),
@@ -277,6 +279,7 @@ Provider<GoRouter> routerProvider = Provider(
 
                           return UploadDocuments(
                             args: UploadDocumentArgs(
+                              context: context,
                               uploadType: args,
                               documentType: DocumentType.tripReport,
                             ),

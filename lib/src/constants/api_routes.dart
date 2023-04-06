@@ -27,4 +27,6 @@ class ApiRoutes {
   // static String queryExpressNumber = 'comcheckenquiry/';
   static String driverPaystubs(DriverUser user, int top) =>
       '${baseUrl}billing/QueryPaystubData?UserId=${user.id!}&CompanyCode=${user.userTenants.first.companyCode!}&Top=$top';
+  static String get tripDocumentUpload =>
+      '${mobileBaseApi}UploadDriverDocuments';
 }

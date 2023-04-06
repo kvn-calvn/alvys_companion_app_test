@@ -6,7 +6,6 @@ Future<T?> showDocumentProgressDialog<T>(BuildContext context) =>
     showGeneralDialog(
         context: context,
         useRootNavigator: true,
-        barrierColor: Colors.red,
         pageBuilder: (context, animation1, animation2) {
           return const DocumentProgressDialog();
         });

@@ -1,15 +1,18 @@
 import 'dart:convert';
-
+import 'dart:io';
 import 'package:alvys3/src/common_widgets/file_upload_progress_dialog.dart';
 import 'package:alvys3/src/features/authentication/presentation/auth_provider_controller.dart';
 import 'package:alvys3/src/features/documents/domain/genius_scan_config/genius_scan_config.dart';
+import 'package:alvys3/src/features/documents/domain/genius_scan_config/genius_scan_generate_document_config.dart';
 import 'package:alvys3/src/features/documents/domain/upload_documents_state/upload_documents_state.dart';
 import 'package:alvys3/src/utils/extensions.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_genius_scan/flutter_genius_scan.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../trips/presentation/controller/trip_page_controller.dart';
@@ -20,26 +23,25 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<
     UploadDocumentsState, UploadDocumentArgs> {
   late AppDocumentsRepository docRepo;
   late TripController trips;
+  late ScanningNotifier isScanning;
   late AuthProviderNotifier userData;
   ImagePicker picker = ImagePicker();
-  bool isScanning = false;
 
   @override
   UploadDocumentsState build(UploadDocumentArgs arg) {
-    print('uploadBuild');
-    state = UploadDocumentsState();
     docRepo = ref.read(documentsRepositoryProvider);
     trips = ref.read(tripControllerProvider.notifier);
     userData = ref.read(authProvider.notifier);
+    isScanning = ref.read(scanningProvider.notifier);
     state = UploadDocumentsState(documentType: dropDownOptions.first);
-
-    //startScan();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      startScan();
+    });
     return state;
   }
 
-  Future<void> startScan() async {
-    if (isScanning) return;
-    isScanning = true;
+  Future<void> startScan([bool firstScan = true]) async {
+    isScanning.setState(true);
     GeniusScanConfig config;
     switch (arg.uploadType) {
       case UploadType.camera:
@@ -62,24 +64,36 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<
       var res = await FlutterGeniusScan.scanWithConfiguration(
           config.toJson().removeNulls);
       var results = GeniusScanResults.fromJson(jsonDecode(jsonEncode(res)));
+      var ctx = arg.context;
+      if (firstScan && results.scans.isEmpty && ctx.mounted) {
+        ctx.pop();
+      }
       state = state.copyWith(pages: [
         ...state.pages,
         ...results.scans
             .map<String>((e) => Scan.toPathString(e.enhancedUrl!))
             .toList()
       ]);
+      firstScan = false;
     } catch (e) {
+      var ctx = arg.context;
+      if (firstScan && ctx.mounted) {
+        ctx.pop();
+      }
       debugPrint('$e');
       state = state;
     }
-    isScanning = false;
+    isScanning.setState(false);
   }
 
   void removePage() {
     if (state.pages.isEmpty) return;
     var pages = List<String>.from(state.pages);
     pages.removeAt(state.pageNumber);
-    state = state.copyWith(pages: pages);
+    var indexToResetTo = state.pageNumber >= state.pages.length - 1
+        ? state.pageNumber - 1
+        : state.pageNumber;
+    state = state.copyWith(pages: pages, pageNumber: indexToResetTo);
   }
 
   void updatePageNumber(int index) {
@@ -90,11 +104,26 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<
     state = state.copyWith(documentType: doc);
   }
 
-  Future<void> uploadFile(BuildContext context, bool mounted) async {
+  Future<void> uploadFile() async {
     //generate document before sending
-    showDocumentProgressDialog(context);
+    showDocumentProgressDialog(arg.context);
+    var path = '${(await getTemporaryDirectory()).path}/scan.pdf';
 
-    if (mounted) Navigator.of(context, rootNavigator: true).pop();
+    await FlutterGeniusScan.generateDocument(
+        GeniusScanGeneratePDFConfig(
+                pages: state.pages
+                    .map((e) => GeneratePDFPage(
+                        imageUrl: GeneratePDFPage.toPathString(e)))
+                    .toList())
+            .toJson(),
+        {'outputFileUrl': GeneratePDFPage.toPathString(path)});
+    var pdfFile = File(path);
+    await docRepo
+        .uploadDocuments(state.documentType?.companyCode ?? '', [pdfFile]);
+    var ctx = arg.context;
+    if (ctx.mounted) {
+      Navigator.of(ctx, rootNavigator: true).pop();
+    }
   }
 
   bool get shouldShowDeleteAndUploadButton => state.pages.isNotEmpty;
@@ -130,12 +159,28 @@ final uploadDocumentsController = AutoDisposeNotifierProviderFamily<
     UploadDocumentsState,
     UploadDocumentArgs>(UploadDocumentsController.new);
 
+final scanningProvider =
+    NotifierProvider<ScanningNotifier, bool>(ScanningNotifier.new);
+
+class ScanningNotifier extends Notifier<bool> {
+  @override
+  bool build() {
+    return false;
+  }
+
+  void setState(bool state) => this.state = state;
+}
+
 class UploadDocumentArgs {
   final UploadType uploadType;
   final DocumentType documentType;
   final String? tripId;
+  final BuildContext context;
   UploadDocumentArgs(
-      {this.tripId, required this.uploadType, required this.documentType});
+      {this.tripId,
+      required this.uploadType,
+      required this.documentType,
+      required this.context});
 }
 
 class UploadDocumentOptions {

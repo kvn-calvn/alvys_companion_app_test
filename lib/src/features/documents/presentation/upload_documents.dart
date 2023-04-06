@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:alvys3/src/common_widgets/alvys_dropdown.dart';
+import 'package:alvys3/src/common_widgets/empty_view.dart';
 import 'package:alvys3/src/features/documents/presentation/upload_documents_controller.dart';
 import 'package:alvys3/src/features/documents/presentation/upload_options.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 class UploadDocuments extends ConsumerStatefulWidget {
   final UploadDocumentArgs args;
@@ -25,12 +27,16 @@ class _UploadDocumentsState extends ConsumerState<UploadDocuments> {
     return Scaffold(
       body: Stack(
         children: [
-          PageView.builder(
-            onPageChanged: uploadDocsNotifier.updatePageNumber,
-            itemCount: uploadDocsState.pages.length,
-            itemBuilder: (context, index) =>
-                Image.file(File(uploadDocsState.pages[index])),
-          ),
+          uploadDocsState.pages.isEmpty
+              ? const EmptyView(
+                  title: 'No Pages',
+                  description: 'Click the add button to add pages.')
+              : PageView.builder(
+                  onPageChanged: uploadDocsNotifier.updatePageNumber,
+                  itemCount: uploadDocsState.pages.length,
+                  itemBuilder: (context, index) =>
+                      Image.file(File(uploadDocsState.pages[index])),
+                ),
           Positioned(
             bottom: 20,
             left: 0,
@@ -47,31 +53,54 @@ class _UploadDocumentsState extends ConsumerState<UploadDocuments> {
             ),
           ),
           if (uploadDocsNotifier.shouldShowDeleteAndUploadButton)
-            Positioned(
-              bottom: MediaQuery.of(context).size.height * 0.2,
-              left: 0,
-              right: 0,
-              child: Material(
-                child: Text(
-                  '${uploadDocsState.pageNumber + 1}/${uploadDocsState.pages.length}',
+            Align(
+              alignment: const Alignment(0, 0.7),
+              child: Opacity(
+                opacity: 0.6,
+                child: Chip(
+                  backgroundColor: Theme.of(context).cardColor,
+                  labelStyle: Theme.of(context).textTheme.labelSmall,
+                  elevation: 4,
+                  label: Text(
+                    '${uploadDocsState.pageNumber + 1}/${uploadDocsState.pages.length}',
+                  ),
                 ),
               ),
             ),
           Positioned(
-            top: 30,
+            top: 0,
             left: 0,
             right: 0,
             child: SafeArea(
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: AlvysDropdown<UploadDocumentOptions>(
-                  items: uploadDocsNotifier.dropDownOptions,
-                  onItemTap: uploadDocsNotifier.updateDocumentType,
-                  dropDownTitle: (item) => item.title,
+                child: Row(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        context.pop();
+                      },
+                      icon: Icon(Icons.adaptive.arrow_back),
+                    ),
+                    Flexible(
+                      child: AlvysDropdown<UploadDocumentOptions>(
+                        radius: 10,
+                        items: uploadDocsNotifier.dropDownOptions,
+                        onItemTap: uploadDocsNotifier.updateDocumentType,
+                        dropDownTitle: (item) => item.title,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
           ),
+          if (ref.watch(scanningProvider))
+            Center(
+              child: Container(
+                color: Colors.transparent,
+              ),
+            )
         ],
       ),
     );

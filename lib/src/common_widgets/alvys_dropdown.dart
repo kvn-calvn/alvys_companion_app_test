@@ -28,7 +28,6 @@ class _AlvysDropdownState<T> extends State<AlvysDropdown<T>> {
   late int currentlySelected;
   @override
   void initState() {
-    print('called');
     super.initState();
     currentItem = widget.items.first;
     currentlySelected = widget.items.indexOf(currentItem);
@@ -38,7 +37,7 @@ class _AlvysDropdownState<T> extends State<AlvysDropdown<T>> {
       widget.items.mapList<Widget>((e, index, last) => DecoratedBox(
             decoration: BoxDecoration(
                 color: index == currentlySelected
-                    ? Theme.of(context).colorScheme.secondary.withOpacity(0.2)
+                    ? Theme.of(context).colorScheme.primary.withOpacity(0.2)
                     : Theme.of(context).cardColor,
                 border: Border(
                     bottom: last
@@ -62,7 +61,12 @@ class _AlvysDropdownState<T> extends State<AlvysDropdown<T>> {
   @override
   Widget build(BuildContext context) {
     return Material(
+      elevation: 3,
       key: actionKey,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(widget.radius),
+      ),
+      clipBehavior: Clip.antiAlias,
       child: InkWell(
         onTap: () async {
           setState(() {
@@ -159,7 +163,11 @@ class DropDownContainer extends StatelessWidget {
                 animation: animation,
                 builder: (context, widget) {
                   return Material(
+                    borderRadius: BorderRadius.circular(radius),
+                    clipBehavior: Clip.antiAlias,
+                    elevation: 3,
                     child: ClipRRect(
+                      borderRadius: BorderRadius.circular(radius),
                       child: Align(
                         heightFactor: animation.value,
                         child: Container(
