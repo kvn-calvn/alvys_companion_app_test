@@ -38,6 +38,10 @@
 	<string>Your location service is used to track the load you have been assigned to carry.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Your location service is used to track the load you have been assigned to carry.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Enable camera access so you can take photos of documents and upload them.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Enables you to select a photo of a document from you gallery to upload.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>

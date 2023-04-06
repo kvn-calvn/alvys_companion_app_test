@@ -26,6 +26,8 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<
 
   @override
   UploadDocumentsState build(UploadDocumentArgs arg) {
+    print('uploadBuild');
+    state = UploadDocumentsState();
     docRepo = ref.read(documentsRepositoryProvider);
     trips = ref.read(tripControllerProvider.notifier);
     userData = ref.read(authProvider.notifier);
@@ -98,7 +100,6 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<
   bool get shouldShowDeleteAndUploadButton => state.pages.isNotEmpty;
 
   List<UploadDocumentOptions> get dropDownOptions {
-    debugPrint(arg.tripId);
     switch (arg.documentType) {
       case DocumentType.tripDocuments:
         var trip = trips.getTrip(arg.tripId!);

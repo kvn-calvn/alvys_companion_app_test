@@ -1,15 +1,22 @@
 import 'package:alvys3/custom_icons/alvys3_icons.dart';
 import 'package:alvys3/src/features/documents/presentation/upload_documents_controller.dart';
+import 'package:alvys3/src/utils/exceptions.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
+import 'package:alvys3/src/utils/permission_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class UploadOptions extends ConsumerWidget {
   final DocumentType documentType;
   final String tripId;
+  final bool mounted;
   const UploadOptions(
-      {required this.tripId, required this.documentType, super.key});
+      {required this.tripId,
+      required this.documentType,
+      required this.mounted,
+      super.key});
   String get route {
     switch (documentType) {
       case DocumentType.tripDocuments:
@@ -31,25 +38,45 @@ class UploadOptions extends ConsumerWidget {
           ListTile(
             leading: const Icon(Icons.camera_alt),
             title: const Text('Camera'),
-            onTap: () {
-              Navigator.of(context, rootNavigator: true).pop();
-              context.goNamed(
-                route,
-                extra: UploadType.camera,
-                params: {ParamType.tripId.name: tripId},
-              );
+            onTap: () async {
+              var hasPermission =
+                  await PermissionHelper.getPermission(Permission.camera);
+              if (!hasPermission) {
+                throw PermissionException("Please enable camera permission",
+                    () {
+                  Navigator.of(context, rootNavigator: true).pop();
+                });
+              }
+              if (mounted) {
+                Navigator.of(context, rootNavigator: true).pop();
+                context.goNamed(
+                  route,
+                  extra: UploadType.camera,
+                  params: {ParamType.tripId.name: tripId},
+                );
+              }
             },
           ),
           ListTile(
             leading: const Icon(Icons.photo),
             title: const Text('Gallery'),
-            onTap: () {
-              Navigator.of(context, rootNavigator: true).pop();
-              context.goNamed(
-                route,
-                extra: UploadType.gallery,
-                params: {ParamType.tripId.name: tripId},
-              );
+            onTap: () async {
+              var hasPermission =
+                  await PermissionHelper.getPermission(Permission.photos);
+              if (!hasPermission) {
+                throw PermissionException("Please enable gallery permission",
+                    () {
+                  Navigator.of(context, rootNavigator: true).pop();
+                });
+              }
+              if (mounted) {
+                Navigator.of(context, rootNavigator: true).pop();
+                context.goNamed(
+                  route,
+                  extra: UploadType.gallery,
+                  params: {ParamType.tripId.name: tripId},
+                );
+              }
             },
           )
         ],

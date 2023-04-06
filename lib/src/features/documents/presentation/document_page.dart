@@ -53,9 +53,9 @@ class _DocumentsPageState extends ConsumerState<DocumentsPage> {
                 showCustomBottomSheet(
                   context,
                   UploadOptions(
-                    documentType: widget.args.documentType,
-                    tripId: widget.args.tripId ?? "",
-                  ),
+                      documentType: widget.args.documentType,
+                      tripId: widget.args.tripId ?? "",
+                      mounted: mounted),
                 );
               },
               child: const Icon(Icons.cloud_upload),

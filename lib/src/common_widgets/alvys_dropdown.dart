@@ -28,6 +28,7 @@ class _AlvysDropdownState<T> extends State<AlvysDropdown<T>> {
   late int currentlySelected;
   @override
   void initState() {
+    print('called');
     super.initState();
     currentItem = widget.items.first;
     currentlySelected = widget.items.indexOf(currentItem);
