@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'package:alvys3/src/common_widgets/file_upload_progress_dialog.dart';
@@ -5,6 +6,7 @@ import 'package:alvys3/src/features/authentication/presentation/auth_provider_co
 import 'package:alvys3/src/features/documents/domain/genius_scan_config/genius_scan_config.dart';
 import 'package:alvys3/src/features/documents/domain/genius_scan_config/genius_scan_generate_document_config.dart';
 import 'package:alvys3/src/features/documents/domain/upload_documents_state/upload_documents_state.dart';
+import 'package:alvys3/src/utils/exceptions.dart';
 import 'package:alvys3/src/utils/extensions.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
@@ -19,9 +21,10 @@ import '../../trips/presentation/controller/trip_page_controller.dart';
 import '../data/data_provider.dart';
 import '../data/repositories/documents_repository.dart';
 
-class UploadDocumentsController extends AutoDisposeFamilyNotifier<
-    UploadDocumentsState, UploadDocumentArgs> {
-  late AppDocumentsRepository docRepo;
+class UploadDocumentsController
+    extends AutoDisposeFamilyNotifier<UploadDocumentsState, UploadDocumentArgs>
+    implements IAppErrorHandler {
+  late AppDocumentsRepository<UploadDocumentsController> docRepo;
   late TripController trips;
   late ScanningNotifier isScanning;
   late AuthProviderNotifier userData;
@@ -118,8 +121,8 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<
             .toJson(),
         {'outputFileUrl': GeneratePDFPage.toPathString(path)});
     var pdfFile = File(path);
-    await docRepo
-        .uploadDocuments(state.documentType?.companyCode ?? '', [pdfFile]);
+    await docRepo.uploadDocuments(
+        state.documentType?.companyCode ?? '', arg.tripId ?? '', [pdfFile]);
     var ctx = arg.context;
     if (ctx.mounted) {
       Navigator.of(ctx, rootNavigator: true).pop();
@@ -150,6 +153,14 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<
         return [];
       case DocumentType.tripReport:
         return [];
+    }
+  }
+
+  @override
+  FutureOr<void> onError() {
+    var ctx = arg.context;
+    if (ctx.mounted) {
+      Navigator.of(ctx, rootNavigator: true).pop();
     }
   }
 }

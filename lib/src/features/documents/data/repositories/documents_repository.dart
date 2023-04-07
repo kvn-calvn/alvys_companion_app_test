@@ -21,7 +21,7 @@ abstract class DocumentsRepository<T> {
   Future<ApiResponse<List<AppDocuments>>> getPersonalDocs();
   Future<ApiResponse<List<AppDocuments>>> getTripReportDocs();
   Future<ApiResponse<String>> uploadDocuments(
-      String companyCode, List<File> document);
+      String companyCode, String tripId, List<File> document);
 }
 
 class AppDocumentsRepository<T> implements DocumentsRepository<T> {
@@ -127,22 +127,28 @@ class AppDocumentsRepository<T> implements DocumentsRepository<T> {
 
   @override
   Future<ApiResponse<String>> uploadDocuments(
-      String companyCode, List<File> documents) async {
+      String companyCode, String tripId, List<File> documents) async {
     if (await network.isConnected) {
       var data = FormData();
+      data.fields.add(MapEntry('TripId', tripId));
       data.files.add(
           MapEntry('file', await MultipartFile.fromFile(documents.first.path)));
-      var res = await ApiClient.singleton.dio.post(
-        ApiRoutes.tripDocumentUpload,
-        onSendProgress: (count, total) =>
-            fileProgress.updateProgress(total, count),
-      );
+      var res = await ApiClient.singleton.dio.post(ApiRoutes.tripDocumentUpload,
+          data: data,
+          onSendProgress: (count, total) =>
+              fileProgress.updateProgress(total, count),
+          options: Options(headers: {
+            'content-type': 'multipart/form-data',
+            'CompanyCode': companyCode,
+          }));
       if (res.statusCode == 200) {
         return ApiResponse(
           success: true,
           data: res.data.toString(),
         );
       }
+      print(res.data);
+      if (res.statusCode == 500) throw ApiServerError(T);
       return ApiResponse(success: false, data: '', error: res.data["Error"]);
     }
     return ApiResponse(

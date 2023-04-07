@@ -2,6 +2,7 @@
 
 //import 'package:alvys3/src/constants/api_routes.dart';
 //import 'package:alvys3/src/utils/exceptions.dart';
+import 'package:alvys3/src/utils/exceptions.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -66,11 +67,7 @@ class DioApiInterCeptor extends Interceptor {
 
   @override
   void onError(DioError err, ErrorInterceptorHandler handler) {
-    if (err.response!.statusCode == 500) {
-      super.onError(err, handler);
-    } else {
-      handler.resolve(err.response!);
-    }
+    handler.resolve(err.response!);
 
     // super.onError(err, handler);
     //  throw ClientException('');

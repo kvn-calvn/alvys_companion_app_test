@@ -1,8 +1,11 @@
 import 'package:alvys3/src/common_widgets/app_dialog.dart';
 import 'package:alvys3/src/features/authentication/presentation/auth_provider_controller.dart';
+import 'package:alvys3/src/features/documents/presentation/upload_documents.dart';
 import 'package:alvys3/src/utils/exceptions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../features/documents/presentation/upload_documents_controller.dart';
 
 final globalErrorHandlerProvider = Provider<GlobalErrorHandler>((ref) {
   return GlobalErrorHandler(ref: ref);
@@ -44,6 +47,12 @@ class GlobalErrorHandler {
         message = e.message;
         onError = e.onError;
         break;
+      case ApiServerError:
+        var e = error as ApiServerError;
+        onError = () => executeOnError(e.controllerType);
+        message = e.message;
+
+        break;
       default:
         hasError = false;
         handleDefault.call();
@@ -61,6 +70,8 @@ class GlobalErrorHandler {
     switch (t) {
       case AuthProviderNotifier:
         ref.read(authProvider.notifier).onError();
+        break;
+      case UploadDocumentsController:
         break;
     }
   }

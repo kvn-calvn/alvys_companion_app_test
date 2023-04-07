@@ -12,6 +12,14 @@ class AlvysClientException implements Exception {
   }
 }
 
+class ApiServerError implements Exception {
+  late String message;
+  Type controllerType;
+  ApiServerError(this.controllerType) {
+    message = 'A server error has occured. Try again later';
+  }
+}
+
 class PermissionException implements Exception {
   final String message;
   final Function onError;
