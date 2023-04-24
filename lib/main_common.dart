@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:alvys3/flavor_config.dart';
 import 'package:alvys3/src/utils/extensions.dart';
 import 'package:alvys3/src/utils/global_error_handler.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
@@ -19,7 +21,7 @@ Future<void> mainCommon() async {
   late ProviderContainer container;
   runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
-    await FlutterGeniusScan.setLicenceKey(Env.geniusScanKey);
+    await FlutterGeniusScan.setLicenceKey(Platform.isAndroid ? FlavorConfig.instance!.androidGeniusScanSDKKey : FlavorConfig.instance!.iosGeniusScanSDKKey);
     var storage = const FlutterSecureStorage();
     String? driverData = await storage.read(key: StorageKey.driverData.name);
     ThemeMode? appThemeMode = ThemeMode.values
