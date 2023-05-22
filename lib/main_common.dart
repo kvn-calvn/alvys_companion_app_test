@@ -9,7 +9,7 @@ import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:alvys3/src/utils/theme_handler.dart';
 import 'package:flutter_genius_scan/flutter_genius_scan.dart';
 
-import 'env/env.dart';
+//import 'env/env.dart';
 import 'src/features/authentication/domain/models/driver_user/driver_user.dart';
 import 'src/features/authentication/presentation/auth_provider_controller.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +21,9 @@ Future<void> mainCommon() async {
   late ProviderContainer container;
   runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
-    await FlutterGeniusScan.setLicenceKey(Platform.isAndroid ? FlavorConfig.instance!.androidGeniusScanSDKKey : FlavorConfig.instance!.iosGeniusScanSDKKey);
+    await FlutterGeniusScan.setLicenceKey(Platform.isAndroid
+        ? FlavorConfig.instance!.androidGeniusScanSDKKey
+        : FlavorConfig.instance!.iosGeniusScanSDKKey);
     var storage = const FlutterSecureStorage();
     String? driverData = await storage.read(key: StorageKey.driverData.name);
     ThemeMode? appThemeMode = ThemeMode.values

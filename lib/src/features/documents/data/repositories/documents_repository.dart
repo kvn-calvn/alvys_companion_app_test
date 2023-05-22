@@ -147,7 +147,6 @@ class AppDocumentsRepository<T> implements DocumentsRepository<T> {
           data: res.data.toString(),
         );
       }
-      print(res.data);
       if (res.statusCode == 500) throw ApiServerError(T);
       return ApiResponse(success: false, data: '', error: res.data["Error"]);
     }

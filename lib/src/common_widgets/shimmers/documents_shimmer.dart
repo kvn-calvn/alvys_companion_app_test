@@ -20,8 +20,8 @@ class DocumentsShimmer extends StatelessWidget {
             color: Theme.of(context).cardColor.withAlpha(100),
             borderRadius: BorderRadius.circular(12),
           ),
-          child: Row(
-            children: const [
+          child: const Row(
+            children: [
               CircleAvatar(),
               SizedBox(
                 width: 10,

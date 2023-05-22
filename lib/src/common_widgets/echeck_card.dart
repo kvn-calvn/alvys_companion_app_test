@@ -18,13 +18,13 @@ class EcheckCard extends StatelessWidget {
       onSelected: (value) {
         switch (value) {
           case EcheckOption.copy:
-            Clipboard.setData(ClipboardData(text: eCheck.expressCheckNumber));
-            SnackBar snackBar = SnackBar(
-              padding: const EdgeInsets.only(top: 10),
+            Clipboard.setData(ClipboardData(text: eCheck.expressCheckNumber!));
+            SnackBar snackBar = const SnackBar(
+              padding: EdgeInsets.only(top: 10),
               content: Column(
                 mainAxisSize: MainAxisSize.min,
                 crossAxisAlignment: CrossAxisAlignment.start,
-                children: const [
+                children: [
                   Padding(
                     padding:
                         EdgeInsets.symmetric(vertical: 8.0, horizontal: 12),
@@ -39,7 +39,7 @@ class EcheckCard extends StatelessWidget {
                   )
                 ],
               ),
-              duration: const Duration(milliseconds: 2000),
+              duration: Duration(milliseconds: 2000),
             );
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
             break;
