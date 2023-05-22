@@ -21,9 +21,11 @@ Future<void> mainCommon() async {
   late ProviderContainer container;
   runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
-    await FlutterGeniusScan.setLicenceKey(Platform.isAndroid
-        ? FlavorConfig.instance!.androidGeniusScanSDKKey
-        : FlavorConfig.instance!.iosGeniusScanSDKKey);
+    if (FlavorConfig.instance!.flavor == Flavor.prod) {
+      await FlutterGeniusScan.setLicenceKey(Platform.isAndroid
+          ? FlavorConfig.instance!.androidGeniusScanSDKKey
+          : FlavorConfig.instance!.iosGeniusScanSDKKey);
+    }
     var storage = const FlutterSecureStorage();
     String? driverData = await storage.read(key: StorageKey.driverData.name);
     ThemeMode? appThemeMode = ThemeMode.values
