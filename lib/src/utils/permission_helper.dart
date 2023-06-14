@@ -13,6 +13,7 @@ class PermissionHelper {
         return false;
       case PermissionStatus.granted:
       case PermissionStatus.limited:
+      case PermissionStatus.provisional:
         return true;
     }
   }
@@ -30,6 +31,7 @@ class PermissionHelper {
         return false;
       case PermissionStatus.granted:
       case PermissionStatus.limited:
+      case PermissionStatus.provisional:
         return true;
     }
   }

@@ -14,7 +14,7 @@ class App extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.read(routerProvider);
     return MaterialApp.router(
-      useInheritedMediaQuery: true,
+      //useInheritedMediaQuery: true,
       themeMode: ref.watch(themeHandlerProvider),
       theme: AlvysTheme.mainTheme(Brightness.light),
       darkTheme: AlvysTheme.mainTheme(Brightness.dark),
