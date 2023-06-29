@@ -52,7 +52,7 @@ class UploadOptions extends ConsumerWidget {
                 context.goNamed(
                   route,
                   extra: UploadType.camera,
-                  params: {ParamType.tripId.name: tripId},
+                  pathParameters: {ParamType.tripId.name: tripId},
                 );
               }
             },
@@ -74,7 +74,7 @@ class UploadOptions extends ConsumerWidget {
                 context.goNamed(
                   route,
                   extra: UploadType.gallery,
-                  params: {ParamType.tripId.name: tripId},
+                  pathParameters: {ParamType.tripId.name: tripId},
                 );
               }
             },

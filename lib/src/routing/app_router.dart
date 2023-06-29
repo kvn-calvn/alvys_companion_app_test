@@ -134,7 +134,7 @@ Provider<GoRouter> routerProvider = Provider(
                   path: ':tripId',
                   builder: (context, state) {
                     return LoadDetailsPage(
-                        state.params[ParamType.tripId.name]!);
+                        state.pathParameters[ParamType.tripId.name]!);
                   },
                   routes: <GoRoute>[
                     GoRoute(
@@ -142,7 +142,7 @@ Provider<GoRouter> routerProvider = Provider(
                         path: RouteName.eCheck.name,
                         builder: (context, state) {
                           return EcheckPage(
-                              state.params[ParamType.tripId.name]!);
+                              state.pathParameters[ParamType.tripId.name]!);
                         },
                         routes: [
                           GoRoute(
@@ -150,7 +150,7 @@ Provider<GoRouter> routerProvider = Provider(
                             path: RouteName.generateEcheck.name,
                             builder: (context, state) {
                               return GenerateEcheck(
-                                  state.params[ParamType.tripId.name]!);
+                                  state.pathParameters[ParamType.tripId.name]!);
                             },
                           ),
                         ]),
@@ -161,7 +161,7 @@ Provider<GoRouter> routerProvider = Provider(
                         return DocumentsPage(
                           DocumentsArgs(
                             DocumentType.tripDocuments,
-                            state.params[ParamType.tripId.name],
+                            state.pathParameters[ParamType.tripId.name],
                           ),
                         );
                       },
@@ -185,7 +185,8 @@ Provider<GoRouter> routerProvider = Provider(
                             return UploadDocuments(
                               args: UploadDocumentArgs(
                                   context: context,
-                                  tripId: state.params[ParamType.tripId.name]!,
+                                  tripId: state
+                                      .pathParameters[ParamType.tripId.name]!,
                                   uploadType: args,
                                   documentType: DocumentType.tripDocuments),
                             );
@@ -198,8 +199,8 @@ Provider<GoRouter> routerProvider = Provider(
                       path: ':stopId',
                       builder: (context, state) {
                         return StopDetailsPage(
-                            state.params[ParamType.tripId.name]!,
-                            state.params[ParamType.stopId.name]!);
+                            state.pathParameters[ParamType.tripId.name]!,
+                            state.pathParameters[ParamType.stopId.name]!);
                       },
                     ),
                   ],

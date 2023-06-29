@@ -40,7 +40,9 @@ class DocumentList<T> extends StatelessWidget {
                         case DocumentType.tripDocuments:
                           context.pushNamed(RouteName.tripDocumentView.name,
                               extra: doc,
-                              params: {ParamType.tripId.name: args.tripId!});
+                              pathParameters: {
+                                ParamType.tripId.name: args.tripId!
+                              });
                           break;
                         case DocumentType.personalDocuments:
                         case DocumentType.paystubs:
