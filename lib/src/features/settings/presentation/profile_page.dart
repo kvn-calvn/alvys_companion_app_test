@@ -47,9 +47,11 @@ class ProfilePage extends ConsumerWidget {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
         child: ListView(children: [
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: [Avatar(profileImageUrl: 'https://i.pravatar.cc/300')],
+            children: const [
+              Avatar(profileImageUrl: 'https://i.pravatar.cc/300')
+            ],
           ),
           TextButton(onPressed: () {}, child: const Text("Edit Picture")),
           Column(
