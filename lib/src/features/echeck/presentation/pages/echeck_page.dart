@@ -49,7 +49,7 @@ class _EcheckPageState extends ConsumerState<EcheckPage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          context.goNamed(RouteName.generateEcheck.name, params: {
+          context.goNamed(RouteName.generateEcheck.name, pathParameters: {
             ParamType.tripId.name: widget.tripId,
           });
         },
