@@ -37,26 +37,23 @@ class _LoadListPageState extends ConsumerState<LoadListPage> {
   }
 
   Future<void> checkLocationPermission(BuildContext context) async {
-    if (await Permission.location.isPermanentlyDenied ||
-        await Permission.location.isDenied) {
+    if (await Permission.location.isPermanentlyDenied || await Permission.location.isDenied) {
       if (mounted) {
         await showDialog(
           context: context,
           builder: (BuildContext context) {
             return AppDialog(
               title: "Alvys wants to use your location.",
-              description:
-                  "Alvys uses your location data to track the movement of loads you have been assigned.",
+              description: "Alvys uses your location data to track the movement of loads you have been assigned.",
               actions: [
                 AppDialogAction(
                     label: 'Allow',
                     action: () {
-                      AppSettings.openLocationSettings()
+                      AppSettings.openAppSettings(type: AppSettingsType.location)
                           .then((value) => GoRouter.of(context).pop());
                     },
                     primary: true),
-                AppDialogAction(
-                    label: 'Not Now', action: GoRouter.of(context).pop),
+                AppDialogAction(label: 'Not Now', action: GoRouter.of(context).pop),
               ],
             );
           },
@@ -146,16 +143,12 @@ class TripList extends ConsumerWidget {
             Expanded(
               child: RefreshIndicator(
                 onRefresh: () async {
-                  await ref
-                      .read(tripControllerProvider.notifier)
-                      .refreshTrips();
+                  await ref.read(tripControllerProvider.notifier).refreshTrips();
                 },
                 child: value.activeTrips.isNotEmpty
                     ? ListView(
                         padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                        children: value.activeTrips
-                            .map((trip) => TripCard(trip: trip))
-                            .toList(),
+                        children: value.activeTrips.map((trip) => TripCard(trip: trip)).toList(),
                       )
                     : const EmptyView(
                         title: "No Trips",

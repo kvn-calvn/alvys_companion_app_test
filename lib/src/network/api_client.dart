@@ -3,6 +3,9 @@
 //import 'package:alvys3/src/constants/api_routes.dart';
 //import 'package:alvys3/src/utils/exceptions.dart';
 //import 'package:alvys3/src/utils/exceptions.dart';
+import 'dart:async';
+
+import 'package:alvys3/src/utils/exceptions.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -17,14 +20,16 @@ const String ACCEPT = "accept";
 const String AUTHORIZATION = "authorization";
 const String DEFAULT_LANGUAGE = "language";
 
+final apiClientProvider = Provider<ApiClient>((ref) {
+  return ApiClient();
+});
+
 class ApiClient {
-  Dio get dio => createDio();
+  late Dio _dio;
 
-  ApiClient._internal();
-
-  static final singleton = ApiClient._internal();
-
-  factory ApiClient() => singleton;
+  ApiClient() {
+    _dio = createDio();
+  }
 
   Dio createDio() {
     Map<String, String> headers = {
@@ -51,12 +56,137 @@ class ApiClient {
     });
     return dio;
   }
+
+  Future<Response> getData<C>(
+    String path, {
+    Object? data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    CancelToken? cancelToken,
+    ProgressCallback? onReceiveProgress,
+  }) {
+    return _executeRequest<C>(() => _dio.get(
+          path,
+          data: data,
+          queryParameters: queryParameters,
+          options: options,
+          cancelToken: cancelToken,
+          onReceiveProgress: onReceiveProgress,
+        ));
+  }
+
+  Future<Response> postData<C>(
+    String path, {
+    Object? data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    CancelToken? cancelToken,
+    ProgressCallback? onReceiveProgress,
+    ProgressCallback? onSendProgress,
+  }) {
+    return _executeRequest<C>(() => _dio.post(
+          path,
+          data: data,
+          queryParameters: queryParameters,
+          options: options,
+          cancelToken: cancelToken,
+          onReceiveProgress: onReceiveProgress,
+          onSendProgress: onSendProgress,
+        ));
+  }
+
+  Future<Response> putData<C>(
+    String path, {
+    Object? data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    CancelToken? cancelToken,
+    ProgressCallback? onReceiveProgress,
+    ProgressCallback? onSendProgress,
+  }) {
+    return _executeRequest<C>(() => _dio.put(
+          path,
+          data: data,
+          queryParameters: queryParameters,
+          options: options,
+          cancelToken: cancelToken,
+          onReceiveProgress: onReceiveProgress,
+          onSendProgress: onSendProgress,
+        ));
+  }
+
+  Future<Response> patchData<C>(
+    String path, {
+    Object? data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    CancelToken? cancelToken,
+    ProgressCallback? onReceiveProgress,
+    ProgressCallback? onSendProgress,
+  }) {
+    return _executeRequest<C>(() => _dio.patch(
+          path,
+          data: data,
+          queryParameters: queryParameters,
+          options: options,
+          cancelToken: cancelToken,
+          onReceiveProgress: onReceiveProgress,
+          onSendProgress: onSendProgress,
+        ));
+  }
+
+  Future<Response> deleteData<C>(
+    String path, {
+    Object? data,
+    Map<String, dynamic>? queryParameters,
+    Options? options,
+    CancelToken? cancelToken,
+  }) {
+    return _executeRequest<C>(() => _dio.delete(
+          path,
+          data: data,
+          queryParameters: queryParameters,
+          options: options,
+          cancelToken: cancelToken,
+        ));
+  }
+
+  Future<Response> _executeRequest<C>(Future<Response> Function() req) async {
+    try {
+      return await req();
+    } on DioException catch (ex) {
+      switch (ex.type) {
+        case DioExceptionType.sendTimeout:
+        case DioExceptionType.connectionTimeout:
+        case DioExceptionType.receiveTimeout:
+          throw Future.error(AlvysTimeoutException(C));
+        case DioExceptionType.badResponse:
+          switch (ex.response?.statusCode) {
+            case (400):
+              throw Future.error(AlvysClientException(ex.response!.data, C));
+            case (417):
+              throw Future.error(ControllerException("Error", ex.response!.data['ErrorMessage'], C));
+            case (404):
+              throw Future.error(AlvysEntityNotFoundException(C));
+            case (401):
+              throw Future.error(AlvysUnauthorizedException(C));
+            default:
+              throw Future.error(ApiServerException(C));
+          }
+        case DioExceptionType.cancel:
+        case DioExceptionType.badCertificate:
+          throw Future.error(ApiServerException(C));
+        case DioExceptionType.connectionError:
+        case DioExceptionType.unknown:
+          throw Future.error(AlvysSocketException(C));
+      }
+    }
+  }
 }
 
 class DioApiInterCeptor extends Interceptor {
   @override
-  Future<void> onRequest(
-      RequestOptions options, RequestInterceptorHandler handler) async {
+  Future<void> onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     var storage = const FlutterSecureStorage();
     String? driverToken = await storage.read(key: StorageKey.driverToken.name);
     if (driverToken != null) {
@@ -64,40 +194,6 @@ class DioApiInterCeptor extends Interceptor {
     }
     super.onRequest(options, handler);
   }
-
-  @override
-  void onError(DioException err, ErrorInterceptorHandler handler) {
-    handler.resolve(err.response!);
-
-    // super.onError(err, handler);
-    //  throw ClientException('');
-    //debugPrint(err.response?.statusCode.toString());
-    // if (err.response!.statusCode! == 400) {
-    //   throw ClientException('message');
-    // }
-    // try {
-    //   handler.next(err);
-    // } catch (e) {
-    //   throw ClientException('message');
-    // }
-
-    // //debugPrint(err.response?.statusCode.toString());
-
-    // super.onError(err, handler);
-  }
-
-  // dynamic requestInterceptor(RequestOptions options) async {
-  //   if (options.headers.containsKey("requiresToken")) {
-  //     //remove the auxiliary header
-  //     options.headers.remove("requiresToken");
-
-  //     var token = await _userTokenHandle.getLoginData();
-
-  //     options.headers.addAll({"Authorization": "Basic $token"});
-
-  //     return options;
-  //   }
-  // }
 }
 
 class FileUploadProgressNotifier extends Notifier<double> {
@@ -111,5 +207,4 @@ class FileUploadProgressNotifier extends Notifier<double> {
   }
 }
 
-final fileUploadProvider = NotifierProvider<FileUploadProgressNotifier, double>(
-    FileUploadProgressNotifier.new);
+final fileUploadProvider = NotifierProvider<FileUploadProgressNotifier, double>(FileUploadProgressNotifier.new);

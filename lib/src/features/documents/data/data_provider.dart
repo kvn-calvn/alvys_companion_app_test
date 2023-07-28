@@ -19,9 +19,9 @@ final tripDocsRepositoryImplProvider = Provider<TripDocsRepositoryImpl>(
   },
 );
 
-final documentsRepositoryProvider =
-    Provider<AppDocumentsRepository<UploadDocumentsController>>((ref) {
+final documentsRepositoryProvider = Provider<AppDocumentsRepository<UploadDocumentsController>>((ref) {
   final networkInfo = ref.watch(networkInfoProvider);
   final fileProgress = ref.watch(fileUploadProvider.notifier);
-  return AppDocumentsRepository(networkInfo, fileProgress);
+  final apiClient = ref.read(apiClientProvider);
+  return AppDocumentsRepository(networkInfo, fileProgress, apiClient);
 });

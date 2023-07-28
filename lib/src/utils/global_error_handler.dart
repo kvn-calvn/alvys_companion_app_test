@@ -13,11 +13,9 @@ final globalErrorHandlerProvider = Provider<GlobalErrorHandler>((ref) {
 
 class GlobalErrorHandler {
   final ProviderRef<GlobalErrorHandler> ref;
-  GlobalKey<NavigatorState> navKey =
-      GlobalKey<NavigatorState>(debugLabel: "MainNavKey");
+  GlobalKey<NavigatorState> navKey = GlobalKey<NavigatorState>(debugLabel: "MainNavKey");
   GlobalErrorHandler({required this.ref});
-  void handle(FlutterErrorDetails? details, bool flutterError,
-      [Object? error, StackTrace? trace]) {
+  void handle(FlutterErrorDetails? details, bool flutterError, [Object? error, StackTrace? trace]) {
     _handleError(
       flutterError ? details!.exception : error!,
       () {
@@ -34,24 +32,25 @@ class GlobalErrorHandler {
   void _handleError(Object error, Function handleDefault) {
     Function? onError;
     String message = '';
+    String title = '';
     bool hasError = true;
     switch (error.runtimeType) {
       case AlvysClientException:
-        var e = error as AlvysClientException;
-        onError = () => executeOnError(e.controllerType);
-        message = '${e.message.content}';
-
+      case AlvysEntityNotFoundException:
+      case AlvysSocketException:
+      case AlvysTimeoutException:
+      case AlvysUnauthorizedException:
+      case ControllerException:
+        var e = error as ControllerException;
+        onError = () => executeOnError(e.source);
+        message = e.message;
+        title = e.title;
         break;
       case PermissionException:
         var e = error as PermissionException;
         message = e.message;
+        title = 'Permission Error';
         onError = e.onError;
-        break;
-      case ApiServerError:
-        var e = error as ApiServerError;
-        onError = () => executeOnError(e.controllerType);
-        message = e.message;
-
         break;
       default:
         hasError = false;
@@ -62,6 +61,7 @@ class GlobalErrorHandler {
         context: navKey.currentState!.context,
         afterError: () => onError?.call(),
         message: message,
+        title: title,
       );
     }
   }
@@ -79,12 +79,13 @@ class GlobalErrorHandler {
   void showErrorDialog(
           {required BuildContext context,
           required void Function() afterError,
-          required String message}) =>
+          required String message,
+          required String title}) =>
       showDialog(
         context: context,
         useRootNavigator: true,
         builder: (context) => AppDialog(
-          title: 'Error',
+          title: title,
           description: message,
           actions: [
             AppDialogAction(

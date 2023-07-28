@@ -6,11 +6,11 @@ part 'client_error.g.dart';
 @freezed
 class ClientError with _$ClientError {
   factory ClientError({
-    @JsonKey(name: "Title") String? title,
-    @JsonKey(name: "Content") String? content,
+    String? title,
+    String? details,
+    required int status,
+    required Map<String, Map<String, List<String>>> errors,
   }) = _ClientError;
-  // ignore: unused_element
   ClientError._();
-  factory ClientError.fromJson(Map<String, dynamic> json) =>
-      _$ClientErrorFromJson(json);
+  factory ClientError.fromJson(Map<String, dynamic> json) => _$ClientErrorFromJson(json);
 }
