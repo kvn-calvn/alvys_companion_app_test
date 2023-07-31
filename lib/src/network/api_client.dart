@@ -5,10 +5,12 @@
 //import 'package:alvys3/src/utils/exceptions.dart';
 import 'dart:async';
 
+import 'package:alvys3/src/network/network_info.dart';
 import 'package:alvys3/src/utils/exceptions.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 //import 'package:alvys3/flavor_config.dart';
 //import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
@@ -21,13 +23,13 @@ const String AUTHORIZATION = "authorization";
 const String DEFAULT_LANGUAGE = "language";
 
 final apiClientProvider = Provider<ApiClient>((ref) {
-  return ApiClient();
+  return ApiClient(ref.read(internetConnectionCheckerProvider));
 });
 
 class ApiClient {
   late Dio _dio;
-
-  ApiClient() {
+  final InternetConnectionChecker connectionChecker;
+  ApiClient(this.connectionChecker) {
     _dio = createDio();
   }
 
@@ -152,6 +154,7 @@ class ApiClient {
   }
 
   Future<Response> _executeRequest<C>(Future<Response> Function() req) async {
+    if (!(await connectionChecker.hasConnection)) throw Future.error(AlvysSocketException(C));
     try {
       return await req();
     } on DioException catch (ex) {
@@ -159,26 +162,26 @@ class ApiClient {
         case DioExceptionType.sendTimeout:
         case DioExceptionType.connectionTimeout:
         case DioExceptionType.receiveTimeout:
-          throw Future.error(AlvysTimeoutException(C));
+          return Future.error(AlvysTimeoutException(C));
         case DioExceptionType.badResponse:
           switch (ex.response?.statusCode) {
             case (400):
-              throw Future.error(AlvysClientException(ex.response!.data, C));
+              return Future.error(AlvysClientException(ex.response!.data, C));
             case (417):
-              throw Future.error(ControllerException("Error", ex.response!.data['ErrorMessage'], C));
+              return Future.error(ControllerException("Error", ex.response!.data['ErrorMessage'], C));
             case (404):
-              throw Future.error(AlvysEntityNotFoundException(C));
+              return Future.error(AlvysEntityNotFoundException(C));
             case (401):
-              throw Future.error(AlvysUnauthorizedException(C));
+              return Future.error(AlvysUnauthorizedException(C));
             default:
-              throw Future.error(ApiServerException(C));
+              return Future.error(ApiServerException(C));
           }
         case DioExceptionType.cancel:
         case DioExceptionType.badCertificate:
-          throw Future.error(ApiServerException(C));
+          return Future.error(ApiServerException(C));
         case DioExceptionType.connectionError:
         case DioExceptionType.unknown:
-          throw Future.error(AlvysSocketException(C));
+          return Future.error(AlvysSocketException(C));
       }
     }
   }

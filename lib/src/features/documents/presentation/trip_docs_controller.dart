@@ -6,7 +6,6 @@ import 'package:intl/intl.dart';
 import '../../../routing/routing_arguments.dart';
 import '../../authentication/domain/models/driver_user/driver_user.dart';
 import '../../authentication/domain/models/driver_user/user_tenant.dart';
-import '../data/data_provider.dart';
 import '../domain/document_state/document_state.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,8 +19,7 @@ class DocumentsArgs {
   DocumentsArgs(this.documentType, this.tripId);
 }
 
-class DocumentsNotifier
-    extends AutoDisposeFamilyAsyncNotifier<DocumentState, DocumentsArgs> {
+class DocumentsNotifier extends AutoDisposeFamilyAsyncNotifier<DocumentState, DocumentsArgs> {
   late AppDocumentsRepository docRepo;
   int top = 10;
 
@@ -50,8 +48,7 @@ class DocumentsNotifier
         break;
       case DocumentType.paystubs:
         await getPaystubs();
-        state = AsyncValue.data(state.value!
-            .copyWith(canLoadMore: state.value!.paystubs.length == top));
+        state = AsyncValue.data(state.value!.copyWith(canLoadMore: state.value!.paystubs.length == top));
 
         break;
       case DocumentType.tripReport:
@@ -90,13 +87,10 @@ class DocumentsNotifier
       case DocumentType.tripDocuments:
       case DocumentType.personalDocuments:
       case DocumentType.tripReport:
-        return state.value!.documentList
-            .map((doc) => PDFViewerArguments(doc.link!, doc.type!, doc))
-            .toList();
+        return state.value!.documentList.map((doc) => PDFViewerArguments(doc.link!, doc.type!, doc)).toList();
       case DocumentType.paystubs:
         return state.value!.paystubs
-            .map((doc) => PDFViewerArguments(
-                doc.link, DateFormat.yMEd().formatNullDate(doc.datePaid!), doc))
+            .map((doc) => PDFViewerArguments(doc.link, DateFormat.yMEd().formatNullDate(doc.datePaid!), doc))
             .toList();
     }
   }
@@ -112,5 +106,5 @@ class DocumentsNotifier
   }
 }
 
-final documentsProvider = AutoDisposeAsyncNotifierProviderFamily<
-    DocumentsNotifier, DocumentState, DocumentsArgs>(DocumentsNotifier.new);
+final documentsProvider =
+    AutoDisposeAsyncNotifierProviderFamily<DocumentsNotifier, DocumentState, DocumentsArgs>(DocumentsNotifier.new);

@@ -2,8 +2,9 @@ import 'package:alvys3/src/constants/api_routes.dart';
 import 'package:alvys3/src/features/authentication/domain/models/driver_user/driver_user.dart';
 import 'package:alvys3/src/network/api_client.dart';
 import 'package:alvys3/src/network/api_response.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../network/network_info.dart';
+import '../presentation/auth_provider_controller.dart';
 
 abstract class AuthRepository<T> {
   Future<ApiResponse<DriverUser>> verifyDriverCode(String phone, String code);
@@ -13,24 +14,16 @@ abstract class AuthRepository<T> {
 }
 
 class AvysAuthRepository<T> implements AuthRepository<T> {
-  final NetworkInfoImpl network;
   final ApiClient client;
-  AvysAuthRepository(this.network, this.client);
+  AvysAuthRepository(this.client);
   @override
   Future<ApiResponse<DriverUser>> getDriverUser(String id) async {
-    if (await network.isConnected) {
-      var res = await client.getData(ApiRoutes.userData(id));
+    var res = await client.getData<T>(ApiRoutes.userData(id));
 
-      return ApiResponse(
-        success: true,
-        data: DriverUser.fromJson(res.data),
-        error: null,
-      );
-    }
     return ApiResponse(
-      success: false,
-      data: null,
-      error: "Error occurred",
+      success: true,
+      data: DriverUser.fromJson(res.data),
+      error: null,
     );
   }
 
@@ -39,14 +32,14 @@ class AvysAuthRepository<T> implements AuthRepository<T> {
     String phone,
   ) async {
     try {
-      var loginRes = await client.getData(ApiRoutes.phoneNumber(phone));
+      var loginRes = await client.getData<T>(ApiRoutes.phoneNumber(phone));
       return ApiResponse(
         success: true,
         data: loginRes.data['Data'].toString(),
         error: null,
       );
     } catch (e) {
-      var registerRes = await client.getData(ApiRoutes.registerPhoneNumber(phone));
+      var registerRes = await client.getData<T>(ApiRoutes.registerPhoneNumber(phone));
 
       return ApiResponse(
         success: true,
@@ -60,7 +53,7 @@ class AvysAuthRepository<T> implements AuthRepository<T> {
   Future<ApiResponse<DriverUser>> verifyDriverCode(String phone, String code) async {
     var verifyRes =
         //await ApiClient.singleton.dio.get(Endpoint.verify(phone, code));
-        await client.getData(ApiRoutes.verify(phone, code));
+        await client.getData<T>(ApiRoutes.verify(phone, code));
     return ApiResponse(
       success: true,
       data: DriverUser.fromJson(verifyRes.data['Data']),
@@ -75,3 +68,8 @@ class AvysAuthRepository<T> implements AuthRepository<T> {
     throw UnimplementedError();
   }
 }
+
+final authRepoProvider = Provider<AvysAuthRepository<AuthProviderNotifier>>((ref) {
+  final apiClient = ref.read(apiClientProvider);
+  return AvysAuthRepository(apiClient);
+});

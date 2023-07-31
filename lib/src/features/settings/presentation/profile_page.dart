@@ -47,11 +47,9 @@ class ProfilePage extends ConsumerWidget {
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
         child: ListView(children: [
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: const [
-              Avatar(profileImageUrl: 'https://i.pravatar.cc/300')
-            ],
+            children: [Avatar(profileImageUrl: 'https://i.pravatar.cc/300')],
           ),
           TextButton(onPressed: () {}, child: const Text("Edit Picture")),
           Column(
@@ -132,8 +130,8 @@ class ProfilePage extends ConsumerWidget {
                 style: Theme.of(context).textTheme.labelLarge,
               ),
               Text(
-                DateFormat('MMM d, yyyy', 'en_US').formatNullDate(
-                    userState.value!.driver!.driversLicenceExpirationDate),
+                DateFormat('MMM d, yyyy', 'en_US')
+                    .formatNullDate(userState.value!.driver!.driversLicenceExpirationDate),
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(

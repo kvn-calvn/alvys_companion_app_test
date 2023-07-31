@@ -11,15 +11,12 @@ class AlvysClientException implements ControllerException {
   }
 
   @override
-  // TODO: implement message
   String get message => error.title ?? error.details ?? error.errors.entries.firstOrNull?.value[0]?.first ?? "";
 
   @override
-  // TODO: implement source
   Type get source => controllerType;
 
   @override
-  // TODO: implement title
   String get title => "Client Error";
 }
 
@@ -42,7 +39,8 @@ class AlvysTimeoutException extends ControllerException {
 class AlvysSocketException extends ControllerException {
   final Type s;
   AlvysSocketException(this.s)
-      : super('Connection Error', 'There was an error with connecting to the server. Try again later', s);
+      : super('Connection Error',
+            'There was an error with connecting to the server. Check your internet connection and try again later', s);
 }
 
 class AlvysEntityNotFoundException extends ControllerException {

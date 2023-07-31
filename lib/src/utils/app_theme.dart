@@ -8,8 +8,7 @@ import 'package:flutter/material.dart';
 class AlvysTheme {
   static ThemeData mainTheme(Brightness brightness) {
     final textTheme = appTextTheme(
-        MediaQueryData.fromWindow(WidgetsBinding.instance.window).size.width,
-        brightness);
+        MediaQueryData.fromView(WidgetsBinding.instance.platformDispatcher.implicitView!).size.width, brightness);
     return ThemeData(
         textTheme: textTheme,
         brightness: brightness,
@@ -18,9 +17,7 @@ class AlvysTheme {
         appBarTheme: AppBarTheme(
           centerTitle: true,
           iconTheme: IconThemeData(
-            color: brightness.isLight
-                ? Colors.black
-                : Colors.white, //change your color here
+            color: brightness.isLight ? Colors.black : Colors.white, //change your color here
           ),
           systemOverlayStyle: SystemUiOverlayStyle(
             statusBarBrightness: brightness,
@@ -28,9 +25,7 @@ class AlvysTheme {
           backgroundColor: Colors.transparent,
           elevation: 0,
           titleTextStyle: appTextTheme(
-                  MediaQueryData.fromWindow(WidgetsBinding.instance.window)
-                      .size
-                      .width,
+                  MediaQueryData.fromView(WidgetsBinding.instance.platformDispatcher.implicitView!).size.width,
                   brightness)
               .headlineLarge!
               .copyWith(
@@ -46,9 +41,7 @@ class AlvysTheme {
               borderRadius: BorderRadius.circular(10.0),
             ),
             textStyle: appTextTheme(
-                    MediaQueryData.fromWindow(WidgetsBinding.instance.window)
-                        .size
-                        .width,
+                    MediaQueryData.fromView(WidgetsBinding.instance.platformDispatcher.implicitView!).size.width,
                     brightness)
                 .labelMedium!
                 .copyWith(
@@ -64,8 +57,7 @@ class AlvysTheme {
         ),
         inputDecorationTheme: InputDecorationTheme(
           isDense: true,
-          fillColor:
-              brightness.isLight ? Colors.white : ColorManager.lightgrey2,
+          fillColor: brightness.isLight ? Colors.white : ColorManager.lightgrey2,
           filled: true,
           border: AlvysOutlineBorder(brightness),
         ),
@@ -79,8 +71,7 @@ class AlvysTheme {
         ),
         cardTheme: CardTheme(
           elevation: 2,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),
         progressIndicatorTheme: ProgressIndicatorThemeData(
           color: ColorManager.primary(brightness),
@@ -107,17 +98,13 @@ class AlvysTheme {
           onSurface: brightness.isLight ? Colors.black : Colors.white,
         ),
         snackBarTheme: SnackBarThemeData(
-            backgroundColor: ColorManager.cardColor(brightness),
-            contentTextStyle: textTheme.bodyMedium),
+            backgroundColor: ColorManager.cardColor(brightness), contentTextStyle: textTheme.bodyMedium),
         dialogTheme: DialogTheme(contentTextStyle: textTheme.labelMedium));
   }
 
   static TextStyle appbarTextStyle(BuildContext context, bool small) {
     return small
-        ? Theme.of(context)
-            .textTheme
-            .titleMedium!
-            .copyWith(fontWeight: FontWeight.w700)
+        ? Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w700)
         : Theme.of(context).textTheme.headlineLarge!;
   }
 
@@ -256,8 +243,7 @@ class AlvysMaterialStateColor extends MaterialStateColor {
     if (states.contains(MaterialState.disabled)) {
       color = Colors.grey.withOpacity(0.5);
     }
-    if (states.contains(MaterialState.focused) ||
-        states.contains(MaterialState.selected)) {
+    if (states.contains(MaterialState.focused) || states.contains(MaterialState.selected)) {
       color = ColorManager.primary(brightness).withOpacity(0.8);
     }
     return color;

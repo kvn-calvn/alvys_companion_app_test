@@ -52,10 +52,8 @@ class AboutPageBody extends StatelessWidget {
     return SingleChildScrollView(
       child: Column(children: [
         const UrlNavButton(title: "Alvys", url: "https://alvys.com"),
-        const UrlNavButton(
-            title: "Terms & Conditions", url: "https://alvys.com/terms/"),
-        const UrlNavButton(
-            title: "Privacy Policy", url: "https://alvys.com/privacy/"),
+        const UrlNavButton(title: "Terms & Conditions", url: "https://alvys.com/terms/"),
+        const UrlNavButton(title: "Privacy Policy", url: "https://alvys.com/privacy/"),
         const SizedBox(
           height: 50.0,
         ),
@@ -70,7 +68,7 @@ class AboutPageBody extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             const Text('Device Model: '),
-                            Text('${snapshot.data!.utsname.machine}'),
+                            Text(snapshot.data!.utsname.machine),
                           ],
                         ),
                         Row(
@@ -96,8 +94,7 @@ class AboutPageBody extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: <Widget>[
                             const Text('Device Model: '),
-                            Text(
-                                '${snapshot.data!.manufacturer} ${snapshot.data!.model}'),
+                            Text('${snapshot.data!.manufacturer} ${snapshot.data!.model}'),
                           ],
                         ),
                         Row(
@@ -117,8 +114,7 @@ class AboutPageBody extends StatelessWidget {
             future: PackageInfo.fromPlatform(),
             builder: (context, snapshot) {
               if (snapshot.hasData) {
-                return Text(
-                    'App Version: ${snapshot.data!.version} (${snapshot.data!.buildNumber})');
+                return Text('App Version: ${snapshot.data!.version} (${snapshot.data!.buildNumber})');
               }
 
               return const Text('');

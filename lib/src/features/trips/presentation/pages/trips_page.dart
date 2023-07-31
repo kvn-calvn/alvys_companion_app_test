@@ -121,10 +121,20 @@ class TripList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final tripsState = ref.watch(tripControllerProvider);
-    return tripsState.when(loading: (() {
+    return tripsState.when(
+        //skipError: true,
+        loading: (() {
       return const TripListShimmer();
     }), error: (error, stack) {
-      return const Text('Oops, something unexpected happened');
+      return RefreshIndicator(
+        onRefresh: () async {
+          await ref.read(tripControllerProvider.notifier).refreshTrips();
+        },
+        child: const EmptyView(
+          title: "Error Occured",
+          description: "Try pull to refresh.",
+        ),
+      );
     }, data: (value) {
       return Padding(
         padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),

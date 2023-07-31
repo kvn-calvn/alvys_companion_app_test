@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:alvys3/src/constants/api_routes.dart';
 import 'package:alvys3/src/features/authentication/presentation/auth_provider_controller.dart';
-import 'package:alvys3/src/features/trips/domain/providers/trip_provider.dart';
 import 'package:alvys3/src/features/trips/data/repositories/trip_repository_impl.dart';
 import 'package:alvys3/src/features/trips/domain/model/app_trip/app_trip.dart';
 import 'package:alvys3/src/features/trips/domain/model/app_trip/trip_list_state.dart';
@@ -30,8 +29,7 @@ class TripController extends _$TripController {
     if (state.value!.trips.isNotEmpty && state.value!.activeTrips.isNotEmpty) {
       var userState = ref.watch(authProvider);
 
-      var authToken = Utils.base64String(
-          "${userState.value!.driver!.userName!}:${userState.value!.driver!.appToken!}");
+      var authToken = Utils.base64String("${userState.value!.driver!.userName!}:${userState.value!.driver!.appToken!}");
       if (await Permission.location.isGranted) {
         PlatformChannel.startLocationTracking(
             userState.value!.driver!.name!,
@@ -51,7 +49,7 @@ class TripController extends _$TripController {
 
   Future<void> getTrips() async {
     state = const AsyncValue.loading();
-    final result = await _tripRepositoryImpl.getTrips();
+    final result = await _tripRepositoryImpl.getTrips<TripController>();
     if (result.success) {
       var dataToGet = result.data!.data.toListNotNull();
       state = AsyncValue.data(state.value!.copyWith(trips: dataToGet));
@@ -63,7 +61,7 @@ class TripController extends _$TripController {
   AppTrip? getTrip(String tripID) => state.value!.getTrip(tripID);
 
   Future<void> refreshTrips() async {
-    final result = await _tripRepositoryImpl.getTrips();
+    final result = await _tripRepositoryImpl.getTrips<TripController>();
     if (result.success) {
       var dataToGet = result.data!.data.toListNotNull();
       state = AsyncValue.data(state.value!.copyWith(trips: dataToGet));
@@ -71,11 +69,10 @@ class TripController extends _$TripController {
   }
 
   Future<void> refreshCurrentTrip(String tripId) async {
-    final result = await _tripRepositoryImpl.getTripDetails(tripId);
+    final result = await _tripRepositoryImpl.getTripDetails<TripController>(tripId);
     if (result.success) {
       var dataToGet = result.data!.data;
-      int index = state.value!.trips
-          .indexWhere((element) => element.id == dataToGet!.id!);
+      int index = state.value!.trips.indexWhere((element) => element.id == dataToGet!.id!);
       var trips = List<AppTrip>.from(state.value!.trips);
       trips[index] = dataToGet!;
       state = AsyncValue.data(state.value!.copyWith(trips: trips));
