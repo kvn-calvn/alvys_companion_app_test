@@ -32,13 +32,14 @@ class TripController extends _$TripController {
       var authToken = Utils.base64String("${userState.value!.driver!.userName!}:${userState.value!.driver!.appToken!}");
       if (await Permission.location.isGranted) {
         PlatformChannel.startLocationTracking(
-            userState.value!.driver!.name!,
-            state.value!.activeTrips.first.driver1Id!,
-            state.value!.activeTrips.first.tripNumber!,
-            state.value!.activeTrips.first.id!,
-            authToken,
-            ApiRoutes.locationTracking,
-            state.value!.activeTrips.first.companyCode!);
+          userState.value!.driver!.name!,
+          state.value!.activeTrips.first.driver1Id!,
+          state.value!.activeTrips.first.tripNumber!,
+          state.value!.activeTrips.first.id!,
+          authToken,
+          ApiRoutes.locationTracking,
+          state.value!.activeTrips.first.companyCode!,
+        );
       }
     } else {
       debugPrint("No trackable trips.");
@@ -69,7 +70,8 @@ class TripController extends _$TripController {
   }
 
   Future<void> refreshCurrentTrip(String tripId) async {
-    final result = await _tripRepositoryImpl.getTripDetails<TripController>(tripId);
+    var trip = state.value!.getTrip(tripId);
+    final result = await _tripRepositoryImpl.getTripDetails<TripController>(tripId, trip.companyCode!);
     if (result.success) {
       var dataToGet = result.data!.data;
       int index = state.value!.trips.indexWhere((element) => element.id == dataToGet!.id!);

@@ -7,6 +7,6 @@ import '../model/stop_details/stop_details.dart';
 
 abstract class TripRepository {
   Future<ApiResponse<Trips>> getTrips<T>();
-  Future<ApiResponse<TripDetails>> getTripDetails<T>(String tripId);
-  Future<ApiResponse<StopDetails>> getStopDetails<T>(String tripId, String stopId);
+  Future<ApiResponse<TripDetails>> getTripDetails<T>(String tripId, String companyCode);
+  // Future<ApiResponse<StopDetails>> getStopDetails<T>(String tripId, String stopId);
 }

@@ -192,10 +192,21 @@ class DioApiInterCeptor extends Interceptor {
   Future<void> onRequest(RequestOptions options, RequestInterceptorHandler handler) async {
     var storage = const FlutterSecureStorage();
     String? driverToken = await storage.read(key: StorageKey.driverToken.name);
+    String? companyCode = await storage.read(key: StorageKey.companyCode.name);
     if (driverToken != null) {
       options.headers.addAll({"Authorization": "Basic $driverToken"});
     }
+    if (companyCode != null) {
+      options.headers.addAll({"CompanyCode": companyCode});
+    }
     super.onRequest(options, handler);
+  }
+
+  @override
+  Future<void> onResponse(Response response, ResponseInterceptorHandler handler) async {
+    var storage = const FlutterSecureStorage();
+    storage.delete(key: StorageKey.companyCode.name);
+    super.onResponse(response, handler);
   }
 }
 

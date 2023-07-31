@@ -4,7 +4,9 @@ import 'package:alvys3/src/features/trips/domain/model/trip_details/trip_details
 import 'package:alvys3/src/features/trips/domain/model/trips/trips.dart';
 import 'package:alvys3/src/network/api_client.dart';
 import 'package:alvys3/src/network/api_response.dart';
+import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../../../../constants/api_routes.dart';
 
@@ -23,15 +25,11 @@ class TripRepositoryImpl implements TripRepository {
   }
 
   @override
-  Future<ApiResponse<TripDetails>> getTripDetails<T>(String tripId) async {
+  Future<ApiResponse<TripDetails>> getTripDetails<T>(String tripId, String companyCode) async {
+    var storage = const FlutterSecureStorage();
+    storage.write(key: StorageKey.companyCode.name, value: companyCode);
     var res = await client.getData<T>(ApiRoutes.tripDetails(tripId));
     return ApiResponse(data: TripDetails.fromJson(res.data));
-  }
-
-  @override
-  Future<ApiResponse<StopDetails>> getStopDetails<T>(String tripId, String stopId) async {
-    var res = await client.getData<T>(ApiRoutes.stopdetails(tripId, stopId));
-    return ApiResponse(data: StopDetails.fromJson(res.data));
   }
 
 /*
