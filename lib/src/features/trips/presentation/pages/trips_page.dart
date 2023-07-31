@@ -122,7 +122,7 @@ class TripList extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final tripsState = ref.watch(tripControllerProvider);
     return tripsState.when(
-        //skipError: true,
+        // skipError: true,
         loading: (() {
       return const TripListShimmer();
     }), error: (error, stack) {

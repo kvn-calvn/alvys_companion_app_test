@@ -27,15 +27,14 @@ class AppTrip with _$AppTrip {
     @JsonKey(name: 'Rate') double? rate,
     @JsonKey(name: 'TripValue') double? tripValue,
     @JsonKey(name: 'LoadRate') double? loadRate,
-    @JsonKey(name: 'PayableDriverAmounts')
-        List<PayableDriverAmount>? payableDriverAmounts,
+    @JsonKey(name: 'PayableDriverAmounts') List<PayableDriverAmount>? payableDriverAmounts,
     @JsonKey(name: 'IsOOP') bool? isOop,
     @JsonKey(name: 'GeneralInstructions') String? generalInstructions,
     @JsonKey(name: 'TotalMiles') double? totalMiles,
     @JsonKey(name: 'TotalWeight') double? totalWeight,
     @JsonKey(name: 'Temperature') double? temperature,
     @JsonKey(name: 'Attachments') dynamic attachments,
-    @JsonKey(name: 'Drivers') List<String>? drivers,
+    @JsonKey(name: 'Drivers') List<String?>? drivers,
     @JsonKey(name: 'MiniStops') List<Stop>? stops,
     @JsonKey(name: 'Invoices') List<ECheck>? eChecks,
     @Default(0) @JsonKey(name: 'StopCount') int stopCount,
@@ -57,6 +56,5 @@ class AppTrip with _$AppTrip {
     @JsonKey(name: 'PaidMiles') double? paidMiles,
   }) = _AppTrip;
 
-  factory AppTrip.fromJson(Map<String, dynamic> json) =>
-      _$AppTripFromJson(json);
+  factory AppTrip.fromJson(Map<String, dynamic> json) => _$AppTripFromJson(json);
 }

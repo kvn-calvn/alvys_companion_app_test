@@ -40,6 +40,7 @@ class GlobalErrorHandler {
       case AlvysSocketException:
       case AlvysTimeoutException:
       case AlvysUnauthorizedException:
+      case ApiServerException:
       case ControllerException:
         var e = error as ControllerException;
         onError = () => executeOnError(e.source);
@@ -54,7 +55,7 @@ class GlobalErrorHandler {
         break;
       default:
         hasError = false;
-        handleDefault.call();
+        handleDefault();
     }
     if (hasError) {
       showErrorDialog(
