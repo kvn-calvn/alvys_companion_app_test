@@ -23,8 +23,10 @@ class StopCard extends ConsumerWidget {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Material(
-          elevation: 2,
-          color: Theme.of(context).cardColor,
+          elevation: 0,
+          color: stop.stopType == 'Pickup'
+              ? ColorManager.pickupStopCardBg(Theme.of(context).brightness)
+              : ColorManager.deliveryStopCardBg(Theme.of(context).brightness),
           borderRadius: BorderRadius.circular(10),
           clipBehavior: Clip.antiAlias,
           child: InkWell(
@@ -43,19 +45,6 @@ class StopCard extends ConsumerWidget {
                     padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 0, 8),
                     child: Row(
                       children: [
-                        Padding(
-                          padding:
-                              const EdgeInsetsDirectional.fromSTEB(0, 0, 8, 0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: stop.stopType == 'Pickup'
-                                    ? ColorManager.pickupColor
-                                    : ColorManager.deliveryColor,
-                                borderRadius: BorderRadius.circular(10)),
-                            width: 8,
-                            height: 77,
-                          ),
-                        ),
                         ConstrainedBox(
                           constraints: BoxConstraints(
                               maxWidth: constraints.maxWidth * 0.8),
