@@ -7,6 +7,7 @@ import 'package:alvys3/src/features/documents/presentation/trip_docs_controller.
 import 'package:alvys3/src/features/documents/presentation/upload_documents.dart';
 import 'package:alvys3/src/features/echeck/presentation/pages/echeck_page.dart';
 import 'package:alvys3/src/features/echeck/presentation/pages/generate_echeck.dart';
+import 'package:alvys3/src/features/notifications/notification_page.dart';
 import 'package:alvys3/src/features/permission/location/presentation/request_location.dart';
 import 'package:alvys3/src/features/permission/notification/request_notification.dart';
 import 'package:alvys3/src/features/settings/presentation/about_page.dart';
@@ -206,6 +207,16 @@ Provider<GoRouter> routerProvider = Provider(
                   ],
                 ),
               ],
+            ),
+            GoRoute(
+              name: RouteName.notifications.name,
+              path: RouteName.notifications.toRoute,
+              pageBuilder: (context, state) => CustomTransitionPage(
+                child: const NotificationPage(),
+                transitionDuration: Duration.zero,
+                transitionsBuilder:
+                    (context, animation, secondaryAnimation, child) => child,
+              ),
             ),
             GoRoute(
                 name: RouteName.settings.name,

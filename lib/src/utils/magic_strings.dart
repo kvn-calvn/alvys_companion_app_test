@@ -25,6 +25,7 @@ enum RouteName {
   uploadPersonalDocument,
   tripReportDocumentList,
   uploadTripReport,
+  notifications,
 
   /// tablet routes
   tabletTrips,

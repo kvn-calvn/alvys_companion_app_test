@@ -64,7 +64,7 @@ class AlvysTheme {
         cardColor: ColorManager.cardColor(brightness),
         bottomNavigationBarTheme: BottomNavigationBarThemeData(
           backgroundColor: ColorManager.scaffoldColor(brightness),
-          selectedItemColor: ColorManager.primary(brightness),
+          selectedItemColor: ColorManager.greyColorScheme1(brightness),
           unselectedItemColor: Colors.grey,
         ),
         inputDecorationTheme: InputDecorationTheme(

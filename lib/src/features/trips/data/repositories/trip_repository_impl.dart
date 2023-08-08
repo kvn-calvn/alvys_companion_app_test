@@ -1,4 +1,3 @@
-import 'package:alvys3/src/features/trips/domain/model/stop_details/stop_details.dart';
 import 'package:alvys3/src/features/trips/domain/repositories/trip_repository.dart';
 import 'package:alvys3/src/features/trips/domain/model/trip_details/trip_details.dart';
 import 'package:alvys3/src/features/trips/domain/model/trips/trips.dart';
