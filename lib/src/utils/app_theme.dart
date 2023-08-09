@@ -18,6 +18,8 @@ class AlvysTheme {
         brightness: brightness,
         primaryColor: brightness.isLight ? Colors.white : Colors.black,
         scaffoldBackgroundColor: ColorManager.scaffoldColor(brightness),
+        tabBarTheme:
+            TabBarTheme(dividerColor: ColorManager.primary(brightness)),
         appBarTheme: AppBarTheme(
           centerTitle: true,
           iconTheme: IconThemeData(
@@ -28,17 +30,18 @@ class AlvysTheme {
           systemOverlayStyle: SystemUiOverlayStyle(
             statusBarBrightness: brightness,
           ),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
+          backgroundColor: ColorManager.cardColor(brightness),
+          elevation: 1,
           titleTextStyle: appTextTheme(
                   MediaQueryData.fromView(WidgetsBinding
                           .instance.platformDispatcher.implicitView!)
                       .size
                       .width,
                   brightness)
-              .headlineLarge!
+              .bodyLarge!
               .copyWith(
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.normal,
+                fontSize: 20,
                 color: brightness.isLight ? Colors.black : Colors.white,
               ),
         ),
@@ -63,7 +66,7 @@ class AlvysTheme {
         ),
         cardColor: ColorManager.cardColor(brightness),
         bottomNavigationBarTheme: BottomNavigationBarThemeData(
-          backgroundColor: ColorManager.scaffoldColor(brightness),
+          backgroundColor: ColorManager.cardColor(brightness),
           selectedItemColor: ColorManager.greyColorScheme1(brightness),
           unselectedItemColor: Colors.grey,
         ),

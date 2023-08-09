@@ -16,8 +16,10 @@ class ColorManager {
   static Color deliveryColor = const Color(0XFFF08080);
   static Color cancelColor = const Color(0XFFE03616);
   static Color white = Colors.white;
+
   static Color cardColor(Brightness brightness) =>
-      brightness.isLight ? const Color(0XFFF3F3F3) : const Color(0XFF232323);
+      brightness.isLight ? const Color(0XFFFFFFFF) : const Color(0XFF303030);
+
   static Color pickupStopCardBg(Brightness brightness) =>
       brightness.isLight ? const Color(0XFFFCE6E6) : const Color(0XFFB05858);
   static Color deliveryStopCardBg(Brightness brightness) =>
@@ -27,7 +29,7 @@ class ColorManager {
   static Color secondaryButtonDisabled(Brightness brightness) =>
       brightness.isLight ? const Color(0XFFBEBEBE) : const Color(0XFF585858);
   static Color scaffoldColor(Brightness brightness) =>
-      brightness.isLight ? const Color(0xFFFFFFFF) : const Color(0XFF141414);
+      brightness.isLight ? const Color(0xFFEDEDED) : const Color(0XFF141414);
   static Color chipColor(Brightness brightness) =>
       brightness.isLight ? const Color(0XFFEBF2FF) : const Color(0XFF233E90);
   static Color shimmerHighlight(Brightness brightness) => brightness.isLight

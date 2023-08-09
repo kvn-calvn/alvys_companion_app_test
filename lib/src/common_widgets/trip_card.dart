@@ -22,7 +22,7 @@ class TripCard extends ConsumerWidget {
           color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(12),
           clipBehavior: Clip.antiAlias,
-          elevation: 0,
+          elevation: 2,
           child: InkWell(
             onTap: () {
               context.goNamed(RouteName.tripDetails.name,
@@ -140,19 +140,37 @@ class TripCard extends ConsumerWidget {
                     child: Row(
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         const TripCardDetail(
-                          title: 'dh',
+                          title: 'Deadhead',
                           details: '0.00 mi',
+                        ),
+                        const SizedBox(
+                          height: 32,
+                          child: VerticalDivider(
+                            width: 10,
+                          ),
                         ),
                         TripCardDetail(
                           title: 'trip',
                           details: '${trip.totalMiles!.toStringAsFixed(2)} mi',
                         ),
+                        const SizedBox(
+                          height: 32,
+                          child: VerticalDivider(
+                            width: 10,
+                          ),
+                        ),
                         TripCardDetail(
                           title: 'stops',
                           details: '${trip.stopCount}',
+                        ),
+                        const SizedBox(
+                          height: 32,
+                          child: VerticalDivider(
+                            width: 10,
+                          ),
                         ),
                         TripCardDetail(
                           title: 'weight',
@@ -184,7 +202,7 @@ class TripCardDetail extends StatelessWidget {
     return Column(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(title.toUpperCase(), style: Theme.of(context).textTheme.bodySmall),
         Text(
