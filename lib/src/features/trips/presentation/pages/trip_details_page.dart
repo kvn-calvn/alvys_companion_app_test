@@ -12,6 +12,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:alvys3/src/utils/extensions.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class LoadDetailsPage extends ConsumerStatefulWidget {
   final String tripId;
@@ -130,6 +131,25 @@ class TripDetails extends ConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
+                        const SizedBox(
+                          height: 200,
+                          child: GoogleMap(
+                            initialCameraPosition: CameraPosition(
+                              tilt: 90,
+                              target: LatLng(37.6, -95.665),
+                              zoom: 13.4,
+                            ),
+                            mapToolbarEnabled: false,
+                            rotateGesturesEnabled: false,
+                            scrollGesturesEnabled: false,
+                            tiltGesturesEnabled: false,
+                            zoomGesturesEnabled: false,
+                            myLocationButtonEnabled: false,
+                            zoomControlsEnabled: false,
+                            compassEnabled: false,
+                            mapType: MapType.normal,
+                          ),
+                        ),
                         LargeNavButton(
                           title: 'E-Checks',
                           onPressed: () {

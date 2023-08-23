@@ -26,7 +26,10 @@ class _SignInPageState extends ConsumerState<SignInPage> {
     return UnfocusWidget(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: AppBar(),
+        appBar: AppBar(
+          elevation: 0,
+          backgroundColor: Colors.transparent,
+        ),
         body: SafeArea(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),

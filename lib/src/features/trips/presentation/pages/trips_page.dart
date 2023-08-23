@@ -75,6 +75,8 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
     return Scaffold(
       appBar: AppBar(
         title: const Text('Loads'),
+        backgroundColor: Colors.transparent,
+        elevation: 0,
         leadingWidth: 120,
         leading: Padding(
           padding: const EdgeInsets.only(right: 16.0),
@@ -132,7 +134,11 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
           ],
         ),
       ),
-      body: const TripList(),
+      body: TabBarView(controller: _tabController, children: const [
+        TripList(),
+        TripList(),
+        TripList(),
+      ]),
     );
   }
 }

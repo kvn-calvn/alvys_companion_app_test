@@ -19,6 +19,7 @@ enum RouteName {
   settings,
   profile,
   editProfile,
+  userDetails,
   generateEcheck,
   paystubs,
   personalDocumentsList,

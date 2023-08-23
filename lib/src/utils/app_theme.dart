@@ -18,8 +18,9 @@ class AlvysTheme {
         brightness: brightness,
         primaryColor: brightness.isLight ? Colors.white : Colors.black,
         scaffoldBackgroundColor: ColorManager.scaffoldColor(brightness),
-        tabBarTheme:
-            TabBarTheme(dividerColor: ColorManager.primary(brightness)),
+        tabBarTheme: TabBarTheme(
+          dividerColor: ColorManager.primary(brightness),
+        ),
         appBarTheme: AppBarTheme(
           centerTitle: true,
           iconTheme: IconThemeData(

@@ -1,3 +1,4 @@
+import 'package:alvys3/custom_icons/alvys3_icons.dart';
 import 'package:alvys3/src/features/documents/presentation/upload_documents_controller.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,7 @@ class _MainBottomNavState extends ConsumerState<MainBottomNav> {
       body: widget.child,
       bottomNavigationBar: BottomNavigationBar(
         elevation: 0.0,
+        backgroundColor: Colors.transparent,
         type: BottomNavigationBarType.fixed,
         currentIndex: ref.watch(bottomNavIndexProvider),
         onTap: (i) {
@@ -37,7 +39,7 @@ class _MainBottomNavState extends ConsumerState<MainBottomNav> {
               context.goNamed(RouteName.trips.name);
               break;
             case 1:
-              context.goNamed(RouteName.notifications.name);
+              context.goNamed(RouteName.profile.name);
               break;
             case 2:
               context.goNamed(RouteName.settings.name);
@@ -45,12 +47,12 @@ class _MainBottomNavState extends ConsumerState<MainBottomNav> {
         },
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Symbols.local_shipping), //Icon(Alvys3Icons.homeIco),
+            icon: Icon(Alvys3Icons.homeIco),
             label: 'Trips',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Symbols.notifications),
-            label: 'Notifications',
+            icon: Icon(Symbols.person),
+            label: 'Profile',
           ),
           BottomNavigationBarItem(
             icon: Icon(Symbols.settings),

@@ -7,8 +7,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-class ProfilePage extends ConsumerWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+class UserDetailsPage extends ConsumerWidget {
+  const UserDetailsPage({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -130,8 +130,8 @@ class ProfilePage extends ConsumerWidget {
                 style: Theme.of(context).textTheme.labelLarge,
               ),
               Text(
-                DateFormat('MMM d, yyyy', 'en_US')
-                    .formatNullDate(userState.value!.driver!.driversLicenceExpirationDate),
+                DateFormat('MMM d, yyyy', 'en_US').formatNullDate(
+                    userState.value!.driver!.driversLicenceExpirationDate),
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(

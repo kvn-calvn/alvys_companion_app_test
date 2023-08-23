@@ -2,6 +2,7 @@ import UIKit
 import Flutter
 import FirebaseCore
 import WindowsAzureMessaging
+import GoogleMaps
 
 
 @UIApplicationMain
@@ -48,7 +49,8 @@ import WindowsAzureMessaging
              result(FlutterMethodNotImplemented)
          }
      }
-      
+    
+    GMSServices.provideAPIKey("AIzaSyDe8oPVBFDy1cfY0D8yHw9DCr7TLUdxVHs")
     GeneratedPluginRegistrant.register(with: self)
     FirebaseApp.configure()
       

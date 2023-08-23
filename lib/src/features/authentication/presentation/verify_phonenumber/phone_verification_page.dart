@@ -73,6 +73,7 @@ class _PhoneNumberVerificationPageState
         appBar: AppBar(
           automaticallyImplyLeading: false,
           elevation: 0,
+          backgroundColor: Colors.transparent,
           leading: IconButton(
             icon: Icon(
               Icons.adaptive.arrow_back,

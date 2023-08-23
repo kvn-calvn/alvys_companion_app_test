@@ -22,6 +22,7 @@ class RequestLocation extends StatelessWidget {
             style: Theme.of(context).textTheme.titleMedium,
           ),
           centerTitle: true,
+          backgroundColor: Colors.transparent,
           elevation: 0,
         ),
         body: Center(

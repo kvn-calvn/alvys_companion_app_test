@@ -10,8 +10,9 @@ import 'package:alvys3/src/features/echeck/presentation/pages/generate_echeck.da
 import 'package:alvys3/src/features/notifications/notification_page.dart';
 import 'package:alvys3/src/features/permission/location/presentation/request_location.dart';
 import 'package:alvys3/src/features/permission/notification/request_notification.dart';
+import 'package:alvys3/src/features/profile/profile.dart';
 import 'package:alvys3/src/features/settings/presentation/about_page.dart';
-import 'package:alvys3/src/features/settings/presentation/profile_page.dart';
+import 'package:alvys3/src/features/settings/presentation/user_details_page.dart';
 import 'package:alvys3/src/features/settings/presentation/settings_page.dart';
 import 'package:alvys3/src/features/trips/presentation/pages/stop_details_page.dart';
 import 'package:alvys3/src/features/trips/presentation/pages/filtered_trip_page.dart';
@@ -209,38 +210,35 @@ Provider<GoRouter> routerProvider = Provider(
               ],
             ),
             GoRoute(
-              name: RouteName.notifications.name,
-              path: RouteName.notifications.toRoute,
+              name: RouteName.profile.name,
+              path: RouteName.profile.toRoute,
               pageBuilder: (context, state) => CustomTransitionPage(
-                child: const NotificationPage(),
+                child: const ProfilePage(),
                 transitionDuration: Duration.zero,
                 transitionsBuilder:
                     (context, animation, secondaryAnimation, child) => child,
               ),
+              routes: [
+                GoRoute(
+                  name: RouteName.userDetails.name,
+                  path: RouteName.userDetails.name,
+                  builder: (context, state) {
+                    return const UserDetailsPage();
+                  },
+                ),
+              ],
             ),
             GoRoute(
                 name: RouteName.settings.name,
                 path: RouteName.settings.toRoute,
-                builder: (context, state) {
-                  return const SettingsPage();
-                },
+                pageBuilder: (context, state) => CustomTransitionPage(
+                      child: const SettingsPage(),
+                      transitionDuration: Duration.zero,
+                      transitionsBuilder:
+                          (context, animation, secondaryAnimation, child) =>
+                              child,
+                    ),
                 routes: [
-                  GoRoute(
-                    name: RouteName.profile.name,
-                    path: RouteName.profile.name,
-                    builder: (context, state) {
-                      return const ProfilePage();
-                    },
-                    routes: [
-                      GoRoute(
-                        name: RouteName.editProfile.name,
-                        path: RouteName.editProfile.name,
-                        builder: (context, state) {
-                          return const RequestNotification();
-                        },
-                      ),
-                    ],
-                  ),
                   GoRoute(
                     name: RouteName.paystubs.name,
                     path: RouteName.paystubs.name,

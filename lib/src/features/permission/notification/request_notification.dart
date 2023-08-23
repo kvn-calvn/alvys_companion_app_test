@@ -27,6 +27,7 @@ class RequestNotification extends ConsumerWidget {
           ),
           centerTitle: true,
           elevation: 0,
+          backgroundColor: Colors.transparent,
         ),
         body: Center(
           child: Padding(
@@ -55,7 +56,8 @@ class RequestNotification extends ConsumerWidget {
                   isLoading: false,
                   isDisable: false,
                   onPressAction: () async {
-                    var requestNotificationResult = await Permission.notification.request();
+                    var requestNotificationResult =
+                        await Permission.notification.request();
 
                     if (requestNotificationResult.isPermanentlyDenied) {
                       if (mounted) {
@@ -65,19 +67,26 @@ class RequestNotification extends ConsumerWidget {
                               return AlertDialog(
                                 content: const Text(
                                     'You have this app\'s location permession to permanently denied. Open location settings to change it.'),
-                                actions: [TextButton(onPressed: () {}, child: const Text(''))],
+                                actions: [
+                                  TextButton(
+                                      onPressed: () {}, child: const Text(''))
+                                ],
                               );
                             });
                       }
-                      AppSettings.openAppSettings(type: AppSettingsType.notification);
+                      AppSettings.openAppSettings(
+                          type: AppSettingsType.notification);
                     }
 
                     if (requestNotificationResult.isGranted) {
                       if (!mounted) return;
 
-                      debugPrint("PHONE_NUMBER: ${userState.value!.driver!.phone!}");
+                      debugPrint(
+                          "PHONE_NUMBER: ${userState.value!.driver!.phone!}");
 
-                      PlatformChannel.getNotification(userState.value!.driver!.phone!, FlavorConfig.instance!.hubName,
+                      PlatformChannel.getNotification(
+                          userState.value!.driver!.phone!,
+                          FlavorConfig.instance!.hubName,
                           FlavorConfig.instance!.connectionString);
 
                       context.goNamed(RouteName.trips.name);

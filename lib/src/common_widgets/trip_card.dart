@@ -22,7 +22,7 @@ class TripCard extends ConsumerWidget {
           color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(12),
           clipBehavior: Clip.antiAlias,
-          elevation: 2,
+          elevation: 0.0,
           child: InkWell(
             onTap: () {
               context.goNamed(RouteName.tripDetails.name,
