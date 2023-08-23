@@ -1,6 +1,5 @@
 import 'package:alvys3/src/common_widgets/custom_bottom_sheet.dart';
 import 'package:alvys3/src/common_widgets/large_nav_button.dart';
-import 'package:alvys3/src/common_widgets/profile_nav_button.dart';
 import 'package:alvys3/src/common_widgets/theme_switcher.dart';
 import 'package:alvys3/src/common_widgets/url_nav_button.dart';
 import 'package:alvys3/src/features/authentication/presentation/auth_provider_controller.dart';
@@ -43,7 +42,6 @@ class SettingsList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var userState = ref.watch(authProvider);
     return ListView(
       scrollDirection: Axis.vertical,
       children: [
