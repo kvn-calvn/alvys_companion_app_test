@@ -41,6 +41,8 @@ class _DocumentsPageState extends ConsumerState<DocumentsPage> {
         ref.watch(documentsProvider.call(widget.args).notifier);
     return Scaffold(
       appBar: AppBar(
+        elevation: 0,
+        backgroundColor: Colors.transparent,
         title: Text(
           docsNotifier.pageTitle,
           style: AlvysTheme.appbarTextStyle(context, true),

@@ -219,6 +219,65 @@ Provider<GoRouter> routerProvider = Provider(
               ),
               routes: [
                 GoRoute(
+                  name: RouteName.paystubs.name,
+                  path: RouteName.paystubs.name,
+                  builder: (context, state) {
+                    return DocumentsPage(
+                        DocumentsArgs(DocumentType.paystubs, null));
+                  },
+                  // routes: [],
+                ),
+                GoRoute(
+                  name: RouteName.personalDocumentsList.name,
+                  path: RouteName.personalDocumentsList.name,
+                  builder: (context, state) {
+                    return DocumentsPage(
+                        DocumentsArgs(DocumentType.personalDocuments, null));
+                  },
+                  routes: [
+                    GoRoute(
+                      name: RouteName.uploadPersonalDocument.name,
+                      path: RouteName.uploadPersonalDocument.name,
+                      builder: (context, state) {
+                        final args = state.extra! as UploadType;
+
+                        return UploadDocuments(
+                          args: UploadDocumentArgs(
+                            context: context,
+                            uploadType: args,
+                            documentType: DocumentType.personalDocuments,
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+                GoRoute(
+                  name: RouteName.tripReportDocumentList.name,
+                  path: RouteName.tripReportDocumentList.name,
+                  builder: (context, state) {
+                    return DocumentsPage(
+                        DocumentsArgs(DocumentType.tripReport, null));
+                  },
+                  routes: [
+                    GoRoute(
+                      name: RouteName.uploadTripReport.name,
+                      path: RouteName.uploadTripReport.name,
+                      builder: (context, state) {
+                        final args = state.extra! as UploadType;
+
+                        return UploadDocuments(
+                          args: UploadDocumentArgs(
+                            context: context,
+                            uploadType: args,
+                            documentType: DocumentType.tripReport,
+                          ),
+                        );
+                      },
+                    ),
+                  ],
+                ),
+                GoRoute(
                   name: RouteName.userDetails.name,
                   path: RouteName.userDetails.name,
                   builder: (context, state) {
@@ -238,65 +297,6 @@ Provider<GoRouter> routerProvider = Provider(
                               child,
                     ),
                 routes: [
-                  GoRoute(
-                    name: RouteName.paystubs.name,
-                    path: RouteName.paystubs.name,
-                    builder: (context, state) {
-                      return DocumentsPage(
-                          DocumentsArgs(DocumentType.paystubs, null));
-                    },
-                    // routes: [],
-                  ),
-                  GoRoute(
-                    name: RouteName.personalDocumentsList.name,
-                    path: RouteName.personalDocumentsList.name,
-                    builder: (context, state) {
-                      return DocumentsPage(
-                          DocumentsArgs(DocumentType.personalDocuments, null));
-                    },
-                    routes: [
-                      GoRoute(
-                        name: RouteName.uploadPersonalDocument.name,
-                        path: RouteName.uploadPersonalDocument.name,
-                        builder: (context, state) {
-                          final args = state.extra! as UploadType;
-
-                          return UploadDocuments(
-                            args: UploadDocumentArgs(
-                              context: context,
-                              uploadType: args,
-                              documentType: DocumentType.personalDocuments,
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
-                  GoRoute(
-                    name: RouteName.tripReportDocumentList.name,
-                    path: RouteName.tripReportDocumentList.name,
-                    builder: (context, state) {
-                      return DocumentsPage(
-                          DocumentsArgs(DocumentType.tripReport, null));
-                    },
-                    routes: [
-                      GoRoute(
-                        name: RouteName.uploadTripReport.name,
-                        path: RouteName.uploadTripReport.name,
-                        builder: (context, state) {
-                          final args = state.extra! as UploadType;
-
-                          return UploadDocuments(
-                            args: UploadDocumentArgs(
-                              context: context,
-                              uploadType: args,
-                              documentType: DocumentType.tripReport,
-                            ),
-                          );
-                        },
-                      ),
-                    ],
-                  ),
                   GoRoute(
                     name: RouteName.about.name,
                     path: RouteName.about.name,
