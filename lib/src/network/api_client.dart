@@ -170,9 +170,11 @@ class ApiClient {
             case (417):
               return Future.error(ControllerException("Error", ex.response!.data['ErrorMessage'], C));
             case (404):
-              return Future.error(AlvysEntityNotFoundException(C));
+              return Future.error(AlvysEntityNotFoundException(ex.response!.data, C));
             case (401):
               return Future.error(AlvysUnauthorizedException(C));
+            case (501):
+              return Future.error(AlvysDependencyException(ex.response!.data, C));
             default:
               return Future.error(ApiServerException(C));
           }
@@ -216,7 +218,7 @@ class FileUploadProgressNotifier extends Notifier<double> {
     return 0;
   }
 
-  void updateProgress(num total, num current) {
+  void updateProgress(num current, num total) {
     state = current / total;
   }
 }
