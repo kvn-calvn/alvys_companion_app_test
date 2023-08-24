@@ -11,12 +11,11 @@ import 'package:intl/intl.dart';
 import '../features/trips/domain/model/app_trip/stop.dart';
 
 class StopCard extends ConsumerWidget {
-  const StopCard({Key? key, required this.stop, required this.tripId})
-      : super(key: key);
+  const StopCard({Key? key, required this.stop, required this.tripId, this.canCheckInOut = false}) : super(key: key);
 
   final Stop stop;
   final String tripId;
-
+  final bool canCheckInOut;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return LayoutBuilder(builder: (context, constraints) {
@@ -31,10 +30,8 @@ class StopCard extends ConsumerWidget {
           clipBehavior: Clip.antiAlias,
           child: InkWell(
             onTap: () {
-              context.goNamed(RouteName.stopDetails.name, pathParameters: {
-                ParamType.tripId.name: tripId,
-                ParamType.stopId.name: stop.stopId!
-              });
+              context.goNamed(RouteName.stopDetails.name,
+                  pathParameters: {ParamType.tripId.name: tripId, ParamType.stopId.name: stop.stopId!});
             },
             child: Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(15, 5, 15, 5),
@@ -46,8 +43,7 @@ class StopCard extends ConsumerWidget {
                     child: Row(
                       children: [
                         ConstrainedBox(
-                          constraints: BoxConstraints(
-                              maxWidth: constraints.maxWidth * 0.8),
+                          constraints: BoxConstraints(maxWidth: constraints.maxWidth * 0.8),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -64,9 +60,7 @@ class StopCard extends ConsumerWidget {
                                 '${stop.city} ${stop.state} ${stop.zip}',
                                 style: Theme.of(context).textTheme.bodyMedium,
                               ),
-                              Text(
-                                  DateFormat("MMM dd, yyyy @ hh:mm")
-                                      .formatNullDate(stop.stopDate),
+                              Text(DateFormat("MMM dd, yyyy @ hh:mm").formatNullDate(stop.stopDate),
                                   style: Theme.of(context).textTheme.bodySmall),
                             ],
                           ),
@@ -79,29 +73,31 @@ class StopCard extends ConsumerWidget {
                     // alignment: MainAxisAlignment.start,
                     children: [
                       ButtonStyle2(
-                        onPressAction: () => {debugPrint("")},
+                        onPressAction: (canCheckInOut && stop.timeRecord?.driver?.timeIn == null)
+                            ? () {
+                                debugPrint("");
+                              }
+                            : null,
                         title: "Checked In",
                         isLoading: false,
-                        isDisable: true,
                       ),
                       const SizedBox(width: 5),
                       ButtonStyle2(
-                        onPressAction: () {
-                          SnackBarWrapper.snackBar(
-                              msg: "Checked In",
-                              context: context,
-                              isSuccess: true);
-                        },
+                        onPressAction: (canCheckInOut &&
+                                stop.timeRecord?.driver?.timeIn != null &&
+                                stop.timeRecord?.driver?.timeOut == null)
+                            ? () {
+                                SnackBarWrapper.snackBar(msg: "Checked In", context: context, isSuccess: true);
+                              }
+                            : null,
                         title: "Check Out",
                         isLoading: false,
-                        isDisable: false,
                       ),
                       const SizedBox(width: 5),
                       ButtonStyle2(
                         onPressAction: () => {debugPrint("")},
                         title: "E-Check",
                         isLoading: false,
-                        isDisable: false,
                       ),
                       const SizedBox(width: 5),
                     ],

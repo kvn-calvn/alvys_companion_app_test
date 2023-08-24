@@ -41,6 +41,7 @@ class GlobalErrorHandler {
       case AlvysTimeoutException:
       case AlvysUnauthorizedException:
       case ApiServerException:
+      case AlvysDependencyException:
       case ControllerException:
         var e = error as ControllerException;
         onError = () => executeOnError(e.source);

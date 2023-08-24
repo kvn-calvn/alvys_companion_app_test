@@ -20,6 +20,41 @@ class AlvysClientException implements ControllerException {
   String get title => "Client Error";
 }
 
+class AlvysDependencyException implements ControllerException {
+  late DependencyError error;
+  late Type controllerType;
+  AlvysDependencyException(dynamic msg, this.controllerType) {
+    error = DependencyError.fromJson(msg);
+  }
+
+  @override
+  String get message => '''${error.title}
+  ${error.detail}''';
+
+  @override
+  Type get source => controllerType;
+
+  @override
+  String get title => "Dependency Failure Error";
+}
+
+class AlvysEntityNotFoundException implements ControllerException {
+  late NotFoundError error;
+  late Type controllerType;
+  AlvysEntityNotFoundException(dynamic msg, this.controllerType) {
+    error = NotFoundError.fromJson(msg);
+  }
+
+  @override
+  String get message => error.title;
+
+  @override
+  Type get source => controllerType;
+
+  @override
+  String get title => "Not Found";
+}
+
 class PermissionException implements Exception {
   final String message;
   final Function onError;
@@ -41,11 +76,6 @@ class AlvysSocketException extends ControllerException {
   AlvysSocketException(this.s)
       : super('Connection Error',
             'There was an error with connecting to the server. Check your internet connection and try again later', s);
-}
-
-class AlvysEntityNotFoundException extends ControllerException {
-  final Type s;
-  AlvysEntityNotFoundException(this.s) : super('Not Found', 'The requested item was not found.', s);
 }
 
 class AlvysUnauthorizedException extends ControllerException {
