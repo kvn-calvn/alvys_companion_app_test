@@ -1,13 +1,10 @@
-import 'package:alvys3/src/common_widgets/custom_bottom_sheet.dart';
 import 'package:alvys3/src/common_widgets/large_nav_button.dart';
 import 'package:alvys3/src/common_widgets/profile_nav_button.dart';
-import 'package:alvys3/src/common_widgets/tenant_switcher.dart';
 import 'package:alvys3/src/features/authentication/presentation/auth_provider_controller.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:material_symbols_icons/symbols.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
