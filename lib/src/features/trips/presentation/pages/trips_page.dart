@@ -74,7 +74,7 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Loads'),
+        title: const Text('Trips'),
         backgroundColor: Colors.transparent,
         elevation: 0,
         leadingWidth: 120,
@@ -123,13 +123,13 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
           },
           tabs: const <Widget>[
             Tab(
-              text: 'ACTIVE',
+              text: 'Active',
             ),
             Tab(
-              text: 'DELIVERED',
+              text: 'Delivered',
             ),
             Tab(
-              text: 'PROCESSING',
+              text: 'Processing',
             )
           ],
         ),

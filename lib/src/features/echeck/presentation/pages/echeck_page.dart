@@ -29,24 +29,6 @@ class _EcheckPageState extends ConsumerState<EcheckPage> {
     var echecks =
         ref.watch(tripControllerProvider).value!.getTrip(widget.tripId).eChecks;
     return Scaffold(
-      appBar: AppBar(
-        title: Text(
-          'E-Checks',
-          style: AlvysTheme.appbarTextStyle(context, true),
-        ),
-        leading: IconButton(
-          // 1
-          icon: Icon(
-            Icons.adaptive.arrow_back,
-          ),
-          onPressed: () {
-            //Navigator.of(context).maybePop();
-            GoRouter.of(context).pop();
-          },
-        ),
-        centerTitle: true,
-        elevation: 0,
-      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           context.goNamed(RouteName.generateEcheck.name, pathParameters: {

@@ -11,7 +11,12 @@ import 'package:intl/intl.dart';
 import '../features/trips/domain/model/app_trip/stop.dart';
 
 class StopCard extends ConsumerWidget {
-  const StopCard({Key? key, required this.stop, required this.tripId, this.canCheckInOut = false}) : super(key: key);
+  const StopCard(
+      {Key? key,
+      required this.stop,
+      required this.tripId,
+      this.canCheckInOut = false})
+      : super(key: key);
 
   final Stop stop;
   final String tripId;
@@ -23,15 +28,15 @@ class StopCard extends ConsumerWidget {
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Material(
           elevation: 0,
-          color: stop.stopType == 'Pickup'
-              ? ColorManager.pickupStopCardBg(Theme.of(context).brightness)
-              : ColorManager.deliveryStopCardBg(Theme.of(context).brightness),
+          color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(10),
           clipBehavior: Clip.antiAlias,
           child: InkWell(
             onTap: () {
-              context.goNamed(RouteName.stopDetails.name,
-                  pathParameters: {ParamType.tripId.name: tripId, ParamType.stopId.name: stop.stopId!});
+              context.goNamed(RouteName.stopDetails.name, pathParameters: {
+                ParamType.tripId.name: tripId,
+                ParamType.stopId.name: stop.stopId!
+              });
             },
             child: Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(15, 5, 15, 5),
@@ -42,8 +47,22 @@ class StopCard extends ConsumerWidget {
                     padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 0, 8),
                     child: Row(
                       children: [
+                        Padding(
+                          padding:
+                              const EdgeInsetsDirectional.fromSTEB(0, 0, 8, 0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                                color: stop.stopType == 'Pickup'
+                                    ? ColorManager.pickupColor
+                                    : ColorManager.deliveryColor,
+                                borderRadius: BorderRadius.circular(10)),
+                            width: 8,
+                            height: 77,
+                          ),
+                        ),
                         ConstrainedBox(
-                          constraints: BoxConstraints(maxWidth: constraints.maxWidth * 0.8),
+                          constraints: BoxConstraints(
+                              maxWidth: constraints.maxWidth * 0.8),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -60,7 +79,9 @@ class StopCard extends ConsumerWidget {
                                 '${stop.city} ${stop.state} ${stop.zip}',
                                 style: Theme.of(context).textTheme.bodyMedium,
                               ),
-                              Text(DateFormat("MMM dd, yyyy @ hh:mm").formatNullDate(stop.stopDate),
+                              Text(
+                                  DateFormat("MMM dd, yyyy @ hh:mm")
+                                      .formatNullDate(stop.stopDate),
                                   style: Theme.of(context).textTheme.bodySmall),
                             ],
                           ),
@@ -73,7 +94,8 @@ class StopCard extends ConsumerWidget {
                     // alignment: MainAxisAlignment.start,
                     children: [
                       ButtonStyle2(
-                        onPressAction: (canCheckInOut && stop.timeRecord?.driver?.timeIn == null)
+                        onPressAction: (canCheckInOut &&
+                                stop.timeRecord?.driver?.timeIn == null)
                             ? () {
                                 debugPrint("");
                               }
@@ -87,7 +109,10 @@ class StopCard extends ConsumerWidget {
                                 stop.timeRecord?.driver?.timeIn != null &&
                                 stop.timeRecord?.driver?.timeOut == null)
                             ? () {
-                                SnackBarWrapper.snackBar(msg: "Checked In", context: context, isSuccess: true);
+                                SnackBarWrapper.snackBar(
+                                    msg: "Checked In",
+                                    context: context,
+                                    isSuccess: true);
                               }
                             : null,
                         title: "Check Out",
