@@ -51,15 +51,11 @@ class TripList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _filteredTrips() {
-      return trips.map((trip) => TripCard(trip: trip));
-    }
-
     if (trips.isNotEmpty) {
       return ListView(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
         scrollDirection: Axis.vertical,
-        children: [..._filteredTrips()],
+        children: trips.map((trip) => TripCard(trip: trip)),
       );
     } else {
       return Center(

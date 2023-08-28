@@ -1,5 +1,3 @@
-import 'package:alvys3/src/features/documents/domain/app_document/app_document.dart';
-
 class FilteredTripsArguments {
   final dynamic data;
   final String title;

@@ -27,8 +27,6 @@ class _MainBottomNavState extends ConsumerState<MainBottomNav> {
     return Scaffold(
       body: widget.children[widget.navShell.currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-        elevation: 0.0,
-        backgroundColor: Colors.transparent,
         type: BottomNavigationBarType.fixed,
         currentIndex: widget.navShell.currentIndex,
         onTap: (i) {

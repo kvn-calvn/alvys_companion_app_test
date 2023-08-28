@@ -1,7 +1,4 @@
-// ignore_for_file: no_leading_underscores_for_local_identifiers
-
 import 'package:alvys3/src/common_widgets/empty_view.dart';
-import 'package:alvys3/src/common_widgets/large_nav_button.dart';
 import 'package:alvys3/src/common_widgets/app_dialog.dart';
 import 'package:alvys3/src/common_widgets/shimmers/trip_card_shimmer.dart';
 import 'package:alvys3/src/common_widgets/trip_card.dart';
@@ -22,8 +19,7 @@ class LoadListPage extends ConsumerStatefulWidget {
   ConsumerState<LoadListPage> createState() => _LoadListPageState();
 }
 
-class _LoadListPageState extends ConsumerState<LoadListPage>
-    with TickerProviderStateMixin {
+class _LoadListPageState extends ConsumerState<LoadListPage> with TickerProviderStateMixin {
   String dropdownvalue = 'Online';
   late TabController _tabController;
   var items = [
@@ -42,27 +38,23 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
   }
 
   Future<void> checkLocationPermission(BuildContext context) async {
-    if (await Permission.location.isPermanentlyDenied ||
-        await Permission.location.isDenied) {
+    if (await Permission.location.isPermanentlyDenied || await Permission.location.isDenied) {
       if (mounted) {
         await showDialog(
           context: context,
           builder: (BuildContext context) {
             return AppDialog(
               title: "Alvys wants to use your location.",
-              description:
-                  "Alvys uses your location data to track the movement of loads you have been assigned.",
+              description: "Alvys uses your location data to track the movement of loads you have been assigned.",
               actions: [
                 AppDialogAction(
                     label: 'Allow',
                     action: () {
-                      AppSettings.openAppSettings(
-                              type: AppSettingsType.location)
+                      AppSettings.openAppSettings(type: AppSettingsType.location)
                           .then((value) => GoRouter.of(context).pop());
                     },
                     primary: true),
-                AppDialogAction(
-                    label: 'Not Now', action: GoRouter.of(context).pop),
+                AppDialogAction(label: 'Not Now', action: GoRouter.of(context).pop),
               ],
             );
           },
@@ -76,8 +68,6 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
     return Scaffold(
       appBar: AppBar(
         title: const Text('Trips'),
-        backgroundColor: Colors.transparent,
-        elevation: 0,
         leadingWidth: 120,
         leading: Padding(
           padding: const EdgeInsets.only(right: 16.0),
@@ -178,16 +168,12 @@ class TripList extends ConsumerWidget {
             Expanded(
               child: RefreshIndicator(
                 onRefresh: () async {
-                  await ref
-                      .read(tripControllerProvider.notifier)
-                      .refreshTrips();
+                  await ref.read(tripControllerProvider.notifier).refreshTrips();
                 },
                 child: value.activeTrips.isNotEmpty
                     ? ListView(
                         padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-                        children: value.activeTrips
-                            .map((trip) => TripCard(trip: trip))
-                            .toList(),
+                        children: value.activeTrips.map((trip) => TripCard(trip: trip)).toList(),
                       )
                     : const EmptyView(
                         title: "No Trips",

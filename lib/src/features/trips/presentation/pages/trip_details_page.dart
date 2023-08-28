@@ -97,41 +97,6 @@ class TripDetails extends ConsumerWidget {
       data: (value) {
         var trip = value.getTrip(tripId);
         var equipment = "${trip.equipment} ${trip.equipmentLength}";
-        Widget stopList() {
-          if (trip.stops!.isNotEmpty) {
-            return Column(
-              children: [
-                ...trip.stops!.map((stop) => StopCard(
-                      stop: stop,
-                      tripId: trip.id!,
-                      canCheckInOutStopId: trip.stops
-                          ?.firstWhereOrNull((element) =>
-                              element.timeRecord?.driver?.timeIn == null || element.timeRecord?.driver?.timeOut == null)
-                          ?.stopId,
-                    ))
-              ],
-            );
-          } else {
-            return Container(
-              alignment: Alignment.center,
-              child: Center(
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const SizedBox(
-                      height: 100,
-                    ),
-                    Text(
-                      "No Stops",
-                      style: Theme.of(context).textTheme.bodyLarge,
-                    ),
-                    Text("There are no stops on this trip.", style: Theme.of(context).textTheme.bodyMedium)
-                  ],
-                ),
-              ),
-            );
-          }
-        }
 
         return RefreshIndicator(
           onRefresh: () async {
@@ -246,7 +211,35 @@ class TripDetails extends ConsumerWidget {
                             ),
                           ],
                         ),
-                        stopList(),
+                        if (trip.stops.isNullOrEmpty)
+                          Center(
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const SizedBox(
+                                  height: 100,
+                                ),
+                                Text(
+                                  "No Stops",
+                                  style: Theme.of(context).textTheme.bodyLarge,
+                                ),
+                                Text("There are no stops on this trip.", style: Theme.of(context).textTheme.bodyMedium)
+                              ],
+                            ),
+                          ),
+                        Column(
+                          children: [
+                            ...trip.stops!.map((stop) => StopCard(
+                                  stop: stop,
+                                  tripId: trip.id!,
+                                  canCheckInOutStopId: trip.stops
+                                      ?.firstWhereOrNull((element) =>
+                                          element.timeRecord?.driver?.timeIn == null ||
+                                          element.timeRecord?.driver?.timeOut == null)
+                                      ?.stopId,
+                                ))
+                          ],
+                        ),
                       ],
                     ),
                   ],
