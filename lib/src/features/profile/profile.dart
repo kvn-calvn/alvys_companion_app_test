@@ -26,16 +26,6 @@ class _SettingsPageState extends State<ProfilePage> {
         centerTitle: false,
         elevation: 0,
         backgroundColor: Colors.transparent,
-        actions: [
-          IconButton(
-              onPressed: () =>
-                  {showCustomBottomSheet(context, const TenantSwitcher())},
-              padding: const EdgeInsets.only(right: 14),
-              icon: const Icon(
-                Symbols.change_circle,
-                size: 35,
-              ))
-        ],
       ),
       body: const Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.0),
@@ -61,7 +51,6 @@ class ProfileList extends ConsumerWidget {
         ),
         ProfileNavButton(
           title: userState.value!.driver!.name!,
-          tenant: "TVA Logistics",
           profileImageUrl: 'https://i.pravatar.cc/300',
           onPressed: () {
             context.pushNamed(RouteName.userDetails.name);

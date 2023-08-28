@@ -5,13 +5,12 @@ class ProfileNavButton extends StatelessWidget {
   const ProfileNavButton({
     Key? key,
     required this.title,
-    required this.tenant,
     required this.onPressed,
     required this.profileImageUrl,
   }) : super(key: key);
 
   final String title;
-  final String tenant;
+
   final String profileImageUrl;
   final void Function()? onPressed;
 
@@ -40,8 +39,6 @@ class ProfileNavButton extends StatelessWidget {
                       children: [
                         Text(title,
                             style: Theme.of(context).textTheme.bodyLarge),
-                        Text(tenant,
-                            style: Theme.of(context).textTheme.bodyMedium),
                       ],
                     ),
                   ),
