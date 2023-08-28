@@ -6,6 +6,7 @@ import 'package:alvys3/src/common_widgets/app_dialog.dart';
 import 'package:alvys3/src/common_widgets/shimmers/trip_card_shimmer.dart';
 import 'package:alvys3/src/common_widgets/trip_card.dart';
 import 'package:alvys3/src/features/trips/presentation/controller/trip_page_controller.dart';
+import 'package:alvys3/src/features/trips/presentation/pages/filtered_trip_page.dart';
 import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:alvys3/src/utils/platform_channel.dart';
 import 'package:app_settings/app_settings.dart';
@@ -136,8 +137,12 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
       ),
       body: TabBarView(controller: _tabController, children: const [
         TripList(),
-        TripList(),
-        TripList(),
+        FilteredTripPage(
+          filterType: TripFilterType.delivered,
+        ),
+        FilteredTripPage(
+          filterType: TripFilterType.processing,
+        ),
       ]),
     );
   }

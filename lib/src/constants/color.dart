@@ -25,7 +25,7 @@ class ColorManager {
   static Color deliveryStopCardBg(Brightness brightness) =>
       brightness.isLight ? const Color(0XFFD4E9F3) : const Color(0XFF2279A3);
   static Color secondaryButton(Brightness brightness) =>
-      brightness.isLight ? const Color(0XFF233E90) : const Color(0XFF232323);
+      brightness.isLight ? const Color(0XFF233E90) : const Color(0XFF265CFF);
   static Color secondaryButtonDisabled(Brightness brightness) =>
       brightness.isLight ? const Color(0XFFBEBEBE) : const Color(0XFF585858);
   static Color scaffoldColor(Brightness brightness) =>

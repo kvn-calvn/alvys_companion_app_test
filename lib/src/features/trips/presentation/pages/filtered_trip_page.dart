@@ -23,22 +23,7 @@ class FilteredTripPage extends ConsumerWidget {
         : ref.watch(tripControllerProvider).value!.processingTrips;
     return Scaffold(
       key: key,
-      appBar: AppBar(
-        elevation: 0,
-        title: Text(
-          filterType.toTitleCase,
-        ),
-        leading: IconButton(
-          // 1
-          icon: Icon(
-            Icons.adaptive.arrow_back,
-          ),
-          color: ColorManager.greyColorScheme1(Theme.of(context).brightness),
-          onPressed: () {
-            Navigator.of(context).maybePop();
-          },
-        ),
-      ),
+
       //backgroundColor: const Color(0xFFF1F4F8),
       body: SafeArea(
           child: RefreshIndicator(
@@ -51,9 +36,13 @@ class FilteredTripPage extends ConsumerWidget {
                 scrollDirection: Axis.vertical,
                 children: trips.map((trip) => TripCard(trip: trip)).toList(),
               )
-            : EmptyView(
-                title: '',
-                description: "There are no ${filterType.name} trips."),
+            : filterType == TripFilterType.processing
+                ? const EmptyView(
+                    title: '',
+                    description: "There are no trips being processed.")
+                : EmptyView(
+                    title: '',
+                    description: "There are no ${filterType.name} trips."),
       )),
     );
   }
