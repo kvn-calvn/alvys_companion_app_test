@@ -1,6 +1,7 @@
 import 'package:alvys3/src/features/trips/domain/model/app_trip/payable_driver.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../../../documents/domain/app_document/app_document.dart';
 import 'echeck.dart';
 import 'stop.dart';
 part 'app_trip.freezed.dart';
@@ -33,10 +34,9 @@ class AppTrip with _$AppTrip {
     @JsonKey(name: 'TotalMiles') double? totalMiles,
     @JsonKey(name: 'TotalWeight') double? totalWeight,
     @JsonKey(name: 'Temperature') double? temperature,
-    @JsonKey(name: 'Attachments') dynamic attachments,
     @JsonKey(name: 'Drivers') List<String?>? drivers,
-    @JsonKey(name: 'MiniStops') List<Stop>? stops,
-    @JsonKey(name: 'Invoices') List<ECheck>? eChecks,
+    @JsonKey(name: 'Stops') List<Stop>? stops,
+    @JsonKey(name: 'Echecks') List<ECheck>? eChecks,
     @Default(0) @JsonKey(name: 'StopCount') int stopCount,
     @JsonKey(name: 'PickupDate') DateTime? pickupDate,
     @JsonKey(name: 'DeliveryDate') DateTime? deliveryDate,
@@ -54,6 +54,7 @@ class AppTrip with _$AppTrip {
     @JsonKey(name: 'Continuous') bool? continuous,
     @JsonKey(name: 'IsTripActive') bool? isTripActive,
     @JsonKey(name: 'PaidMiles') double? paidMiles,
+    @JsonKey(name: 'Attachments') @Default([]) List<AppDocument> attachments,
   }) = _AppTrip;
 
   factory AppTrip.fromJson(Map<String, dynamic> json) => _$AppTripFromJson(json);

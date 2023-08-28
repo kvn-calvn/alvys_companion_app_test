@@ -11,16 +11,11 @@ import 'package:intl/intl.dart';
 import '../features/trips/domain/model/app_trip/stop.dart';
 
 class StopCard extends ConsumerWidget {
-  const StopCard(
-      {Key? key,
-      required this.stop,
-      required this.tripId,
-      this.canCheckInOut = false})
-      : super(key: key);
+  const StopCard({Key? key, required this.stop, required this.tripId, this.canCheckInOutStopId}) : super(key: key);
 
   final Stop stop;
   final String tripId;
-  final bool canCheckInOut;
+  final String? canCheckInOutStopId;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return LayoutBuilder(builder: (context, constraints) {
@@ -33,10 +28,8 @@ class StopCard extends ConsumerWidget {
           clipBehavior: Clip.antiAlias,
           child: InkWell(
             onTap: () {
-              context.goNamed(RouteName.stopDetails.name, pathParameters: {
-                ParamType.tripId.name: tripId,
-                ParamType.stopId.name: stop.stopId!
-              });
+              context.goNamed(RouteName.stopDetails.name,
+                  pathParameters: {ParamType.tripId.name: tripId, ParamType.stopId.name: stop.stopId!});
             },
             child: Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(15, 5, 15, 5),
@@ -46,23 +39,21 @@ class StopCard extends ConsumerWidget {
                   Padding(
                     padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 0, 8),
                     child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
-                          padding:
-                              const EdgeInsetsDirectional.fromSTEB(0, 0, 8, 0),
+                          padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 8, 0),
                           child: Container(
                             decoration: BoxDecoration(
-                                color: stop.stopType == 'Pickup'
-                                    ? ColorManager.pickupColor
-                                    : ColorManager.deliveryColor,
+                                color:
+                                    stop.stopType == 'Pickup' ? ColorManager.pickupColor : ColorManager.deliveryColor,
                                 borderRadius: BorderRadius.circular(10)),
                             width: 8,
                             height: 77,
                           ),
                         ),
                         ConstrainedBox(
-                          constraints: BoxConstraints(
-                              maxWidth: constraints.maxWidth * 0.8),
+                          constraints: BoxConstraints(maxWidth: constraints.maxWidth * 0.8),
                           child: Column(
                             mainAxisSize: MainAxisSize.min,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -72,16 +63,14 @@ class StopCard extends ConsumerWidget {
                                 style: Theme.of(context).textTheme.bodyLarge,
                               ),
                               Text(
-                                stop.street!,
+                                stop.address?.street ?? "",
                                 style: Theme.of(context).textTheme.bodyMedium,
                               ),
                               Text(
-                                '${stop.city} ${stop.state} ${stop.zip}',
+                                '${stop.address?.city ?? ''} ${stop.address?.state ?? ''} ${stop.address?.zip ?? ''}',
                                 style: Theme.of(context).textTheme.bodyMedium,
                               ),
-                              Text(
-                                  DateFormat("MMM dd, yyyy @ hh:mm")
-                                      .formatNullDate(stop.stopDate),
+                              Text(DateFormat("MMM dd, yyyy @ hh:mm").formatNullDate(stop.stopDate),
                                   style: Theme.of(context).textTheme.bodySmall),
                             ],
                           ),
@@ -94,28 +83,24 @@ class StopCard extends ConsumerWidget {
                     // alignment: MainAxisAlignment.start,
                     children: [
                       ButtonStyle2(
-                        onPressAction: (canCheckInOut &&
-                                stop.timeRecord?.driver?.timeIn == null)
+                        onPressAction: canCheckInOutStopId == stop.stopId && stop.timeRecord?.driver?.timeIn == null
                             ? () {
                                 debugPrint("");
                               }
                             : null,
-                        title: "Checked In",
+                        title: stop.timeRecord?.driver?.timeIn == null ? "Check In" : "Checked In",
                         isLoading: false,
                       ),
                       const SizedBox(width: 5),
                       ButtonStyle2(
-                        onPressAction: (canCheckInOut &&
+                        onPressAction: canCheckInOutStopId == stop.stopId &&
                                 stop.timeRecord?.driver?.timeIn != null &&
-                                stop.timeRecord?.driver?.timeOut == null)
+                                stop.timeRecord?.driver?.timeOut == null
                             ? () {
-                                SnackBarWrapper.snackBar(
-                                    msg: "Checked In",
-                                    context: context,
-                                    isSuccess: true);
+                                SnackBarWrapper.snackBar(msg: "Checked In", context: context, isSuccess: true);
                               }
                             : null,
-                        title: "Check Out",
+                        title: stop.timeRecord?.driver?.timeOut == null ? "Check Out" : 'Checked Out',
                         isLoading: false,
                       ),
                       const SizedBox(width: 5),

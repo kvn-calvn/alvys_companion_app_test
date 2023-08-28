@@ -1,18 +1,13 @@
-// ignore_for_file: no_leading_underscores_for_local_identifiers
-
 import 'package:alvys3/src/common_widgets/empty_view.dart';
 import 'package:alvys3/src/common_widgets/trip_card.dart';
-import 'package:alvys3/src/constants/color.dart';
 import 'package:alvys3/src/features/trips/presentation/controller/trip_page_controller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../utils/extensions.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../utils/magic_strings.dart';
 
 class FilteredTripPage extends ConsumerWidget {
-  const FilteredTripPage({Key? key, required this.filterType})
-      : super(key: key);
+  const FilteredTripPage({Key? key, required this.filterType}) : super(key: key);
 
   final TripFilterType filterType;
 
@@ -37,12 +32,8 @@ class FilteredTripPage extends ConsumerWidget {
                 children: trips.map((trip) => TripCard(trip: trip)).toList(),
               )
             : filterType == TripFilterType.processing
-                ? const EmptyView(
-                    title: '',
-                    description: "There are no trips being processed.")
-                : EmptyView(
-                    title: '',
-                    description: "There are no ${filterType.name} trips."),
+                ? const EmptyView(title: '', description: "There are no trips being processed.")
+                : EmptyView(title: '', description: "There are no ${filterType.name} trips."),
       )),
     );
   }

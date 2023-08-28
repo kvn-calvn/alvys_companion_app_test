@@ -49,3 +49,10 @@ enum EcheckOption { copy, cancel }
 enum UploadType { camera, gallery }
 
 enum ParamType { tripId, stopId }
+
+class DocumentTypes {
+  static const String medical = 'Medical',
+      tripReport = 'Trip Report',
+      license = 'License',
+      driverLicense = 'DriverLicense';
+}

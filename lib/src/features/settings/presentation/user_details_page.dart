@@ -104,11 +104,11 @@ class UserDetailsPage extends ConsumerWidget {
                 style: Theme.of(context).textTheme.labelLarge,
               ),
               Text(
-                userState.value!.driver!.address!.street!,
+                userState.value!.driver!.address!.street,
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               Text(
-                "${userState.value!.driver!.address!.city}, ${userState.value!.driver!.address!.state!} ${userState.value!.driver!.address!.zip!}",
+                "${userState.value!.driver!.address!.city}, ${userState.value!.driver!.address!.state} ${userState.value!.driver!.address!.zip}",
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(
@@ -130,8 +130,8 @@ class UserDetailsPage extends ConsumerWidget {
                 style: Theme.of(context).textTheme.labelLarge,
               ),
               Text(
-                DateFormat('MMM d, yyyy', 'en_US').formatNullDate(
-                    userState.value!.driver!.driversLicenceExpirationDate),
+                DateFormat('MMM d, yyyy', 'en_US')
+                    .formatNullDate(userState.value!.driver!.driversLicenceExpirationDate),
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(

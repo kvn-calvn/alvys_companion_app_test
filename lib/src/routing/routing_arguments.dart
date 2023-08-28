@@ -1,3 +1,5 @@
+import 'package:alvys3/src/features/documents/domain/app_document/app_document.dart';
+
 class FilteredTripsArguments {
   final dynamic data;
   final String title;
@@ -28,11 +30,4 @@ class EcheckArguments {
 class TripDocsArguments {
   final String tripId;
   const TripDocsArguments({required this.tripId});
-}
-
-class PDFViewerArguments<T> {
-  final String docUrl;
-  final String title;
-  final T documentData;
-  const PDFViewerArguments(this.docUrl, this.title, this.documentData);
 }

@@ -22,7 +22,7 @@ import '../data/repositories/documents_repository.dart';
 
 class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocumentsState, UploadDocumentArgs>
     implements IAppErrorHandler {
-  late AppDocumentsRepository<UploadDocumentsController> docRepo;
+  late AppDocumentRepository<UploadDocumentsController> docRepo;
   late TripController trips;
   late ScanningNotifier isScanning;
   late AuthProviderNotifier userData;
