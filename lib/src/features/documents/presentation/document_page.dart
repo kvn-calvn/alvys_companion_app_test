@@ -1,5 +1,3 @@
-// ignore_for_file: library_private_types_in_public_api, no_leading_underscores_for_local_identifiers
-
 import '../../../common_widgets/custom_bottom_sheet.dart';
 import '../../../common_widgets/empty_view.dart';
 import '../../../common_widgets/load_more_button.dart';
@@ -19,7 +17,7 @@ class DocumentsPage extends ConsumerStatefulWidget {
   const DocumentsPage(this.args, {Key? key}) : super(key: key);
 
   @override
-  _DocumentsPageState createState() => _DocumentsPageState();
+  ConsumerState<DocumentsPage> createState() => _DocumentsPageState();
 }
 
 class _DocumentsPageState extends ConsumerState<DocumentsPage> {

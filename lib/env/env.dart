@@ -1,5 +1,3 @@
-// ignore_for_file: non_constant_identifier_names
-
 import 'dart:io';
 
 import 'package:envied/envied.dart';
@@ -18,19 +16,19 @@ abstract class Env {
   static final String iOSGeniusScanSDKKey = _Env.iOSGeniusScanSDKKey;
 
   @EnviedField(varName: 'IOS_GENIUSSCANSDKKEY_QA', obfuscate: true)
-  static final String iOSGeniusScanSDKKey_QA = _Env.iOSGeniusScanSDKKey_QA;
+  static final String iOSGeniusScanSDKKeyQA = _Env.iOSGeniusScanSDKKey_QA;
 
   @EnviedField(varName: 'IOS_GENIUSSCANSDKKEY_DEV', obfuscate: true)
-  static final String iOSGeniusScanSDKKey_DEV = _Env.iOSGeniusScanSDKKey_DEV;
+  static final String iOSGeniusScanSDKKeyDEV = _Env.iOSGeniusScanSDKKey_DEV;
 
   @EnviedField(varName: 'ANDROID_GENIUSSCANSDKKEY', obfuscate: true)
   static final String androidGeniusScanSDKKey = _Env.androidGeniusScanSDKKey;
 
   @EnviedField(varName: 'ANDROID_GENIUSSCANSDKKEY_DEV', obfuscate: true)
-  static final String androidGeniusScanSDKKey_DEV = _Env.androidGeniusScanSDKKey_DEV;
+  static final String androidGeniusScanSDKKeyDEV = _Env.androidGeniusScanSDKKey_DEV;
 
   @EnviedField(varName: 'ANDROID_GENIUSSCANSDKKEY_QA', obfuscate: true)
-  static final String androidGeniusScanSDKKey_QA = _Env.androidGeniusScanSDKKey_QA;
+  static final String androidGeniusScanSDKKeyQA = _Env.androidGeniusScanSDKKey_QA;
 
   @EnviedField(varName: 'AZURETELEMETRYKEY_DEV', obfuscate: true)
   static final String azureTelemetryKeyDEV = _Env.azureTelemetryKeyDEV;

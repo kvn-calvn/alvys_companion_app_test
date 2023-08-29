@@ -1,5 +1,3 @@
-// ignore_for_file: no_leading_underscores_for_local_identifiers
-
 import 'package:alvys3/src/constants/color.dart';
 import 'package:alvys3/src/features/trips/presentation/controller/trip_page_controller.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
