@@ -126,7 +126,7 @@ class AlvysTheme {
     return small
         ? Theme.of(context)
             .textTheme
-            .titleMedium!
+            .headlineLarge!
             .copyWith(fontWeight: FontWeight.w700)
         : Theme.of(context).textTheme.headlineLarge!;
   }

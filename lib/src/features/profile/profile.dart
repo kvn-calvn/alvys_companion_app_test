@@ -1,5 +1,6 @@
 import '../../common_widgets/large_nav_button.dart';
 import '../../common_widgets/profile_nav_button.dart';
+import '../../utils/app_theme.dart';
 import '../authentication/presentation/auth_provider_controller.dart';
 import '../../utils/magic_strings.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,10 @@ class _SettingsPageState extends State<ProfilePage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text('Profile'),
+        title: Text(
+          'Profile',
+          style: AlvysTheme.appbarTextStyle(context, true),
+        ),
         centerTitle: false,
         elevation: 0,
         backgroundColor: Colors.transparent,

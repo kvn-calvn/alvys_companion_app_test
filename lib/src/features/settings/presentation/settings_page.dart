@@ -2,6 +2,7 @@ import '../../../common_widgets/custom_bottom_sheet.dart';
 import '../../../common_widgets/large_nav_button.dart';
 import '../../../common_widgets/theme_switcher.dart';
 import '../../../common_widgets/url_nav_button.dart';
+import '../../../utils/app_theme.dart';
 import '../../authentication/presentation/auth_provider_controller.dart';
 import '../../../utils/magic_strings.dart';
 import '../../../utils/platform_channel.dart';
@@ -22,7 +23,10 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text('Settings'),
+        title: Text(
+          'Settings',
+          style: AlvysTheme.appbarTextStyle(context, true),
+        ),
         centerTitle: false,
         elevation: 0,
         backgroundColor: Colors.transparent,

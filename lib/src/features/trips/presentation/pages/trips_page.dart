@@ -2,6 +2,7 @@ import '../../../../common_widgets/empty_view.dart';
 import '../../../../common_widgets/app_dialog.dart';
 import '../../../../common_widgets/shimmers/trip_card_shimmer.dart';
 import '../../../../common_widgets/trip_card.dart';
+import '../../../../utils/app_theme.dart';
 import '../controller/trip_page_controller.dart';
 import 'filtered_trip_page.dart';
 import '../../../../utils/magic_strings.dart';
@@ -19,7 +20,8 @@ class LoadListPage extends ConsumerStatefulWidget {
   ConsumerState<LoadListPage> createState() => _LoadListPageState();
 }
 
-class _LoadListPageState extends ConsumerState<LoadListPage> with TickerProviderStateMixin {
+class _LoadListPageState extends ConsumerState<LoadListPage>
+    with TickerProviderStateMixin {
   String dropdownvalue = 'Online';
   late TabController _tabController;
   var items = [
@@ -38,23 +40,27 @@ class _LoadListPageState extends ConsumerState<LoadListPage> with TickerProvider
   }
 
   Future<void> checkLocationPermission(BuildContext context) async {
-    if (await Permission.location.isPermanentlyDenied || await Permission.location.isDenied) {
+    if (await Permission.location.isPermanentlyDenied ||
+        await Permission.location.isDenied) {
       if (mounted) {
         await showDialog(
           context: context,
           builder: (BuildContext context) {
             return AppDialog(
               title: "Alvys wants to use your location.",
-              description: "Alvys uses your location data to track the movement of loads you have been assigned.",
+              description:
+                  "Alvys uses your location data to track the movement of loads you have been assigned.",
               actions: [
                 AppDialogAction(
                     label: 'Allow',
                     action: () {
-                      AppSettings.openAppSettings(type: AppSettingsType.location)
+                      AppSettings.openAppSettings(
+                              type: AppSettingsType.location)
                           .then((value) => GoRouter.of(context).pop());
                     },
                     primary: true),
-                AppDialogAction(label: 'Not Now', action: GoRouter.of(context).pop),
+                AppDialogAction(
+                    label: 'Not Now', action: GoRouter.of(context).pop),
               ],
             );
           },
@@ -67,44 +73,84 @@ class _LoadListPageState extends ConsumerState<LoadListPage> with TickerProvider
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Trips'),
-        leadingWidth: 120,
-        leading: Padding(
-          padding: const EdgeInsets.only(right: 16.0),
-          child: DropdownButton(
-            value: dropdownvalue,
-            icon: const Icon(Icons.keyboard_arrow_down),
-            items: [
-              DropdownMenuItem(
-                value: "Online",
-                onTap: () {
-                  //Check if user is on an active trip then start tracking if not dialog show that they are not on an active trip therefore they will remain offline.
-                },
-                child: Text(
-                  "Online",
-                  style: Theme.of(context).textTheme.titleMedium,
+        title: Text(
+          'Trips',
+          style: AlvysTheme.appbarTextStyle(context, true),
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: Container(
+              //
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              /* decoration: BoxDecoration(
+                color: Colors.green.shade50,
+                border: Border.all(color: Colors.transparent),
+                borderRadius: BorderRadius.circular(10),
+              ),*/
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton(
+                  value: dropdownvalue,
+                  isDense: true,
+                  elevation: 1,
+                  iconSize: 0.0,
+                  borderRadius: BorderRadius.circular(10),
+                  items: [
+                    DropdownMenuItem(
+                      value: "Online",
+                      onTap: () {
+                        //Check if user is on an active trip then start tracking if not dialog show that they are not on an active trip therefore they will remain offline.
+                      },
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.brightness_1,
+                            color: Colors.green.shade600,
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            "Online",
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                        ],
+                      ),
+                    ),
+                    DropdownMenuItem(
+                      value: "Offline",
+                      onTap: () {
+                        //Stop location tracking when offline.
+                        PlatformChannel.stopLocationTracking();
+                      },
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.brightness_1,
+                            color: Colors.grey.shade600,
+                          ),
+                          const SizedBox(
+                            width: 5,
+                          ),
+                          Text(
+                            "Offline",
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                  onChanged: (String? value) {
+                    setState(() {
+                      dropdownvalue = value!;
+                    });
+                  },
                 ),
               ),
-              DropdownMenuItem(
-                value: "Offline",
-                onTap: () {
-                  //Stop location tracking when offline.
-                  PlatformChannel.stopLocationTracking();
-                },
-                child: Text(
-                  "Offline",
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-              )
-            ],
-            onChanged: (String? value) {
-              setState(() {
-                dropdownvalue = value!;
-              });
-            },
+            ),
           ),
-        ),
-        centerTitle: true,
+        ],
+        centerTitle: false,
         bottom: TabBar(
           controller: _tabController,
           labelStyle: Theme.of(context).textTheme.bodyLarge,
@@ -168,12 +214,16 @@ class TripList extends ConsumerWidget {
             Expanded(
               child: RefreshIndicator(
                 onRefresh: () async {
-                  await ref.read(tripControllerProvider.notifier).refreshTrips();
+                  await ref
+                      .read(tripControllerProvider.notifier)
+                      .refreshTrips();
                 },
                 child: value.activeTrips.isNotEmpty
                     ? ListView(
                         padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-                        children: value.activeTrips.map((trip) => TripCard(trip: trip)).toList(),
+                        children: value.activeTrips
+                            .map((trip) => TripCard(trip: trip))
+                            .toList(),
                       )
                     : const EmptyView(
                         title: "No Trips",
