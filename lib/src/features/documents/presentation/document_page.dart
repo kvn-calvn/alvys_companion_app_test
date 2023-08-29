@@ -37,8 +37,7 @@ class _DocumentsPageState extends ConsumerState<DocumentsPage> {
   @override
   Widget build(BuildContext context) {
     final docsState = ref.watch(documentsProvider.call(widget.args));
-    final docsNotifier =
-        ref.watch(documentsProvider.call(widget.args).notifier);
+    final docsNotifier = ref.watch(documentsProvider.call(widget.args).notifier);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -55,9 +54,7 @@ class _DocumentsPageState extends ConsumerState<DocumentsPage> {
                 showCustomBottomSheet(
                   context,
                   UploadOptions(
-                      documentType: widget.args.documentType,
-                      tripId: widget.args.tripId ?? "",
-                      mounted: mounted),
+                      documentType: widget.args.documentType, tripId: widget.args.tripId ?? "", mounted: mounted),
                 );
               },
               child: const Icon(Icons.cloud_upload),
@@ -70,30 +67,22 @@ class _DocumentsPageState extends ConsumerState<DocumentsPage> {
           error: (error, stack) {
             return RefreshIndicator(
               onRefresh: () async {
-                await ref
-                    .read(documentsProvider.call(widget.args).notifier)
-                    .getDocuments();
+                await ref.read(documentsProvider.call(widget.args).notifier).getDocuments();
               },
-              child: const EmptyView(
-                  title: "Error occurred while loading documents",
-                  description: ''),
+              child: const EmptyView(title: "Error occurred while loading documents", description: ''),
             );
           },
           data: (data) {
             return DocumentList(
-              documents: docsNotifier.documentThumbnails,
+              documents: docsState.value!.documentList,
               refreshFunction: () async {
-                await ref
-                    .read(documentsProvider.call(widget.args).notifier)
-                    .getDocuments();
+                await ref.read(documentsProvider.call(widget.args).notifier).getDocuments();
               },
               args: widget.args,
               emptyMessage: "No ${docsNotifier.pageTitle}",
               extra: data.canLoadMore
                   ? LoadMoreButton(loadMoreFunction: () async {
-                      await ref
-                          .read(documentsProvider.call(widget.args).notifier)
-                          .loadMorePaystubs();
+                      await ref.read(documentsProvider.call(widget.args).notifier).loadMorePaystubs();
                     })
                   : null,
             );

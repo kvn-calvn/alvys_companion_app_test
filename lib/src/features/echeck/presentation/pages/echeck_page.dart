@@ -5,6 +5,7 @@ import 'package:alvys3/src/features/trips/presentation/controller/trip_page_cont
 import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../utils/extensions.dart';
 
@@ -25,37 +26,35 @@ class _EcheckPageState extends ConsumerState<EcheckPage> {
 
   @override
   Widget build(BuildContext context) {
-    var echecks =
-        ref.watch(tripControllerProvider).value!.getTrip(widget.tripId).eChecks;
-    return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          context.goNamed(RouteName.generateEcheck.name, pathParameters: {
-            ParamType.tripId.name: widget.tripId,
-          });
-        },
-        backgroundColor: ColorManager.primary(Theme.of(context).brightness),
-        child: const Icon(Icons.attach_money, color: Colors.white),
-      ),
-      body: RefreshIndicator(
-        onRefresh: () async {
-          await ref
-              .read(tripControllerProvider.notifier)
-              .refreshCurrentTrip(widget.tripId);
-        },
-        child: echecks.isNullOrEmpty
-            ? const EmptyView(
-                title: 'No E-Checks',
-                description: 'Generated E-Checks will appear here.')
-            : ListView.builder(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                itemCount: echecks!.length,
-                itemBuilder: (context, index) => EcheckCard(
-                  eCheck: echecks[index],
-                  cancelECheck: (echeckNumber) {},
-                ),
-              ),
-      ),
-    );
+    var state = ref.watch(tripControllerProvider);
+    var echecks = ref.watch(tripControllerProvider).value!.getTrip(widget.tripId).eChecks;
+    return state.isLoading
+        ? SpinKitFoldingCube()
+        : Scaffold(
+            floatingActionButton: FloatingActionButton(
+              onPressed: () {
+                context.goNamed(RouteName.generateEcheck.name, pathParameters: {
+                  ParamType.tripId.name: widget.tripId,
+                });
+              },
+              backgroundColor: ColorManager.primary(Theme.of(context).brightness),
+              child: const Icon(Icons.attach_money, color: Colors.white),
+            ),
+            body: RefreshIndicator(
+              onRefresh: () async {
+                await ref.read(tripControllerProvider.notifier).refreshCurrentTrip(widget.tripId);
+              },
+              child: echecks.isNullOrEmpty
+                  ? const EmptyView(title: 'No E-Checks', description: 'Generated E-Checks will appear here.')
+                  : ListView.builder(
+                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                      itemCount: echecks!.length,
+                      itemBuilder: (context, index) => EcheckCard(
+                        eCheck: echecks[index],
+                        cancelECheck: (echeckNumber) {},
+                      ),
+                    ),
+            ),
+          );
   }
 }

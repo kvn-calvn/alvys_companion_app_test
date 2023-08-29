@@ -1,8 +1,8 @@
 import 'dart:convert';
 
+import 'package:alvys3/src/models/address/address.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'address.dart';
 import 'user_tenant.dart';
 
 part 'driver_user.freezed.dart';
@@ -15,8 +15,7 @@ class DriverUser with _$DriverUser {
     @JsonKey(name: "UserName") String? userName,
     @JsonKey(name: "Name") String? name,
     @JsonKey(name: "Email") String? email,
-    @JsonKey(name: "DriversLicenceExpirationDate")
-        DateTime? driversLicenceExpirationDate,
+    @JsonKey(name: "DriversLicenceExpirationDate") DateTime? driversLicenceExpirationDate,
     @JsonKey(name: "DriversLicenceState") String? driversLicenceState,
     @JsonKey(name: "DriversLicenceNumber") String? driversLicenceNumber,
     @JsonKey(name: "AppToken") String? appToken,
@@ -28,12 +27,9 @@ class DriverUser with _$DriverUser {
     @JsonKey(name: "DateModified") DateTime? dateModified,
     @Default(true) @JsonKey(name: "FirstLogin") bool firstLogin,
     @Default(false) @JsonKey(name: "IsDeleted") bool isDeleted,
-    @Default(<UserTenant>[])
-    @JsonKey(name: "UserTenants")
-        List<UserTenant> userTenants,
+    @Default(<UserTenant>[]) @JsonKey(name: "UserTenants") List<UserTenant> userTenants,
   }) = _DriverUser;
   DriverUser._();
-  factory DriverUser.fromJson(Map<String, dynamic> json) =>
-      _$DriverUserFromJson(json);
+  factory DriverUser.fromJson(Map<String, dynamic> json) => _$DriverUserFromJson(json);
   String toStringJson() => jsonEncode(this);
 }

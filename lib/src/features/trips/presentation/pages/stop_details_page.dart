@@ -69,15 +69,12 @@ class StopDetails extends ConsumerWidget {
               color: ColorManager.primary(Theme.of(context).brightness),
               size: 50.0,
             ),
-        error: (error, stack) =>
-            Text('Oops, something unexpected happened, $stack'),
+        error: (error, stack) => Text('Oops, something unexpected happened, $stack'),
         data: (value) {
           var currentStop = value.getStop(tripId, stopId);
           return RefreshIndicator(
             onRefresh: () async {
-              await ref
-                  .read(tripControllerProvider.notifier)
-                  .refreshCurrentTrip(tripId);
+              await ref.read(tripControllerProvider.notifier).refreshCurrentTrip(tripId);
             },
             child: ListView(
               children: [
@@ -93,11 +90,11 @@ class StopDetails extends ConsumerWidget {
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     Text(
-                      currentStop.street ?? "",
+                      currentStop.address?.street ?? "",
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     Text(
-                      '${currentStop.city!} ${currentStop.state!} ${currentStop.zip!}',
+                      '${currentStop.address?.city} ${currentStop.address?.state} ${currentStop.address?.zip}',
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ],
@@ -129,8 +126,7 @@ class StopDetails extends ConsumerWidget {
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         Text(
-                          DateFormat.MEd()
-                              .formatNullDate(currentStop.actualStopdate),
+                          DateFormat.MEd().formatNullDate(currentStop.actualStopdate),
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
@@ -149,8 +145,7 @@ class StopDetails extends ConsumerWidget {
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         Text(
-                          DateFormat.MEd().formatNullDate(
-                              currentStop.timeRecord?.driver?.timeIn),
+                          DateFormat.MEd().formatNullDate(currentStop.timeRecord?.driver?.timeIn),
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
@@ -163,8 +158,7 @@ class StopDetails extends ConsumerWidget {
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         Text(
-                          DateFormat.MEd().formatNullDate(
-                              currentStop.timeRecord?.driver?.timeOut),
+                          DateFormat.MEd().formatNullDate(currentStop.timeRecord?.driver?.timeOut),
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
@@ -177,8 +171,7 @@ class StopDetails extends ConsumerWidget {
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 const SizedBox(height: 5),
-                ItemsWidget(
-                    commodities: currentStop.mComodities ?? <MComodity>[]),
+                ItemsWidget(commodities: currentStop.comodities ?? <MComodity>[]),
                 const SizedBox(height: 20),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -188,9 +181,7 @@ class StopDetails extends ConsumerWidget {
                       style: Theme.of(context).textTheme.bodyLarge,
                     ),
                     Text(
-                      currentStop.genInstructions.isNullOrEmpty
-                          ? '-'
-                          : currentStop.genInstructions!,
+                      currentStop.genInstructions.isNullOrEmpty ? '-' : currentStop.genInstructions!,
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ],

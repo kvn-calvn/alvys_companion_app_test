@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:alvys3/src/features/documents/domain/app_document/app_document.dart';
 import 'package:alvys3/src/utils/app_theme.dart';
 import 'package:dio/dio.dart';
 
@@ -9,10 +10,8 @@ import 'package:flutter/material.dart';
 import 'package:pdf_viewer_plugin/pdf_viewer_plugin.dart';
 import 'package:share_plus/share_plus.dart';
 
-import '../../../routing/routing_arguments.dart';
-
 class PDFViewer extends StatefulWidget {
-  final PDFViewerArguments arguments;
+  final AppDocument arguments;
 
   const PDFViewer({Key? key, required this.arguments}) : super(key: key);
 
@@ -33,7 +32,7 @@ class _PDFViewerState extends State<PDFViewer> {
   Future<void> initPdf() async {
     path = "${(await getTemporaryDirectory()).path}/doc.pdf";
     await Dio().download(
-      widget.arguments.docUrl,
+      widget.arguments.documentUrl,
       path,
       onReceiveProgress: (count, total) {
         if (mounted) {
@@ -58,7 +57,7 @@ class _PDFViewerState extends State<PDFViewer> {
         elevation: 0,
         centerTitle: true,
         title: Text(
-          widget.arguments.title,
+          widget.arguments.documentType,
           textAlign: TextAlign.start,
           style: AlvysTheme.appbarTextStyle(context, true),
         ),
@@ -93,9 +92,7 @@ class _PDFViewerState extends State<PDFViewer> {
                       strokeWidth: 16,
                     ),
                   ),
-                  progress > 0
-                      ? Text('${(progress * 100).ceil()}')
-                      : const SizedBox.shrink(),
+                  progress > 0 ? Text('${(progress * 100).ceil()}') : const SizedBox.shrink(),
                 ],
               )
             : errorMessage.isNotEmpty

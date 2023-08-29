@@ -10,7 +10,7 @@ void main() {
     env: Flavor.prod.toUpperCase,
     rawApiBase: "api.alvys.com",
     baseUrl: "https://api.alvys.com/api/",
-    mobileBaseApi: 'https://api.alvys.com/api/mobilev2/',
+    mobileBaseApi: 'https://api.alvys.com/api/mobile/',
     storageUrl: "https://alvyssandboxstorage.blob.core.windows.net/",
     androidGeniusScanSDKKey: Env.androidGeniusScanSDKKey,
     iosGeniusScanSDKKey: Env.iOSGeniusScanSDKKey,

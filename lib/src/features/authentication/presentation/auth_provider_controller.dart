@@ -51,12 +51,12 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppError
     state = const AsyncValue.loading();
     var driverRes = await authRepo.verifyDriverCode(state.value!.phone, state.value!.verificationCode);
     var storage = const FlutterSecureStorage();
-    state = AsyncValue.data(state.value!.copyWith(driver: driverRes.data));
-    await storage.write(key: StorageKey.driverData.name, value: driverRes.data!.toStringJson());
+    state = AsyncValue.data(state.value!.copyWith(driver: driverRes));
+    await storage.write(key: StorageKey.driverData.name, value: driverRes.toStringJson());
     await storage.write(
       key: StorageKey.driverToken.name,
       value: base64.encode(
-        utf8.encode("${driverRes.data!.userName}:${driverRes.data!.appToken}"),
+        utf8.encode("${driverRes.userName}:${driverRes.appToken}"),
       ),
     );
 
