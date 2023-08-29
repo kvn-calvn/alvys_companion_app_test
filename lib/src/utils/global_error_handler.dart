@@ -12,7 +12,7 @@ final globalErrorHandlerProvider = Provider<GlobalErrorHandler>((ref) {
 
 class GlobalErrorHandler {
   final ProviderRef<GlobalErrorHandler> ref;
-  GlobalKey<NavigatorState> navKey = GlobalKey<NavigatorState>(debugLabel: "MainNavKey");
+  LabeledGlobalKey<NavigatorState> navKey = LabeledGlobalKey<NavigatorState>("MainNavKey");
   GlobalErrorHandler({required this.ref});
   void handle(FlutterErrorDetails? details, bool flutterError, [Object? error, StackTrace? trace]) {
     _handleError(
