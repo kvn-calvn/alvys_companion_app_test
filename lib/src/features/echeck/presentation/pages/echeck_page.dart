@@ -1,12 +1,11 @@
 import 'package:alvys3/src/common_widgets/echeck_card.dart';
 import 'package:alvys3/src/common_widgets/empty_view.dart';
 import 'package:alvys3/src/constants/color.dart';
+import 'package:alvys3/src/features/echeck/presentation/pages/generate_echeck.dart';
 import 'package:alvys3/src/features/trips/presentation/controller/trip_page_controller.dart';
-import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:go_router/go_router.dart';
 import '../../../../utils/extensions.dart';
 
 class EcheckPage extends ConsumerStatefulWidget {
@@ -27,25 +26,38 @@ class _EcheckPageState extends ConsumerState<EcheckPage> {
   @override
   Widget build(BuildContext context) {
     var state = ref.watch(tripControllerProvider);
-    var echecks = ref.watch(tripControllerProvider).value!.getTrip(widget.tripId).eChecks;
+    var echecks =
+        ref.watch(tripControllerProvider).value!.getTrip(widget.tripId).eChecks;
     return state.isLoading
         ? SpinKitFoldingCube()
         : Scaffold(
             floatingActionButton: FloatingActionButton(
               onPressed: () {
+                showDialog<void>(
+                  context: context,
+                  builder: (BuildContext context) {
+                    return GenerateEcheck(widget.tripId);
+                  },
+                );
+/*
                 context.goNamed(RouteName.generateEcheck.name, pathParameters: {
                   ParamType.tripId.name: widget.tripId,
-                });
+                });*/
               },
-              backgroundColor: ColorManager.primary(Theme.of(context).brightness),
+              backgroundColor:
+                  ColorManager.primary(Theme.of(context).brightness),
               child: const Icon(Icons.attach_money, color: Colors.white),
             ),
             body: RefreshIndicator(
               onRefresh: () async {
-                await ref.read(tripControllerProvider.notifier).refreshCurrentTrip(widget.tripId);
+                await ref
+                    .read(tripControllerProvider.notifier)
+                    .refreshCurrentTrip(widget.tripId);
               },
               child: echecks.isNullOrEmpty
-                  ? const EmptyView(title: 'No E-Checks', description: 'Generated E-Checks will appear here.')
+                  ? const EmptyView(
+                      title: 'No E-Checks',
+                      description: 'Generated E-Checks will appear here.')
                   : ListView.builder(
                       padding: const EdgeInsets.symmetric(horizontal: 16.0),
                       itemCount: echecks!.length,
