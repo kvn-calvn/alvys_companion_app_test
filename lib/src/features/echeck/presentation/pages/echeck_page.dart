@@ -2,7 +2,6 @@ import '../../../../common_widgets/echeck_card.dart';
 import '../../../../common_widgets/empty_view.dart';
 import '../../../../constants/color.dart';
 import '../../../trips/presentation/controller/trip_page_controller.dart';
-import '../../../../utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -14,8 +13,7 @@ class EcheckPage extends ConsumerStatefulWidget {
   const EcheckPage(this.tripId, {Key? key}) : super(key: key);
 
   @override
-  // ignore: library_private_types_in_public_api
-  _EcheckPageState createState() => _EcheckPageState();
+  ConsumerState<EcheckPage> createState() => _EcheckPageState();
 }
 
 class _EcheckPageState extends ConsumerState<EcheckPage> {

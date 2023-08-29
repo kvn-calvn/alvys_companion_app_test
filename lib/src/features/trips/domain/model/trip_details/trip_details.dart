@@ -1,5 +1,6 @@
-import '../app_trip/app_trip.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+import '../app_trip/app_trip.dart';
 
 part 'trip_details.freezed.dart';
 part 'trip_details.g.dart';

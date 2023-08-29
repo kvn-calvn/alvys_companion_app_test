@@ -7,7 +7,7 @@ class TabletView extends ConsumerWidget {
   List<Widget> get tabs => [];
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Material(
+    return const Material(
       color: Colors.transparent,
       child: Row(
         children: [

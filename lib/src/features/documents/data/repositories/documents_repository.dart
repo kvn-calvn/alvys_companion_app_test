@@ -1,15 +1,16 @@
 import 'dart:async';
 import 'dart:io';
 
-import '../../../../constants/api_routes.dart';
-import '../../../authentication/domain/models/driver_user/driver_user.dart';
-import '../../../../network/api_client.dart';
-import '../../../../utils/magic_strings.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../domain/app_document/app_document.dart';
+
+import '../../../../constants/api_routes.dart';
+import '../../../../network/api_client.dart';
 import '../../../../utils/extensions.dart';
+import '../../../../utils/magic_strings.dart';
+import '../../../authentication/domain/models/driver_user/driver_user.dart';
+import '../../domain/app_document/app_document.dart';
 import '../../presentation/upload_documents_controller.dart';
 
 abstract class DocumentsRepository<T> {

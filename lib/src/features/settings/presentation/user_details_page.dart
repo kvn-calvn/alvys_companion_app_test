@@ -1,11 +1,11 @@
-import '../../../common_widgets/avatar.dart';
-import '../../../utils/app_theme.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../../../common_widgets/avatar.dart';
+import '../../../utils/app_theme.dart';
 import '../../authentication/presentation/auth_provider_controller.dart';
 
 class UserDetailsPage extends ConsumerWidget {

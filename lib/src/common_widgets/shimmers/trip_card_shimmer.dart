@@ -1,7 +1,8 @@
-import 'shimmer_widget.dart';
 import 'package:fade_shimmer/fade_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'shimmer_widget.dart';
 
 class TripListShimmer extends StatelessWidget {
   const TripListShimmer({Key? key}) : super(key: key);

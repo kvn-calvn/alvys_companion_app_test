@@ -1,6 +1,7 @@
+import 'package:freezed_annotation/freezed_annotation.dart';
+
 import '../driver_user/driver_user.dart';
 import '../driver_user/user_tenant.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'auth_state.freezed.dart';
 part 'auth_state.g.dart';
