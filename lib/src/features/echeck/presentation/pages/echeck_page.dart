@@ -6,7 +6,6 @@ import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import '../../../../utils/app_theme.dart';
 import '../../../../utils/extensions.dart';
 
 class EcheckPage extends ConsumerStatefulWidget {
