@@ -50,6 +50,8 @@ enum UploadType { camera, gallery }
 
 enum ParamType { tripId, stopId }
 
+enum EcheckReason { advance, trailerWash, extraLaborDelivery, lumper, palletFee }
+
 class DocumentTypes {
   static const String medical = 'Medical',
       tripReport = 'Trip Report',

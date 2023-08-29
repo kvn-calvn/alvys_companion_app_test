@@ -1,5 +1,5 @@
-import 'package:alvys3/src/features/authentication/domain/models/driver_user/driver_user.dart';
-import 'package:alvys3/src/features/authentication/domain/models/driver_user/user_tenant.dart';
+import '../driver_user/driver_user.dart';
+import '../driver_user/user_tenant.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'auth_state.freezed.dart';
@@ -15,8 +15,7 @@ class AuthState with _$AuthState {
     @Default('') String verificationCode,
     @Default(false) bool driverLoggedIn,
   }) = _AuthState;
-  UserTenant currentUserTenant(String companyCode) => driver!.userTenants
-      .firstWhere((element) => element.companyCode == companyCode);
-  factory AuthState.fromJson(Map<String, dynamic> json) =>
-      _$AuthStateFromJson(json);
+  UserTenant currentUserTenant(String companyCode) =>
+      driver!.userTenants.firstWhere((element) => element.companyCode == companyCode);
+  factory AuthState.fromJson(Map<String, dynamic> json) => _$AuthStateFromJson(json);
 }

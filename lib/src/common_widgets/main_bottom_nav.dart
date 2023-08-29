@@ -1,11 +1,9 @@
-import 'package:alvys3/custom_icons/alvys3_icons.dart';
-import 'package:alvys3/src/features/documents/presentation/upload_documents_controller.dart';
+import '../../custom_icons/alvys3_icons.dart';
+import '../features/documents/presentation/upload_documents_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
-
-final bottomNavIndexProvider = StateProvider((ref) => 0);
 
 class MainBottomNav extends ConsumerStatefulWidget {
   const MainBottomNav({

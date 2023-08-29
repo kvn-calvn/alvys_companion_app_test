@@ -1,23 +1,20 @@
 import 'dart:async';
-import 'package:alvys3/src/utils/extensions.dart';
+import '../../../../utils/extensions.dart';
+import '../../../../utils/magic_strings.dart';
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../domain/echeck_state/echeck_state.dart';
 
 class EcheckPageController extends AutoDisposeAsyncNotifier<ECheckState> {
-  final List<String> reasons = [
-    'Advance',
-    'Trailer Wash',
-    'Extra Labor Delivery',
-    'Lumper',
-    'Pallet Fee'
-  ];
-  final List<String> stopReasons = [
-    'Late Fee',
-    'Extra Labor Delivery',
-    'Lumper',
-  ];
+  final List<String> reasons = EcheckReason.values.map((e) => e.name.splitCamelCaseWord().titleCase).toList();
+  final List<String> stopReasons =
+      [EcheckReason.lumper, EcheckReason.extraLaborDelivery].map((e) => e.name.splitCamelCaseWord().titleCase).toList();
+  //   'Late Fee',
+  //   'Extra Labor Delivery',
+  //   'Lumper',
+  // ];
 
   @override
   FutureOr<ECheckState> build() {
@@ -44,8 +41,7 @@ class EcheckPageController extends AutoDisposeAsyncNotifier<ECheckState> {
   }
 
   void setAmount(String? amount) {
-    state = AsyncValue.data(
-        state.value!.copyWith(amount: amount.currencyNumbersOnly));
+    state = AsyncValue.data(state.value!.copyWith(amount: amount.currencyNumbersOnly));
   }
 
   bool get showGenerateButton {
@@ -58,5 +54,4 @@ class EcheckPageController extends AutoDisposeAsyncNotifier<ECheckState> {
 }
 
 final echeckPageControllerProvider =
-    AutoDisposeAsyncNotifierProvider<EcheckPageController, ECheckState>(
-        EcheckPageController.new);
+    AutoDisposeAsyncNotifierProvider<EcheckPageController, ECheckState>(EcheckPageController.new);

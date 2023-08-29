@@ -1,4 +1,4 @@
-import 'package:alvys3/src/constants/color.dart';
+import '../constants/color.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 

@@ -1,15 +1,16 @@
 import 'dart:async';
 
-import 'package:alvys3/src/constants/api_routes.dart';
-import 'package:alvys3/src/features/authentication/presentation/auth_provider_controller.dart';
-import 'package:alvys3/src/features/trips/domain/model/app_trip/app_trip.dart';
-import 'package:alvys3/src/features/trips/domain/model/app_trip/trip_list_state.dart';
-import 'package:alvys3/src/features/trips/data/repositories/trip_repository.dart';
-import 'package:alvys3/src/utils/platform_channel.dart';
-import 'package:alvys3/src/utils/utils.dart';
+import '../../../../constants/api_routes.dart';
+import '../../../authentication/presentation/auth_provider_controller.dart';
+import '../../domain/model/app_trip/app_trip.dart';
+import '../../domain/model/app_trip/trip_list_state.dart';
+import '../../data/repositories/trip_repository.dart';
+import '../../../../utils/magic_strings.dart';
+import '../../../../utils/platform_channel.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../../../utils/extensions.dart';
@@ -28,15 +29,15 @@ class TripController extends _$TripController {
 
     if (state.value!.trips.isNotEmpty && state.value!.activeTrips.isNotEmpty) {
       var userState = ref.watch(authProvider);
-
-      var authToken = Utils.base64String("${userState.value!.driver!.userName!}:${userState.value!.driver!.appToken!}");
+      var storage = const FlutterSecureStorage();
+      var authToken = await storage.read(key: StorageKey.driverToken.name);
       if (await Permission.location.isGranted) {
         PlatformChannel.startLocationTracking(
           userState.value!.driver!.name!,
           state.value!.activeTrips.first.driver1Id!,
           state.value!.activeTrips.first.tripNumber!,
           state.value!.activeTrips.first.id!,
-          authToken,
+          authToken!,
           ApiRoutes.locationTracking,
           state.value!.activeTrips.first.companyCode!,
         );
@@ -65,11 +66,9 @@ class TripController extends _$TripController {
   Future<void> refreshCurrentTrip(String tripId) async {
     var trip = state.value!.getTrip(tripId);
     final result = await tripRepo.getTripDetails<TripController>(tripId, trip.companyCode!);
-    // if (result.success) {
     int index = state.value!.trips.indexWhere((element) => element.id == result.id!);
     var trips = List<AppTrip>.from(state.value!.trips);
     trips[index] = result;
     state = AsyncValue.data(state.value!.copyWith(trips: trips));
-    // }
   }
 }

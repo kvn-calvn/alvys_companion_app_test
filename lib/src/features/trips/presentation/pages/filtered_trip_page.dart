@@ -1,6 +1,6 @@
-import 'package:alvys3/src/common_widgets/empty_view.dart';
-import 'package:alvys3/src/common_widgets/trip_card.dart';
-import 'package:alvys3/src/features/trips/presentation/controller/trip_page_controller.dart';
+import '../../../../common_widgets/empty_view.dart';
+import '../../../../common_widgets/trip_card.dart';
+import '../controller/trip_page_controller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
 

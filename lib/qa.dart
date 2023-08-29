@@ -1,6 +1,6 @@
-import 'package:alvys3/env/env.dart';
-import 'package:alvys3/main_common.dart';
-import 'package:alvys3/src/utils/extensions.dart';
+import 'env/env.dart';
+import 'main_common.dart';
+import 'src/utils/extensions.dart';
 
 import 'flavor_config.dart';
 

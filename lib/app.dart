@@ -1,7 +1,7 @@
-import 'package:alvys3/src/features/authentication/domain/models/driver_user/driver_user.dart';
-import 'package:alvys3/src/routing/app_router.dart';
-import 'package:alvys3/src/utils/app_theme.dart';
-import 'package:alvys3/src/utils/theme_handler.dart';
+import 'src/features/authentication/domain/models/driver_user/driver_user.dart';
+import 'src/routing/app_router.dart';
+import 'src/utils/app_theme.dart';
+import 'src/utils/theme_handler.dart';
 //import 'package:alvys3/src/routing/routes.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

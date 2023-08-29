@@ -1,10 +1,9 @@
-import 'package:alvys3/src/common_widgets/app_dialog.dart';
-import 'package:alvys3/src/features/authentication/presentation/auth_provider_controller.dart';
-//import 'package:alvys3/src/features/documents/presentation/upload_documents.dart';
-import 'package:alvys3/src/utils/exceptions.dart';
+import '../common_widgets/app_dialog.dart';
+import 'exceptions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../features/authentication/presentation/auth_provider_controller.dart';
 import '../features/documents/presentation/upload_documents_controller.dart';
 
 final globalErrorHandlerProvider = Provider<GlobalErrorHandler>((ref) {

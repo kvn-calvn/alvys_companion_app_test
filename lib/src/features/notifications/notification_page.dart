@@ -1,4 +1,4 @@
-import 'package:alvys3/src/common_widgets/empty_view.dart';
+import '../../common_widgets/empty_view.dart';
 import 'package:flutter/material.dart';
 
 class NotificationPage extends StatefulWidget {
@@ -33,8 +33,6 @@ class NotificationList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const EmptyView(
-        title: "No updates",
-        description: "Trip update notifications will appear here.");
+    return const EmptyView(title: "No updates", description: "Trip update notifications will appear here.");
   }
 }

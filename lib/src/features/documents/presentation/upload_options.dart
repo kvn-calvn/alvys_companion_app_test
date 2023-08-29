@@ -1,8 +1,8 @@
-import 'package:alvys3/custom_icons/alvys3_icons.dart';
-import 'package:alvys3/src/features/documents/presentation/upload_documents_controller.dart';
-import 'package:alvys3/src/utils/exceptions.dart';
-import 'package:alvys3/src/utils/magic_strings.dart';
-import 'package:alvys3/src/utils/permission_helper.dart';
+import '../../../../custom_icons/alvys3_icons.dart';
+import 'upload_documents_controller.dart';
+import '../../../utils/exceptions.dart';
+import '../../../utils/magic_strings.dart';
+import '../../../utils/permission_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -12,11 +12,7 @@ class UploadOptions extends ConsumerWidget {
   final DocumentType documentType;
   final String tripId;
   final bool mounted;
-  const UploadOptions(
-      {required this.tripId,
-      required this.documentType,
-      required this.mounted,
-      super.key});
+  const UploadOptions({required this.tripId, required this.documentType, required this.mounted, super.key});
   String get route {
     switch (documentType) {
       case DocumentType.tripDocuments:
@@ -39,11 +35,9 @@ class UploadOptions extends ConsumerWidget {
             leading: const Icon(Icons.camera_alt),
             title: const Text('Camera'),
             onTap: () async {
-              var hasPermission =
-                  await PermissionHelper.getPermission(Permission.camera);
+              var hasPermission = await PermissionHelper.getPermission(Permission.camera);
               if (!hasPermission) {
-                throw PermissionException("Please enable camera permission",
-                    () {
+                throw PermissionException("Please enable camera permission", () {
                   Navigator.of(context, rootNavigator: true).pop();
                 });
               }
@@ -61,11 +55,9 @@ class UploadOptions extends ConsumerWidget {
             leading: const Icon(Icons.photo),
             title: const Text('Gallery'),
             onTap: () async {
-              var hasPermission =
-                  await PermissionHelper.getPermission(Permission.photos);
+              var hasPermission = await PermissionHelper.getPermission(Permission.photos);
               if (!hasPermission) {
-                throw PermissionException("Please enable gallery permission",
-                    () {
+                throw PermissionException("Please enable gallery permission", () {
                   Navigator.of(context, rootNavigator: true).pop();
                 });
               }
@@ -95,35 +87,26 @@ class DocumentUploadButton extends ConsumerWidget {
     required this.icon,
     required this.title,
   });
-  static DocumentUploadButton upload(UploadDocumentArgs args) =>
-      DocumentUploadButton(
-          onTap: (ref) async {
-            await ref
-                .read(uploadDocumentsController.call(args).notifier)
-                .uploadFile();
-          },
-          icon: Alvys3Icons.upload,
-          title: 'Upload');
-  static DocumentUploadButton add(UploadDocumentArgs args) =>
-      DocumentUploadButton(
+  static DocumentUploadButton upload(UploadDocumentArgs args) => DocumentUploadButton(
+      onTap: (ref) async {
+        await ref.read(uploadDocumentsController.call(args).notifier).uploadFile();
+      },
+      icon: Alvys3Icons.upload,
+      title: 'Upload');
+  static DocumentUploadButton add(UploadDocumentArgs args) => DocumentUploadButton(
         onTap: (ref) async {
           debugPrint('adding');
-          await ref
-              .read(uploadDocumentsController.call(args).notifier)
-              .startScan();
+          await ref.read(uploadDocumentsController.call(args).notifier).startScan();
         },
         icon: Alvys3Icons.add,
         title: 'Add',
       );
-  static DocumentUploadButton delete(UploadDocumentArgs args) =>
-      DocumentUploadButton(
-          onTap: (ref) {
-            ref
-                .read(uploadDocumentsController.call(args).notifier)
-                .removePage();
-          },
-          icon: Alvys3Icons.delete,
-          title: 'Delete');
+  static DocumentUploadButton delete(UploadDocumentArgs args) => DocumentUploadButton(
+      onTap: (ref) {
+        ref.read(uploadDocumentsController.call(args).notifier).removePage();
+      },
+      icon: Alvys3Icons.delete,
+      title: 'Delete');
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Column(

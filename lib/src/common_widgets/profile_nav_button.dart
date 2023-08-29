@@ -1,4 +1,4 @@
-import 'package:alvys3/src/common_widgets/avatar.dart';
+import 'avatar.dart';
 import 'package:flutter/material.dart';
 
 class ProfileNavButton extends StatelessWidget {
@@ -37,8 +37,7 @@ class ProfileNavButton extends StatelessWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(title,
-                            style: Theme.of(context).textTheme.bodyLarge),
+                        Text(title, style: Theme.of(context).textTheme.bodyLarge),
                       ],
                     ),
                   ),

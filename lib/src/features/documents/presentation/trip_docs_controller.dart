@@ -1,7 +1,7 @@
 import 'dart:async';
-import 'package:alvys3/src/features/authentication/presentation/auth_provider_controller.dart';
+import '../../authentication/presentation/auth_provider_controller.dart';
 import '../domain/document_state/document_state.dart';
-import 'package:alvys3/src/utils/magic_strings.dart';
+import '../../../utils/magic_strings.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data/repositories/documents_repository.dart';

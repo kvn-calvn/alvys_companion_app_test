@@ -1,6 +1,6 @@
-import 'package:alvys3/src/features/echeck/domain/echeck_list/echeck_list.dart';
-import 'package:alvys3/src/features/echeck/domain/echeck_query/echeck_query.dart';
-import 'package:alvys3/src/network/api_client.dart';
+import '../../domain/echeck_list/echeck_list.dart';
+import '../../domain/echeck_query/echeck_query.dart';
+import '../../../../network/api_client.dart';
 
 import '../../../../constants/api_routes.dart';
 

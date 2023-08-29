@@ -1,4 +1,4 @@
-import 'package:alvys3/src/utils/extensions.dart';
+import '../utils/extensions.dart';
 import 'package:flutter/material.dart';
 
 class ColorManager {

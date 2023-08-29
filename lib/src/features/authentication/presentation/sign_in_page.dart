@@ -1,10 +1,10 @@
-import 'package:alvys3/src/common_widgets/unfocus_widget.dart';
-import 'package:alvys3/src/features/authentication/presentation/auth_provider_controller.dart';
+import '../../../common_widgets/unfocus_widget.dart';
+import 'auth_provider_controller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
-import 'package:alvys3/src/constants/color.dart';
+import '../../../constants/color.dart';
 import 'package:flutter/material.dart';
 
 class SignInPage extends ConsumerStatefulWidget {
@@ -42,8 +42,7 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                   height: 25,
                 ),
                 Text('Enter your 10 digit phone number',
-                    textAlign: TextAlign.center,
-                    style: Theme.of(context).textTheme.headlineLarge),
+                    textAlign: TextAlign.center, style: Theme.of(context).textTheme.headlineLarge),
                 const SizedBox(
                   height: 20,
                 ),
@@ -77,12 +76,9 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                     : ButtonStyle1(
                         title: "Next",
                         isLoading: false,
-                        isDisable:
-                            ref.watch(authProvider).value!.phone.length < 10,
+                        isDisable: ref.watch(authProvider).value!.phone.length < 10,
                         onPressAction: () async {
-                          await ref
-                              .read(authProvider.notifier)
-                              .signInDriver(context, mounted);
+                          await ref.read(authProvider.notifier).signInDriver(context, mounted);
                         }),
               ],
             ),
@@ -95,11 +91,7 @@ class _SignInPageState extends ConsumerState<SignInPage> {
 
 class ButtonStyle1 extends StatelessWidget {
   const ButtonStyle1(
-      {Key? key,
-      required this.onPressAction,
-      required this.title,
-      this.isLoading = false,
-      this.isDisable = false})
+      {Key? key, required this.onPressAction, required this.title, this.isLoading = false, this.isDisable = false})
       : super(key: key);
 
   final Function onPressAction;

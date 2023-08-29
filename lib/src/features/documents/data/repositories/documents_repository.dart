@@ -1,10 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:alvys3/src/constants/api_routes.dart';
-import 'package:alvys3/src/features/authentication/domain/models/driver_user/driver_user.dart';
-import 'package:alvys3/src/network/api_client.dart';
-import 'package:alvys3/src/utils/magic_strings.dart';
+import '../../../../constants/api_routes.dart';
+import '../../../authentication/domain/models/driver_user/driver_user.dart';
+import '../../../../network/api_client.dart';
+import '../../../../utils/magic_strings.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

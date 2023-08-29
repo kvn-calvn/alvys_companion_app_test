@@ -1,4 +1,4 @@
-import 'package:alvys3/src/constants/color.dart';
+import '../constants/color.dart';
 import 'package:flutter/material.dart';
 
 class SnackBarWrapper {
@@ -25,8 +25,7 @@ class SnackBarWrapper {
           horizontal: 10.0, // Inner padding for SnackBar content.
         ),
         behavior: SnackBarBehavior.floating,
-        backgroundColor:
-            isSuccess ? ColorManager.success : ColorManager.failure,
+        backgroundColor: isSuccess ? ColorManager.success : ColorManager.failure,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(8.0),
         ),

@@ -1,4 +1,4 @@
-import 'package:alvys3/src/utils/extensions.dart';
+import '../../../../utils/extensions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'genius_scan_config.freezed.dart';
@@ -23,8 +23,7 @@ class GeniusScanConfig with _$GeniusScanConfig {
     String? menuColor,
   }) = _GeniusScanConfig;
 
-  factory GeniusScanConfig.fromJson(Map<String, dynamic> json) =>
-      _$GeniusScanConfigFromJson(json);
+  factory GeniusScanConfig.fromJson(Map<String, dynamic> json) => _$GeniusScanConfigFromJson(json);
 
   factory GeniusScanConfig.camera() => GeniusScanConfig(
         source: 'camera',
@@ -51,8 +50,7 @@ class GeniusScanResults with _$GeniusScanResults {
     @Default(<Scan>[]) List<Scan> scans,
   }) = _GeniusScanResults;
 
-  factory GeniusScanResults.fromJson(Map<String, dynamic> json) =>
-      _$GeniusScanResultsFromJson(json);
+  factory GeniusScanResults.fromJson(Map<String, dynamic> json) => _$GeniusScanResultsFromJson(json);
 }
 
 @freezed

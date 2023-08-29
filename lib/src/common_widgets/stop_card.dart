@@ -1,8 +1,9 @@
-import 'package:alvys3/src/common_widgets/buttons.dart';
-import 'package:alvys3/src/common_widgets/snack_bar.dart';
-import 'package:alvys3/src/constants/color.dart';
-import 'package:alvys3/src/utils/extensions.dart';
-import 'package:alvys3/src/utils/magic_strings.dart';
+import 'buttons.dart';
+import 'snack_bar.dart';
+import '../constants/color.dart';
+import '../utils/extensions.dart';
+import '../utils/magic_strings.dart';
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -94,7 +95,7 @@ class StopCard extends ConsumerWidget {
                       const SizedBox(width: 5),
                       ButtonStyle2(
                         onPressAction: canCheckInOutStopId == stop.stopId &&
-                                stop.timeRecord?.driver?.timeIn != null &&
+                                stop.timeRecord?.driver?.timeIn.isNotNull != null &&
                                 stop.timeRecord?.driver?.timeOut == null
                             ? () {
                                 SnackBarWrapper.snackBar(msg: "Checked In", context: context, isSuccess: true);

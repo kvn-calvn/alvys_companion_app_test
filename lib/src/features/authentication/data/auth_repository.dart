@@ -1,6 +1,6 @@
-import 'package:alvys3/src/constants/api_routes.dart';
-import 'package:alvys3/src/features/authentication/domain/models/driver_user/driver_user.dart';
-import 'package:alvys3/src/network/api_client.dart';
+import '../../../constants/api_routes.dart';
+import '../domain/models/driver_user/driver_user.dart';
+import '../../../network/api_client.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../presentation/auth_provider_controller.dart';

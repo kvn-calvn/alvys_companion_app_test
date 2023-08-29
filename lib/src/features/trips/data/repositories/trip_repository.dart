@@ -1,6 +1,6 @@
-import 'package:alvys3/src/features/trips/domain/model/app_trip/app_trip.dart';
-import 'package:alvys3/src/network/api_client.dart';
-import 'package:alvys3/src/utils/magic_strings.dart';
+import '../../domain/model/app_trip/app_trip.dart';
+import '../../../../network/api_client.dart';
+import '../../../../utils/magic_strings.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
@@ -30,30 +30,6 @@ class AppTripRepository implements TripRepository {
     var res = await client.getData<T>(ApiRoutes.tripDetails(tripId));
     return AppTrip.fromJson(res.data);
   }
-
-/*
-  @override
-  Future<ApiResponse<StopDetails>> getStopDetails(
-      String tripId, String stopId) async {
-    if (await _networkInfo.isConnected) {
-      try {
-        var response = await _remoteDataSource.getStopDetails(tripId, stopId);
-
-        return ApiResponse(data: response);
-      } catch (error) {
-        return ApiResponse(
-          success: false,
-          error: ErrorHandler.handle(error).failure.message,
-        );
-      }
-    } else {
-      return ApiResponse(
-        success: false,
-        error: DataSource.NO_INTERNET_CONNECTION.getFailure().message,
-      );
-    }
-  }
-*/
 }
 
 final tripRepoProvider = Provider<AppTripRepository>((ref) {

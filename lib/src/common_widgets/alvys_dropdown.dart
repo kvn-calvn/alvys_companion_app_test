@@ -1,4 +1,4 @@
-import 'package:alvys3/src/utils/extensions.dart';
+import '../utils/extensions.dart';
 import 'package:flutter/material.dart';
 
 const Duration duration = Duration(milliseconds: 128);
@@ -33,30 +33,26 @@ class _AlvysDropdownState<T> extends State<AlvysDropdown<T>> {
     currentlySelected = widget.items.indexOf(currentItem);
   }
 
-  List<Widget> get getItems =>
-      widget.items.mapList<Widget>((e, index, last) => DecoratedBox(
-            decoration: BoxDecoration(
-                color: index == currentlySelected
-                    ? Theme.of(context).colorScheme.primary.withOpacity(0.2)
-                    : Theme.of(context).cardColor,
-                border: Border(
-                    bottom: last
-                        ? BorderSide.none
-                        : BorderSide(color: Theme.of(context).dividerColor))),
-            child: ListTile(
-              title: Text(widget.dropDownTitle(e)),
-              dense: true,
-              onTap: () {
-                setState(() {
-                  currentItem = e;
-                  currentlySelected = widget.items.indexOf(e);
-                });
-                widget.onItemTap(e);
+  List<Widget> get getItems => widget.items.mapList<Widget>((e, index, last) => DecoratedBox(
+        decoration: BoxDecoration(
+            color: index == currentlySelected
+                ? Theme.of(context).colorScheme.primary.withOpacity(0.2)
+                : Theme.of(context).cardColor,
+            border: Border(bottom: last ? BorderSide.none : BorderSide(color: Theme.of(context).dividerColor))),
+        child: ListTile(
+          title: Text(widget.dropDownTitle(e)),
+          dense: true,
+          onTap: () {
+            setState(() {
+              currentItem = e;
+              currentlySelected = widget.items.indexOf(e);
+            });
+            widget.onItemTap(e);
 
-                Navigator.pop(context);
-              },
-            ),
-          ));
+            Navigator.pop(context);
+          },
+        ),
+      ));
 
   @override
   Widget build(BuildContext context) {
@@ -73,10 +69,7 @@ class _AlvysDropdownState<T> extends State<AlvysDropdown<T>> {
             isOpen = true;
           });
           var data = actionKey.getKeyPosition(context);
-          await Navigator.push(
-              context,
-              _AlvysDropdownRoute(
-                  getItems, data, widget.coverDisplayText, widget.radius));
+          await Navigator.push(context, _AlvysDropdownRoute(getItems, data, widget.coverDisplayText, widget.radius));
           setState(() {
             isOpen = false;
           });
@@ -100,8 +93,7 @@ class _AlvysDropdownRoute extends PopupRoute {
   final KeyData data;
   final bool coverDisplayText;
   final double radius;
-  _AlvysDropdownRoute(
-      this.items, this.data, this.coverDisplayText, this.radius);
+  _AlvysDropdownRoute(this.items, this.data, this.coverDisplayText, this.radius);
 
   @override
   Color? get barrierColor => null;
@@ -113,8 +105,7 @@ class _AlvysDropdownRoute extends PopupRoute {
   String? get barrierLabel => '${super.debugLabel}_AlvysDropdownRoute';
 
   @override
-  Widget buildPage(BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation) {
+  Widget buildPage(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
     return DropDownContainer(
       items: items,
       animation: animation,
@@ -151,14 +142,10 @@ class DropDownContainer extends StatelessWidget {
       return Stack(
         children: [
           Positioned(
-            top: position.top <= position.bottom
-                ? position.top + (coverDisplayText ? 0 : size.height + 3)
-                : null,
+            top: position.top <= position.bottom ? position.top + (coverDisplayText ? 0 : size.height + 3) : null,
             left: position.left,
             right: position.right,
-            bottom: position.bottom < position.top
-                ? position.bottom - (coverDisplayText ? 0 : size.height + 5)
-                : null,
+            bottom: position.bottom < position.top ? position.bottom - (coverDisplayText ? 0 : size.height + 5) : null,
             child: AnimatedBuilder(
                 animation: animation,
                 builder: (context, widget) {
@@ -171,8 +158,7 @@ class DropDownContainer extends StatelessWidget {
                       child: Align(
                         heightFactor: animation.value,
                         child: Container(
-                          constraints: BoxConstraints(
-                              maxHeight: constraints.maxHeight * 0.3),
+                          constraints: BoxConstraints(maxHeight: constraints.maxHeight * 0.3),
                           child: SingleChildScrollView(
                             child: Column(
                               children: items,

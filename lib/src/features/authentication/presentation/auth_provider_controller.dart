@@ -1,20 +1,18 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:alvys3/src/features/authentication/data/auth_repository.dart';
-import 'package:alvys3/src/features/authentication/domain/models/auth_state/auth_state.dart';
-import 'package:alvys3/src/features/authentication/domain/models/driver_user/driver_user.dart';
-import 'package:alvys3/src/features/authentication/domain/models/driver_user/user_tenant.dart';
-import 'package:alvys3/src/utils/exceptions.dart';
-import 'package:alvys3/src/utils/extensions.dart';
-import 'package:alvys3/src/utils/magic_strings.dart';
+import '../data/auth_repository.dart';
+import '../domain/models/auth_state/auth_state.dart';
+import '../domain/models/driver_user/driver_user.dart';
+import '../domain/models/driver_user/user_tenant.dart';
+import '../../../utils/exceptions.dart';
+import '../../../utils/extensions.dart';
+import '../../../utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
-
-import '../../../common_widgets/main_bottom_nav.dart';
 
 class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppErrorHandler {
   final DriverUser? driver;
@@ -99,7 +97,6 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppError
   Future<void> signOut(BuildContext context) async {
     GoRouter.of(context).goNamed(RouteName.signIn.name);
     var storage = const FlutterSecureStorage();
-    ref.read(bottomNavIndexProvider.notifier).update((state) => 0);
     resetFields();
     await storage.delete(key: StorageKey.driverData.name);
     await storage.delete(key: StorageKey.driverToken.name);

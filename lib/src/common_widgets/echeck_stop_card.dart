@@ -1,31 +1,23 @@
-import 'package:alvys3/src/constants/color.dart';
+import '../constants/color.dart';
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
+import '../features/trips/domain/model/app_trip/stop.dart';
 import '../utils/extensions.dart';
 
 class ECheckStopCard extends StatefulWidget {
   const ECheckStopCard({
     Key? key,
-    required this.stopId,
-    required this.stopType,
-    required this.stopName,
     required this.onTap,
     this.currentStopId,
-    required this.city,
-    required this.state,
-    required this.zip,
     required this.selectedColor,
     this.selected = false,
+    required this.stop,
   }) : super(key: key);
 
-  final String stopType;
-  final String stopId;
   final String? currentStopId;
-  final String stopName;
-  final String city;
-  final String state;
-  final String zip;
-  final Color selectedColor;
 
+  final Color selectedColor;
+  final Stop stop;
   final void Function(String stop) onTap;
   final bool selected;
 
@@ -33,17 +25,14 @@ class ECheckStopCard extends StatefulWidget {
   State<ECheckStopCard> createState() => _ECheckStopCardState();
 }
 
-class _ECheckStopCardState extends State<ECheckStopCard>
-    with TickerProviderStateMixin {
+class _ECheckStopCardState extends State<ECheckStopCard> with TickerProviderStateMixin {
   Color selectedColor(BuildContext context) {
-    return isSelected
-        ? ColorManager.primary(Theme.of(context).brightness)
-        : Theme.of(context).cardColor;
+    return isSelected ? ColorManager.primary(Theme.of(context).brightness) : Theme.of(context).cardColor;
   }
 
   bool get isSelected {
     if (widget.currentStopId.isNullOrEmpty) return false;
-    return widget.currentStopId == widget.stopId;
+    return widget.currentStopId == widget.stop.stopId;
   }
 
   late AnimationController animationController;
@@ -51,11 +40,9 @@ class _ECheckStopCardState extends State<ECheckStopCard>
   @override
   void initState() {
     super.initState();
-    animationController = AnimationController(
-        vsync: this, duration: const Duration(milliseconds: 350));
-    colorAnimation = ColorTween(
-            begin: widget.selectedColor.withAlpha(0), end: widget.selectedColor)
-        .animate(animationController);
+    animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 350));
+    colorAnimation =
+        ColorTween(begin: widget.selectedColor.withAlpha(0), end: widget.selectedColor).animate(animationController);
   }
 
   @override
@@ -63,9 +50,7 @@ class _ECheckStopCardState extends State<ECheckStopCard>
     return AnimatedBuilder(
         animation: colorAnimation,
         builder: (context, child) {
-          isSelected
-              ? animationController.forward()
-              : animationController.reverse();
+          isSelected ? animationController.forward() : animationController.reverse();
           return Padding(
             padding: const EdgeInsets.symmetric(vertical: 8.0),
             child: Material(
@@ -75,25 +60,22 @@ class _ECheckStopCardState extends State<ECheckStopCard>
               clipBehavior: Clip.antiAlias,
               child: InkWell(
                 onTap: () {
-                  widget.onTap(widget.stopId);
+                  widget.onTap(widget.stop.stopId!);
                 },
                 child: Ink(
                   child: Container(
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(10),
-                        border: Border.all(
-                            color: colorAnimation.value!, width: 2.3)),
+                        border: Border.all(color: colorAnimation.value!, width: 2.3)),
                     child: Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(10, 8, 0, 8),
+                      padding: const EdgeInsetsDirectional.fromSTEB(10, 8, 0, 8),
                       child: Row(
                         children: [
                           Padding(
-                            padding: const EdgeInsetsDirectional.fromSTEB(
-                                0, 0, 8, 0),
+                            padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 8, 0),
                             child: Container(
                               decoration: BoxDecoration(
-                                  color: widget.stopType == 'Pickup'
+                                  color: widget.stop.stopType == 'Pickup'
                                       ? ColorManager.pickupColor
                                       : ColorManager.deliveryColor,
                                   borderRadius: BorderRadius.circular(10)),
@@ -106,13 +88,12 @@ class _ECheckStopCardState extends State<ECheckStopCard>
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                widget.stopName,
+                                widget.stop.companyName!,
                                 style: Theme.of(context).textTheme.bodyLarge,
                               ),
                               Text(
-                                  "${widget.city}, ${widget.state} ${widget.zip}",
-                                  style:
-                                      Theme.of(context).textTheme.bodyMedium),
+                                  "${widget.stop.address?.city ?? ''}, ${widget.stop.address?.state ?? ''} ${widget.stop.address?.zip ?? ''}",
+                                  style: Theme.of(context).textTheme.bodyMedium),
                             ],
                           ),
                         ],

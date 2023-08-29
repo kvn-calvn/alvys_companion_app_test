@@ -1,10 +1,10 @@
 import 'dart:io';
-import 'package:alvys3/custom_icons/alvys3_icons.dart';
-import 'package:alvys3/flavor_config.dart';
-import 'package:alvys3/src/common_widgets/buttons.dart';
-import 'package:alvys3/src/constants/color.dart';
-import 'package:alvys3/src/utils/magic_strings.dart';
-import 'package:alvys3/src/utils/platform_channel.dart';
+import '../../../../../custom_icons/alvys3_icons.dart';
+import '../../../../../flavor_config.dart';
+import '../../../../common_widgets/buttons.dart';
+import '../../../../constants/color.dart';
+import '../../../../utils/magic_strings.dart';
+import '../../../../utils/platform_channel.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -54,12 +54,10 @@ class RequestLocation extends StatelessWidget {
                   isLoading: false,
                   isDisable: false,
                   onPressAction: () async {
-                    var requestLocationResult =
-                        await Permission.location.request();
+                    var requestLocationResult = await Permission.location.request();
                     await Permission.locationAlways.request();
 
-                    var notificationPermStatus =
-                        await Permission.notification.status;
+                    var notificationPermStatus = await Permission.notification.status;
 
                     if (requestLocationResult.isPermanentlyDenied) {
                       debugPrint('Location request was denied');
@@ -76,9 +74,7 @@ class RequestLocation extends StatelessWidget {
                     if (notificationPermStatus.isGranted) {
                       if (!mounted) return;
                       PlatformChannel.getNotification(
-                          "DR",
-                          FlavorConfig.instance!.hubName,
-                          FlavorConfig.instance!.connectionString);
+                          "DR", FlavorConfig.instance!.hubName, FlavorConfig.instance!.connectionString);
                       context.goNamed(RouteName.trips.name);
                     }
 
@@ -99,10 +95,8 @@ class RequestLocation extends StatelessWidget {
                 ),
                 TextButton(
                   onPressed: () async {
-                    var notificationPermStatus =
-                        await Permission.notification.status;
-                    if (notificationPermStatus.isGranted ||
-                        notificationPermStatus.isDenied) {
+                    var notificationPermStatus = await Permission.notification.status;
+                    if (notificationPermStatus.isGranted || notificationPermStatus.isDenied) {
                       if (!mounted) return;
                       context.goNamed(RouteName.trips.name);
                     } else {

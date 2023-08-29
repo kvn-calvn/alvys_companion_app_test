@@ -1,10 +1,10 @@
-import 'package:alvys3/src/common_widgets/custom_bottom_sheet.dart';
-import 'package:alvys3/src/common_widgets/large_nav_button.dart';
-import 'package:alvys3/src/common_widgets/theme_switcher.dart';
-import 'package:alvys3/src/common_widgets/url_nav_button.dart';
-import 'package:alvys3/src/features/authentication/presentation/auth_provider_controller.dart';
-import 'package:alvys3/src/utils/magic_strings.dart';
-import 'package:alvys3/src/utils/platform_channel.dart';
+import '../../../common_widgets/custom_bottom_sheet.dart';
+import '../../../common_widgets/large_nav_button.dart';
+import '../../../common_widgets/theme_switcher.dart';
+import '../../../common_widgets/url_nav_button.dart';
+import '../../authentication/presentation/auth_provider_controller.dart';
+import '../../../utils/magic_strings.dart';
+import '../../../utils/platform_channel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';

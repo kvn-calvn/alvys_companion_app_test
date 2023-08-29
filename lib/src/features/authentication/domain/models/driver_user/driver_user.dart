@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:alvys3/src/models/address/address.dart';
+import '../../../../../models/address/address.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import 'user_tenant.dart';

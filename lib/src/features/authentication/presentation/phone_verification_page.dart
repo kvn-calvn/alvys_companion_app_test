@@ -1,7 +1,8 @@
-import 'package:alvys3/src/common_widgets/buttons.dart';
-import 'package:alvys3/src/common_widgets/unfocus_widget.dart';
-import 'package:alvys3/src/constants/color.dart';
-import 'package:alvys3/src/utils/extensions.dart';
+import '../../../common_widgets/buttons.dart';
+import '../../../common_widgets/unfocus_widget.dart';
+import '../../../constants/color.dart';
+import 'auth_provider_controller.dart';
+import '../../../utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,19 +10,15 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
 import 'package:pinput/pinput.dart';
 
-import '../auth_provider_controller.dart';
-
 class PhoneNumberVerificationPage extends ConsumerStatefulWidget {
   const PhoneNumberVerificationPage({Key? key}) : super(key: key);
 
   @override
   // ignore: library_private_types_in_public_api
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _PhoneNumberVerificationPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _PhoneNumberVerificationPageState();
 }
 
-class _PhoneNumberVerificationPageState
-    extends ConsumerState<PhoneNumberVerificationPage> {
+class _PhoneNumberVerificationPageState extends ConsumerState<PhoneNumberVerificationPage> {
   final pinController = TextEditingController();
   final focusNode = FocusNode();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -57,10 +54,7 @@ class _PhoneNumberVerificationPageState
           color: Theme.of(context).inputDecorationTheme.fillColor,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: (Theme.of(context).brightness.isLight
-                    ? Colors.black
-                    : Colors.white)
-                .withOpacity(0.5),
+            color: (Theme.of(context).brightness.isLight ? Colors.black : Colors.white).withOpacity(0.5),
           ),
         ),
       );
@@ -96,9 +90,7 @@ class _PhoneNumberVerificationPageState
                   const SizedBox(
                     height: 25,
                   ),
-                  Text('Verification',
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.headlineLarge),
+                  Text('Verification', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headlineLarge),
                   const SizedBox(
                     height: 20,
                   ),
@@ -107,8 +99,7 @@ class _PhoneNumberVerificationPageState
                     textAlign: TextAlign.center,
                   ),
                   Text(ref.watch(authProvider).value!.phone.toPhoneNumberString,
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.titleMedium),
+                      textAlign: TextAlign.center, style: Theme.of(context).textTheme.titleMedium),
                   const SizedBox(
                     height: 40,
                   ),
@@ -116,16 +107,12 @@ class _PhoneNumberVerificationPageState
                     length: length,
                     controller: pinController,
                     focusNode: focusNode,
-                    onChanged:
-                        ref.watch(authProvider.notifier).setVerificationCode,
+                    onChanged: ref.watch(authProvider.notifier).setVerificationCode,
                     defaultPinTheme: defaultPinTheme(context),
                     cursor: Padding(
                       padding: const EdgeInsets.symmetric(vertical: 12.0),
                       child: Container(
-                        decoration: BoxDecoration(
-                            color: Theme.of(context)
-                                .textSelectionTheme
-                                .cursorColor),
+                        decoration: BoxDecoration(color: Theme.of(context).textSelectionTheme.cursorColor),
                         height: double.infinity,
                         width: 2,
                       ),
@@ -134,16 +121,12 @@ class _PhoneNumberVerificationPageState
                       FilteringTextInputFormatter.allow(RegExp('[0-9]')),
                     ],
                     onCompleted: (pin) async {
-                      await ref
-                          .read(authProvider.notifier)
-                          .verifyDriver(context, mounted);
+                      await ref.read(authProvider.notifier).verifyDriver(context, mounted);
                     },
                     focusedPinTheme: defaultPinTheme(context).copyWith(
                       decoration: defaultPinTheme(context).decoration!.copyWith(
                             border: Border.all(
-                              color: ColorManager.primary(
-                                      Theme.of(context).brightness)
-                                  .withOpacity(0.8),
+                              color: ColorManager.primary(Theme.of(context).brightness).withOpacity(0.8),
                             ),
                           ),
                     ),
@@ -164,16 +147,9 @@ class _PhoneNumberVerificationPageState
                     )
                   else ...[
                     ButtonStyle1(
-                        isDisable: ref
-                                .watch(authProvider)
-                                .value!
-                                .verificationCode
-                                .length !=
-                            6,
+                        isDisable: ref.watch(authProvider).value!.verificationCode.length != 6,
                         onPressAction: () async {
-                          await ref
-                              .read(authProvider.notifier)
-                              .verifyDriver(context, mounted);
+                          await ref.read(authProvider.notifier).verifyDriver(context, mounted);
                         },
                         title: "Verify",
                         isLoading: false),

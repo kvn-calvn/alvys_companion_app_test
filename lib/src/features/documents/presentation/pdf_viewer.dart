@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:alvys3/src/features/documents/domain/app_document/app_document.dart';
-import 'package:alvys3/src/utils/app_theme.dart';
+import '../domain/app_document/app_document.dart';
+import '../../../utils/app_theme.dart';
 import 'package:dio/dio.dart';
 
 import 'package:go_router/go_router.dart';

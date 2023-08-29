@@ -1,4 +1,4 @@
-import 'package:alvys3/flavor_config.dart';
+import '../../flavor_config.dart';
 
 class ApiRoutes {
   static String get baseUrl => FlavorConfig.instance!.baseUrl;

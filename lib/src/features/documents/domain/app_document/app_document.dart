@@ -1,4 +1,4 @@
-import 'package:alvys3/flavor_config.dart';
+import '../../../../../flavor_config.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'app_document.freezed.dart';

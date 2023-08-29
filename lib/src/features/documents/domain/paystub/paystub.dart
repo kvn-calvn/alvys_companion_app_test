@@ -1,4 +1,4 @@
-import 'package:alvys3/src/constants/api_routes.dart';
+import '../../../../constants/api_routes.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'paystub.freezed.dart';
@@ -14,8 +14,6 @@ class Paystub with _$Paystub {
     @JsonKey(name: 'DatePaid') DateTime? datePaid,
   }) = _Paystub;
   Paystub._();
-  String get link =>
-      '${ApiRoutes.storageUrl}${companyCode!.toLowerCase()}/$fileName';
-  factory Paystub.fromJson(Map<String, dynamic> json) =>
-      _$PaystubFromJson(json);
+  String get link => '${ApiRoutes.storageUrl}${companyCode!.toLowerCase()}/$fileName';
+  factory Paystub.fromJson(Map<String, dynamic> json) => _$PaystubFromJson(json);
 }

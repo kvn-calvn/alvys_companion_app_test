@@ -1,10 +1,10 @@
-import 'package:alvys3/src/common_widgets/echeck_stop_card.dart';
-import 'package:alvys3/src/common_widgets/unfocus_widget.dart';
-import 'package:alvys3/src/constants/color.dart';
-import 'package:alvys3/src/features/authentication/presentation/sign_in_phonenumber/sign_in_page.dart';
-import 'package:alvys3/src/features/echeck/presentation/controller/echeck_page_controller.dart';
-import 'package:alvys3/src/features/trips/domain/model/app_trip/stop.dart';
-import 'package:alvys3/src/features/trips/presentation/controller/trip_page_controller.dart';
+import '../../../../common_widgets/echeck_stop_card.dart';
+import '../../../../common_widgets/unfocus_widget.dart';
+import '../../../../constants/color.dart';
+import '../../../authentication/presentation/sign_in_page.dart';
+import '../controller/echeck_page_controller.dart';
+import '../../../trips/domain/model/app_trip/stop.dart';
+import '../../../trips/presentation/controller/trip_page_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -76,14 +76,9 @@ class _GenerateEcheckState extends ConsumerState<GenerateEcheck> {
                   const Text("Select a Stop"),
                   for (Stop stop in ref.watch(tripControllerProvider).value!.getTrip(widget.tripId).stops!)
                     ECheckStopCard(
-                      stopId: stop.stopId!,
-                      stopType: stop.stopType!,
-                      stopName: stop.companyName!,
+                      stop: stop,
                       onTap: ref.read(echeckPageControllerProvider.notifier).setStopId,
                       currentStopId: ref.watch(echeckPageControllerProvider).value!.stopId,
-                      city: stop.address!.city,
-                      state: stop.address!.state,
-                      zip: stop.address!.zip,
                       selectedColor: ColorManager.primary(Theme.of(context).brightness),
                     ),
                   // const ECheckStopCard(

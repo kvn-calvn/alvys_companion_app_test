@@ -1,3 +1,4 @@
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -72,32 +73,6 @@ extension StringExt on String? {
     return inStatus;
   }
 
-  bool get isNullOrEmpty {
-    if (this == null) return true;
-    return this!.isEmpty;
-  }
-
-  bool get isNotNullOrEmpty {
-    if (this == null) return false;
-    return this!.isNotEmpty;
-  }
-
-  String get sentenceCase {
-    if (this == null) return "";
-    return this!.isNotEmpty
-        ? '${this![0].toUpperCase()}${this!.substring(1).toLowerCase()}'
-        : '';
-  }
-
-  String get titleCase {
-    if (this == null) return "";
-    return this!
-        .replaceAll(RegExp(' +'), ' ')
-        .split(" ")
-        .map((str) => str.sentenceCase)
-        .join(" ");
-  }
-
   String get numbersOnly {
     if (this == null) return '';
     return this!.replaceAll(RegExp(r'[^0-9]'), '');
@@ -159,13 +134,6 @@ extension EnumListExt<T extends Enum> on Iterable<T> {
   }
 }
 
-extension DateFormatEx on DateFormat {
-  String formatNullDate(DateTime? date) {
-    if (date == null) return '-';
-    return format(date);
-  }
-}
-
 extension MapExtn<T> on Map<T, dynamic> {
   Map<T, dynamic> get removeNulls {
     Map<T, dynamic> returnMap = {};
@@ -179,15 +147,12 @@ extension MapExtn<T> on Map<T, dynamic> {
 extension KeyExtensions on GlobalKey {
   KeyData getKeyPosition(BuildContext context) {
     final RenderBox button = currentContext!.findRenderObject() as RenderBox;
-    final RenderBox overlay =
-        Overlay.of(context).context.findRenderObject() as RenderBox;
+    final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
     return KeyData(
         RelativeRect.fromRect(
           Rect.fromPoints(
-            button.localToGlobal(button.size.topLeft(Offset.zero),
-                ancestor: overlay),
-            button.localToGlobal(button.size.bottomRight(Offset.zero),
-                ancestor: overlay),
+            button.localToGlobal(button.size.topLeft(Offset.zero), ancestor: overlay),
+            button.localToGlobal(button.size.bottomRight(Offset.zero), ancestor: overlay),
           ),
           Offset.zero & overlay.size,
         ),
