@@ -12,6 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:lottie/lottie.dart';
 
 class LoadListPage extends ConsumerStatefulWidget {
   const LoadListPage({Key? key}) : super(key: key);
@@ -103,12 +104,14 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
                       },
                       child: Row(
                         children: [
-                          Icon(
+                          Lottie.asset('assets/lottie/green_pulse.json',
+                              width: 30, height: 30),
+                          /*Icon(
                             Icons.brightness_1,
                             color: Colors.green.shade600,
-                          ),
+                          ),*/
                           const SizedBox(
-                            width: 5,
+                            width: 0,
                           ),
                           Text(
                             "Online",
@@ -125,12 +128,16 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
                       },
                       child: Row(
                         children: [
+                          const SizedBox(
+                            width: 8,
+                          ),
                           Icon(
                             Icons.brightness_1,
+                            size: 14,
                             color: Colors.grey.shade600,
                           ),
                           const SizedBox(
-                            width: 5,
+                            width: 8,
                           ),
                           Text(
                             "Offline",
