@@ -1,5 +1,6 @@
-import 'avatar.dart';
 import 'package:flutter/material.dart';
+
+import 'avatar.dart';
 
 class ProfileNavButton extends StatelessWidget {
   const ProfileNavButton({

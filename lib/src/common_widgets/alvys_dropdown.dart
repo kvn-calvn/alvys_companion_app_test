@@ -1,5 +1,6 @@
-import '../utils/extensions.dart';
 import 'package:flutter/material.dart';
+
+import '../utils/extensions.dart';
 
 const Duration duration = Duration(milliseconds: 128);
 

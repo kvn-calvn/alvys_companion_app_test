@@ -1,8 +1,7 @@
+import '../../../../constants/api_routes.dart';
+import '../../../../network/api_client.dart';
 import '../../domain/echeck_list/echeck_list.dart';
 import '../../domain/echeck_query/echeck_query.dart';
-import '../../../../network/api_client.dart';
-
-import '../../../../constants/api_routes.dart';
 
 abstract class EcheckRemoteDataSource {
   Future<EcheckList> getEchecksByTripId(String tripId);

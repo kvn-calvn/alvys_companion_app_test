@@ -1,12 +1,13 @@
 import 'dart:io';
 
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
 import '../../../common_widgets/alvys_dropdown.dart';
 import '../../../common_widgets/empty_view.dart';
 import 'upload_documents_controller.dart';
 import 'upload_options.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 class UploadDocuments extends ConsumerStatefulWidget {
   final UploadDocumentArgs args;

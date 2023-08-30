@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../stop_details/reference.dart';
 import '../../../../../models/address/address.dart';
+import '../stop_details/reference.dart';
 import 'm_comodity.dart';
 import 'time_record.dart';
 

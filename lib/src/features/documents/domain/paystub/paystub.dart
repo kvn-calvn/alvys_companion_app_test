@@ -1,5 +1,6 @@
-import '../../../../constants/api_routes.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+import '../../../../constants/api_routes.dart';
 
 part 'paystub.freezed.dart';
 part 'paystub.g.dart';

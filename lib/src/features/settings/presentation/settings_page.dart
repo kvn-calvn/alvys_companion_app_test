@@ -1,14 +1,15 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+
 import '../../../common_widgets/custom_bottom_sheet.dart';
 import '../../../common_widgets/large_nav_button.dart';
 import '../../../common_widgets/theme_switcher.dart';
 import '../../../common_widgets/url_nav_button.dart';
 import '../../../utils/app_theme.dart';
-import '../../authentication/presentation/auth_provider_controller.dart';
 import '../../../utils/magic_strings.dart';
 import '../../../utils/platform_channel.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
+import '../../authentication/presentation/auth_provider_controller.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);

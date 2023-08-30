@@ -1,11 +1,11 @@
 import 'dart:convert';
 
-import 'package:alvys3/src/constants/api_routes.dart';
-import 'package:alvys3/src/features/authentication/domain/models/driver_user/driver_user.dart';
-import 'package:alvys3/src/features/authentication/presentation/auth_provider_controller.dart';
-import 'package:alvys3/src/features/trips/domain/model/app_trip/app_trip.dart';
-import 'package:alvys3/src/features/trips/presentation/controller/trip_page_controller.dart';
-import 'package:alvys3/src/utils/magic_strings.dart';
+import '../constants/api_routes.dart';
+import '../features/authentication/domain/models/driver_user/driver_user.dart';
+import '../features/authentication/presentation/auth_provider_controller.dart';
+import '../features/trips/domain/model/app_trip/app_trip.dart';
+import '../features/trips/presentation/controller/trip_page_controller.dart';
+import 'magic_strings.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

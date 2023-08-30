@@ -1,4 +1,4 @@
-import 'package:alvys3/src/utils/alvys_websocket.dart';
+import '../utils/alvys_websocket.dart';
 
 import '../../custom_icons/alvys3_icons.dart';
 import '../features/documents/presentation/upload_documents_controller.dart';
