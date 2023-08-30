@@ -22,7 +22,7 @@ class Stop with _$Stop {
       @JsonKey(name: 'Notes') List<dynamic>? notes,
       @JsonKey(name: 'References') List<Reference>? references,
       @JsonKey(name: 'Instructions') String? instructions,
-      @JsonKey(name: 'GenInstructions') String? genInstructions,
+      @JsonKey(name: 'GeneralInstructions') String? genInstructions,
       @JsonKey(name: 'TimeRecord') TimeRecord? timeRecord,
       @JsonKey(name: 'StopId') String? stopId,
       @JsonKey(name: 'StopType') String? stopType,
