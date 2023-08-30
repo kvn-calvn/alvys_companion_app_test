@@ -11,7 +11,10 @@ class AlvysClientException implements ControllerException {
   }
 
   @override
-  String get message => error.title ?? error.details ?? error.errors.entries.firstOrNull?.value[0]?.first ?? "";
+  String get message =>
+      error.errors.entries.firstOrNull?.value[0]?.firstOrNull ??
+      '''${error.title ?? ''}
+  ${error.details ?? ''}''';
 
   @override
   Type get source => controllerType;
