@@ -1,7 +1,7 @@
+import '../../../documents/domain/app_document/app_document.dart';
 import 'payable_driver.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../../../documents/domain/app_document/app_document.dart';
 import 'echeck.dart';
 import 'stop.dart';
 part 'app_trip.freezed.dart';

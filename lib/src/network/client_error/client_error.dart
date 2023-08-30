@@ -17,7 +17,7 @@ class ClientError with _$ClientError {
 
 @freezed
 class DependencyError with _$DependencyError {
-  factory DependencyError({required String title, required int status, required String detail}) = _DependencyError;
+  factory DependencyError({required String title, required int status, required String? detail}) = _DependencyError;
 
   factory DependencyError.fromJson(Map<String, dynamic> json) => _$DependencyErrorFromJson(json);
 }

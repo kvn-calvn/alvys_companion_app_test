@@ -4,7 +4,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../../../constants/api_routes.dart';
 import '../../../../network/api_client.dart';
 import '../../../../utils/magic_strings.dart';
-import '../../domain/model/app_trip/app_trip.dart';
+import '../../domain/app_trip/app_trip.dart';
 
 abstract class TripRepository {
   Future<List<AppTrip>> getTrips<T>();

@@ -25,12 +25,10 @@ abstract class Env {
   static final String androidGeniusScanSDKKey = _Env.androidGeniusScanSDKKey;
 
   @EnviedField(varName: 'ANDROID_GENIUSSCANSDKKEY_DEV', obfuscate: true)
-  static final String androidGeniusScanSDKKeyDEV =
-      _Env.androidGeniusScanSDKKeyDEV;
+  static final String androidGeniusScanSDKKeyDEV = _Env.androidGeniusScanSDKKeyDEV;
 
   @EnviedField(varName: 'ANDROID_GENIUSSCANSDKKEY_QA', obfuscate: true)
-  static final String androidGeniusScanSDKKeyQA =
-      _Env.androidGeniusScanSDKKeyQA;
+  static final String androidGeniusScanSDKKeyQA = _Env.androidGeniusScanSDKKeyQA;
 
   @EnviedField(varName: 'AZURETELEMETRYKEY_DEV', obfuscate: true)
   static final String azureTelemetryKeyDEV = _Env.azureTelemetryKeyDEV;
@@ -59,6 +57,5 @@ abstract class Env {
   @EnviedField(varName: 'CONNECTION_STRING_DEV', obfuscate: true)
   static final String connectionStringDev = _Env.connectionStringDev;
 
-  static String get geniusScanKey =>
-      Platform.isAndroid ? androidGeniusScanSDKKey : iOSGeniusScanSDKKey;
+  static String get geniusScanKey => Platform.isAndroid ? androidGeniusScanSDKKey : iOSGeniusScanSDKKey;
 }

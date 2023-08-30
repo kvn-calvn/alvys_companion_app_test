@@ -1,5 +1,5 @@
 import 'popup_dropdown.dart';
-import '../features/trips/domain/model/app_trip/echeck.dart';
+import '../features/trips/domain/app_trip/echeck.dart';
 import '../utils/magic_strings.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';

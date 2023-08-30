@@ -3,7 +3,7 @@ import 'dart:convert';
 import '../constants/api_routes.dart';
 import '../features/authentication/domain/models/driver_user/driver_user.dart';
 import '../features/authentication/presentation/auth_provider_controller.dart';
-import '../features/trips/domain/model/app_trip/app_trip.dart';
+import '../features/trips/domain/app_trip/app_trip.dart';
 import '../features/trips/presentation/controller/trip_page_controller.dart';
 import 'magic_strings.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';

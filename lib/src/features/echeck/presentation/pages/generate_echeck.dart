@@ -3,7 +3,7 @@ import '../../../../common_widgets/unfocus_widget.dart';
 import '../../../../constants/color.dart';
 import '../../../authentication/presentation/sign_in_page.dart';
 import '../controller/echeck_page_controller.dart';
-import '../../../trips/domain/model/app_trip/stop.dart';
+import '../../../trips/domain/app_trip/stop.dart';
 import '../../../trips/presentation/controller/trip_page_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

@@ -1,4 +1,4 @@
-import 'package:alvys3/src/features/trips/domain/model/app_trip/reference.dart';
+import 'package:alvys3/src/features/trips/domain/app_trip/reference.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 import '../../../../constants/color.dart';
@@ -10,7 +10,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../utils/app_theme.dart';
-import '../../domain/model/app_trip/m_comodity.dart';
+import '../../domain/app_trip/m_comodity.dart';
 
 class StopDetailsPage extends ConsumerStatefulWidget {
   final String tripId;
@@ -70,15 +70,12 @@ class StopDetails extends ConsumerWidget {
               color: ColorManager.primary(Theme.of(context).brightness),
               size: 50.0,
             ),
-        error: (error, stack) =>
-            Text('Oops, something unexpected happened, $stack'),
+        error: (error, stack) => Text('Oops, something unexpected happened, $stack'),
         data: (value) {
           var currentStop = value.getStop(tripId, stopId);
           return RefreshIndicator(
             onRefresh: () async {
-              await ref
-                  .read(tripControllerProvider.notifier)
-                  .refreshCurrentTrip(tripId);
+              await ref.read(tripControllerProvider.notifier).refreshCurrentTrip(tripId);
             },
             child: ListView(
               children: [
@@ -130,8 +127,7 @@ class StopDetails extends ConsumerWidget {
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         Text(
-                          DateFormat.MEd()
-                              .formatNullDate(currentStop.actualStopdate),
+                          DateFormat.MEd().formatNullDate(currentStop.actualStopdate),
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
@@ -150,8 +146,7 @@ class StopDetails extends ConsumerWidget {
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         Text(
-                          DateFormat.MEd().formatNullDate(
-                              currentStop.timeRecord?.driver?.timeIn),
+                          DateFormat.MEd().formatNullDate(currentStop.timeRecord?.driver?.timeIn),
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
@@ -164,8 +159,7 @@ class StopDetails extends ConsumerWidget {
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         Text(
-                          DateFormat.MEd().formatNullDate(
-                              currentStop.timeRecord?.driver?.timeOut),
+                          DateFormat.MEd().formatNullDate(currentStop.timeRecord?.driver?.timeOut),
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
@@ -178,8 +172,7 @@ class StopDetails extends ConsumerWidget {
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 const SizedBox(height: 5),
-                ItemsWidget(
-                    commodities: currentStop.comodities ?? <MComodity>[]),
+                ItemsWidget(commodities: currentStop.comodities ?? <MComodity>[]),
                 const SizedBox(height: 20),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -189,9 +182,7 @@ class StopDetails extends ConsumerWidget {
                       style: Theme.of(context).textTheme.bodyLarge,
                     ),
                     HtmlWidget(
-                      currentStop.genInstructions.isNullOrEmpty
-                          ? '-'
-                          : currentStop.genInstructions!,
+                      currentStop.genInstructions.isNullOrEmpty ? '-' : currentStop.genInstructions!,
                     ),
                     /*Text(
                       currentStop.genInstructions.isNullOrEmpty
@@ -223,8 +214,7 @@ class StopDetails extends ConsumerWidget {
                       'References',
                       style: Theme.of(context).textTheme.bodyLarge,
                     ),
-                    ReferencesWidget(
-                        references: currentStop.references ?? <Reference>[])
+                    ReferencesWidget(references: currentStop.references ?? <Reference>[])
                   ],
                 ),
               ],

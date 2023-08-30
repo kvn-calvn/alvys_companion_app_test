@@ -29,7 +29,7 @@ class AlvysDependencyException implements ControllerException {
 
   @override
   String get message => '''${error.title}
-  ${error.detail}''';
+  ${error.detail ?? ''}''';
 
   @override
   Type get source => controllerType;

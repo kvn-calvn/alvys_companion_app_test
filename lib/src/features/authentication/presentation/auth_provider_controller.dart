@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:alvys3/src/utils/platform_channel.dart';
+
 import '../../../utils/alvys_websocket.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
@@ -102,6 +104,7 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppError
   Future<void> signOut(BuildContext context) async {
     GoRouter.of(context).goNamed(RouteName.signIn.name);
     var storage = const FlutterSecureStorage();
+    PlatformChannel.stopLocationTracking();
     await ref.read(websocketProvider).stopWebsocketConnection();
     resetFields();
     await storage.delete(key: StorageKey.driverData.name);

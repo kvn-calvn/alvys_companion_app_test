@@ -4,8 +4,8 @@ import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 
 import '../../../../constants/api_routes.dart';
 import '../../../authentication/presentation/auth_provider_controller.dart';
-import '../../domain/model/app_trip/app_trip.dart';
-import '../../domain/model/app_trip/trip_list_state.dart';
+import '../../domain/app_trip/app_trip.dart';
+import '../../domain/app_trip/trip_list_state.dart';
 import '../../data/repositories/trip_repository.dart';
 import '../../../../utils/magic_strings.dart';
 import '../../../../utils/platform_channel.dart';

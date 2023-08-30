@@ -8,7 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
-import '../features/trips/domain/model/app_trip/stop.dart';
+import '../features/trips/domain/app_trip/stop.dart';
 
 class StopCard extends ConsumerWidget {
   const StopCard({Key? key, required this.stop, required this.tripId, this.canCheckInOutStopId}) : super(key: key);

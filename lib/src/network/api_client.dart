@@ -159,6 +159,8 @@ class ApiClient {
     try {
       return await req();
     } on DioException catch (ex) {
+      debugPrint(ex.response?.statusCode.toString());
+      debugPrint('${ex.response?.data}');
       switch (ex.type) {
         case DioExceptionType.sendTimeout:
         case DioExceptionType.connectionTimeout:
@@ -175,7 +177,7 @@ class ApiClient {
               return Future.error(AlvysEntityNotFoundException(ex.response!.data, C));
             case (401):
               return Future.error(AlvysUnauthorizedException(C));
-            case (501):
+            case (504):
               return Future.error(AlvysDependencyException(ex.response!.data, C));
             default:
               return Future.error(ApiServerException(C));
