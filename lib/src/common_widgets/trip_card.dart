@@ -39,7 +39,7 @@ class TripCard extends ConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Trip# ${trip.tripNumber}',
+                          'Trip# ${trip.tripNumber} ${trip.companyCode}',
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                         Text(NumberFormat.simpleCurrency().format(trip.tripValue),

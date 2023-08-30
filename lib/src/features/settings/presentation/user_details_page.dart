@@ -143,8 +143,7 @@ class UserDetailsPage extends ConsumerWidget {
                 style: Theme.of(context).textTheme.labelLarge,
               ),
               Text(
-                //userState.value!.driver!.driversLicenceState? ?? "N/A",
-                "",
+                userState.value!.driver!.driversLicenceState ?? "N/A",
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
             ],

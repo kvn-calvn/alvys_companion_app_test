@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:alvys3/src/utils/alvys_websocket.dart';
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -45,6 +47,8 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppError
   void logOutDriver() {
     state = AsyncValue.data(state.value!.copyWith(phone: '', verificationCode: '', driverLoggedIn: false));
   }
+
+  DriverUser? get stateUser => state.value!.driver;
 
   Future<void> verifyDriver(BuildContext context, bool mounted) async {
     state = const AsyncValue.loading();
@@ -98,6 +102,7 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppError
   Future<void> signOut(BuildContext context) async {
     GoRouter.of(context).goNamed(RouteName.signIn.name);
     var storage = const FlutterSecureStorage();
+    await ref.read(websocketProvider).stopWebsocketConnection();
     resetFields();
     await storage.delete(key: StorageKey.driverData.name);
     await storage.delete(key: StorageKey.driverToken.name);
@@ -110,7 +115,16 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppError
     ));
   }
 
-  List<String> get tenantCompanyCodes => state.value!.driver!.userTenants.map<String>((e) => e.companyCode!).toList();
+  void updateUser(DriverUser user) {
+    if (state.value?.driver != null) {
+      state = AsyncValue.data(state.value!.copyWith(driver: user));
+    }
+  }
+
+  List<String> get tenantCompanyCodes => state.value!.driver!.userTenants
+      .where((t) => t.companyCode.isNotNullOrEmpty)
+      .map<String>((e) => e.companyCode!)
+      .toList();
 
   UserTenant? getCurrentUserTenant(String companyCode) =>
       state.value!.driver!.userTenants.firstOrNull((element) => element.companyCode == companyCode);

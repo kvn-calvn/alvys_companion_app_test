@@ -18,6 +18,7 @@ class MainActivity : FlutterActivity() {
     private var isBound = false
     private lateinit var mConnection : ServiceConnection
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+        NotificationHub.setListener(NHNotificationListener())
         val locationTrackingServiceIntent = Intent(this, LocationTrackingService::class.java)
 
         super.configureFlutterEngine(flutterEngine)
@@ -30,7 +31,6 @@ class MainActivity : FlutterActivity() {
                         val connectionString: String? = call.argument<String>("connectionString")
                         val hubName: String? = call.argument<String>("hubName")
 
-                        NotificationHub.setListener(NHNotificationListener())
                         NotificationHub.start(this.application, hubName, connectionString)
                         NotificationHub.addTag(driverPhone)
                         NotificationHub.setEnabled(true)

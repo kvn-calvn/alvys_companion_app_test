@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
+
 import '../../../../constants/api_routes.dart';
 import '../../../authentication/presentation/auth_provider_controller.dart';
 import '../../domain/model/app_trip/app_trip.dart';
@@ -61,6 +63,23 @@ class TripController extends _$TripController {
     final result = await tripRepo.getTrips<TripController>();
     var dataToGet = result.toListNotNull();
     state = AsyncValue.data(state.value!.copyWith(trips: dataToGet));
+  }
+
+  void updateTrip(AppTrip trip) {
+    if (!state.isLoading && state.value.isNotNull) {
+      int index = state.value!.trips.indexWhere((element) => element.id == trip.id!);
+      var trips = List<AppTrip>.from(state.value!.trips);
+      if (index > -1) {
+        trips[index] = trip;
+        state = AsyncValue.data(state.value!.copyWith(trips: trips));
+      } else {
+        var user = ref.read(authProvider.notifier).driver;
+        if (trip.drivers!.removeNulls.contains(user?.phone)) {
+          trips.add(trip);
+          state = AsyncValue.data(state.value!.copyWith(trips: trips));
+        }
+      }
+    }
   }
 
   Future<void> refreshCurrentTrip(String tripId) async {

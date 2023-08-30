@@ -17,6 +17,7 @@ class ApiRoutes {
   static String tripDocs(String tripId) => '${mobileBaseApi}getdocumentsbytrip/$tripId';
   static String documents = '${mobileBaseApi}driver/documents';
   // static String tripEchecks = 'getechecksbytrip/';
+  static String get webSocket => 'https://$rawBaseUrl/mobilehub';
   static String stopdetails(String tripId, String stopId) => '${mobileBaseApi}GetStopDetail/$stopId/$tripId';
   static String getEchecksByTrip(String tripId) => '${mobileBaseApi}GetEChecksByTrip/$tripId';
   // static String queryExpressNumber = 'comcheckenquiry/';

@@ -1,3 +1,5 @@
+import 'package:alvys3/src/utils/alvys_websocket.dart';
+
 import '../../custom_icons/alvys3_icons.dart';
 import '../features/documents/presentation/upload_documents_controller.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +22,14 @@ class MainBottomNav extends ConsumerStatefulWidget {
 }
 
 class _MainBottomNavState extends ConsumerState<MainBottomNav> {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      await ref.read(websocketProvider).restartConnection();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
