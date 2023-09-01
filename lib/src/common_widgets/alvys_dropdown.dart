@@ -32,7 +32,6 @@ class _AlvysDropdownState<T> extends State<AlvysDropdown<T>> {
     super.initState();
     currentItem = widget.items.first;
     currentlySelected = widget.items.indexOf(currentItem);
-    widget.onItemTap(currentItem);
   }
 
   List<Widget> get getItems => widget.items.mapList<Widget>((e, index, last) => DecoratedBox(

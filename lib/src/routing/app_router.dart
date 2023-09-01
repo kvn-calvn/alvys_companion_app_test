@@ -133,6 +133,30 @@ Provider<GoRouter> routerProvider = Provider(
                     },
                     routes: <GoRoute>[
                       GoRoute(
+                        name: RouteName.tripDocumentView.name,
+                        path: RouteName.tripDocumentView.name,
+                        builder: (context, state) {
+                          final args = state.extra! as AppDocument;
+                          return PDFViewer(
+                            arguments: args,
+                          );
+                        },
+                      ),
+                      GoRoute(
+                        name: RouteName.uploadTripDocument.name,
+                        path: RouteName.uploadTripDocument.name,
+                        builder: (context, state) {
+                          final args = state.extra! as UploadType;
+                          return UploadDocuments(
+                            args: UploadDocumentArgs(
+                                context: context,
+                                tripId: state.pathParameters[ParamType.tripId.name]!,
+                                uploadType: args,
+                                documentType: DocumentType.tripDocuments),
+                          );
+                        },
+                      ),
+                      GoRoute(
                           name: RouteName.eCheck.name,
                           path: RouteName.eCheck.name,
                           builder: (context, state) {
@@ -147,45 +171,6 @@ Provider<GoRouter> routerProvider = Provider(
                               },
                             ),
                           ]),
-                      GoRoute(
-                        name: RouteName.tripDocumentList.name,
-                        path: RouteName.tripDocumentList.name,
-                        builder: (context, state) {
-                          return DocumentsPage(
-                            DocumentsArgs(
-                              DocumentType.tripDocuments,
-                              state.pathParameters[ParamType.tripId.name],
-                            ),
-                          );
-                        },
-                        routes: <GoRoute>[
-                          GoRoute(
-                            name: RouteName.tripDocumentView.name,
-                            path: RouteName.tripDocumentView.name,
-                            builder: (context, state) {
-                              final args = state.extra! as AppDocument;
-
-                              return PDFViewer(
-                                arguments: args,
-                              );
-                            },
-                          ),
-                          GoRoute(
-                            name: RouteName.uploadTripDocument.name,
-                            path: RouteName.uploadTripDocument.name,
-                            builder: (context, state) {
-                              final args = state.extra! as UploadType;
-                              return UploadDocuments(
-                                args: UploadDocumentArgs(
-                                    context: context,
-                                    tripId: state.pathParameters[ParamType.tripId.name]!,
-                                    uploadType: args,
-                                    documentType: DocumentType.tripDocuments),
-                              );
-                            },
-                          ),
-                        ],
-                      ),
                       GoRoute(
                         name: RouteName.stopDetails.name,
                         path: ':stopId',

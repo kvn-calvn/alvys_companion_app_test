@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import '../../../../custom_icons/alvys3_icons.dart';
 import 'upload_documents_controller.dart';
 import '../../../utils/exceptions.dart';
@@ -38,7 +40,7 @@ class UploadOptions extends ConsumerWidget {
               var hasPermission = await PermissionHelper.getPermission(Permission.camera);
               if (!hasPermission) {
                 throw PermissionException("Please enable camera permission", () {
-                  Navigator.of(context, rootNavigator: true).pop();
+                  Navigator.of(context, rootNavigator: false).pop();
                 });
               }
               if (mounted) {
@@ -55,10 +57,11 @@ class UploadOptions extends ConsumerWidget {
             leading: const Icon(Icons.photo),
             title: const Text('Gallery'),
             onTap: () async {
-              var hasPermission = await PermissionHelper.getPermission(Permission.photos);
+              var hasPermission = await PermissionHelper.getPermission(
+                  Platform.isAndroid ? Permission.mediaLibrary : Permission.photos);
               if (!hasPermission) {
                 throw PermissionException("Please enable gallery permission", () {
-                  Navigator.of(context, rootNavigator: true).pop();
+                  Navigator.of(context, rootNavigator: false).pop();
                 });
               }
               if (mounted) {

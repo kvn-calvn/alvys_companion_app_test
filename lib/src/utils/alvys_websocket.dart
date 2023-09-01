@@ -77,11 +77,9 @@ class AlvysWebsocket {
     connection ??= getWebSocketConnection;
     await connection?.start();
     updateHandler();
-    //await addToGroups();
   }
 
   Future<void> stopWebsocketConnection() async {
-    //   await removeFromGroups();
     await connection?.stop();
   }
 

@@ -110,7 +110,7 @@ class AlvysHttpClient extends BaseClient {
   }
 
   Future<Response> _handleResponse<T>(Response response) {
-    var body = jsonDecode(response.body);
+    var body = response.statusCode != 200 ? jsonDecode(response.body) : {};
     switch (response.statusCode) {
       case (400):
         return Future.error(AlvysClientException(body, T));
