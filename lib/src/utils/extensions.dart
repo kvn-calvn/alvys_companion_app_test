@@ -42,15 +42,6 @@ extension ListExt<T, K> on Iterable<T>? {
     return false;
   }
 
-  T? firstOrNull(bool Function(T e) test) {
-    if (this == null) return null;
-    try {
-      return this!.firstWhere(test);
-    } on StateError catch (_) {
-      return null;
-    }
-  }
-
   List<J> mapList<J>(J Function(T e, int index, bool isLast) toElement) {
     List<J> items = [];
     if (isNullOrEmpty) return items;
@@ -59,13 +50,19 @@ extension ListExt<T, K> on Iterable<T>? {
     }
     return items;
   }
+
+  Future<Iterable<J>> asyncMap<J>(Future<J> Function(T e) op) {
+    if (this == null) return Future.value([]);
+    var res = this!.map((e) async => await op(e));
+    return Future.wait(res);
+  }
 }
 
 extension StringExt on String? {
   bool isInStatus(Iterable<String> test) {
     bool inStatus = false;
     for (var element in test) {
-      if (element == this) {
+      if (element.toLowerCase() == this?.toLowerCase()) {
         inStatus = true;
       }
     }

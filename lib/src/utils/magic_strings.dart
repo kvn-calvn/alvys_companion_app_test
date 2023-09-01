@@ -58,3 +58,22 @@ class DocumentTypes {
       license = 'License',
       driverLicense = 'DriverLicense';
 }
+
+class TripStatus {
+  static const String open = "Open";
+  static const String reserved = "Reserved";
+  static const String covered = "Covered";
+  static const String dispatched = "Dispatched";
+  static const String inTransit = "In Transit";
+  static const String delivered = "Delivered";
+  static const String invoiced = "Invoiced";
+  static const String completed = "Completed";
+  static const String quoted = "Quoted";
+  static const String released = "Released";
+  static const String tonu = "TONU";
+  static const String cancelled = "Cancelled";
+  static const String queued = "Queued";
+  static const String financed = "Financed";
+  static const String paid = "Paid";
+  static const String inReview = "In Review";
+}

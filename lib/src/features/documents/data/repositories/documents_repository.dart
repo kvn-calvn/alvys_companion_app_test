@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:alvys3/src/network/http_client.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
-import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http/http.dart';
 
 import '../../../../constants/api_routes.dart';
 import '../../../../network/api_client.dart';
@@ -18,13 +19,14 @@ abstract class DocumentsRepository<T> {
   Future<List<AppDocument>> getPaystubs(DriverUser user, [int top = 10]);
   Future<List<AppDocument>> getPersonalDocs(DriverUser user);
   Future<List<AppDocument>> getTripReportDocs(DriverUser user);
-  Future<String> uploadDocuments(String companyCode, String tripId, List<File> document);
+  Future<void> uploadDocuments(UploadDocumentOptions docData, List<File> documents, [String? tripId]);
 }
 
 class AppDocumentRepository<T> implements DocumentsRepository<T> {
   final ApiClient client;
+  final AlvysHttpClient httpClient;
   final FileUploadProgressNotifier fileProgress;
-  AppDocumentRepository(this.fileProgress, this.client);
+  AppDocumentRepository(this.fileProgress, this.client, this.httpClient);
   @override
   Future<List<AppDocument>> getPaystubs(DriverUser user, [int top = 10]) async {
     var driverId = user.userTenants.firstWhereOrNull((element) => element.companyOwnedAsset ?? false)?.assetId;
@@ -60,23 +62,17 @@ class AppDocumentRepository<T> implements DocumentsRepository<T> {
   }
 
   @override
-  Future<String> uploadDocuments(String companyCode, String tripId, List<File> documents) async {
-    var data = FormData();
-    data.fields.add(MapEntry('TripId', tripId));
-    data.files.add(MapEntry('file', await MultipartFile.fromFile(documents.first.path)));
-    var res = await client.postData<T>(ApiRoutes.tripDocumentUpload,
-        data: data,
-        onSendProgress: (count, total) => fileProgress.updateProgress(total, count),
-        options: Options(headers: {
-          'content-type': 'multipart/form-data',
-          'CompanyCode': companyCode,
-        }));
-    return res.data;
+  Future<void> uploadDocuments(UploadDocumentOptions docData, List<File> documents, [String? tripId]) async {
+    var headers = tripId != null ? {'TripId': tripId} : <String, String>{};
+    var data = await documents.asyncMap((e) => MultipartFile.fromPath(docData.title, e.path));
+    await httpClient.upload(Uri.parse(ApiRoutes.tripDocumentUpload),
+        files: data.toList(), onProgress: fileProgress.updateProgress, headers: headers);
   }
 }
 
 final documentsRepositoryProvider = Provider<AppDocumentRepository<UploadDocumentsController>>((ref) {
   final fileProgress = ref.watch(fileUploadProvider.notifier);
   final apiClient = ref.read(apiClientProvider);
-  return AppDocumentRepository(fileProgress, apiClient);
+  final httpClient = ref.read(httpClientProvider);
+  return AppDocumentRepository(fileProgress, apiClient, httpClient);
 });

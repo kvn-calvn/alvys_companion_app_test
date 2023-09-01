@@ -109,7 +109,7 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
             .toJson(),
         {'outputFileUrl': GeneratePDFPage.toPathString(path)});
     var pdfFile = File(path);
-    await docRepo.uploadDocuments(state.documentType?.companyCode ?? '', arg.tripId ?? '', [pdfFile]);
+    await docRepo.uploadDocuments(state.documentType!, [pdfFile], arg.tripId);
     var ctx = arg.context;
     if (ctx.mounted) {
       Navigator.of(ctx, rootNavigator: true).pop();
@@ -135,11 +135,11 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
         ], trip?.companyCode);
 
       case DocumentType.personalDocuments:
-        return UploadDocumentOptions.getOptionsList(["titles"], null);
+        return UploadDocumentOptions.getOptionsList(["License", "Medical"], userData.getCompanyOwned.companyCode!);
       case DocumentType.paystubs:
         return [];
       case DocumentType.tripReport:
-        return [];
+        return UploadDocumentOptions.getOptionsList(['Trip Report'], userData.getCompanyOwned.companyCode!);
     }
   }
 

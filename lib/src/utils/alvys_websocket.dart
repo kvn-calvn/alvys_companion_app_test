@@ -10,7 +10,6 @@ import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:logging/logging.dart';
 import 'package:signalr_netcore/ihub_protocol.dart';
 import 'package:signalr_netcore/signalr_client.dart';
 
@@ -86,17 +85,6 @@ class AlvysWebsocket {
     await connection?.stop();
   }
 
-  Future<void> addToGroups() async {
-    var user = ref.read(authProvider.notifier).stateUser!;
-    var args = [user.userTenants.map((e) => e.companyCode!).toList()];
-    await connection?.invoke('AddToGroupsAsync', args: args);
-  }
-
-  Future<void> removeFromGroups() async {
-    var user = ref.read(authProvider.notifier).stateUser!;
-    await connection?.invoke('RemoveFromGroupsAsync', args: [user.userTenants.map((e) => e.companyCode!).toList()]);
-  }
-
   void updateHandler() {
     connection?.on(
       "Ping",
@@ -109,6 +97,7 @@ class AlvysWebsocket {
       (args) {
         try {
           var trip = AppTrip.fromJson(jsonDecode(jsonEncode(args))[0]);
+          if (trip.stops.isNullOrEmpty) return;
           ref.read(tripControllerProvider.notifier).updateTrip(trip);
         } catch (_) {}
       },

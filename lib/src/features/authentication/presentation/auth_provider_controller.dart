@@ -130,8 +130,9 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppError
       .toList();
 
   UserTenant? getCurrentUserTenant(String companyCode) =>
-      state.value!.driver!.userTenants.firstOrNull((element) => element.companyCode == companyCode);
-
+      state.value!.driver!.userTenants.firstWhereOrNull((element) => element.companyCode == companyCode);
+  UserTenant get getCompanyOwned =>
+      state.value!.driver!.userTenants.firstWhere((element) => element.companyOwnedAsset!);
   @override
   FutureOr<void> onError() {
     state = AsyncValue.data(state.value!);

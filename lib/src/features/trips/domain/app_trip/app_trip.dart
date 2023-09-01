@@ -1,3 +1,5 @@
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
+
 import '../../../documents/domain/app_document/app_document.dart';
 import 'payable_driver.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -58,4 +60,11 @@ class AppTrip with _$AppTrip {
   }) = _AppTrip;
 
   factory AppTrip.fromJson(Map<String, dynamic> json) => _$AppTripFromJson(json);
+
+  AppTrip._();
+
+  String? get canCheckInOutStopId => stops
+      ?.firstWhereOrNull(
+          (element) => element.timeRecord?.driver?.timeIn == null || element.timeRecord?.driver?.timeOut == null)
+      ?.stopId;
 }

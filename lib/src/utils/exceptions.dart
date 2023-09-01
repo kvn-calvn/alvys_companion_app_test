@@ -64,6 +64,12 @@ class PermissionException implements Exception {
   PermissionException(this.message, this.onError);
 }
 
+class AlvysException implements Exception {
+  final String message, title;
+  final Function onError;
+  AlvysException(this.message, this.title, this.onError);
+}
+
 class AlvysDioError extends DioException {
   AlvysDioError({required RequestOptions requestOptions}) : super(requestOptions: requestOptions);
 }

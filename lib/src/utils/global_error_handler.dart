@@ -53,6 +53,12 @@ class GlobalErrorHandler {
         title = 'Permission Error';
         onError = e.onError;
         break;
+      case AlvysException:
+        var e = error as AlvysException;
+        message = e.message;
+        title = e.title;
+        onError = e.onError;
+        break;
       default:
         hasError = false;
         handleDefault();

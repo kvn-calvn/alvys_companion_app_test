@@ -1,7 +1,11 @@
 import 'dart:async';
 
+import 'package:alvys3/src/features/trips/domain/app_trip/stop.dart';
+import 'package:alvys3/src/features/trips/domain/update_stop_time_record/update_stop_time_record.dart';
+import 'package:alvys3/src/utils/exceptions.dart';
+import 'package:alvys3/src/utils/helpers.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
-
+import 'package:geolocator/geolocator.dart';
 import '../../../../constants/api_routes.dart';
 import '../../../authentication/presentation/auth_provider_controller.dart';
 import '../../domain/app_trip/app_trip.dart';
@@ -29,19 +33,21 @@ class TripController extends _$TripController {
     state = AsyncValue.data(TripListState());
     await getTrips();
 
-    if (state.value!.trips.isNotEmpty && state.value!.activeTrips.isNotEmpty) {
+    if (state.value!.activeTrips.isNotEmpty) {
+      var trackingTrip = state.value!.activeTrips.firstWhereOrNull((e) => e.status == TripStatus.inTransit) ??
+          state.value!.activeTrips.first;
       var userState = ref.watch(authProvider);
       var storage = const FlutterSecureStorage();
       var authToken = await storage.read(key: StorageKey.driverToken.name);
       if (await Permission.location.isGranted) {
         PlatformChannel.startLocationTracking(
           userState.value!.driver!.name!,
-          state.value!.activeTrips.first.driver1Id!,
-          state.value!.activeTrips.first.tripNumber!,
-          state.value!.activeTrips.first.id!,
+          trackingTrip.driver1Id!,
+          trackingTrip.tripNumber!,
+          trackingTrip.id!,
           authToken!,
           ApiRoutes.locationTracking,
-          state.value!.activeTrips.first.companyCode!,
+          trackingTrip.companyCode!,
         );
       }
     } else {
@@ -88,6 +94,55 @@ class TripController extends _$TripController {
     int index = state.value!.trips.indexWhere((element) => element.id == result.id!);
     var trips = List<AppTrip>.from(state.value!.trips);
     trips[index] = result;
+    state = AsyncValue.data(state.value!.copyWith(trips: trips));
+  }
+
+  Future<void> checkIn(String tripId, String stopId) async {
+    state = AsyncValue.data(state.value!.copyWith(loadingStopId: stopId, checkIn: true));
+    var trip = state.value!.getTripOrNull(tripId);
+    if (trip == null) return;
+    var stop = trip.stops!.firstWhereOrNull((element) => element.stopId == stopId);
+    if (stop == null) return;
+    var location = await Helpers.getUserPosition(() {
+      state = AsyncValue.data(state.value!.copyWith(loadingStopId: null));
+    });
+    var distance = Geolocator.distanceBetween(
+        location.latitude, location.longitude, double.parse(stop.latitude!), double.parse(stop.longitude!));
+    if (distance > 10) {
+      throw AlvysException('''You are too far from the stop location to check in.
+      Move closer and try again.''', 'Too Far', () {
+        state = AsyncValue.data(state.value!.copyWith(loadingStopId: null));
+      });
+    }
+    var dto = UpdateStopTimeRecord(
+        latitude: location.latitude, longitude: location.longitude, timeIn: DateTime.now(), stopId: stopId);
+    var newStop = await tripRepo.updateStopTimeRecord(trip.companyCode!, tripId, stopId, dto);
+    updateStop(tripId, newStop);
+    state = AsyncValue.data(state.value!.copyWith(loadingStopId: null, checkIn: true));
+  }
+
+  Future<void> checkOut(String tripId, String stopId) async {
+    state = AsyncValue.data(state.value!.copyWith(loadingStopId: stopId, checkIn: false));
+    var trip = state.value!.getTripOrNull(tripId);
+    if (trip == null) return;
+    var location = await Helpers.getUserPosition(() {
+      state = AsyncValue.data(state.value!.copyWith(loadingStopId: null));
+    });
+    var dto = UpdateStopTimeRecord(
+        latitude: location.latitude, longitude: location.longitude, timeOut: DateTime.now(), stopId: stopId);
+    var stop = await tripRepo.updateStopTimeRecord(trip.companyCode!, tripId, stopId, dto);
+    updateStop(tripId, stop);
+    state = AsyncValue.data(state.value!.copyWith(loadingStopId: null, checkIn: false));
+  }
+
+  void updateStop(String tripId, Stop stop) async {
+    var trip = state.value!.getTrip(tripId);
+    int index = state.value!.trips.indexWhere((element) => element.id == trip.id!);
+    var trips = List<AppTrip>.from(state.value!.trips);
+    int stopIndex = trip.stops!.indexWhere((element) => element.stopId == stop.stopId!);
+    var stops = List<Stop>.from(trip.stops!);
+    stops[stopIndex] = stop;
+    trips[index] = trip.copyWith(stops: stops);
     state = AsyncValue.data(state.value!.copyWith(trips: trips));
   }
 }

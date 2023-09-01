@@ -1,3 +1,5 @@
+import 'package:alvys3/src/features/trips/presentation/controller/trip_page_controller.dart';
+
 import 'buttons.dart';
 import 'snack_bar.dart';
 import '../constants/color.dart';
@@ -18,6 +20,8 @@ class StopCard extends ConsumerWidget {
   final String? canCheckInOutStopId;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var tripNotifier = ref.read(tripControllerProvider.notifier);
+    var tripState = ref.read(tripControllerProvider);
     return LayoutBuilder(builder: (context, constraints) {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -82,27 +86,28 @@ class StopCard extends ConsumerWidget {
                     // buttonPadding: const EdgeInsetsDirectional.only(end: 12),
                     // alignment: MainAxisAlignment.start,
                     children: [
-                      ButtonStyle2(
-                        onPressAction: canCheckInOutStopId == stop.stopId && stop.timeRecord?.driver?.timeIn == null
-                            ? () {
-                                debugPrint("");
-                              }
-                            : null,
-                        title: stop.timeRecord?.driver?.timeIn == null ? "Check In" : "Checked In",
-                        isLoading: false,
-                      ),
+                      tripState.value!.checkIn && tripState.value!.loadingStopId == stop.stopId!
+                          ? const ButtonLoading()
+                          : ButtonStyle2(
+                              onPressAction:
+                                  canCheckInOutStopId == stop.stopId && stop.timeRecord?.driver?.timeIn == null
+                                      ? () async => await tripNotifier.checkIn(tripId, stop.stopId!)
+                                      : null,
+                              title: stop.timeRecord?.driver?.timeIn == null ? "Check In" : "Checked In",
+                              isLoading: false,
+                            ),
                       const SizedBox(width: 5),
-                      ButtonStyle2(
-                        onPressAction: canCheckInOutStopId == stop.stopId &&
-                                stop.timeRecord?.driver?.timeIn.isNotNull != null &&
-                                stop.timeRecord?.driver?.timeOut == null
-                            ? () {
-                                SnackBarWrapper.snackBar(msg: "Checked In", context: context, isSuccess: true);
-                              }
-                            : null,
-                        title: stop.timeRecord?.driver?.timeOut == null ? "Check Out" : 'Checked Out',
-                        isLoading: false,
-                      ),
+                      !tripState.value!.checkIn && tripState.value!.loadingStopId == stop.stopId!
+                          ? const ButtonLoading()
+                          : ButtonStyle2(
+                              onPressAction: canCheckInOutStopId == stop.stopId &&
+                                      stop.timeRecord?.driver?.timeIn != null &&
+                                      stop.timeRecord?.driver?.timeOut == null
+                                  ? () async => await tripNotifier.checkOut(tripId, stop.stopId!)
+                                  : null,
+                              title: stop.timeRecord?.driver?.timeOut == null ? "Check Out" : 'Checked Out',
+                              isLoading: false,
+                            ),
                       const SizedBox(width: 5),
                       ButtonStyle2(
                         onPressAction: () => {debugPrint("")},
@@ -120,5 +125,17 @@ class StopCard extends ConsumerWidget {
         ),
       );
     });
+  }
+}
+
+class ButtonLoading extends StatelessWidget {
+  final double height;
+  const ButtonLoading({super.key, this.height = 24});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialButton(
+        onPressed: null,
+        child: SizedBox(width: height, height: height, child: const CircularProgressIndicator.adaptive()));
   }
 }

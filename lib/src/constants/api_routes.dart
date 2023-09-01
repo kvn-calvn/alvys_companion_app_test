@@ -14,6 +14,7 @@ class ApiRoutes {
   static String verify(String phone, String code) => '${mobileBaseApi}authenticateuser/$phone/$code';
   static String trips = '${mobileBaseApi}trips';
   static String tripDetails(String tripId) => '$mobileBaseApi$tripId/trip';
+  static String timeStopRecord(String tripId, String stopId) => '$mobileBaseApi$tripId/$stopId/time_record';
   static String tripDocs(String tripId) => '${mobileBaseApi}getdocumentsbytrip/$tripId';
   static String documents = '${mobileBaseApi}driver/documents';
   // static String tripEchecks = 'getechecksbytrip/';
