@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:alvys3/src/network/http_client.dart';
+import 'package:alvys3/src/utils/helpers.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -32,8 +33,7 @@ class AppTripRepository implements TripRepository {
 
   @override
   Future<AppTrip> getTripDetails<T>(String tripId, String companyCode) async {
-    var storage = const FlutterSecureStorage();
-    await storage.write(key: StorageKey.companyCode.name, value: companyCode);
+    await Helpers.setCompanyCode(companyCode);
     var res = await httpClient.getData<T>(Uri.parse(ApiRoutes.tripDetails(tripId)));
     return AppTrip.fromJson(res.body.toDecodedJson);
   }
@@ -41,8 +41,7 @@ class AppTripRepository implements TripRepository {
   @override
   Future<Stop> updateStopTimeRecord<T>(
       String companyCode, String tripId, String stopId, UpdateStopTimeRecord record) async {
-    var storage = const FlutterSecureStorage();
-    await storage.write(key: StorageKey.companyCode.name, value: companyCode);
+    await Helpers.setCompanyCode(companyCode);
     var res = await httpClient.putData<T>(
       Uri.parse(ApiRoutes.timeStopRecord(tripId, stopId)),
       body: record.toJson().toJsonEncodedString,

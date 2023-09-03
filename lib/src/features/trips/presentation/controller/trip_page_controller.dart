@@ -24,7 +24,7 @@ import '../../../../utils/extensions.dart';
 part 'trip_page_controller.g.dart';
 
 @riverpod
-class TripController extends _$TripController {
+class TripController extends _$TripController implements IAppErrorHandler {
   late TripRepository tripRepo;
 
   @override
@@ -114,8 +114,7 @@ class TripController extends _$TripController {
         state = AsyncValue.data(state.value!.copyWith(loadingStopId: null));
       });
     }
-    var dto = UpdateStopTimeRecord(
-        latitude: location.latitude, longitude: location.longitude, timeIn: DateTime.now(), stopId: stopId);
+    var dto = UpdateStopTimeRecord(latitude: location.latitude, longitude: location.longitude, timeIn: DateTime.now());
     var newStop = await tripRepo.updateStopTimeRecord(trip.companyCode!, tripId, stopId, dto);
     updateStop(tripId, newStop);
     state = AsyncValue.data(state.value!.copyWith(loadingStopId: null, checkIn: true));
@@ -128,8 +127,7 @@ class TripController extends _$TripController {
     var location = await Helpers.getUserPosition(() {
       state = AsyncValue.data(state.value!.copyWith(loadingStopId: null));
     });
-    var dto = UpdateStopTimeRecord(
-        latitude: location.latitude, longitude: location.longitude, timeOut: DateTime.now(), stopId: stopId);
+    var dto = UpdateStopTimeRecord(latitude: location.latitude, longitude: location.longitude, timeOut: DateTime.now());
     var stop = await tripRepo.updateStopTimeRecord(trip.companyCode!, tripId, stopId, dto);
     updateStop(tripId, stop);
     state = AsyncValue.data(state.value!.copyWith(loadingStopId: null, checkIn: false));
@@ -144,5 +142,10 @@ class TripController extends _$TripController {
     stops[stopIndex] = stop;
     trips[index] = trip.copyWith(stops: stops);
     state = AsyncValue.data(state.value!.copyWith(trips: trips));
+  }
+
+  @override
+  FutureOr<void> onError() {
+    state = AsyncData(state.value!.copyWith(loadingStopId: null));
   }
 }

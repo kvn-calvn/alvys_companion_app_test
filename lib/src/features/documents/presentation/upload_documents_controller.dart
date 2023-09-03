@@ -109,10 +109,27 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
             .toJson(),
         {'outputFileUrl': GeneratePDFPage.toPathString(path)});
     var pdfFile = File(path);
-    await docRepo.uploadDocuments(state.documentType!, [pdfFile], arg.tripId);
+    await _doUpload(pdfFile);
+
     var ctx = arg.context;
     if (ctx.mounted) {
-      Navigator.of(ctx, rootNavigator: true).pop();
+      Navigator.of(ctx).pop();
+    }
+  }
+
+  Future<void> _doUpload(File pdfFile) {
+    switch (arg.documentType) {
+      case DocumentType.tripDocuments:
+        var trip = trips.getTrip(arg.tripId!);
+        return docRepo.uploadTripDocuments(trip!.companyCode!, state.documentType!, pdfFile, arg.tripId!);
+
+      case DocumentType.personalDocuments:
+        return docRepo.uploadPersonalDocuments(state.documentType!, pdfFile);
+      case DocumentType.paystubs:
+        return Future.value(null);
+
+      case DocumentType.tripReport:
+        return docRepo.uploadTripReport(userData.getCompanyOwned.companyCode!, state.documentType!, pdfFile);
     }
   }
 

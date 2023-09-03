@@ -1,4 +1,6 @@
 import 'package:alvys3/src/utils/exceptions.dart';
+import 'package:alvys3/src/utils/magic_strings.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:geolocator/geolocator.dart';
 
 class Helpers {
@@ -23,5 +25,10 @@ class Helpers {
           PermissionException('Location permissions are permanently denied, we cannot request permissions.', onError));
     }
     return await Geolocator.getCurrentPosition(forceAndroidLocationManager: true);
+  }
+
+  static Future<void> setCompanyCode(String companyCode) async {
+    var storage = const FlutterSecureStorage();
+    await storage.write(key: StorageKey.companyCode.name, value: companyCode);
   }
 }

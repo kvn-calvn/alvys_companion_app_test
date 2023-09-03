@@ -8,7 +8,6 @@ class UpdateStopTimeRecord with _$UpdateStopTimeRecord {
   factory UpdateStopTimeRecord({
     @JsonKey(name: 'In') DateTime? timeIn,
     @JsonKey(name: 'Out') DateTime? timeOut,
-    @JsonKey(name: 'StopId') required String stopId,
     @JsonKey(name: 'Latitude') required double latitude,
     @JsonKey(name: 'Longitude') required double longitude,
   }) = _UpdateStopTimeRecord;

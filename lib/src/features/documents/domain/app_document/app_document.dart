@@ -32,9 +32,10 @@ class DriverPaystubDTO with _$DriverPaystubDTO {
 
 @freezed
 class DriverDocumentsDTO with _$DriverDocumentsDTO {
-  factory DriverDocumentsDTO(
-      {@JsonKey(name: 'AcceptedTypes') required List<String> acceptedTypes,
-      @JsonKey(name: 'AssetId') required String driverId}) = _DriverDocumentsDTO;
+  factory DriverDocumentsDTO({
+    @JsonKey(name: 'AcceptedTypes') required List<String> acceptedTypes,
+    @JsonKey(name: 'AssetId') required String driverId,
+  }) = _DriverDocumentsDTO;
 
   factory DriverDocumentsDTO.fromJson(Map<String, dynamic> json) => _$DriverDocumentsDTOFromJson(json);
 }

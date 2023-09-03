@@ -35,8 +35,6 @@ class DocumentsNotifier extends AutoDisposeFamilyAsyncNotifier<DocumentState, Do
   Future<void> getDocuments() async {
     switch (arg.documentType) {
       case DocumentType.tripDocuments:
-        var res = await docRepo.getTripDocs(arg.tripId!);
-        state = AsyncValue.data(state.value!.copyWith(documentList: res));
         break;
       case DocumentType.personalDocuments:
         var res = await docRepo.getPersonalDocs(auth.driver!);
@@ -48,7 +46,7 @@ class DocumentsNotifier extends AutoDisposeFamilyAsyncNotifier<DocumentState, Do
 
         break;
       case DocumentType.tripReport:
-        var res = await docRepo.getTripReportDocs(auth.driver!);
+        var res = await docRepo.getTripReportDocs(auth.getCompanyOwned.companyCode!, auth.driver!);
         state = AsyncValue.data(state.value!.copyWith(documentList: res));
         break;
     }
@@ -56,6 +54,7 @@ class DocumentsNotifier extends AutoDisposeFamilyAsyncNotifier<DocumentState, Do
 
   Future<void> getPaystubs() async {
     var res = await docRepo.getPaystubs(
+      auth.getCompanyOwned.companyCode!,
       auth.driver!,
       top = top,
     );
