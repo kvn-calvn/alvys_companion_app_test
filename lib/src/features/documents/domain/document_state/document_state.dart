@@ -1,6 +1,7 @@
-import '../app_document/app_document.dart';
-import '../../../../utils/extensions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+import '../../../../utils/extensions.dart';
+import '../app_document/app_document.dart';
 
 part 'document_state.freezed.dart';
 part 'document_state.g.dart';

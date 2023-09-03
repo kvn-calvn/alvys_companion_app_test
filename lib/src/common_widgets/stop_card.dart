@@ -1,16 +1,14 @@
-import 'package:alvys3/src/features/trips/presentation/controller/trip_page_controller.dart';
-
-import 'buttons.dart';
-import 'snack_bar.dart';
-import '../constants/color.dart';
-import '../utils/magic_strings.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 
+import '../constants/color.dart';
 import '../features/trips/domain/app_trip/stop.dart';
+import '../features/trips/presentation/controller/trip_page_controller.dart';
+import '../utils/magic_strings.dart';
+import 'buttons.dart';
 
 class StopCard extends ConsumerWidget {
   const StopCard({Key? key, required this.stop, required this.tripId, this.canCheckInOutStopId}) : super(key: key);

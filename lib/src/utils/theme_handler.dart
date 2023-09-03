@@ -1,7 +1,8 @@
-import 'magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
+import 'magic_strings.dart';
 
 class ThemeHandlerNotifier extends Notifier<ThemeMode> {
   late ThemeMode currentThemeMode;

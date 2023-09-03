@@ -1,4 +1,4 @@
-import 'package:alvys3/src/features/trips/domain/app_trip/reference.dart';
+import '../../domain/app_trip/reference.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
 import '../../../../constants/color.dart';

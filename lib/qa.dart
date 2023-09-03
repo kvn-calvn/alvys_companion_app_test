@@ -1,8 +1,7 @@
 import 'env/env.dart';
+import 'flavor_config.dart';
 import 'main_common.dart';
 import 'src/utils/extensions.dart';
-
-import 'flavor_config.dart';
 
 void main() {
   FlavorConfig(

@@ -1,11 +1,12 @@
-import '../../../../common_widgets/echeck_card.dart';
-import '../../../../common_widgets/empty_view.dart';
-import '../../../../constants/color.dart';
-import '../../../trips/presentation/controller/trip_page_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+
+import '../../../../common_widgets/echeck_card.dart';
+import '../../../../common_widgets/empty_view.dart';
+import '../../../../constants/color.dart';
 import '../../../../utils/extensions.dart';
+import '../../../trips/presentation/controller/trip_page_controller.dart';
 import 'generate_echeck.dart';
 
 class EcheckPage extends ConsumerStatefulWidget {

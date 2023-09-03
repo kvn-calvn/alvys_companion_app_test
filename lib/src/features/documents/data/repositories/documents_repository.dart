@@ -1,9 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:alvys3/flavor_config.dart';
-import 'package:alvys3/src/network/http_client.dart';
-import 'package:alvys3/src/utils/helpers.dart';
+import '../../../../network/http_client.dart';
+import '../../../../utils/helpers.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart';

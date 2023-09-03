@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:alvys3/src/features/trips/domain/app_trip/stop.dart';
-import 'package:alvys3/src/features/trips/domain/update_stop_time_record/update_stop_time_record.dart';
-import 'package:alvys3/src/utils/exceptions.dart';
-import 'package:alvys3/src/utils/helpers.dart';
+import '../../domain/app_trip/stop.dart';
+import '../../domain/update_stop_time_record/update_stop_time_record.dart';
+import '../../../../utils/exceptions.dart';
+import '../../../../utils/helpers.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:geolocator/geolocator.dart';
 import '../../../../constants/api_routes.dart';

@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:alvys3/src/network/custom_multipart_request.dart';
-import 'package:alvys3/src/utils/exceptions.dart';
-import 'package:alvys3/src/utils/magic_strings.dart';
+import 'custom_multipart_request.dart';
+import '../utils/exceptions.dart';
+import '../utils/magic_strings.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';

@@ -1,8 +1,8 @@
-import '../utils/magic_strings.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import '../utils/magic_strings.dart';
 
 class Landing extends StatefulWidget {
   const Landing({Key? key}) : super(key: key);

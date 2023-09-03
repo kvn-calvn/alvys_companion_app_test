@@ -1,6 +1,5 @@
-import 'package:alvys3/src/features/documents/domain/app_document/app_document.dart';
-
 import '../../flavor_config.dart';
+import '../features/documents/domain/app_document/app_document.dart';
 
 class ApiRoutes {
   static String get baseUrl => FlavorConfig.instance!.baseUrl;

@@ -1,5 +1,5 @@
-import 'package:alvys3/src/features/documents/presentation/upload_options.dart';
-import 'package:alvys3/src/utils/magic_strings.dart';
+import '../../../documents/presentation/upload_options.dart';
+import '../../../../utils/magic_strings.dart';
 
 import '../../../../common_widgets/custom_bottom_sheet.dart';
 import '../../../../common_widgets/empty_view.dart';

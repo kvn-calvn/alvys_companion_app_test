@@ -1,9 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:alvys3/src/utils/platform_channel.dart';
-
-import '../../../utils/alvys_websocket.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,9 +8,11 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../../utils/alvys_websocket.dart';
 import '../../../utils/exceptions.dart';
 import '../../../utils/extensions.dart';
 import '../../../utils/magic_strings.dart';
+import '../../../utils/platform_channel.dart';
 import '../data/auth_repository.dart';
 import '../domain/models/auth_state/auth_state.dart';
 import '../domain/models/driver_user/driver_user.dart';
