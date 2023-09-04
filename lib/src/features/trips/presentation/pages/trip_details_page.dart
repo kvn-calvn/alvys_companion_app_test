@@ -1,3 +1,5 @@
+import 'package:alvys3/src/common_widgets/shimmers/trip_details_shimmer.dart';
+
 import '../../../../common_widgets/stop_card.dart';
 import '../../../../constants/color.dart';
 import '../../../echeck/presentation/pages/echeck_page.dart';
@@ -87,12 +89,9 @@ class TripDetails extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final tripDetailsState = ref.watch(tripControllerProvider);
-
+    // return TripDetailsShimmer();
     return tripDetailsState.when(
-      loading: () => SpinKitFoldingCube(
-        color: ColorManager.primary(Theme.of(context).brightness),
-        size: 50.0,
-      ),
+      loading: () => const TripDetailsShimmer(),
       error: (error, stack) => Text('Oops, something unexpected happened, $stack'),
       data: (value) {
         var trip = value.getTrip(tripId);
@@ -211,7 +210,7 @@ class TripDetails extends ConsumerWidget {
                             ),
                           ],
                         ),
-                        if (trip.stops.isNullOrEmpty)
+                        if (trip.stops.isNullOrEmpty) ...{
                           Center(
                             child: Column(
                               mainAxisSize: MainAxisSize.min,
@@ -227,15 +226,18 @@ class TripDetails extends ConsumerWidget {
                               ],
                             ),
                           ),
-                        Column(
-                          children: [
-                            ...trip.stops!.map((stop) => StopCard(
-                                  stop: stop,
-                                  tripId: trip.id!,
-                                  canCheckInOutStopId: trip.canCheckInOutStopId,
-                                ))
-                          ],
-                        ),
+                        } else ...{
+                          Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              ...trip.stops!.map((stop) => StopCard(
+                                    stop: stop,
+                                    tripId: trip.id!,
+                                    canCheckInOutStopId: trip.canCheckInOutStopId,
+                                  ))
+                            ],
+                          ),
+                        }
                       ],
                     ),
                   ],
