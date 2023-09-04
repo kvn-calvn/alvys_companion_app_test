@@ -1,3 +1,6 @@
+import 'package:alvys3/src/features/echeck/presentation/controller/echeck_page_controller.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'popup_dropdown.dart';
 import '../features/trips/domain/app_trip/echeck.dart';
 import '../utils/magic_strings.dart';
@@ -6,12 +9,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-class EcheckCard extends StatelessWidget {
+class EcheckCard extends ConsumerWidget {
   final ECheck eCheck;
+  final String tripId;
   final Function(String echeckNumber) cancelECheck;
-  const EcheckCard({Key? key, required this.eCheck, required this.cancelECheck}) : super(key: key);
+  const EcheckCard({Key? key, required this.eCheck, required this.cancelECheck, required this.tripId})
+      : super(key: key);
 
-  void showEcheckMenu(BuildContext context) {
+  void showEcheckMenu(BuildContext context, String? checkNumber) {
+    if (checkNumber == null) return;
     showCustomPopup<EcheckOption>(
       context: context,
       onSelected: (value) {
@@ -53,7 +59,8 @@ class EcheckCard extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    var state = ref.watch(echeckPageControllerProvider);
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 12),
       child: Material(
@@ -61,66 +68,69 @@ class EcheckCard extends StatelessWidget {
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(10),
         clipBehavior: Clip.antiAlias,
-        child: InkWell(
-          onLongPress: () {
-            showEcheckMenu(context);
-          },
-          child: Padding(
-            padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 4),
-                      child: Row(
+        child: state.value!.loadingEcheckNumber == eCheck.expressCheckNumber
+            ? const Center(child: CircularProgressIndicator())
+            : InkWell(
+                onLongPress: () {
+                  showEcheckMenu(context, state.value!.loadingEcheckNumber);
+                },
+                child: Padding(
+                  padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
                         mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            eCheck.expressCheckNumber!,
-                            style: GoogleFonts.oxygenMono(
-                              fontWeight: FontWeight.w800,
-                              textStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
-                                    letterSpacing: 2,
-                                    decoration: eCheck.isCanceled ? TextDecoration.lineThrough : TextDecoration.none,
-                                    decorationThickness: 2,
+                          Padding(
+                            padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 4),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  eCheck.expressCheckNumber!,
+                                  style: GoogleFonts.oxygenMono(
+                                    fontWeight: FontWeight.w800,
+                                    textStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
+                                          letterSpacing: 2,
+                                          decoration:
+                                              eCheck.isCanceled ? TextDecoration.lineThrough : TextDecoration.none,
+                                          decorationThickness: 2,
+                                        ),
                                   ),
+                                )
+                              ],
                             ),
-                          )
+                          ),
+                          const Text(
+                            'Funds Available',
+                          ),
+                          Text('\$${eCheck.amount?.toStringAsFixed(2)}', style: Theme.of(context).textTheme.bodyLarge),
+                          Padding(
+                            padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [Text(eCheck.reason!, style: Theme.of(context).textTheme.bodySmall)],
+                            ),
+                          ),
                         ],
                       ),
-                    ),
-                    const Text(
-                      'Funds Available',
-                    ),
-                    Text('\$${eCheck.amount?.toStringAsFixed(2)}', style: Theme.of(context).textTheme.bodyLarge),
-                    Padding(
-                      padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [Text(eCheck.reason!, style: Theme.of(context).textTheme.bodySmall)],
-                      ),
-                    ),
-                  ],
+                      IconButton(
+                        constraints: const BoxConstraints(),
+                        splashRadius: 24,
+                        onPressed: () {
+                          showEcheckMenu(context, state.value!.loadingEcheckNumber);
+                        },
+                        icon: const Icon(Icons.more_vert),
+                      )
+                    ],
+                  ),
                 ),
-                IconButton(
-                  constraints: const BoxConstraints(),
-                  splashRadius: 24,
-                  onPressed: () {
-                    showEcheckMenu(context);
-                  },
-                  icon: const Icon(Icons.more_vert),
-                )
-              ],
-            ),
-          ),
-        ),
+              ),
       ),
     );
   }

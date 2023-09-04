@@ -5,8 +5,16 @@ part 'generate_echeck_request.g.dart';
 
 @freezed
 class GenerateECheckRequest with _$GenerateECheckRequest {
-  factory GenerateECheckRequest() = _GenerateECheckRequest;
+  factory GenerateECheckRequest({
+    @JsonKey(name: 'TripId') required String tripId,
+    @JsonKey(name: 'StopId') String? stopId,
+    @JsonKey(name: 'Reason') required String reason,
+    @JsonKey(name: 'Note') required String note,
+    @JsonKey(name: 'FirstName') required String firstName,
+    @JsonKey(name: 'LastName') required String lastName,
+    @JsonKey(name: 'DriverId') required String driverId,
+    @JsonKey(name: 'Amount') required double amount,
+  }) = _GenerateECheckRequest;
 
-  factory GenerateECheckRequest.fromJson(Map<String, dynamic> json) =>
-      _$GenerateECheckRequestFromJson(json);
+  factory GenerateECheckRequest.fromJson(Map<String, dynamic> json) => _$GenerateECheckRequestFromJson(json);
 }

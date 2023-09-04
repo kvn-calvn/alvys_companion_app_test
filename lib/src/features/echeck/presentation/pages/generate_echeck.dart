@@ -26,6 +26,8 @@ class _GenerateEcheckState extends ConsumerState<GenerateEcheck> {
       mask: '\$##########', filter: {"#": RegExp(r'[0-9\.]')}, type: MaskAutoCompletionType.eager);
   @override
   Widget build(BuildContext context) {
+    var notifier = ref.read(echeckPageControllerProvider.notifier);
+    var state = ref.read(echeckPageControllerProvider);
     return UnfocusWidget(
       child: Scaffold(
         appBar: AppBar(
@@ -57,7 +59,7 @@ class _GenerateEcheckState extends ConsumerState<GenerateEcheck> {
                   autofocus: true,
                   inputFormatters: [amountMaskFormatter],
                   keyboardType: TextInputType.number,
-                  onChanged: ref.read(echeckPageControllerProvider.notifier).setAmount,
+                  onChanged: notifier.setAmount,
                   decoration: const InputDecoration(hintText: "Amount"),
                 ),
                 const SizedBox(
@@ -65,20 +67,20 @@ class _GenerateEcheckState extends ConsumerState<GenerateEcheck> {
                 ),
                 DropdownButtonFormField(
                     isDense: true,
-                    value: ref.watch(echeckPageControllerProvider).value!.reason,
+                    value: state.value!.reason,
                     hint: const Text('Reason'),
-                    onChanged: ref.read(echeckPageControllerProvider.notifier).setReason,
-                    items: ref.watch(echeckPageControllerProvider.notifier).reasonsDropdown),
+                    onChanged: notifier.setReason,
+                    items: notifier.reasonsDropdown),
                 const SizedBox(
                   height: 16,
                 ),
-                if (ref.watch(echeckPageControllerProvider.notifier).showStopDropdown) ...[
+                if (state.value!.showStopDropdown) ...[
                   const Text("Select a Stop"),
                   for (Stop stop in ref.watch(tripControllerProvider).value!.getTrip(widget.tripId).stops!)
                     ECheckStopCard(
                       stop: stop,
-                      onTap: ref.read(echeckPageControllerProvider.notifier).setStopId,
-                      currentStopId: ref.watch(echeckPageControllerProvider).value!.stopId,
+                      onTap: notifier.setStopId,
+                      currentStopId: state.value!.stopId,
                       selectedColor: ColorManager.primary(Theme.of(context).brightness),
                     ),
                   // const ECheckStopCard(
@@ -112,9 +114,10 @@ class _GenerateEcheckState extends ConsumerState<GenerateEcheck> {
                   height: 16,
                 ),
                 ButtonStyle1(
-                    isDisable: !ref.watch(echeckPageControllerProvider.notifier).showGenerateButton,
-                    onPressAction: () {},
-                    title: "Generate")
+                  isDisable: !state.value!.showGenerateButton,
+                  onPressAction: () async => await notifier.generateEcheck(widget.tripId),
+                  title: "Generate",
+                )
               ],
             ),
           ),

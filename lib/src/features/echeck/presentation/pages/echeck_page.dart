@@ -1,3 +1,4 @@
+import 'package:alvys3/src/features/echeck/presentation/controller/echeck_page_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -25,6 +26,7 @@ class _EcheckPageState extends ConsumerState<EcheckPage> {
 
   @override
   Widget build(BuildContext context) {
+    var notifier = ref.read(echeckPageControllerProvider.notifier);
     var state = ref.watch(tripControllerProvider);
     var echecks = ref.watch(tripControllerProvider).value!.getTrip(widget.tripId).eChecks;
     return state.isLoading
@@ -35,7 +37,7 @@ class _EcheckPageState extends ConsumerState<EcheckPage> {
                 showDialog<void>(
                   context: context,
                   builder: (BuildContext context) {
-                    return GenerateEcheck(widget.tripId);
+                    return Dialog(child: GenerateEcheck(widget.tripId));
                   },
                 );
 /*
@@ -57,7 +59,8 @@ class _EcheckPageState extends ConsumerState<EcheckPage> {
                       itemCount: echecks!.length,
                       itemBuilder: (context, index) => EcheckCard(
                         eCheck: echecks[index],
-                        cancelECheck: (echeckNumber) {},
+                        cancelECheck: (echeckNumber) async => await notifier.cancelEcheck(widget.tripId, echeckNumber),
+                        tripId: widget.tripId,
                       ),
                     ),
             ),

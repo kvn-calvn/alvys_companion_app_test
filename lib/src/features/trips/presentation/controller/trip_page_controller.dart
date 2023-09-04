@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:alvys3/src/features/trips/domain/app_trip/echeck.dart';
+
 import '../../domain/app_trip/stop.dart';
 import '../../domain/update_stop_time_record/update_stop_time_record.dart';
 import '../../../../utils/exceptions.dart';
@@ -142,6 +144,22 @@ class TripController extends _$TripController implements IAppErrorHandler {
     stops[stopIndex] = stop;
     trips[index] = trip.copyWith(stops: stops);
     state = AsyncValue.data(state.value!.copyWith(trips: trips));
+  }
+
+  void addEcheck(String tripId, ECheck echeck) {
+    var trip = getTrip(tripId);
+    if (trip == null) return;
+    trip = trip.copyWith(eChecks: [...trip.eChecks ?? [], echeck]);
+    updateTrip(trip);
+  }
+
+  void updateEcheck(String tripId, ECheck echeck) {
+    var trip = getTrip(tripId);
+    if (trip == null) return;
+    var currentECheckIndex = trip.eChecks?.indexWhere((element) => element.eCheckId == echeck.eCheckId);
+    if (currentECheckIndex == null || currentECheckIndex < 0) return;
+    trip.eChecks![currentECheckIndex] = echeck;
+    updateTrip(trip);
   }
 
   @override

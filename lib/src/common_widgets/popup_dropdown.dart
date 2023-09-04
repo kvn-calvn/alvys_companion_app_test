@@ -6,18 +6,15 @@ showCustomPopup<T>(
     required List<AlvysPopupItem<T>> Function(BuildContext context) items,
     bool useRootNavigator = true}) async {
   final RenderBox button = context.findRenderObject() as RenderBox;
-  final RenderBox overlay =
-      Overlay.of(context).context.findRenderObject() as RenderBox;
+  final RenderBox overlay = Overlay.of(context, rootOverlay: true).context.findRenderObject() as RenderBox;
   var position = RelativeRect.fromRect(
     Rect.fromPoints(
       button.localToGlobal(const Offset(0, 0), ancestor: overlay),
-      button.localToGlobal(button.size.bottomRight(Offset.zero),
-          ancestor: overlay),
+      button.localToGlobal(button.size.bottomRight(Offset.zero), ancestor: overlay),
     ),
     Offset.zero & overlay.size,
   );
-  var newPos = position.shift(Offset(
-      0, button.size.height * (position.top <= position.bottom ? 0.5 : -0.5)));
+  var newPos = position.shift(Offset(0, button.size.height * (position.top <= position.bottom ? 0.5 : -0.5)));
   T? res = await Navigator.of(context, rootNavigator: useRootNavigator)
       .push<T?>(_AlvysPopupRoute<T>(items(context), newPos, position));
   if (res != null) {
@@ -28,8 +25,7 @@ showCustomPopup<T>(
 class AlvysPopupItem<T> extends StatelessWidget {
   final T value;
   final Widget child;
-  const AlvysPopupItem({Key? key, required this.value, required this.child})
-      : super(key: key);
+  const AlvysPopupItem({Key? key, required this.value, required this.child}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -76,8 +72,7 @@ class _AlvysPopupRoute<T> extends PopupRoute<T> {
   String? get barrierLabel => "Alvys_Popup_Route";
 
   @override
-  Widget buildPage(BuildContext context, Animation<double> animation,
-      Animation<double> secondaryAnimation) {
+  Widget buildPage(BuildContext context, Animation<double> animation, Animation<double> secondaryAnimation) {
     return MediaQuery.removePadding(
       context: context,
       removeTop: true,

@@ -13,14 +13,12 @@ class ApiRoutes {
   static String trips = '${mobileBaseApi}trips';
   static String tripDetails(String tripId) => '$mobileBaseApi$tripId/trip';
   static String timeStopRecord(String tripId, String stopId) => '$mobileBaseApi$tripId/$stopId/time_record';
-  //static String documents = '${mobileBaseApi}driver/documents';
-  // static String tripEchecks = 'getechecksbytrip/';
   static String get webSocket => 'https://$rawBaseUrl/mobilehub';
-  static String stopdetails(String tripId, String stopId) => '${mobileBaseApi}GetStopDetail/$stopId/$tripId';
-  static String getEchecksByTrip(String tripId) => '${mobileBaseApi}GetEChecksByTrip/$tripId';
-  // static String queryExpressNumber = 'comcheckenquiry/';
   static String driverPaystubs = '${mobileBaseApi}driver/paystubs';
   static String tripReport = '${mobileBaseApi}driver/trip_report';
+  static Uri get driverStatus => Uri.parse('${mobileBaseApi}driver/status');
+  static Uri get generateEcheck => Uri.parse('${mobileBaseApi}echeck');
+  static Uri cancelEcheck(String echeckNumber) => Uri.parse('$mobileBaseApi$echeckNumber/echeck');
   static Uri paystubs(DriverPaystubDTO dto) =>
       Uri.https(FlavorConfig.instance!.rawApiBase, '/driver/paystubs', dto.toJson());
   static Uri documents([DriverDocumentsDTO? dto]) =>

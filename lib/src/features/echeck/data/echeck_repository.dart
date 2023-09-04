@@ -1,0 +1,28 @@
+import 'package:alvys3/src/constants/api_routes.dart';
+import 'package:alvys3/src/features/echeck/domain/generate_echeck/generate_echeck_request.dart';
+import 'package:alvys3/src/features/trips/domain/app_trip/echeck.dart';
+import 'package:alvys3/src/network/http_client.dart';
+import 'package:alvys3/src/utils/helpers.dart';
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+final eCheckRepoProvider = Provider<EcheckRepository>((ref) {
+  return EcheckRepository(ref.read(httpClientProvider));
+});
+
+class EcheckRepository {
+  final AlvysHttpClient httpClient;
+
+  EcheckRepository(this.httpClient);
+  Future<ECheck> generateEcheck<T>(String companyCode, GenerateECheckRequest request) async {
+    Helpers.setCompanyCode(companyCode);
+    var res = await httpClient.postData<T>(ApiRoutes.generateEcheck, body: request.toJson().toJsonEncodedString);
+    return ECheck.fromJson(res.body.toDecodedJson);
+  }
+
+  Future<ECheck> cancelEcheck<T>(String companyCode, String checkNumber) async {
+    Helpers.setCompanyCode(companyCode);
+    var res = await httpClient.patchData<T>(ApiRoutes.cancelEcheck(checkNumber));
+    return ECheck.fromJson(res.body.toDecodedJson);
+  }
+}
