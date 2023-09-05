@@ -108,6 +108,7 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppError
     resetFields();
     await storage.delete(key: StorageKey.driverData.name);
     await storage.delete(key: StorageKey.driverToken.name);
+    state = AsyncValue.data(state.value!.copyWith(driver: null));
   }
 
   void resetFields() {
