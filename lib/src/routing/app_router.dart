@@ -110,7 +110,7 @@ Provider<GoRouter> routerProvider = Provider(
                   if (ref.read(authProvider).value!.driver == null) {
                     return RouteName.signIn.toRoute;
                   }
-                  return state.path!;
+                  return null;
                 },
                 routes: [
                   GoRoute(
@@ -185,7 +185,7 @@ Provider<GoRouter> routerProvider = Provider(
                   if (ref.read(authProvider).value!.driver == null) {
                     return RouteName.signIn.toRoute;
                   }
-                  return state.path!;
+                  return null;
                 },
                 routes: [
                   GoRoute(
@@ -267,7 +267,7 @@ Provider<GoRouter> routerProvider = Provider(
                     if (ref.read(authProvider).value!.driver == null) {
                       return RouteName.signIn.toRoute;
                     }
-                    return state.path!;
+                    return null;
                   },
                   routes: [
                     GoRoute(
