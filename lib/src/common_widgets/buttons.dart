@@ -55,6 +55,16 @@ class ButtonStyle2 extends StatelessWidget {
   Widget build(BuildContext context) {
     return ElevatedButton(
       onPressed: isDisable ? null : () => onPressAction(),
+      style: ButtonStyle(
+          elevation: MaterialStateProperty.all(0),
+          backgroundColor: isDisable
+              ? MaterialStateProperty.all<Color>(
+                  ColorManager.secondaryButtonDisabled(
+                      Theme.of(context).brightness),
+                )
+              : MaterialStateProperty.all<Color>(
+                  ColorManager.secondaryButton(Theme.of(context).brightness),
+                )),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10.0),
         child: Text(

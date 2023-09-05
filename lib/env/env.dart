@@ -59,6 +59,5 @@ abstract class Env {
   @EnviedField(varName: 'CONNECTION_STRING_DEV', obfuscate: true)
   static final connectionStringDev = _Env.connectionStringDev;
 
-  static String get geniusScanKey =>
-      Platform.isAndroid ? androidGeniusScanSDKKey : iOSGeniusScanSDKKey;
+  static String get geniusScanKey => Platform.isAndroid ? androidGeniusScanSDKKey : iOSGeniusScanSDKKey;
 }

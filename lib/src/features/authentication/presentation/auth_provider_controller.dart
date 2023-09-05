@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:alvys3/src/features/authentication/data/auth_repository.dart';
-import 'package:alvys3/src/features/authentication/data/data_providers.dart';
 import 'package:alvys3/src/features/authentication/domain/models/auth_state/auth_state.dart';
 import 'package:alvys3/src/features/authentication/domain/models/driver_user/driver_user.dart';
 import 'package:alvys3/src/features/authentication/domain/models/driver_user/user_tenant.dart';
@@ -17,22 +16,19 @@ import 'package:permission_handler/permission_handler.dart';
 
 import '../../../common_widgets/main_bottom_nav.dart';
 
-class AuthProviderNotifier extends AsyncNotifier<AuthState>
-    implements IAppErrorHandler {
+class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppErrorHandler {
   final DriverUser? driver;
   late AuthRepository<AuthProviderNotifier> authRepo;
   AuthProviderNotifier({this.driver});
   @override
   FutureOr<AuthState> build() {
     authRepo = ref.read(authRepoProvider);
-    state = AsyncValue.data(
-        AuthState(driver: driver, driverLoggedIn: driver != null));
+    state = AsyncValue.data(AuthState(driver: driver, driverLoggedIn: driver != null));
     return state.value!;
   }
 
   void setUserTenantCompanyCode(String? companyCode) {
-    state = AsyncValue.data(
-        state.value!.copyWith(userTenantCompanyCode: companyCode));
+    state = AsyncValue.data(state.value!.copyWith(userTenantCompanyCode: companyCode));
   }
 
   void setPhone(String? p) {
@@ -40,28 +36,23 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState>
   }
 
   void setVerificationCode(String v) {
-    state =
-        AsyncValue.data(state.value!.copyWith(verificationCode: v.numbersOnly));
+    state = AsyncValue.data(state.value!.copyWith(verificationCode: v.numbersOnly));
   }
 
   void setDriverUserData(DriverUser? data) {
-    state = AsyncValue.data(
-        state.value!.copyWith(driver: data, driverLoggedIn: driver != null));
+    state = AsyncValue.data(state.value!.copyWith(driver: data, driverLoggedIn: driver != null));
   }
 
   void logOutDriver() {
-    state = AsyncValue.data(state.value!
-        .copyWith(phone: '', verificationCode: '', driverLoggedIn: false));
+    state = AsyncValue.data(state.value!.copyWith(phone: '', verificationCode: '', driverLoggedIn: false));
   }
 
   Future<void> verifyDriver(BuildContext context, bool mounted) async {
     state = const AsyncValue.loading();
-    var driverRes = await authRepo.verifyDriverCode(
-        state.value!.phone, state.value!.verificationCode);
+    var driverRes = await authRepo.verifyDriverCode(state.value!.phone, state.value!.verificationCode);
     var storage = const FlutterSecureStorage();
     state = AsyncValue.data(state.value!.copyWith(driver: driverRes.data));
-    await storage.write(
-        key: StorageKey.driverData.name, value: driverRes.data!.toStringJson());
+    await storage.write(key: StorageKey.driverData.name, value: driverRes.data!.toStringJson());
     await storage.write(
       key: StorageKey.driverToken.name,
       value: base64.encode(
@@ -74,8 +65,7 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState>
 
     if (locationStatus.isPermanentlyDenied || locationStatus.isDenied) {
       if (mounted) context.goNamed(RouteName.locationPermission.name);
-    } else if (notificationStatus.isDenied ||
-        notificationStatus.isPermanentlyDenied) {
+    } else if (notificationStatus.isDenied || notificationStatus.isPermanentlyDenied) {
       if (mounted) context.goNamed(RouteName.notificationPermission.name);
     } else {
       debugPrint("GO_STRAIGHT_HOME");
@@ -122,13 +112,10 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState>
     ));
   }
 
-  List<String> get tenantCompanyCodes => state.value!.driver!.userTenants
-      .map<String>((e) => e.companyCode!)
-      .toList();
+  List<String> get tenantCompanyCodes => state.value!.driver!.userTenants.map<String>((e) => e.companyCode!).toList();
 
   UserTenant? getCurrentUserTenant(String companyCode) =>
-      state.value!.driver!.userTenants
-          .firstOrNull((element) => element.companyCode == companyCode);
+      state.value!.driver!.userTenants.firstOrNull((element) => element.companyCode == companyCode);
 
   @override
   FutureOr<void> onError() {
@@ -136,5 +123,4 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState>
   }
 }
 
-var authProvider = AsyncNotifierProvider<AuthProviderNotifier, AuthState>(
-    AuthProviderNotifier.new);
+var authProvider = AsyncNotifierProvider<AuthProviderNotifier, AuthState>(AuthProviderNotifier.new);

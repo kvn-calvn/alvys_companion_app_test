@@ -165,13 +165,10 @@ class TripDetails extends ConsumerWidget {
                                         trip.equipment!,
                                         style: Theme.of(context)
                                             .textTheme
-                                            .bodyMedium!
-                                            .copyWith(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                            .bodyMedium!,
                                       ),
-                                      backgroundColor: const Color(0xFFBBDEFB),
+                                      backgroundColor: ColorManager.chipColor(
+                                          Theme.of(context).brightness),
                                     ),
                                   ],
                                   if (trip.totalWeight != null) ...[
@@ -180,28 +177,23 @@ class TripDetails extends ConsumerWidget {
                                         '${trip.totalWeight}lbs',
                                         style: Theme.of(context)
                                             .textTheme
-                                            .bodyMedium!
-                                            .copyWith(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.bold,
-                                            ),
+                                            .bodyMedium!,
                                       ),
-                                      backgroundColor: const Color(0xFFBBDEFB),
+                                      backgroundColor: ColorManager.chipColor(
+                                          Theme.of(context).brightness),
                                     ),
                                   ],
                                   if (trip.temperature != null) ...[
                                     Chip(
-                                        label: Text(
-                                          '${trip.temperature!.toStringAsFixed(2)}°F',
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .bodyMedium!
-                                              .copyWith(
-                                                  color: Colors.black,
-                                                  fontWeight: FontWeight.bold),
-                                        ),
-                                        backgroundColor:
-                                            const Color(0xFFBBDEFB)),
+                                      label: Text(
+                                        '${trip.temperature!.toStringAsFixed(2)}°F',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!,
+                                      ),
+                                      backgroundColor: ColorManager.chipColor(
+                                          Theme.of(context).brightness),
+                                    ),
                                   ],
                                   if (trip.totalMiles != null) ...[
                                     Chip(
@@ -209,12 +201,10 @@ class TripDetails extends ConsumerWidget {
                                         '${trip.totalMiles!.toStringAsFixed(2)} mi',
                                         style: Theme.of(context)
                                             .textTheme
-                                            .bodyMedium!
-                                            .copyWith(
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold),
+                                            .bodyMedium!,
                                       ),
-                                      backgroundColor: const Color(0xFFBBDEFB),
+                                      backgroundColor: ColorManager.chipColor(
+                                          Theme.of(context).brightness),
                                     ),
                                   ],
                                   if (trip.trailerNum.isNotNullOrEmpty) ...[
@@ -223,12 +213,10 @@ class TripDetails extends ConsumerWidget {
                                         'Trailer ${trip.trailerNum}',
                                         style: Theme.of(context)
                                             .textTheme
-                                            .bodyMedium!
-                                            .copyWith(
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold),
+                                            .bodyMedium!,
                                       ),
-                                      backgroundColor: const Color(0xFFBBDEFB),
+                                      backgroundColor: ColorManager.chipColor(
+                                          Theme.of(context).brightness),
                                     ),
                                   ],
                                   if (trip.paidMiles != null) ...[
@@ -237,12 +225,10 @@ class TripDetails extends ConsumerWidget {
                                         'Pay \$${trip.paidMiles!.toStringAsFixed(2)}',
                                         style: Theme.of(context)
                                             .textTheme
-                                            .bodyMedium!
-                                            .copyWith(
-                                                color: Colors.black,
-                                                fontWeight: FontWeight.bold),
+                                            .bodyMedium!,
                                       ),
-                                      backgroundColor: const Color(0xFFBBDEFB),
+                                      backgroundColor: ColorManager.chipColor(
+                                          Theme.of(context).brightness),
                                     ),
                                   ],
                                 ],

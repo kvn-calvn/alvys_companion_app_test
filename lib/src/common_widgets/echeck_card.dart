@@ -9,8 +9,7 @@ import '../utils/extensions.dart';
 class EcheckCard extends StatelessWidget {
   final ECheck eCheck;
   final Function(String echeckNumber) cancelECheck;
-  const EcheckCard({Key? key, required this.eCheck, required this.cancelECheck})
-      : super(key: key);
+  const EcheckCard({Key? key, required this.eCheck, required this.cancelECheck}) : super(key: key);
 
   void showEcheckMenu(BuildContext context) {
     showCustomPopup<EcheckOption>(
@@ -26,8 +25,7 @@ class EcheckCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding:
-                        EdgeInsets.symmetric(vertical: 8.0, horizontal: 12),
+                    padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12),
                     child: Text('E-Check number copied'),
                   ),
                   SizedBox(
@@ -49,8 +47,7 @@ class EcheckCard extends StatelessWidget {
         }
       },
       items: (context) => EcheckOption.values
-          .map<AlvysPopupItem<EcheckOption>>(
-              (e) => AlvysPopupItem(value: e, child: Text(e.name.titleCase)))
+          .map<AlvysPopupItem<EcheckOption>>((e) => AlvysPopupItem(value: e, child: Text(e.name.titleCase)))
           .toList(),
     );
   }
@@ -88,14 +85,9 @@ class EcheckCard extends StatelessWidget {
                             eCheck.expressCheckNumber!,
                             style: GoogleFonts.oxygenMono(
                               fontWeight: FontWeight.w800,
-                              textStyle: Theme.of(context)
-                                  .textTheme
-                                  .titleMedium!
-                                  .copyWith(
+                              textStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
                                     letterSpacing: 2,
-                                    decoration: eCheck.isCanceled
-                                        ? TextDecoration.lineThrough
-                                        : TextDecoration.none,
+                                    decoration: eCheck.isCanceled ? TextDecoration.lineThrough : TextDecoration.none,
                                     decorationThickness: 2,
                                   ),
                             ),
@@ -106,17 +98,13 @@ class EcheckCard extends StatelessWidget {
                     const Text(
                       'Funds Available',
                     ),
-                    Text('\$${eCheck.amount?.toStringAsFixed(2)}',
-                        style: Theme.of(context).textTheme.bodyLarge),
+                    Text('\$${eCheck.amount?.toStringAsFixed(2)}', style: Theme.of(context).textTheme.bodyLarge),
                     Padding(
                       padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
                       child: Row(
                         mainAxisSize: MainAxisSize.max,
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(eCheck.reason!,
-                              style: Theme.of(context).textTheme.bodySmall)
-                        ],
+                        children: [Text(eCheck.reason!, style: Theme.of(context).textTheme.bodySmall)],
                       ),
                     ),
                   ],

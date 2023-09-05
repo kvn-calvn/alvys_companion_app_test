@@ -18,7 +18,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'app.dart';
 
 Future<void> mainCommon() async {
-  late ProviderContainer container;
+  var container = ProviderContainer();
   runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
     if (FlavorConfig.instance!.flavor == Flavor.prod) {

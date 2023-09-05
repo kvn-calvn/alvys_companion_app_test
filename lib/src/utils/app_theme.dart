@@ -8,13 +8,18 @@ import 'package:flutter/material.dart';
 class AlvysTheme {
   static ThemeData mainTheme(Brightness brightness) {
     final textTheme = appTextTheme(
-        MediaQueryData.fromWindow(WidgetsBinding.instance.window).size.width,
+        MediaQueryData.fromView(
+                WidgetsBinding.instance.platformDispatcher.implicitView!)
+            .size
+            .width,
         brightness);
     return ThemeData(
         textTheme: textTheme,
         brightness: brightness,
         primaryColor: brightness.isLight ? Colors.white : Colors.black,
         scaffoldBackgroundColor: ColorManager.scaffoldColor(brightness),
+        tabBarTheme:
+            TabBarTheme(dividerColor: ColorManager.primary(brightness)),
         appBarTheme: AppBarTheme(
           centerTitle: true,
           iconTheme: IconThemeData(
@@ -25,16 +30,18 @@ class AlvysTheme {
           systemOverlayStyle: SystemUiOverlayStyle(
             statusBarBrightness: brightness,
           ),
-          backgroundColor: Colors.transparent,
-          elevation: 0,
+          backgroundColor: ColorManager.cardColor(brightness),
+          elevation: 1,
           titleTextStyle: appTextTheme(
-                  MediaQueryData.fromWindow(WidgetsBinding.instance.window)
+                  MediaQueryData.fromView(WidgetsBinding
+                          .instance.platformDispatcher.implicitView!)
                       .size
                       .width,
                   brightness)
-              .headlineLarge!
+              .bodyLarge!
               .copyWith(
-                fontWeight: FontWeight.bold,
+                fontWeight: FontWeight.normal,
+                fontSize: 20,
                 color: brightness.isLight ? Colors.black : Colors.white,
               ),
         ),
@@ -46,7 +53,8 @@ class AlvysTheme {
               borderRadius: BorderRadius.circular(10.0),
             ),
             textStyle: appTextTheme(
-                    MediaQueryData.fromWindow(WidgetsBinding.instance.window)
+                    MediaQueryData.fromView(WidgetsBinding
+                            .instance.platformDispatcher.implicitView!)
                         .size
                         .width,
                     brightness)
@@ -59,7 +67,7 @@ class AlvysTheme {
         cardColor: ColorManager.cardColor(brightness),
         bottomNavigationBarTheme: BottomNavigationBarThemeData(
           backgroundColor: ColorManager.cardColor(brightness),
-          selectedItemColor: ColorManager.primary(brightness),
+          selectedItemColor: ColorManager.greyColorScheme1(brightness),
           unselectedItemColor: Colors.grey,
         ),
         inputDecorationTheme: InputDecorationTheme(

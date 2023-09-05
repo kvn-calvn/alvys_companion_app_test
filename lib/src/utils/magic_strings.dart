@@ -25,6 +25,7 @@ enum RouteName {
   uploadPersonalDocument,
   tripReportDocumentList,
   uploadTripReport,
+  notifications,
 
   /// tablet routes
   tabletTrips,
@@ -40,7 +41,7 @@ enum DocumentType { tripDocuments, personalDocuments, paystubs, tripReport }
 
 enum Environment { dev, qa, sandbox }
 
-enum StorageKey { driverData, themeMode, driverToken }
+enum StorageKey { driverData, themeMode, driverToken, companyCode }
 
 enum EcheckOption { copy, cancel }
 

@@ -7,8 +7,7 @@ import 'package:alvys3/src/features/authentication/domain/models/verified/verifi
 
 abstract class AuthRemoteDataSource {
   Future<Phonenumber> loginWithPhoneNumber(String phoneNumber);
-  Future<Verified> verifyPhoneNumber(
-      String phoneNumber, String verificationCode);
+  Future<Verified> verifyPhoneNumber(String phoneNumber, String verificationCode);
 }
 
 class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
@@ -19,20 +18,17 @@ class AuthRemoteDataSourceImpl implements AuthRemoteDataSource {
   Future<Phonenumber> loginWithPhoneNumber(String phoneNumber) async {
     var base64PhoneNumber = Utils.base64String(phoneNumber);
 
-    var res =
-        await _apiClient.dio.get('${ApiRoutes.phoneNumber}/$base64PhoneNumber');
+    var res = await _apiClient.getData('${ApiRoutes.phoneNumber}/$base64PhoneNumber');
 
     return Phonenumber.fromJson(res.data);
   }
 
   @override
-  Future<Verified> verifyPhoneNumber(
-      String phoneNumber, String verificationCode) async {
+  Future<Verified> verifyPhoneNumber(String phoneNumber, String verificationCode) async {
     var base64VerificationCode = Utils.base64String(verificationCode);
     var base64PhoneNumber = Utils.base64String(phoneNumber);
 
-    var res = await _apiClient.dio
-        .get('${ApiRoutes.verify}/$base64PhoneNumber/$base64VerificationCode');
+    var res = await _apiClient.getData('${ApiRoutes.verify}/$base64PhoneNumber/$base64VerificationCode');
     return Verified.fromJson(res.data);
   }
 }

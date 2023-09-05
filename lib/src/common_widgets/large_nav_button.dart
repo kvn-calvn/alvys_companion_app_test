@@ -21,7 +21,7 @@ class LargeNavButton extends StatelessWidget {
       child: Material(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(12),
-        elevation: 2,
+        elevation: 0,
         clipBehavior: Clip.antiAlias,
         child: Ink(
           child: InkWell(

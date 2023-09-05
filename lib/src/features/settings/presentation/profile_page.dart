@@ -130,8 +130,8 @@ class ProfilePage extends ConsumerWidget {
                 style: Theme.of(context).textTheme.labelLarge,
               ),
               Text(
-                DateFormat('MMM d, yyyy', 'en_US').formatNullDate(
-                    userState.value!.driver!.driversLicenceExpirationDate),
+                DateFormat('MMM d, yyyy', 'en_US')
+                    .formatNullDate(userState.value!.driver!.driversLicenceExpirationDate),
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
               const SizedBox(
@@ -142,7 +142,8 @@ class ProfilePage extends ConsumerWidget {
                 style: Theme.of(context).textTheme.labelLarge,
               ),
               Text(
-                userState.value!.driver!.driversLicenceState!,
+                //userState.value!.driver!.driversLicenceState? ?? "N/A",
+                "",
                 style: Theme.of(context).textTheme.bodyMedium,
               ),
             ],

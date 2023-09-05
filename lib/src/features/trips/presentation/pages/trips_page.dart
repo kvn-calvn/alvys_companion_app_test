@@ -21,8 +21,10 @@ class LoadListPage extends ConsumerStatefulWidget {
   ConsumerState<LoadListPage> createState() => _LoadListPageState();
 }
 
-class _LoadListPageState extends ConsumerState<LoadListPage> {
+class _LoadListPageState extends ConsumerState<LoadListPage>
+    with TickerProviderStateMixin {
   String dropdownvalue = 'Online';
+  late TabController _tabController;
   var items = [
     'Online',
     'Offline',
@@ -31,8 +33,10 @@ class _LoadListPageState extends ConsumerState<LoadListPage> {
   @override
   void initState() {
     super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      checkLocationPermission(context);
+      //checkLocationPermission(context);
     });
   }
 
@@ -51,7 +55,8 @@ class _LoadListPageState extends ConsumerState<LoadListPage> {
                 AppDialogAction(
                     label: 'Allow',
                     action: () {
-                      AppSettings.openLocationSettings()
+                      AppSettings.openAppSettings(
+                              type: AppSettingsType.location)
                           .then((value) => GoRouter.of(context).pop());
                     },
                     primary: true),
@@ -69,47 +74,63 @@ class _LoadListPageState extends ConsumerState<LoadListPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: const Text('Trips'),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: DropdownButton(
-              value: dropdownvalue,
-              icon: const Icon(Icons.keyboard_arrow_down),
-              items: [
-                DropdownMenuItem(
-                  value: "Online",
-                  onTap: () {
-                    //Check if user is on an active trip then start tracking if not dialog show that they are not on an active trip therefore they will remain offline.
-                  },
-                  child: Text(
-                    "Online",
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
+        title: const Text('Loads'),
+        leadingWidth: 120,
+        leading: Padding(
+          padding: const EdgeInsets.only(right: 16.0),
+          child: DropdownButton(
+            value: dropdownvalue,
+            icon: const Icon(Icons.keyboard_arrow_down),
+            items: [
+              DropdownMenuItem(
+                value: "Online",
+                onTap: () {
+                  //Check if user is on an active trip then start tracking if not dialog show that they are not on an active trip therefore they will remain offline.
+                },
+                child: Text(
+                  "Online",
+                  style: Theme.of(context).textTheme.titleMedium,
                 ),
-                DropdownMenuItem(
-                  value: "Offline",
-                  onTap: () {
-                    //Stop location tracking when offline.
-                    PlatformChannel.stopLocationTracking();
-                  },
-                  child: Text(
-                    "Offline",
-                    style: Theme.of(context).textTheme.titleMedium,
-                  ),
-                )
-              ],
-              onChanged: (String? value) {
-                setState(() {
-                  dropdownvalue = value!;
-                });
-              },
-            ),
+              ),
+              DropdownMenuItem(
+                value: "Offline",
+                onTap: () {
+                  //Stop location tracking when offline.
+                  PlatformChannel.stopLocationTracking();
+                },
+                child: Text(
+                  "Offline",
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
+              )
+            ],
+            onChanged: (String? value) {
+              setState(() {
+                dropdownvalue = value!;
+              });
+            },
           ),
-        ],
-        centerTitle: false,
-        elevation: 0,
+        ),
+        centerTitle: true,
+        bottom: TabBar(
+          controller: _tabController,
+          labelStyle: Theme.of(context).textTheme.bodyLarge,
+          onTap: (value) {
+            /*if (functions.isLoading)
+                  setState(() => tabController.index = 0);*/
+          },
+          tabs: const <Widget>[
+            Tab(
+              text: 'ACTIVE',
+            ),
+            Tab(
+              text: 'DELIVERED',
+            ),
+            Tab(
+              text: 'PROCESSING',
+            )
+          ],
+        ),
       ),
       body: const TripList(),
     );
@@ -124,10 +145,20 @@ class TripList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final tripsState = ref.watch(tripControllerProvider);
-    return tripsState.when(loading: (() {
+    return tripsState.when(
+        // skipError: true,
+        loading: (() {
       return const TripListShimmer();
     }), error: (error, stack) {
-      return const Text('Oops, something unexpected happened');
+      return RefreshIndicator(
+        onRefresh: () async {
+          await ref.read(tripControllerProvider.notifier).refreshTrips();
+        },
+        child: const EmptyView(
+          title: "Error Occured",
+          description: "Try pull to refresh.",
+        ),
+      );
     }, data: (value) {
       return Padding(
         padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -152,7 +183,7 @@ class TripList extends ConsumerWidget {
                 },
                 child: value.activeTrips.isNotEmpty
                     ? ListView(
-                        padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
+                        padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
                         children: value.activeTrips
                             .map((trip) => TripCard(trip: trip))
                             .toList(),
