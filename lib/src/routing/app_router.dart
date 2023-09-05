@@ -181,6 +181,12 @@ Provider<GoRouter> routerProvider = Provider(
                   transitionDuration: Duration.zero,
                   transitionsBuilder: (context, animation, secondaryAnimation, child) => child,
                 ),
+                redirect: (context, state) {
+                  if (ref.read(authProvider).value!.driver == null) {
+                    return RouteName.signIn.toRoute;
+                  }
+                  return state.path!;
+                },
                 routes: [
                   GoRoute(
                     name: RouteName.paystubs.name,
@@ -257,6 +263,12 @@ Provider<GoRouter> routerProvider = Provider(
                         transitionDuration: Duration.zero,
                         transitionsBuilder: (context, animation, secondaryAnimation, child) => child,
                       ),
+                  redirect: (context, state) {
+                    if (ref.read(authProvider).value!.driver == null) {
+                      return RouteName.signIn.toRoute;
+                    }
+                    return state.path!;
+                  },
                   routes: [
                     GoRoute(
                       name: RouteName.about.name,
