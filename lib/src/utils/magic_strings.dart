@@ -7,8 +7,6 @@ enum RouteName {
   locationPermission,
   notificationPermission,
   trips,
-  delivered,
-  processing,
   tripDetails,
   eCheck,
   tripDocumentList,

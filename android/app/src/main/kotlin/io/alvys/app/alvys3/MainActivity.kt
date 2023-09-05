@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.os.IBinder
 import android.util.Log
+import androidx.window.layout.WindowMetricsCalculator
 import com.microsoft.windowsazure.messaging.notificationhubs.NotificationHub
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
@@ -23,6 +24,7 @@ class MainActivity : FlutterActivity() {
 
         super.configureFlutterEngine(flutterEngine)
         val messenger = flutterEngine.dartExecutor.binaryMessenger
+
         MethodChannel(messenger, "PLATFORM_CHANNEL")
             .setMethodCallHandler { call, result ->
                 when (call.method) {
@@ -47,6 +49,17 @@ class MainActivity : FlutterActivity() {
                     }
                     "stopLocationTracking" -> {
                         context.stopService(locationTrackingServiceIntent)
+                    }
+                    "isTablet" ->{
+                        val metrics = WindowMetricsCalculator.getOrCreate()
+                            .computeCurrentWindowMetrics(this)
+                        val widthDp = metrics.bounds.width() /
+                                resources.displayMetrics.density
+                        val heightDp = metrics.bounds.height() /
+                                resources.displayMetrics.density
+                        var larger = if(widthDp > heightDp) widthDp else heightDp
+                       result.success(larger > 900f)
+
                     }
                     else -> result.notImplemented()
                 }
