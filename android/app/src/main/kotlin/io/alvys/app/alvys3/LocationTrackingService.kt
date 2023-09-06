@@ -53,7 +53,7 @@ class LocationTrackingService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        prepareForegroundNotification()
+        //prepareForegroundNotification()
         startLocationUpdates()
         return START_STICKY
     }
@@ -96,7 +96,7 @@ class LocationTrackingService : Service() {
     private fun prepareForegroundNotification() {
         val serviceChannel = NotificationChannel(
             "CHANNEL_ID_01",
-            "Location Service Channel",
+            "Location Service",
             NotificationManager.IMPORTANCE_NONE,
         )
         val manager: NotificationManager = getSystemService(NotificationManager::class.java)

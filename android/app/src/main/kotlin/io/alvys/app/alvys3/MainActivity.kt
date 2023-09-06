@@ -4,6 +4,7 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
 import androidx.window.layout.WindowMetricsCalculator
@@ -18,6 +19,7 @@ class MainActivity : FlutterActivity() {
 
     private var isBound = false
     private lateinit var mConnection : ServiceConnection
+    private var startString: String? = null
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         NotificationHub.setListener(NHNotificationListener())
         val locationTrackingServiceIntent = Intent(this, LocationTrackingService::class.java)
@@ -49,6 +51,11 @@ class MainActivity : FlutterActivity() {
                     }
                     "stopLocationTracking" -> {
                         context.stopService(locationTrackingServiceIntent)
+                    }
+                    "initialLink" -> {
+                        if (startString != null) {
+                            result.success(startString)
+                        }
                     }
                     "isTablet" ->{
                         val metrics = WindowMetricsCalculator.getOrCreate()
@@ -84,6 +91,13 @@ class MainActivity : FlutterActivity() {
                 isBound = false
             }
         }
+
+    }
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        val intent = intent
+        startString = intent.data?.toString()
     }
 
 

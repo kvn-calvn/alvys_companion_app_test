@@ -18,16 +18,13 @@ import GoogleMaps
         _ application: UIApplication,
         didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
     ) -> Bool {
-        
-        
-        
+         
         let FVC: FlutterViewController = window?.rootViewController as! FlutterViewController
         let platformChannel = FlutterMethodChannel(name: "PLATFORM_CHANNEL", binaryMessenger: FVC as! FlutterBinaryMessenger)
         
         UNUserNotificationCenter.current().delegate = self;
         MSNotificationHub.setDelegate(self)
-        
-        
+              
         platformChannel.setMethodCallHandler { (call, result) in
             let method = call.method
             guard let args = call.arguments as? NSDictionary else {return}
@@ -68,8 +65,6 @@ import GoogleMaps
     
     func NHRegisterattion(driverPhone: String?, hubName: String?, connectionString: String?) {
         
-        print(driverPhone)
-        print(hubName)
         if (!(connectionString ?? "").isEmpty && !(hubName ?? "").isEmpty && !(driverPhone ?? "").isEmpty){
             
             let hubOptions = MSNotificationHubOptions(withOptions: [.alert, .badge, .sound])!
@@ -121,24 +116,13 @@ import GoogleMaps
     
     func notificationHub(_ notificationHub: MSNotificationHub!, didReceivePushNotification notification: MSNotificationHubMessage!) {
     
-        guard let aps = notification.userInfo["aps"] as? [String: Any] else { return }
-        guard let category = aps["category"] as? String else {return}
+        //guard let aps = notification.userInfo["aps"] as? [String: Any] else { return }
+        //guard let category = aps["category"] as? String else {return}
         
         //Do something when notification is tapped whether app is active or not
         if (notificationResponseCompletionHandler != nil) {
-            
-            switch category {
-            case "STOP_UPDATE":
-                guard let stopId = notification.userInfo["STOP_ID"] as? String else {return}
-                print("Stop Id: \(stopId)")
-            case "TRIP_UPDATE":
-                guard let tripId = notification.userInfo["TRIP_ID"] as? String else {return}
-                print("Trip Id: \(tripId)")
-            default:
-                print("NO_CATEGORY_RECEIVED")
-            }
-           
-            print("Tapped Notification")
+            guard let url = notification.userInfo["LINK"] as? String else {return}
+            openDeepLinkURL(url: url)
         }
     
         // Call notification completion handlers.
@@ -152,12 +136,16 @@ import GoogleMaps
         }
     }
     
-    func showAlert (title: String, body: String){
-            let alertController = UIAlertController(title: "\(title)", message: "\(body)", preferredStyle: .alert)
-            alertController.addAction(UIAlertAction(title: "Ok", style: .default, handler: nil))
-            self.window.rootViewController?.present(alertController, animated: true, completion: nil)
+    func openDeepLinkURL(url: String){
+        let deepLinkUrl = URL(string: url)!
+        if UIApplication.shared.canOpenURL(deepLinkUrl) {
+            UIApplication.shared.open(deepLinkUrl, options: [:]) { success in
+                print("Can open app store URL: \(url)")
+            }
+        }else {
+            print("Cannot open URL: \(url)")
         }
-    
+    }
 }
 
 
