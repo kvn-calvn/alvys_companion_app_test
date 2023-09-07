@@ -1,20 +1,22 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:alvys3/src/features/authentication/data/auth_repository.dart';
-import 'package:alvys3/src/features/authentication/domain/models/auth_state/auth_state.dart';
-import 'package:alvys3/src/features/authentication/domain/models/driver_user/driver_user.dart';
-import 'package:alvys3/src/features/authentication/domain/models/driver_user/user_tenant.dart';
-import 'package:alvys3/src/utils/exceptions.dart';
-import 'package:alvys3/src/utils/extensions.dart';
-import 'package:alvys3/src/utils/magic_strings.dart';
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-import '../../../common_widgets/main_bottom_nav.dart';
+import '../../../utils/alvys_websocket.dart';
+import '../../../utils/exceptions.dart';
+import '../../../utils/extensions.dart';
+import '../../../utils/magic_strings.dart';
+import '../../../utils/platform_channel.dart';
+import '../data/auth_repository.dart';
+import '../domain/models/auth_state/auth_state.dart';
+import '../domain/models/driver_user/driver_user.dart';
+import '../domain/models/driver_user/user_tenant.dart';
 
 class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppErrorHandler {
   final DriverUser? driver;
@@ -47,16 +49,18 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppError
     state = AsyncValue.data(state.value!.copyWith(phone: '', verificationCode: '', driverLoggedIn: false));
   }
 
+  DriverUser? get stateUser => state.value!.driver;
+
   Future<void> verifyDriver(BuildContext context, bool mounted) async {
     state = const AsyncValue.loading();
     var driverRes = await authRepo.verifyDriverCode(state.value!.phone, state.value!.verificationCode);
     var storage = const FlutterSecureStorage();
-    state = AsyncValue.data(state.value!.copyWith(driver: driverRes.data));
-    await storage.write(key: StorageKey.driverData.name, value: driverRes.data!.toStringJson());
+    state = AsyncValue.data(state.value!.copyWith(driver: driverRes));
+    await storage.write(key: StorageKey.driverData.name, value: driverRes.toStringJson());
     await storage.write(
       key: StorageKey.driverToken.name,
       value: base64.encode(
-        utf8.encode("${driverRes.data!.userName}:${driverRes.data!.appToken}"),
+        utf8.encode("${driverRes.userName}:${driverRes.appToken}"),
       ),
     );
 
@@ -99,10 +103,12 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppError
   Future<void> signOut(BuildContext context) async {
     GoRouter.of(context).goNamed(RouteName.signIn.name);
     var storage = const FlutterSecureStorage();
-    ref.read(bottomNavIndexProvider.notifier).update((state) => 0);
+    PlatformChannel.stopLocationTracking();
+    await ref.read(websocketProvider).stopWebsocketConnection();
     resetFields();
     await storage.delete(key: StorageKey.driverData.name);
     await storage.delete(key: StorageKey.driverToken.name);
+    state = AsyncValue.data(state.value!.copyWith(driver: null));
   }
 
   void resetFields() {
@@ -112,11 +118,21 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppError
     ));
   }
 
-  List<String> get tenantCompanyCodes => state.value!.driver!.userTenants.map<String>((e) => e.companyCode!).toList();
+  void updateUser(DriverUser user) {
+    if (state.value?.driver != null) {
+      state = AsyncValue.data(state.value!.copyWith(driver: user));
+    }
+  }
+
+  List<String> get tenantCompanyCodes => state.value!.driver!.userTenants
+      .where((t) => t.companyCode.isNotNullOrEmpty)
+      .map<String>((e) => e.companyCode!)
+      .toList();
 
   UserTenant? getCurrentUserTenant(String companyCode) =>
-      state.value!.driver!.userTenants.firstOrNull((element) => element.companyCode == companyCode);
-
+      state.value!.driver!.userTenants.firstWhereOrNull((element) => element.companyCode == companyCode);
+  UserTenant get getCompanyOwned =>
+      state.value!.driver!.userTenants.firstWhere((element) => element.companyOwnedAsset!);
   @override
   FutureOr<void> onError() {
     state = AsyncValue.data(state.value!);

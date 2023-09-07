@@ -1,4 +1,4 @@
-import 'package:alvys3/src/constants/color.dart';
+import '../constants/color.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
@@ -18,8 +18,9 @@ class AlvysTheme {
         brightness: brightness,
         primaryColor: brightness.isLight ? Colors.white : Colors.black,
         scaffoldBackgroundColor: ColorManager.scaffoldColor(brightness),
-        tabBarTheme:
-            TabBarTheme(dividerColor: ColorManager.primary(brightness)),
+        tabBarTheme: TabBarTheme(
+          dividerColor: ColorManager.primary(brightness),
+        ),
         appBarTheme: AppBarTheme(
           centerTitle: true,
           iconTheme: IconThemeData(
@@ -27,11 +28,11 @@ class AlvysTheme {
                 ? Colors.black
                 : Colors.white, //change your color here
           ),
+          backgroundColor: Colors.transparent,
+          elevation: 0,
           systemOverlayStyle: SystemUiOverlayStyle(
             statusBarBrightness: brightness,
           ),
-          backgroundColor: ColorManager.cardColor(brightness),
-          elevation: 1,
           titleTextStyle: appTextTheme(
                   MediaQueryData.fromView(WidgetsBinding
                           .instance.platformDispatcher.implicitView!)
@@ -66,9 +67,10 @@ class AlvysTheme {
         ),
         cardColor: ColorManager.cardColor(brightness),
         bottomNavigationBarTheme: BottomNavigationBarThemeData(
-          backgroundColor: ColorManager.cardColor(brightness),
-          selectedItemColor: ColorManager.greyColorScheme1(brightness),
-          unselectedItemColor: Colors.grey,
+          backgroundColor: Colors.transparent,
+          elevation: 0,
+          selectedItemColor: ColorManager.primary(brightness),
+          unselectedItemColor: ColorManager.greyColorScheme2,
         ),
         inputDecorationTheme: InputDecorationTheme(
           isDense: true,
@@ -86,7 +88,7 @@ class AlvysTheme {
           fillColor: AlvysMaterialStateColor(brightness),
         ),
         cardTheme: CardTheme(
-          elevation: 2,
+          elevation: 0,
           shape:
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),
@@ -124,7 +126,7 @@ class AlvysTheme {
     return small
         ? Theme.of(context)
             .textTheme
-            .titleMedium!
+            .headlineLarge!
             .copyWith(fontWeight: FontWeight.w700)
         : Theme.of(context).textTheme.headlineLarge!;
   }

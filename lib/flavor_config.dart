@@ -1,5 +1,3 @@
-// ignore_for_file: constant_identifier_names
-
 enum Flavor { dev, prod, qa }
 
 class FlavorConfig {

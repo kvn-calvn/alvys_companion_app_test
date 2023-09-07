@@ -1,21 +1,20 @@
-import 'package:alvys3/src/common_widgets/shimmers/shimmer_widget.dart';
 import 'package:fade_shimmer/fade_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'shimmer_widget.dart';
 
 class TripListShimmer extends StatelessWidget {
   const TripListShimmer({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return const AlvysShimmer(
-        repeatingChild: TripCardShimmer(), repeatAmount: 5);
+    return const AlvysShimmer(repeatingChild: TripCardShimmer(), repeatAmount: 5);
   }
 }
 
 class TripCardShimmer extends ConsumerWidget {
-  const TripCardShimmer({Key? key, this.millisecondsDelay = 2000})
-      : super(key: key);
+  const TripCardShimmer({Key? key, this.millisecondsDelay = 2000}) : super(key: key);
 
   final int millisecondsDelay;
 
@@ -71,8 +70,7 @@ class TripCardShimmer extends ConsumerWidget {
                       size: 24,
                     ),
                     Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
+                      padding: const EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -114,8 +112,7 @@ class TripCardShimmer extends ConsumerWidget {
                       size: 24,
                     ),
                     Padding(
-                      padding:
-                          const EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
+                      padding: const EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
                       child: Column(
                         mainAxisSize: MainAxisSize.max,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -177,8 +174,7 @@ class TripCardShimmer extends ConsumerWidget {
 
 class TripCardDetail extends StatelessWidget {
   final int millisecondsDelay;
-  const TripCardDetail({Key? key, required this.millisecondsDelay})
-      : super(key: key);
+  const TripCardDetail({Key? key, required this.millisecondsDelay}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

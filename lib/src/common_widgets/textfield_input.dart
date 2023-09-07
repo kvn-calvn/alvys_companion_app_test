@@ -1,4 +1,4 @@
-import 'package:alvys3/src/constants/color.dart';
+import '../constants/color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -40,8 +40,7 @@ class TextfieldInput extends StatelessWidget {
           borderRadius: BorderRadius.circular(15),
         ),
         focusedBorder: OutlineInputBorder(
-          borderSide: BorderSide(
-              width: 1, color: ColorManager.primary(Brightness.dark)),
+          borderSide: BorderSide(width: 1, color: ColorManager.primary(Brightness.dark)),
           borderRadius: BorderRadius.circular(10),
         ),
       ),

@@ -1,13 +1,7 @@
 import 'dart:async';
-
-import 'package:alvys3/src/utils/extensions.dart';
-import 'package:intl/intl.dart';
-
-import '../../../routing/routing_arguments.dart';
-import '../../authentication/domain/models/driver_user/driver_user.dart';
-import '../../authentication/domain/models/driver_user/user_tenant.dart';
+import '../../authentication/presentation/auth_provider_controller.dart';
 import '../domain/document_state/document_state.dart';
-import 'package:alvys3/src/utils/magic_strings.dart';
+import '../../../utils/magic_strings.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../data/repositories/documents_repository.dart';
@@ -20,12 +14,14 @@ class DocumentsArgs {
 }
 
 class DocumentsNotifier extends AutoDisposeFamilyAsyncNotifier<DocumentState, DocumentsArgs> {
-  late AppDocumentsRepository docRepo;
+  late AppDocumentRepository docRepo;
+  late AuthProviderNotifier auth;
   int top = 10;
 
   @override
   FutureOr<DocumentState> build(DocumentsArgs arg) async {
     docRepo = ref.watch(documentsRepositoryProvider);
+    auth = ref.read(authProvider.notifier);
     state = AsyncValue.data(DocumentState());
     await init();
     return state.value!;
@@ -39,34 +35,30 @@ class DocumentsNotifier extends AutoDisposeFamilyAsyncNotifier<DocumentState, Do
   Future<void> getDocuments() async {
     switch (arg.documentType) {
       case DocumentType.tripDocuments:
-        var res = await docRepo.getTripDocs(arg.tripId!);
-        state = AsyncValue.data(state.value!.copyWith(documentList: res.data!));
         break;
       case DocumentType.personalDocuments:
-        var res = await docRepo.getPersonalDocs();
-        state = AsyncValue.data(state.value!.copyWith(documentList: res.data!));
+        var res = await docRepo.getPersonalDocs(auth.driver!);
+        state = AsyncValue.data(state.value!.copyWith(documentList: res));
         break;
       case DocumentType.paystubs:
         await getPaystubs();
-        state = AsyncValue.data(state.value!.copyWith(canLoadMore: state.value!.paystubs.length == top));
+        state = AsyncValue.data(state.value!.copyWith(canLoadMore: state.value!.documentList.length == top));
 
         break;
       case DocumentType.tripReport:
-        var res = await docRepo.getTripReportDocs();
-        state = AsyncValue.data(state.value!.copyWith(documentList: res.data!));
+        var res = await docRepo.getTripReportDocs(auth.getCompanyOwned.companyCode!, auth.driver!);
+        state = AsyncValue.data(state.value!.copyWith(documentList: res));
         break;
     }
   }
 
   Future<void> getPaystubs() async {
     var res = await docRepo.getPaystubs(
-      DriverUser(
-        id: '05e697bc147e45d984028d80db0db6f3',
-        userTenants: [UserTenant(companyCode: "TR058")],
-      ),
+      auth.getCompanyOwned.companyCode!,
+      auth.driver!,
       top = top,
     );
-    state = AsyncValue.data(state.value!.copyWith(paystubs: res.data!));
+    state = AsyncValue.data(state.value!.copyWith(documentList: res));
   }
 
   String get pageTitle {
@@ -82,24 +74,11 @@ class DocumentsNotifier extends AutoDisposeFamilyAsyncNotifier<DocumentState, Do
     }
   }
 
-  List<PDFViewerArguments> get documentThumbnails {
-    switch (arg.documentType) {
-      case DocumentType.tripDocuments:
-      case DocumentType.personalDocuments:
-      case DocumentType.tripReport:
-        return state.value!.documentList.map((doc) => PDFViewerArguments(doc.link!, doc.type!, doc)).toList();
-      case DocumentType.paystubs:
-        return state.value!.paystubs
-            .map((doc) => PDFViewerArguments(doc.link, DateFormat.yMEd().formatNullDate(doc.datePaid!), doc))
-            .toList();
-    }
-  }
-
   Future<void> loadMorePaystubs() async {
     if (arg.documentType == DocumentType.paystubs && state.value!.canLoadMore) {
       top += 10;
       await getPaystubs();
-      if (state.value!.paystubs.length < top) {
+      if (state.value!.documentList.length < top) {
         state = AsyncValue.data(state.value!.copyWith(canLoadMore: false));
       }
     }

@@ -1,19 +1,21 @@
-import 'package:alvys3/src/features/documents/presentation/upload_documents_controller.dart';
-import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:material_symbols_icons/symbols.dart';
 
-final bottomNavIndexProvider = StateProvider((ref) => 0);
+import '../../custom_icons/alvys3_icons.dart';
+import '../features/documents/presentation/upload_documents_controller.dart';
+import '../utils/alvys_websocket.dart';
 
 class MainBottomNav extends ConsumerStatefulWidget {
   const MainBottomNav({
+    required this.navShell,
+    required this.children,
     Key? key,
-    required this.child,
   }) : super(key: key);
 
-  final Widget child;
+  final StatefulNavigationShell navShell;
+  final List<Widget> children;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _MainBottomNavState();
@@ -21,36 +23,44 @@ class MainBottomNav extends ConsumerStatefulWidget {
 
 class _MainBottomNavState extends ConsumerState<MainBottomNav> {
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      await ref.read(websocketProvider).restartConnection();
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: widget.child,
+      body: widget.children[widget.navShell.currentIndex],
       bottomNavigationBar: BottomNavigationBar(
-        elevation: 0.0,
         type: BottomNavigationBarType.fixed,
-        currentIndex: ref.watch(bottomNavIndexProvider),
+        currentIndex: widget.navShell.currentIndex,
         onTap: (i) {
           if (ref.read(scanningProvider)) return;
-          ref.read(bottomNavIndexProvider.notifier).update((state) => i);
+          widget.navShell.goBranch(i, initialLocation: widget.navShell.currentIndex == i);
+          // ref.read(bottomNavIndexProvider.notifier).update((state) => i);
 
-          switch (i) {
-            case 0:
-              context.goNamed(RouteName.trips.name);
-              break;
-            case 1:
-              context.goNamed(RouteName.notifications.name);
-              break;
-            case 2:
-              context.goNamed(RouteName.settings.name);
-          }
+          // switch (i) {
+          //   case 0:
+          //     context.goNamed(RouteName.trips.name);
+          //     break;
+          //   case 1:
+          //     context.goNamed(RouteName.profile.name);
+          //     break;
+          //   case 2:
+          //     context.goNamed(RouteName.settings.name);
+          // }
         },
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Symbols.local_shipping), //Icon(Alvys3Icons.homeIco),
+            icon: Icon(Alvys3Icons.homeIco),
             label: 'Trips',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Symbols.notifications),
-            label: 'Notifications',
+            icon: Icon(Symbols.person),
+            label: 'Profile',
           ),
           BottomNavigationBarItem(
             icon: Icon(Symbols.settings),

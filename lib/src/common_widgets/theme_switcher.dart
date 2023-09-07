@@ -1,7 +1,8 @@
-import 'package:alvys3/src/utils/theme_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../utils/extensions.dart';
+import '../utils/theme_handler.dart';
 
 class ThemeSwitcher extends ConsumerStatefulWidget {
   const ThemeSwitcher({Key? key}) : super(key: key);

@@ -1,5 +1,3 @@
-// ignore_for_file: no_leading_underscores_for_local_identifiers
-
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -12,11 +10,9 @@ class UrlNavButton extends StatelessWidget {
 
   final String title;
   final String url;
-
+  Uri get _url => Uri.parse(url);
   @override
   Widget build(BuildContext context) {
-    final Uri _url = Uri.parse(url);
-
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 5.0),
       child: Material(
@@ -37,10 +33,7 @@ class UrlNavButton extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge!
-                        .copyWith(fontWeight: FontWeight.bold),
+                    style: Theme.of(context).textTheme.bodyLarge!.copyWith(fontWeight: FontWeight.bold),
                   ),
                   const Spacer(),
                   const Icon(

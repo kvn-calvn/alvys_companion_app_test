@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-import 'package:alvys3/src/common_widgets/buttons.dart';
+import 'buttons.dart';
 import 'package:flutter/material.dart';
 
 class AppDialogAction {
@@ -8,17 +8,11 @@ class AppDialogAction {
   final bool primary;
   final void Function() action;
 
-  AppDialogAction(
-      {required this.label, required this.action, this.primary = false});
+  AppDialogAction({required this.label, required this.action, this.primary = false});
 }
 
 class AppDialog extends StatelessWidget {
-  const AppDialog(
-      {Key? key,
-      required this.title,
-      required this.description,
-      required this.actions})
-      : super(key: key);
+  const AppDialog({Key? key, required this.title, required this.description, required this.actions}) : super(key: key);
 
   final String title, description;
   final List<AppDialogAction> actions;
@@ -70,8 +64,7 @@ class AppDialog extends StatelessWidget {
               ),
               for (var action in actions)
                 action.primary
-                    ? ButtonStyle1(
-                        onPressAction: action.action, title: action.label)
+                    ? ButtonStyle1(onPressAction: action.action, title: action.label)
                     : TextButton(
                         onPressed: action.action,
                         child: Text(

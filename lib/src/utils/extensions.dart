@@ -1,5 +1,5 @@
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 
 extension ListExt<T, K> on Iterable<T>? {
   bool isInStatus(String test) {
@@ -42,15 +42,6 @@ extension ListExt<T, K> on Iterable<T>? {
     return false;
   }
 
-  T? firstOrNull(bool Function(T e) test) {
-    if (this == null) return null;
-    try {
-      return this!.firstWhere(test);
-    } on StateError catch (_) {
-      return null;
-    }
-  }
-
   List<J> mapList<J>(J Function(T e, int index, bool isLast) toElement) {
     List<J> items = [];
     if (isNullOrEmpty) return items;
@@ -59,43 +50,23 @@ extension ListExt<T, K> on Iterable<T>? {
     }
     return items;
   }
+
+  Future<Iterable<J>> asyncMap<J>(Future<J> Function(T e) op) {
+    if (this == null) return Future.value([]);
+    var res = this!.map((e) async => await op(e));
+    return Future.wait(res);
+  }
 }
 
 extension StringExt on String? {
   bool isInStatus(Iterable<String> test) {
     bool inStatus = false;
     for (var element in test) {
-      if (element == this) {
+      if (element.toLowerCase() == this?.toLowerCase()) {
         inStatus = true;
       }
     }
     return inStatus;
-  }
-
-  bool get isNullOrEmpty {
-    if (this == null) return true;
-    return this!.isEmpty;
-  }
-
-  bool get isNotNullOrEmpty {
-    if (this == null) return false;
-    return this!.isNotEmpty;
-  }
-
-  String get sentenceCase {
-    if (this == null) return "";
-    return this!.isNotEmpty
-        ? '${this![0].toUpperCase()}${this!.substring(1).toLowerCase()}'
-        : '';
-  }
-
-  String get titleCase {
-    if (this == null) return "";
-    return this!
-        .replaceAll(RegExp(' +'), ' ')
-        .split(" ")
-        .map((str) => str.sentenceCase)
-        .join(" ");
   }
 
   String get numbersOnly {
@@ -159,13 +130,6 @@ extension EnumListExt<T extends Enum> on Iterable<T> {
   }
 }
 
-extension DateFormatEx on DateFormat {
-  String formatNullDate(DateTime? date) {
-    if (date == null) return '-';
-    return format(date);
-  }
-}
-
 extension MapExtn<T> on Map<T, dynamic> {
   Map<T, dynamic> get removeNulls {
     Map<T, dynamic> returnMap = {};
@@ -179,15 +143,12 @@ extension MapExtn<T> on Map<T, dynamic> {
 extension KeyExtensions on GlobalKey {
   KeyData getKeyPosition(BuildContext context) {
     final RenderBox button = currentContext!.findRenderObject() as RenderBox;
-    final RenderBox overlay =
-        Overlay.of(context).context.findRenderObject() as RenderBox;
+    final RenderBox overlay = Overlay.of(context).context.findRenderObject() as RenderBox;
     return KeyData(
         RelativeRect.fromRect(
           Rect.fromPoints(
-            button.localToGlobal(button.size.topLeft(Offset.zero),
-                ancestor: overlay),
-            button.localToGlobal(button.size.bottomRight(Offset.zero),
-                ancestor: overlay),
+            button.localToGlobal(button.size.topLeft(Offset.zero), ancestor: overlay),
+            button.localToGlobal(button.size.bottomRight(Offset.zero), ancestor: overlay),
           ),
           Offset.zero & overlay.size,
         ),

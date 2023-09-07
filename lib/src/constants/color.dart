@@ -1,4 +1,4 @@
-import 'package:alvys3/src/utils/extensions.dart';
+import '../utils/extensions.dart';
 import 'package:flutter/material.dart';
 
 class ColorManager {
@@ -18,18 +18,18 @@ class ColorManager {
   static Color white = Colors.white;
 
   static Color cardColor(Brightness brightness) =>
-      brightness.isLight ? const Color(0XFFFFFFFF) : const Color(0XFF303030);
+      brightness.isLight ? const Color(0XFFF3F3F3) : const Color(0XFF232323);
 
   static Color pickupStopCardBg(Brightness brightness) =>
       brightness.isLight ? const Color(0XFFFCE6E6) : const Color(0XFFB05858);
   static Color deliveryStopCardBg(Brightness brightness) =>
       brightness.isLight ? const Color(0XFFD4E9F3) : const Color(0XFF2279A3);
   static Color secondaryButton(Brightness brightness) =>
-      brightness.isLight ? const Color(0XFF233E90) : const Color(0XFF232323);
+      brightness.isLight ? const Color(0XFF233E90) : const Color(0XFF265CFF);
   static Color secondaryButtonDisabled(Brightness brightness) =>
       brightness.isLight ? const Color(0XFFBEBEBE) : const Color(0XFF585858);
   static Color scaffoldColor(Brightness brightness) =>
-      brightness.isLight ? const Color(0xFFEDEDED) : const Color(0XFF141414);
+      brightness.isLight ? const Color(0xFFFFFFFF) : const Color(0XFF141414);
   static Color chipColor(Brightness brightness) =>
       brightness.isLight ? const Color(0XFFEBF2FF) : const Color(0XFF233E90);
   static Color shimmerHighlight(Brightness brightness) => brightness.isLight

@@ -1,18 +1,18 @@
-// ignore_for_file: no_leading_underscores_for_local_identifiers
-
-import 'package:alvys3/src/common_widgets/empty_view.dart';
-import 'package:alvys3/src/common_widgets/large_nav_button.dart';
-import 'package:alvys3/src/common_widgets/app_dialog.dart';
-import 'package:alvys3/src/common_widgets/shimmers/trip_card_shimmer.dart';
-import 'package:alvys3/src/common_widgets/trip_card.dart';
-import 'package:alvys3/src/features/trips/presentation/controller/trip_page_controller.dart';
-import 'package:alvys3/src/utils/magic_strings.dart';
-import 'package:alvys3/src/utils/platform_channel.dart';
+import '../../../../common_widgets/empty_view.dart';
+import '../../../../common_widgets/app_dialog.dart';
+import '../../../../common_widgets/shimmers/trip_card_shimmer.dart';
+import '../../../../common_widgets/trip_card.dart';
+import '../../../../utils/app_theme.dart';
+import '../controller/trip_page_controller.dart';
+import 'filtered_trip_page.dart';
+import '../../../../utils/magic_strings.dart';
+import '../../../../utils/platform_channel.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:lottie/lottie.dart';
 
 class LoadListPage extends ConsumerStatefulWidget {
   const LoadListPage({Key? key}) : super(key: key);
@@ -74,44 +74,90 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Loads'),
-        leadingWidth: 120,
-        leading: Padding(
-          padding: const EdgeInsets.only(right: 16.0),
-          child: DropdownButton(
-            value: dropdownvalue,
-            icon: const Icon(Icons.keyboard_arrow_down),
-            items: [
-              DropdownMenuItem(
-                value: "Online",
-                onTap: () {
-                  //Check if user is on an active trip then start tracking if not dialog show that they are not on an active trip therefore they will remain offline.
-                },
-                child: Text(
-                  "Online",
-                  style: Theme.of(context).textTheme.titleMedium,
+        title: Text(
+          'Trips',
+          style: AlvysTheme.appbarTextStyle(context, true),
+        ),
+        actions: [
+          Padding(
+            padding: const EdgeInsets.only(right: 16.0),
+            child: Container(
+              //
+              padding: const EdgeInsets.symmetric(horizontal: 5),
+              /* decoration: BoxDecoration(
+                color: Colors.green.shade50,
+                border: Border.all(color: Colors.transparent),
+                borderRadius: BorderRadius.circular(10),
+              ),*/
+              child: DropdownButtonHideUnderline(
+                child: DropdownButton(
+                  value: dropdownvalue,
+                  isDense: true,
+                  elevation: 1,
+                  iconSize: 0.0,
+                  borderRadius: BorderRadius.circular(10),
+                  items: [
+                    DropdownMenuItem(
+                      value: "Online",
+                      onTap: () {
+                        //Check if user is on an active trip then start tracking if not dialog show that they are not on an active trip therefore they will remain offline.
+                      },
+                      child: Row(
+                        children: [
+                          Lottie.asset('assets/lottie/green_pulse.json',
+                              width: 30, height: 30),
+                          /*Icon(
+                            Icons.brightness_1,
+                            color: Colors.green.shade600,
+                          ),*/
+                          const SizedBox(
+                            width: 0,
+                          ),
+                          Text(
+                            "Online",
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                        ],
+                      ),
+                    ),
+                    DropdownMenuItem(
+                      value: "Offline",
+                      onTap: () {
+                        //Stop location tracking when offline.
+                        PlatformChannel.stopLocationTracking();
+                      },
+                      child: Row(
+                        children: [
+                          const SizedBox(
+                            width: 8,
+                          ),
+                          Icon(
+                            Icons.brightness_1,
+                            size: 14,
+                            color: Colors.grey.shade600,
+                          ),
+                          const SizedBox(
+                            width: 8,
+                          ),
+                          Text(
+                            "Offline",
+                            style: Theme.of(context).textTheme.titleMedium,
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                  onChanged: (String? value) {
+                    setState(() {
+                      dropdownvalue = value!;
+                    });
+                  },
                 ),
               ),
-              DropdownMenuItem(
-                value: "Offline",
-                onTap: () {
-                  //Stop location tracking when offline.
-                  PlatformChannel.stopLocationTracking();
-                },
-                child: Text(
-                  "Offline",
-                  style: Theme.of(context).textTheme.titleMedium,
-                ),
-              )
-            ],
-            onChanged: (String? value) {
-              setState(() {
-                dropdownvalue = value!;
-              });
-            },
+            ),
           ),
-        ),
-        centerTitle: true,
+        ],
+        centerTitle: false,
         bottom: TabBar(
           controller: _tabController,
           labelStyle: Theme.of(context).textTheme.bodyLarge,
@@ -121,18 +167,26 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
           },
           tabs: const <Widget>[
             Tab(
-              text: 'ACTIVE',
+              text: 'Active',
             ),
             Tab(
-              text: 'DELIVERED',
+              text: 'Delivered',
             ),
             Tab(
-              text: 'PROCESSING',
+              text: 'Processing',
             )
           ],
         ),
       ),
-      body: const TripList(),
+      body: TabBarView(controller: _tabController, children: const [
+        TripList(),
+        FilteredTripPage(
+          filterType: TripFilterType.delivered,
+        ),
+        FilteredTripPage(
+          filterType: TripFilterType.processing,
+        ),
+      ]),
     );
   }
 }
@@ -164,16 +218,6 @@ class TripList extends ConsumerWidget {
         padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
         child: Column(
           children: [
-            if (value.deliveredTrips.isNotEmpty)
-              Padding(
-                padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
-                child: LargeNavButton(
-                  title: "Delivered",
-                  onPressed: () {
-                    context.pushNamed(RouteName.delivered.name);
-                  },
-                ),
-              ),
             Expanded(
               child: RefreshIndicator(
                 onRefresh: () async {

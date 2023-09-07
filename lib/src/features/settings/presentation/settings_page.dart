@@ -1,14 +1,15 @@
-import 'package:alvys3/src/common_widgets/custom_bottom_sheet.dart';
-import 'package:alvys3/src/common_widgets/large_nav_button.dart';
-import 'package:alvys3/src/common_widgets/profile_nav_button.dart';
-import 'package:alvys3/src/common_widgets/theme_switcher.dart';
-import 'package:alvys3/src/common_widgets/url_nav_button.dart';
-import 'package:alvys3/src/features/authentication/presentation/auth_provider_controller.dart';
-import 'package:alvys3/src/utils/magic_strings.dart';
-import 'package:alvys3/src/utils/platform_channel.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../../common_widgets/custom_bottom_sheet.dart';
+import '../../../common_widgets/large_nav_button.dart';
+import '../../../common_widgets/theme_switcher.dart';
+import '../../../common_widgets/url_nav_button.dart';
+import '../../../utils/app_theme.dart';
+import '../../../utils/magic_strings.dart';
+import '../../../utils/platform_channel.dart';
+import '../../authentication/presentation/auth_provider_controller.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -23,9 +24,13 @@ class _SettingsPageState extends State<SettingsPage> {
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        title: const Text('Settings'),
+        title: Text(
+          'Settings',
+          style: AlvysTheme.appbarTextStyle(context, true),
+        ),
         centerTitle: false,
         elevation: 0,
+        backgroundColor: Colors.transparent,
       ),
       body: const Padding(
         padding: EdgeInsets.symmetric(horizontal: 16.0),
@@ -42,40 +47,11 @@ class SettingsList extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var userState = ref.watch(authProvider);
     return ListView(
       scrollDirection: Axis.vertical,
       children: [
         const SizedBox(
           height: 10,
-        ),
-        ProfileNavButton(
-          title: userState.value!.driver!.name!,
-          profileImageUrl: 'https://i.pravatar.cc/300',
-          onPressed: () {
-            context.pushNamed(RouteName.profile.name);
-          },
-        ),
-        LargeNavButton(
-          title: "My Documents",
-          onPressed: () {
-            context.goNamed(RouteName.personalDocumentsList.name);
-          },
-        ),
-        LargeNavButton(
-          title: "Paystubs",
-          onPressed: () {
-            context.goNamed(RouteName.paystubs.name);
-          },
-        ),
-        LargeNavButton(
-          title: "Trip Report",
-          onPressed: () {
-            context.pushNamed(RouteName.tripReportDocumentList.name);
-          },
-        ),
-        const SizedBox(
-          height: 15,
         ),
         LargeNavButton(
           title: "Change Theme",
@@ -83,13 +59,13 @@ class SettingsList extends ConsumerWidget {
             showCustomBottomSheet(context, const ThemeSwitcher());
           },
         ),
+        const UrlNavButton(title: "Help", url: "https://alvys.com/help/"),
         LargeNavButton(
           title: "About",
           onPressed: () {
             context.pushNamed(RouteName.about.name);
           },
         ),
-        const UrlNavButton(title: "Help", url: "https://alvys.com/help/"),
         LargeNavButton(
           title: "Sign Out",
           onPressed: () {

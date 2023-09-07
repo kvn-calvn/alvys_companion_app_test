@@ -1,6 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import 'address.dart';
+import '../../../../../models/address/address.dart';
 
 part 'office.freezed.dart';
 part 'office.g.dart';

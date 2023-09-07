@@ -1,14 +1,14 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import 'package:alvys3/src/common_widgets/file_upload_progress_dialog.dart';
-import 'package:alvys3/src/features/authentication/presentation/auth_provider_controller.dart';
-import 'package:alvys3/src/features/documents/domain/genius_scan_config/genius_scan_config.dart';
-import 'package:alvys3/src/features/documents/domain/genius_scan_config/genius_scan_generate_document_config.dart';
-import 'package:alvys3/src/features/documents/domain/upload_documents_state/upload_documents_state.dart';
-import 'package:alvys3/src/utils/exceptions.dart';
-import 'package:alvys3/src/utils/extensions.dart';
-import 'package:alvys3/src/utils/magic_strings.dart';
+import '../../../common_widgets/file_upload_progress_dialog.dart';
+import '../../authentication/presentation/auth_provider_controller.dart';
+import '../domain/genius_scan_config/genius_scan_config.dart';
+import '../domain/genius_scan_config/genius_scan_generate_document_config.dart';
+import '../domain/upload_documents_state/upload_documents_state.dart';
+import '../../../utils/exceptions.dart';
+import '../../../utils/extensions.dart';
+import '../../../utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_genius_scan/flutter_genius_scan.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,7 +22,7 @@ import '../data/repositories/documents_repository.dart';
 
 class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocumentsState, UploadDocumentArgs>
     implements IAppErrorHandler {
-  late AppDocumentsRepository<UploadDocumentsController> docRepo;
+  late AppDocumentRepository<UploadDocumentsController> docRepo;
   late TripController trips;
   late ScanningNotifier isScanning;
   late AuthProviderNotifier userData;
@@ -109,10 +109,27 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
             .toJson(),
         {'outputFileUrl': GeneratePDFPage.toPathString(path)});
     var pdfFile = File(path);
-    await docRepo.uploadDocuments(state.documentType?.companyCode ?? '', arg.tripId ?? '', [pdfFile]);
+    await _doUpload(pdfFile);
+
     var ctx = arg.context;
     if (ctx.mounted) {
-      Navigator.of(ctx, rootNavigator: true).pop();
+      Navigator.of(ctx).pop();
+    }
+  }
+
+  Future<void> _doUpload(File pdfFile) {
+    switch (arg.documentType) {
+      case DocumentType.tripDocuments:
+        var trip = trips.getTrip(arg.tripId!);
+        return docRepo.uploadTripDocuments(trip!.companyCode!, state.documentType!, pdfFile, arg.tripId!);
+
+      case DocumentType.personalDocuments:
+        return docRepo.uploadPersonalDocuments(state.documentType!, pdfFile);
+      case DocumentType.paystubs:
+        return Future.value(null);
+
+      case DocumentType.tripReport:
+        return docRepo.uploadTripReport(userData.getCompanyOwned.companyCode!, state.documentType!, pdfFile);
     }
   }
 
@@ -135,11 +152,11 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
         ], trip?.companyCode);
 
       case DocumentType.personalDocuments:
-        return UploadDocumentOptions.getOptionsList(["titles"], null);
+        return UploadDocumentOptions.getOptionsList(["License", "Medical"], userData.getCompanyOwned.companyCode!);
       case DocumentType.paystubs:
         return [];
       case DocumentType.tripReport:
-        return [];
+        return UploadDocumentOptions.getOptionsList(['Trip Report'], userData.getCompanyOwned.companyCode!);
     }
   }
 

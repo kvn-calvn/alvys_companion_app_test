@@ -1,12 +1,11 @@
-//import 'package:alvys3/src/constants/color.dart';
-import 'package:alvys3/src/utils/extensions.dart';
-import 'package:alvys3/src/utils/magic_strings.dart';
+import '../utils/magic_strings.dart';
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
 
-import '../features/trips/domain/model/app_trip/app_trip.dart';
+import '../features/trips/domain/app_trip/app_trip.dart';
 
 class TripCard extends ConsumerWidget {
   const TripCard({Key? key, required this.trip}) : super(key: key);
@@ -22,11 +21,10 @@ class TripCard extends ConsumerWidget {
           color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(12),
           clipBehavior: Clip.antiAlias,
-          elevation: 2,
+          elevation: 0,
           child: InkWell(
             onTap: () {
-              context.goNamed(RouteName.tripDetails.name,
-                  pathParameters: {ParamType.tripId.name: trip.id!});
+              context.goNamed(RouteName.tripDetails.name, pathParameters: {ParamType.tripId.name: trip.id!});
             },
             child: Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(15, 5, 15, 5),
@@ -41,12 +39,10 @@ class TripCard extends ConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text(
-                          'Trip# ${trip.tripNumber}',
+                          'Trip# ${trip.tripNumber} ${trip.companyCode}',
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
-                        Text(
-                            NumberFormat.simpleCurrency()
-                                .format(trip.tripValue),
+                        Text(NumberFormat.simpleCurrency().format(trip.tripValue),
                             style: Theme.of(context).textTheme.bodyMedium),
                       ],
                     ),
@@ -63,8 +59,7 @@ class TripCard extends ConsumerWidget {
                           size: 24,
                         ),
                         Padding(
-                          padding:
-                              const EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
+                          padding: const EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
                           child: Column(
                             mainAxisSize: MainAxisSize.max,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -73,17 +68,11 @@ class TripCard extends ConsumerWidget {
                                 constraints: BoxConstraints(
                                   maxWidth: constraints.maxWidth * 0.75,
                                 ),
-                                child: Text(
-                                    '${trip.firstStopAddress}'
-                                        .replaceAll(',', ', '),
-                                    style:
-                                        Theme.of(context).textTheme.bodyLarge),
+                                child: Text('${trip.firstStopAddress}'.replaceAll(',', ', '),
+                                    style: Theme.of(context).textTheme.bodyLarge),
                               ),
-                              Text(
-                                  DateFormat('MMM d @ h:mm a', 'en_US')
-                                      .formatNullDate(trip.pickupDate),
-                                  style:
-                                      Theme.of(context).textTheme.bodyMedium!),
+                              Text(DateFormat('MMM d @ h:mm a', 'en_US').formatNullDate(trip.pickupDate),
+                                  style: Theme.of(context).textTheme.bodyMedium!),
                             ],
                           ),
                         ),
@@ -102,33 +91,25 @@ class TripCard extends ConsumerWidget {
                           size: 24,
                         ),
                         Padding(
-                          padding:
-                              const EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
+                          padding: const EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
                           child: Column(
                             mainAxisSize: MainAxisSize.max,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                  padding: const EdgeInsetsDirectional.fromSTEB(
-                                      0, 0, 10, 0),
+                                  padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 10, 0),
                                   child: ConstrainedBox(
                                     constraints: BoxConstraints(
                                       maxWidth: constraints.maxWidth * 0.75,
                                     ),
                                     child: Text(
-                                      '${trip.lastStopAddress}'
-                                          .replaceAll(',', ', '),
+                                      '${trip.lastStopAddress}'.replaceAll(',', ', '),
                                       maxLines: 2,
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyLarge!,
+                                      style: Theme.of(context).textTheme.bodyLarge!,
                                     ),
                                   )),
-                              Text(
-                                  DateFormat('MMM d @ h:mm a', 'en_US')
-                                      .formatNullDate(trip.deliveryDate),
-                                  style:
-                                      Theme.of(context).textTheme.bodyMedium!),
+                              Text(DateFormat('MMM d @ h:mm a', 'en_US').formatNullDate(trip.deliveryDate),
+                                  style: Theme.of(context).textTheme.bodyMedium!),
                             ],
                           ),
                         ),
@@ -154,7 +135,7 @@ class TripCard extends ConsumerWidget {
                         ),
                         TripCardDetail(
                           title: 'trip',
-                          details: '${trip.totalMiles!.toStringAsFixed(2)} mi',
+                          details: '${trip.totalMiles?.toStringAsFixed(2)} mi',
                         ),
                         const SizedBox(
                           height: 32,

@@ -8,9 +8,11 @@ import 'dart:async';
 import 'package:alvys3/src/network/network_info.dart';
 import 'package:alvys3/src/utils/exceptions.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+
 //import 'package:alvys3/flavor_config.dart';
 //import 'package:pretty_dio_logger/pretty_dio_logger.dart';
 
@@ -158,21 +160,26 @@ class ApiClient {
     try {
       return await req();
     } on DioException catch (ex) {
+      debugPrint(ex.response?.statusCode.toString());
+      debugPrint('${ex.response?.data}');
       switch (ex.type) {
         case DioExceptionType.sendTimeout:
         case DioExceptionType.connectionTimeout:
         case DioExceptionType.receiveTimeout:
           return Future.error(AlvysTimeoutException(C));
         case DioExceptionType.badResponse:
+          debugPrint('${ex.response?.data}');
           switch (ex.response?.statusCode) {
             case (400):
               return Future.error(AlvysClientException(ex.response!.data, C));
             case (417):
               return Future.error(ControllerException("Error", ex.response!.data['ErrorMessage'], C));
             case (404):
-              return Future.error(AlvysEntityNotFoundException(C));
+              return Future.error(AlvysEntityNotFoundException(ex.response!.data, C));
             case (401):
               return Future.error(AlvysUnauthorizedException(C));
+            case (504):
+              return Future.error(AlvysDependencyException(ex.response!.data, C));
             default:
               return Future.error(ApiServerException(C));
           }
@@ -216,7 +223,7 @@ class FileUploadProgressNotifier extends Notifier<double> {
     return 0;
   }
 
-  void updateProgress(num total, num current) {
+  void updateProgress(num current, num total) {
     state = current / total;
   }
 }

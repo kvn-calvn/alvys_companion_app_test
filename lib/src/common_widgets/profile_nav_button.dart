@@ -1,5 +1,6 @@
-import 'package:alvys3/src/common_widgets/avatar.dart';
 import 'package:flutter/material.dart';
+
+import 'avatar.dart';
 
 class ProfileNavButton extends StatelessWidget {
   const ProfileNavButton({
@@ -10,6 +11,7 @@ class ProfileNavButton extends StatelessWidget {
   }) : super(key: key);
 
   final String title;
+
   final String profileImageUrl;
   final void Function()? onPressed;
 
@@ -33,12 +35,16 @@ class ProfileNavButton extends StatelessWidget {
                   Avatar(profileImageUrl: profileImageUrl),
                   Padding(
                     padding: const EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
-                    child: Text(title,
-                        style: Theme.of(context).textTheme.bodyLarge),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(title, style: Theme.of(context).textTheme.bodyLarge),
+                      ],
+                    ),
                   ),
                   const Expanded(
                     child: Align(
-                      alignment: AlignmentDirectional(0.9, 0),
+                      alignment: AlignmentDirectional(1.0, 0),
                       child: Icon(
                         Icons.arrow_forward_ios,
                         color: Color(0xFF95A1AC),

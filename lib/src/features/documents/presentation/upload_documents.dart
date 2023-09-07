@@ -1,41 +1,36 @@
 import 'dart:io';
 
-import 'package:alvys3/src/common_widgets/alvys_dropdown.dart';
-import 'package:alvys3/src/common_widgets/empty_view.dart';
-import 'package:alvys3/src/features/documents/presentation/upload_documents_controller.dart';
-import 'package:alvys3/src/features/documents/presentation/upload_options.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+
+import '../../../common_widgets/alvys_dropdown.dart';
+import '../../../common_widgets/empty_view.dart';
+import 'upload_documents_controller.dart';
+import 'upload_options.dart';
 
 class UploadDocuments extends ConsumerStatefulWidget {
   final UploadDocumentArgs args;
   const UploadDocuments({required this.args, super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _UploadDocumentsState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _UploadDocumentsState();
 }
 
 class _UploadDocumentsState extends ConsumerState<UploadDocuments> {
   @override
   Widget build(BuildContext context) {
-    final uploadDocsState =
-        ref.watch(uploadDocumentsController.call(widget.args));
-    final uploadDocsNotifier =
-        ref.watch(uploadDocumentsController.call(widget.args).notifier);
+    final uploadDocsState = ref.watch(uploadDocumentsController.call(widget.args));
+    final uploadDocsNotifier = ref.watch(uploadDocumentsController.call(widget.args).notifier);
     return Scaffold(
       body: Stack(
         children: [
           uploadDocsState.pages.isEmpty
-              ? const EmptyView(
-                  title: 'No Pages',
-                  description: 'Click the add button to add pages.')
+              ? const EmptyView(title: 'No Pages', description: 'Click the add button to add pages.')
               : PageView.builder(
                   onPageChanged: uploadDocsNotifier.updatePageNumber,
                   itemCount: uploadDocsState.pages.length,
-                  itemBuilder: (context, index) =>
-                      Image.file(File(uploadDocsState.pages[index])),
+                  itemBuilder: (context, index) => Image.file(File(uploadDocsState.pages[index])),
                 ),
           Positioned(
             bottom: 20,

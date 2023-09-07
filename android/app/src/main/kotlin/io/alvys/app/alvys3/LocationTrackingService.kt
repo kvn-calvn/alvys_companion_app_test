@@ -16,8 +16,8 @@ import org.json.JSONObject
 
 
 class LocationTrackingService : Service() {
-    private val UPDATE_INTERVAL_IN_MILLISECONDS = 900000 //Every 15mins
-    private val MAX_UPDATE_DELAY_MILLISECONDS = 900000 //Every 15mins
+
+    private val INTERVAL_IN_MILLISECONDS = 900000 //Every 15mins
     private var mFusedLocationClient: FusedLocationProviderClient? = null
     private var locationRequest: LocationRequest? = null
     private val localBinder = MyLocalBinder()
@@ -53,7 +53,7 @@ class LocationTrackingService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        prepareForegroundNotification()
+        //prepareForegroundNotification()
         startLocationUpdates()
         return START_STICKY
     }
@@ -96,7 +96,7 @@ class LocationTrackingService : Service() {
     private fun prepareForegroundNotification() {
         val serviceChannel = NotificationChannel(
             "CHANNEL_ID_01",
-            "Location Service Channel",
+            "Location Service",
             NotificationManager.IMPORTANCE_NONE,
         )
         val manager: NotificationManager = getSystemService(NotificationManager::class.java)
@@ -134,11 +134,9 @@ class LocationTrackingService : Service() {
 
     private fun initData() {
 
-        locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 10000)
+        locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, INTERVAL_IN_MILLISECONDS.toLong())
             .apply {
-                setWaitForAccurateLocation(true)
-                setMinUpdateIntervalMillis(UPDATE_INTERVAL_IN_MILLISECONDS.toLong())
-                setMaxUpdateDelayMillis(MAX_UPDATE_DELAY_MILLISECONDS.toLong())
+                setWaitForAccurateLocation(true)                
             }.build()
 
         mFusedLocationClient =

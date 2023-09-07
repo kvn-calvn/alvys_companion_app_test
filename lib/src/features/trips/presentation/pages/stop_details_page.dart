@@ -1,15 +1,16 @@
-// ignore_for_file: no_leading_underscores_for_local_identifiers
+import '../../domain/app_trip/reference.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
-import 'package:alvys3/src/constants/color.dart';
-import 'package:alvys3/src/features/trips/presentation/controller/trip_page_controller.dart';
-import 'package:alvys3/src/utils/extensions.dart';
+import '../../../../constants/color.dart';
+import '../controller/trip_page_controller.dart';
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../utils/app_theme.dart';
-import '../../domain/model/app_trip/m_comodity.dart';
+import '../../domain/app_trip/m_comodity.dart';
 
 class StopDetailsPage extends ConsumerStatefulWidget {
   final String tripId;
@@ -69,15 +70,12 @@ class StopDetails extends ConsumerWidget {
               color: ColorManager.primary(Theme.of(context).brightness),
               size: 50.0,
             ),
-        error: (error, stack) =>
-            Text('Oops, something unexpected happened, $stack'),
+        error: (error, stack) => Text('Oops, something unexpected happened, $stack'),
         data: (value) {
           var currentStop = value.getStop(tripId, stopId);
           return RefreshIndicator(
             onRefresh: () async {
-              await ref
-                  .read(tripControllerProvider.notifier)
-                  .refreshCurrentTrip(tripId);
+              await ref.read(tripControllerProvider.notifier).refreshCurrentTrip(tripId);
             },
             child: ListView(
               children: [
@@ -93,11 +91,11 @@ class StopDetails extends ConsumerWidget {
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     Text(
-                      currentStop.street ?? "",
+                      currentStop.address?.street ?? "",
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                     Text(
-                      '${currentStop.city!} ${currentStop.state!} ${currentStop.zip!}',
+                      '${currentStop.address?.city} ${currentStop.address?.state} ${currentStop.address?.zip}',
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ],
@@ -129,8 +127,7 @@ class StopDetails extends ConsumerWidget {
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         Text(
-                          DateFormat.MEd()
-                              .formatNullDate(currentStop.actualStopdate),
+                          DateFormat.MEd().formatNullDate(currentStop.actualStopdate),
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
@@ -149,8 +146,7 @@ class StopDetails extends ConsumerWidget {
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         Text(
-                          DateFormat.MEd().formatNullDate(
-                              currentStop.timeRecord?.driver?.timeIn),
+                          DateFormat.MEd().formatNullDate(currentStop.timeRecord?.driver?.timeIn),
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
@@ -163,8 +159,7 @@ class StopDetails extends ConsumerWidget {
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         Text(
-                          DateFormat.MEd().formatNullDate(
-                              currentStop.timeRecord?.driver?.timeOut),
+                          DateFormat.MEd().formatNullDate(currentStop.timeRecord?.driver?.timeOut),
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
@@ -177,8 +172,7 @@ class StopDetails extends ConsumerWidget {
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 const SizedBox(height: 5),
-                ItemsWidget(
-                    commodities: currentStop.mComodities ?? <MComodity>[]),
+                ItemsWidget(commodities: currentStop.comodities ?? <MComodity>[]),
                 const SizedBox(height: 20),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -187,12 +181,15 @@ class StopDetails extends ConsumerWidget {
                       'Company Instruction',
                       style: Theme.of(context).textTheme.bodyLarge,
                     ),
-                    Text(
+                    HtmlWidget(
+                      currentStop.genInstructions.isNullOrEmpty ? '-' : currentStop.genInstructions!,
+                    ),
+                    /*Text(
                       currentStop.genInstructions.isNullOrEmpty
                           ? '-'
                           : currentStop.genInstructions!,
                       style: Theme.of(context).textTheme.bodyMedium,
-                    ),
+                    ),*/
                   ],
                 ),
                 const SizedBox(height: 20),
@@ -208,11 +205,45 @@ class StopDetails extends ConsumerWidget {
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
                   ],
-                )
+                ),
+                const SizedBox(height: 20),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'References',
+                      style: Theme.of(context).textTheme.bodyLarge,
+                    ),
+                    ReferencesWidget(references: currentStop.references ?? <Reference>[])
+                  ],
+                ),
               ],
             ),
           );
         });
+  }
+}
+
+class ReferencesWidget extends StatelessWidget {
+  const ReferencesWidget({
+    Key? key,
+    required this.references,
+  }) : super(key: key);
+
+  final List<Reference> references;
+
+  @override
+  Widget build(BuildContext context) {
+    if (references.isEmpty) return const Text('-');
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: references
+          .map((reference) => Text(
+                '${reference.name} ${reference.value}',
+                style: Theme.of(context).textTheme.bodyMedium,
+              ))
+          .toList(),
+    );
   }
 }
 

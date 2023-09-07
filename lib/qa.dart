@@ -1,8 +1,7 @@
-import 'package:alvys3/env/env.dart';
-import 'package:alvys3/main_common.dart';
-import 'package:alvys3/src/utils/extensions.dart';
-
+import 'env/env.dart';
 import 'flavor_config.dart';
+import 'main_common.dart';
+import 'src/utils/extensions.dart';
 
 void main() {
   FlavorConfig(
@@ -10,10 +9,10 @@ void main() {
     env: Flavor.qa.toUpperCase,
     rawApiBase: "alvysapi-qa.azurewebsites.net",
     baseUrl: "https://alvysapi-qa.azurewebsites.net/api/",
-    mobileBaseApi: 'https://alvysapi-qa.azurewebsites.net/api/mobilev2/',
+    mobileBaseApi: 'https://alvysapi-qa.azurewebsites.net/api/mobile/',
     storageUrl: "https://alvysqastorage.blob.core.windows.net/",
-    androidGeniusScanSDKKey: Env.androidGeniusScanSDKKey_QA,
-    iosGeniusScanSDKKey: Env.iOSGeniusScanSDKKey_QA,
+    androidGeniusScanSDKKey: Env.androidGeniusScanSDKKeyQA,
+    iosGeniusScanSDKKey: Env.iOSGeniusScanSDKKeyQA,
     azureTelemetryKey: Env.azureTelemetryKeyQA,
     gMapsKey: Env.gMapsKey,
     hereMapsKey: Env.hereMapsKey,

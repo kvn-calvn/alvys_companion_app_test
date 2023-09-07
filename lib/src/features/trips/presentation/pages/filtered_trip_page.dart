@@ -1,18 +1,13 @@
-// ignore_for_file: no_leading_underscores_for_local_identifiers
-
-import 'package:alvys3/src/common_widgets/empty_view.dart';
-import 'package:alvys3/src/common_widgets/trip_card.dart';
-import 'package:alvys3/src/constants/color.dart';
-import 'package:alvys3/src/features/trips/presentation/controller/trip_page_controller.dart';
+import '../../../../common_widgets/empty_view.dart';
+import '../../../../common_widgets/trip_card.dart';
+import '../controller/trip_page_controller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../utils/extensions.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../utils/magic_strings.dart';
 
 class FilteredTripPage extends ConsumerWidget {
-  const FilteredTripPage({Key? key, required this.filterType})
-      : super(key: key);
+  const FilteredTripPage({Key? key, required this.filterType}) : super(key: key);
 
   final TripFilterType filterType;
 
@@ -23,22 +18,7 @@ class FilteredTripPage extends ConsumerWidget {
         : ref.watch(tripControllerProvider).value!.processingTrips;
     return Scaffold(
       key: key,
-      appBar: AppBar(
-        elevation: 0,
-        title: Text(
-          filterType.toTitleCase,
-        ),
-        leading: IconButton(
-          // 1
-          icon: Icon(
-            Icons.adaptive.arrow_back,
-          ),
-          color: ColorManager.greyColorScheme1(Theme.of(context).brightness),
-          onPressed: () {
-            Navigator.of(context).maybePop();
-          },
-        ),
-      ),
+
       //backgroundColor: const Color(0xFFF1F4F8),
       body: SafeArea(
           child: RefreshIndicator(
@@ -51,9 +31,9 @@ class FilteredTripPage extends ConsumerWidget {
                 scrollDirection: Axis.vertical,
                 children: trips.map((trip) => TripCard(trip: trip)).toList(),
               )
-            : EmptyView(
-                title: '',
-                description: "There are no ${filterType.name} trips."),
+            : filterType == TripFilterType.processing
+                ? const EmptyView(title: '', description: "There are no trips being processed.")
+                : EmptyView(title: '', description: "There are no ${filterType.name} trips."),
       )),
     );
   }
@@ -71,15 +51,11 @@ class TripList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    _filteredTrips() {
-      return trips.map((trip) => TripCard(trip: trip));
-    }
-
     if (trips.isNotEmpty) {
       return ListView(
         padding: const EdgeInsets.fromLTRB(16, 0, 16, 0),
         scrollDirection: Axis.vertical,
-        children: [..._filteredTrips()],
+        children: trips.map((trip) => TripCard(trip: trip)),
       );
     } else {
       return Center(
