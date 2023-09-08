@@ -8,6 +8,7 @@ import 'trip_documents_page.dart';
 import '../../../../utils/app_theme.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -21,7 +22,8 @@ class LoadDetailsPage extends ConsumerStatefulWidget {
   ConsumerState<LoadDetailsPage> createState() => _LoadDetailsPageState();
 }
 
-class _LoadDetailsPageState extends ConsumerState<LoadDetailsPage> with TickerProviderStateMixin {
+class _LoadDetailsPageState extends ConsumerState<LoadDetailsPage>
+    with TickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -91,14 +93,17 @@ class TripDetails extends ConsumerWidget {
     // return TripDetailsShimmer();
     return tripDetailsState.when(
       loading: () => const TripDetailsShimmer(),
-      error: (error, stack) => Text('Oops, something unexpected happened, $stack'),
+      error: (error, stack) =>
+          Text('Oops, something unexpected happened, $stack'),
       data: (value) {
         var trip = value.getTrip(tripId);
         var equipment = "${trip.equipment} ${trip.equipmentLength}";
 
         return RefreshIndicator(
           onRefresh: () async {
-            await ref.read(tripControllerProvider.notifier).refreshCurrentTrip(tripId);
+            await ref
+                .read(tripControllerProvider.notifier)
+                .refreshCurrentTrip(tripId);
           },
           child: ListView(
               scrollDirection: Axis.vertical,
@@ -145,7 +150,8 @@ class TripDetails extends ConsumerWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Padding(
-                              padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 15, 0),
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  0, 10, 15, 0),
                               child: Wrap(
                                 spacing: 5,
                                 runSpacing: 5,
@@ -153,55 +159,73 @@ class TripDetails extends ConsumerWidget {
                                   if (equipment.isNotNullOrEmpty) ...[
                                     Chip(
                                       label: Text(
-                                        trip.equipment!,
-                                        style: Theme.of(context).textTheme.bodyMedium!,
+                                        '${trip.equipment!} ${trip.equipmentLength ?? ''}',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!,
                                       ),
-                                      backgroundColor: ColorManager.chipColor(Theme.of(context).brightness),
+                                      backgroundColor: ColorManager.chipColor(
+                                          Theme.of(context).brightness),
                                     ),
                                   ],
                                   if (trip.totalWeight != null) ...[
                                     Chip(
                                       label: Text(
-                                        '${trip.totalWeight}lbs',
-                                        style: Theme.of(context).textTheme.bodyMedium!,
+                                        '${intl.NumberFormat.decimalPattern().format(trip.totalWeight)} lbs',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!,
                                       ),
-                                      backgroundColor: ColorManager.chipColor(Theme.of(context).brightness),
+                                      backgroundColor: ColorManager.chipColor(
+                                          Theme.of(context).brightness),
                                     ),
                                   ],
                                   if (trip.temperature != null) ...[
                                     Chip(
                                       label: Text(
-                                        '${trip.temperature!.toStringAsFixed(2)}°F',
-                                        style: Theme.of(context).textTheme.bodyMedium!,
+                                        '${trip.temperature!.toStringAsFixed(1)} °f',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!,
                                       ),
-                                      backgroundColor: ColorManager.chipColor(Theme.of(context).brightness),
+                                      backgroundColor: ColorManager.chipColor(
+                                          Theme.of(context).brightness),
                                     ),
                                   ],
                                   if (trip.totalMiles != null) ...[
                                     Chip(
                                       label: Text(
-                                        '${trip.totalMiles!.toStringAsFixed(2)} mi',
-                                        style: Theme.of(context).textTheme.bodyMedium!,
+                                        '${intl.NumberFormat.decimalPattern().format(trip.totalMiles)} mi',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!,
                                       ),
-                                      backgroundColor: ColorManager.chipColor(Theme.of(context).brightness),
+                                      backgroundColor: ColorManager.chipColor(
+                                          Theme.of(context).brightness),
                                     ),
                                   ],
                                   if (trip.trailerNum.isNotNullOrEmpty) ...[
                                     Chip(
                                       label: Text(
                                         'Trailer ${trip.trailerNum}',
-                                        style: Theme.of(context).textTheme.bodyMedium!,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!,
                                       ),
-                                      backgroundColor: ColorManager.chipColor(Theme.of(context).brightness),
+                                      backgroundColor: ColorManager.chipColor(
+                                          Theme.of(context).brightness),
                                     ),
                                   ],
                                   if (trip.paidMiles != null) ...[
                                     Chip(
                                       label: Text(
-                                        'Pay \$${trip.paidMiles!.toStringAsFixed(2)}',
-                                        style: Theme.of(context).textTheme.bodyMedium!,
+                                        'Pay ${intl.NumberFormat.simpleCurrency().format(trip.paidMiles)}',
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium!,
                                       ),
-                                      backgroundColor: ColorManager.chipColor(Theme.of(context).brightness),
+                                      backgroundColor: ColorManager.chipColor(
+                                          Theme.of(context).brightness),
                                     ),
                                   ],
                                 ],
@@ -221,7 +245,9 @@ class TripDetails extends ConsumerWidget {
                                   "No Stops",
                                   style: Theme.of(context).textTheme.bodyLarge,
                                 ),
-                                Text("There are no stops on this trip.", style: Theme.of(context).textTheme.bodyMedium)
+                                Text("There are no stops on this trip.",
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium)
                               ],
                             ),
                           ),
@@ -232,7 +258,8 @@ class TripDetails extends ConsumerWidget {
                               ...trip.stops!.map((stop) => StopCard(
                                     stop: stop,
                                     tripId: trip.id!,
-                                    canCheckInOutStopId: trip.canCheckInOutStopId,
+                                    canCheckInOutStopId:
+                                        trip.canCheckInOutStopId,
                                   ))
                             ],
                           ),
