@@ -24,7 +24,7 @@ class AppDocument with _$AppDocument {
 @freezed
 class DriverPaystubDTO with _$DriverPaystubDTO {
   factory DriverPaystubDTO(
-      {@JsonKey(name: 'Top') required int top,
+      {@JsonKey(name: 'Top') required String top,
       @JsonKey(name: 'DriverId') required String driverId}) = _DriverPaystubDTO;
 
   factory DriverPaystubDTO.fromJson(Map<String, dynamic> json) => _$DriverPaystubDTOFromJson(json);

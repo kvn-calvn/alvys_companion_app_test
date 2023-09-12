@@ -1,4 +1,4 @@
-import 'package:alvys3/src/common_widgets/shimmers/shimmer_widget.dart';
+import 'shimmer_widget.dart';
 import 'package:fade_shimmer/fade_shimmer.dart';
 import 'package:flutter/material.dart';
 

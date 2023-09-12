@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
+import '../domain/models/user_details/user_details.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -56,12 +57,10 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppError
     var driverRes = await authRepo.verifyDriverCode(state.value!.phone, state.value!.verificationCode);
     var storage = const FlutterSecureStorage();
     state = AsyncValue.data(state.value!.copyWith(driver: driverRes));
-    await storage.write(key: StorageKey.driverData.name, value: driverRes.toStringJson());
+    await storage.write(key: StorageKey.driverData.name, value: driverRes.toJson().toJsonEncodedString);
     await storage.write(
       key: StorageKey.driverToken.name,
-      value: base64.encode(
-        utf8.encode("${driverRes.userName}:${driverRes.appToken}"),
-      ),
+      value: base64.encode(utf8.encode("${driverRes.userName}:${driverRes.appToken}")),
     );
 
     var locationStatus = await Permission.location.status;
@@ -92,7 +91,7 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppError
     state = const AsyncValue.loading();
     await authRepo.signInDriverByPhone(state.value!.phone);
 
-    if (mounted) context.pushNamed(RouteName.verify.name);
+    if (mounted) context.goNamed(RouteName.verify.name);
     state = AsyncValue.data(state.value!);
   }
 
@@ -121,6 +120,21 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppError
   void updateUser(DriverUser user) {
     if (state.value?.driver != null) {
       state = AsyncValue.data(state.value!.copyWith(driver: user));
+    }
+  }
+
+  void updateUserFromDetails(UserDetails user) {
+    if (state.value?.driver != null) {
+      var driverUser = state.value!.driver!.copyWith(
+          email: user.email,
+          phone: user.phone,
+          userTenants: user.userTenants
+              .map((e) => state.value!.driver!.userTenants
+                  .firstWhereOrNull((element) => element.companyCode == e.companyCode)
+                  ?.copyWith(permissions: e.permissions))
+              .removeNulls
+              .toList());
+      state = AsyncValue.data(state.value!.copyWith(driver: driverUser));
     }
   }
 

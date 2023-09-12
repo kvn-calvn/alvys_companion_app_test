@@ -63,7 +63,7 @@ class SettingsList extends ConsumerWidget {
         LargeNavButton(
           title: "About",
           onPressed: () {
-            context.pushNamed(RouteName.about.name);
+            context.goNamed(RouteName.about.name);
           },
         ),
         LargeNavButton(

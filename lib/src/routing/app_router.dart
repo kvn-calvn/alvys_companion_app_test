@@ -1,4 +1,5 @@
-import 'package:alvys3/src/common_widgets/tablet_view.dart';
+import '../common_widgets/empty_view.dart';
+import '../common_widgets/tablet_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -11,7 +12,7 @@ import '../features/authentication/presentation/sign_in_page.dart';
 import '../features/documents/domain/app_document/app_document.dart';
 import '../features/documents/presentation/document_page.dart';
 import '../features/documents/presentation/pdf_viewer.dart';
-import '../features/documents/presentation/trip_docs_controller.dart';
+import '../features/documents/presentation/docs_controller.dart';
 import '../features/documents/presentation/upload_documents.dart';
 import '../features/documents/presentation/upload_documents_controller.dart';
 import '../features/echeck/presentation/pages/echeck_page.dart';
@@ -27,9 +28,11 @@ import '../features/trips/presentation/pages/trips_page.dart';
 import '../utils/extensions.dart';
 import '../utils/global_error_handler.dart';
 import '../utils/magic_strings.dart';
+import '../utils/tablet_utils.dart';
 import 'error_page.dart';
 import 'landing.dart';
 
+Provider<GoRouter> get getRouter => TabletUtils.instance.isTablet ? tabletRouteProvider : routerProvider;
 Provider<GoRouter> routerProvider = Provider(
   (ref) => GoRouter(
     navigatorKey: ref.read(globalErrorHandlerProvider).navKey,
@@ -44,19 +47,20 @@ Provider<GoRouter> routerProvider = Provider(
         },
       ),
       GoRoute(
-        name: RouteName.signIn.name,
-        path: RouteName.signIn.toRoute,
-        builder: (context, state) {
-          return const SignInPage();
-        },
-      ),
-      GoRoute(
-        name: RouteName.verify.name,
-        path: RouteName.verify.toRoute,
-        builder: (context, state) {
-          return const PhoneNumberVerificationPage();
-        },
-      ),
+          name: RouteName.signIn.name,
+          path: RouteName.signIn.toRoute,
+          builder: (context, state) {
+            return const SignInPage();
+          },
+          routes: [
+            GoRoute(
+              name: RouteName.verify.name,
+              path: RouteName.verify.name,
+              builder: (context, state) {
+                return const PhoneNumberVerificationPage();
+              },
+            ),
+          ]),
       GoRoute(
         name: RouteName.locationPermission.name,
         path: RouteName.locationPermission.toRoute,
@@ -71,25 +75,6 @@ Provider<GoRouter> routerProvider = Provider(
           return const RequestNotification();
         },
       ),
-
-      /// tablet shellRoute
-      // ShellRoute(
-      //   builder: (context, state, child) {
-      //     return MainBottomNav(child: child);
-      //   },
-      //   routes: [
-      //     GoRoute(
-      //       name: RouteName.tabletTrips.name,
-      //       path: RouteName.tabletTrips.toRoute,
-      //       pageBuilder: (context, state) => CustomTransitionPage(
-      //           child: const LoadListPage(),
-      //           transitionDuration: Duration.zero,
-      //           transitionsBuilder: (context, animation, secondaryAnimation, child) => child),
-      //     ),
-      //   ],
-      // ),
-
-      ///phone shell route
       StatefulShellRoute(
           pageBuilder: (context, state, navigationShell) => NoTransitionPage(child: navigationShell),
           navigatorContainerBuilder: (context, navigationShell, children) => MainBottomNav(
@@ -137,7 +122,6 @@ Provider<GoRouter> routerProvider = Provider(
                           final args = state.extra! as UploadType;
                           return UploadDocuments(
                             args: UploadDocumentArgs(
-                                context: context,
                                 tripId: state.pathParameters[ParamType.tripId.name]!,
                                 uploadType: args,
                                 documentType: DocumentType.tripDocuments),
@@ -211,7 +195,6 @@ Provider<GoRouter> routerProvider = Provider(
 
                           return UploadDocuments(
                             args: UploadDocumentArgs(
-                              context: context,
                               uploadType: args,
                               documentType: DocumentType.personalDocuments,
                             ),
@@ -235,7 +218,6 @@ Provider<GoRouter> routerProvider = Provider(
 
                           return UploadDocuments(
                             args: UploadDocumentArgs(
-                              context: context,
                               uploadType: args,
                               documentType: DocumentType.tripReport,
                             ),
@@ -301,11 +283,11 @@ Provider<GoRouter> routerProvider = Provider(
   ),
 );
 
-final tabletRouteProvider = Provider<GoRouter>((ref) {
+Provider<GoRouter> tabletRouteProvider = Provider((ref) {
   return GoRouter(
       navigatorKey: ref.read(globalErrorHandlerProvider).navKey,
       initialLocation:
-          ref.read(authProvider).value!.driver == null ? RouteName.signIn.toRoute : RouteName.trips.toRoute,
+          ref.read(authProvider).value!.driver == null ? RouteName.signIn.toRoute : RouteName.emptyView.toRoute,
       debugLogDiagnostics: false,
       routes: [
         GoRoute(
@@ -316,19 +298,20 @@ final tabletRouteProvider = Provider<GoRouter>((ref) {
           },
         ),
         GoRoute(
-          name: RouteName.signIn.name,
-          path: RouteName.signIn.toRoute,
-          builder: (context, state) {
-            return const SignInPage();
-          },
-        ),
-        GoRoute(
-          name: RouteName.verify.name,
-          path: RouteName.verify.toRoute,
-          builder: (context, state) {
-            return const PhoneNumberVerificationPage();
-          },
-        ),
+            name: RouteName.signIn.name,
+            path: RouteName.signIn.toRoute,
+            builder: (context, state) {
+              return const SignInPage();
+            },
+            routes: [
+              GoRoute(
+                name: RouteName.verify.name,
+                path: RouteName.verify.name,
+                builder: (context, state) {
+                  return const PhoneNumberVerificationPage();
+                },
+              ),
+            ]),
         GoRoute(
           name: RouteName.locationPermission.name,
           path: RouteName.locationPermission.toRoute,
@@ -350,68 +333,84 @@ final tabletRouteProvider = Provider<GoRouter>((ref) {
                   children,
                 ),
             branches: [
+              StatefulShellBranch(
+                routes: [
+                  GoRoute(
+                    name: RouteName.emptyView.name,
+                    path: RouteName.emptyView.toRoute,
+                    builder: (context, state) => const Scaffold(
+                      body: EmptyView(title: '', description: 'Tap a trip on the left to see the details'),
+                    ),
+                  )
+                ],
+              ),
               StatefulShellBranch(routes: [
                 GoRoute(
-                  name: RouteName.tripDetails.name,
-                  path: ':tripId',
-                  builder: (context, state) {
-                    return LoadDetailsPage(state.pathParameters[ParamType.tripId.name]!);
-                  },
-                  routes: <GoRoute>[
-                    GoRoute(
-                      name: RouteName.tripDocumentView.name,
-                      path: RouteName.tripDocumentView.name,
-                      builder: (context, state) {
-                        final args = state.extra! as AppDocument;
-                        return PDFViewer(
-                          arguments: args,
-                        );
-                      },
-                    ),
-                    GoRoute(
-                      name: RouteName.uploadTripDocument.name,
-                      path: RouteName.uploadTripDocument.name,
-                      builder: (context, state) {
-                        final args = state.extra! as UploadType;
-                        return UploadDocuments(
-                          args: UploadDocumentArgs(
-                              context: context,
-                              tripId: state.pathParameters[ParamType.tripId.name]!,
-                              uploadType: args,
-                              documentType: DocumentType.tripDocuments),
-                        );
-                      },
-                    ),
-                    GoRoute(
-                        name: RouteName.eCheck.name,
-                        path: RouteName.eCheck.name,
+                    path: RouteName.trips.toRoute,
+                    name: RouteName.trips.name,
+                    builder: (context, state) => const Scaffold(),
+                    routes: [
+                      GoRoute(
+                        name: RouteName.tripDetails.name,
+                        path: ':tripId',
                         builder: (context, state) {
-                          return EcheckPage(state.pathParameters[ParamType.tripId.name]!);
+                          return LoadDetailsPage(state.pathParameters[ParamType.tripId.name]!);
                         },
-                        routes: [
+                        routes: <GoRoute>[
                           GoRoute(
-                            name: RouteName.generateEcheck.name,
-                            path: RouteName.generateEcheck.name,
+                            name: RouteName.tripDocumentView.name,
+                            path: RouteName.tripDocumentView.name,
                             builder: (context, state) {
-                              return GenerateEcheck(state.pathParameters[ParamType.tripId.name]!);
+                              final args = state.extra! as AppDocument;
+                              return PDFViewer(
+                                arguments: args,
+                              );
                             },
                           ),
-                        ]),
-                    GoRoute(
-                      name: RouteName.stopDetails.name,
-                      path: ':stopId',
-                      builder: (context, state) {
-                        return StopDetailsPage(
-                            state.pathParameters[ParamType.tripId.name]!, state.pathParameters[ParamType.stopId.name]!);
-                      },
-                    ),
-                  ],
-                ),
+                          GoRoute(
+                            name: RouteName.uploadTripDocument.name,
+                            path: RouteName.uploadTripDocument.name,
+                            builder: (context, state) {
+                              final args = state.extra! as UploadType;
+                              return UploadDocuments(
+                                args: UploadDocumentArgs(
+                                    tripId: state.pathParameters[ParamType.tripId.name]!,
+                                    uploadType: args,
+                                    documentType: DocumentType.tripDocuments),
+                              );
+                            },
+                          ),
+                          GoRoute(
+                              name: RouteName.eCheck.name,
+                              path: RouteName.eCheck.name,
+                              builder: (context, state) {
+                                return EcheckPage(state.pathParameters[ParamType.tripId.name]!);
+                              },
+                              routes: [
+                                GoRoute(
+                                  name: RouteName.generateEcheck.name,
+                                  path: RouteName.generateEcheck.name,
+                                  builder: (context, state) {
+                                    return GenerateEcheck(state.pathParameters[ParamType.tripId.name]!);
+                                  },
+                                ),
+                              ]),
+                          GoRoute(
+                            name: RouteName.stopDetails.name,
+                            path: ':stopId',
+                            builder: (context, state) {
+                              return StopDetailsPage(state.pathParameters[ParamType.tripId.name]!,
+                                  state.pathParameters[ParamType.stopId.name]!);
+                            },
+                          ),
+                        ],
+                      ),
+                    ])
               ]),
               StatefulShellBranch(routes: [
                 GoRoute(
                   name: RouteName.paystubs.name,
-                  path: RouteName.paystubs.name,
+                  path: RouteName.paystubs.toRoute,
                   builder: (context, state) {
                     return DocumentsPage(DocumentsArgs(DocumentType.paystubs, null));
                   },
@@ -419,7 +418,7 @@ final tabletRouteProvider = Provider<GoRouter>((ref) {
                 ),
                 GoRoute(
                   name: RouteName.personalDocumentsList.name,
-                  path: RouteName.personalDocumentsList.name,
+                  path: RouteName.personalDocumentsList.toRoute,
                   builder: (context, state) {
                     return DocumentsPage(DocumentsArgs(DocumentType.personalDocuments, null));
                   },
@@ -432,7 +431,6 @@ final tabletRouteProvider = Provider<GoRouter>((ref) {
 
                         return UploadDocuments(
                           args: UploadDocumentArgs(
-                            context: context,
                             uploadType: args,
                             documentType: DocumentType.personalDocuments,
                           ),
@@ -443,7 +441,7 @@ final tabletRouteProvider = Provider<GoRouter>((ref) {
                 ),
                 GoRoute(
                   name: RouteName.tripReportDocumentList.name,
-                  path: RouteName.tripReportDocumentList.name,
+                  path: RouteName.tripReportDocumentList.toRoute,
                   builder: (context, state) {
                     return DocumentsPage(DocumentsArgs(DocumentType.tripReport, null));
                   },
@@ -456,7 +454,6 @@ final tabletRouteProvider = Provider<GoRouter>((ref) {
 
                         return UploadDocuments(
                           args: UploadDocumentArgs(
-                            context: context,
                             uploadType: args,
                             documentType: DocumentType.tripReport,
                           ),
@@ -467,7 +464,7 @@ final tabletRouteProvider = Provider<GoRouter>((ref) {
                 ),
                 GoRoute(
                   name: RouteName.userDetails.name,
-                  path: RouteName.userDetails.name,
+                  path: RouteName.userDetails.toRoute,
                   builder: (context, state) {
                     return const UserDetailsPage();
                   },
@@ -476,7 +473,7 @@ final tabletRouteProvider = Provider<GoRouter>((ref) {
               StatefulShellBranch(routes: [
                 GoRoute(
                   name: RouteName.about.name,
-                  path: RouteName.about.name,
+                  path: RouteName.about.toRoute,
                   builder: (context, state) {
                     return const AboutPage();
                   },
@@ -484,7 +481,7 @@ final tabletRouteProvider = Provider<GoRouter>((ref) {
                 ),
                 GoRoute(
                   name: RouteName.documentView.name,
-                  path: RouteName.documentView.name,
+                  path: RouteName.documentView.toRoute,
                   builder: (context, state) {
                     final args = state.extra! as AppDocument;
 

@@ -1,4 +1,4 @@
-import 'package:alvys3/src/features/echeck/presentation/controller/echeck_page_controller.dart';
+import '../features/echeck/presentation/controller/echeck_page_controller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'popup_dropdown.dart';

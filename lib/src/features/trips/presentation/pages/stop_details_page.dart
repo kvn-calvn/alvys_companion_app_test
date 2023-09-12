@@ -1,11 +1,12 @@
+import '../../../../common_widgets/empty_view.dart';
+import '../../../../common_widgets/shimmers/stop_details_shimmer.dart';
+
 import '../../domain/app_trip/reference.dart';
 import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 
-import '../../../../constants/color.dart';
 import '../controller/trip_page_controller.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart' as intl;
 import '../../../../utils/app_theme.dart';
@@ -63,6 +64,7 @@ class StopDetails extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final stopDetailsState = ref.watch(tripControllerProvider);
+<<<<<<< Updated upstream
 
     return stopDetailsState.when(
         loading: () => SpinKitFoldingCube(
@@ -80,6 +82,19 @@ class StopDetails extends ConsumerWidget {
                   .refreshCurrentTrip(tripId);
             },
             child: ListView(
+=======
+    if (stopDetailsState.isLoading) return const StopDetailsShimmer();
+    var currentStop = stopDetailsState.value!.tryGetStop(tripId, stopId);
+    return RefreshIndicator(
+      onRefresh: () async {
+        await ref.read(tripControllerProvider.notifier).refreshCurrentTrip(tripId);
+      },
+      child: currentStop == null
+          ? const EmptyView(
+              title: 'Stop Unavailable',
+              description: 'Stop details not found. Try refreshing this page or the trip list page')
+          : ListView(
+>>>>>>> Stashed changes
               children: [
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -173,7 +188,7 @@ class StopDetails extends ConsumerWidget {
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  'Items',
+                  'Commodities',
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 const SizedBox(height: 5),
@@ -228,8 +243,7 @@ class StopDetails extends ConsumerWidget {
                 ),
               ],
             ),
-          );
-        });
+    );
   }
 }
 
@@ -267,6 +281,10 @@ class ItemsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
+      if (commodities.isEmpty)
+        const Row(
+          children: [Text('-')],
+        ),
       for (var item in commodities)
         Padding(
           padding: const EdgeInsets.symmetric(vertical: 3.0),

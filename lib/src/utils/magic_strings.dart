@@ -25,13 +25,7 @@ enum RouteName {
   tripReportDocumentList,
   uploadTripReport,
   notifications,
-
-  /// tablet routes
-  tabletTrips,
-  tabletTripDetails,
-  tabletStopDetails,
-  tabletSettings,
-  tabletDocumentView,
+  emptyView
 }
 
 enum TripFilterType { processing, delivered }

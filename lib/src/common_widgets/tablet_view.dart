@@ -1,4 +1,4 @@
-import 'package:alvys3/src/features/settings/presentation/settings_page.dart';
+import '../features/settings/presentation/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -17,7 +17,10 @@ class TabletView extends ConsumerWidget {
     return Material(
       color: Colors.transparent,
       child: Row(
-        children: [const Flexible(flex: 35, child: TabletLeftNav()), Flexible(child: children[navShell.currentIndex])],
+        children: [
+          const Flexible(flex: 4, child: TabletLeftNav()),
+          Flexible(flex: 6, child: children[navShell.currentIndex])
+        ],
       ),
     );
   }

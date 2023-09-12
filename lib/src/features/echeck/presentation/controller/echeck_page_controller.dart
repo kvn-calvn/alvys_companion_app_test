@@ -1,9 +1,9 @@
 import 'dart:async';
-import 'package:alvys3/src/features/authentication/presentation/auth_provider_controller.dart';
-import 'package:alvys3/src/features/echeck/data/echeck_repository.dart';
-import 'package:alvys3/src/features/echeck/domain/generate_echeck/generate_echeck_request.dart';
-import 'package:alvys3/src/features/trips/presentation/controller/trip_page_controller.dart';
-import 'package:alvys3/src/utils/exceptions.dart';
+import '../../../authentication/presentation/auth_provider_controller.dart';
+import '../../data/echeck_repository.dart';
+import '../../domain/generate_echeck/generate_echeck_request.dart';
+import '../../../trips/presentation/controller/trip_page_controller.dart';
+import '../../../../utils/exceptions.dart';
 
 import '../../../../utils/extensions.dart';
 import 'package:flutter/material.dart';

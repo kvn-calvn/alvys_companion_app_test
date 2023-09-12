@@ -1,17 +1,17 @@
-import 'package:alvys3/src/common_widgets/shimmers/trip_details_shimmer.dart';
-
-import '../../../../common_widgets/stop_card.dart';
-import '../../../../constants/color.dart';
-import '../../../echeck/presentation/pages/echeck_page.dart';
-import '../controller/trip_page_controller.dart';
-import 'trip_documents_page.dart';
-import '../../../../utils/app_theme.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+import '../../../../common_widgets/shimmers/trip_details_shimmer.dart';
+import '../../../../common_widgets/stop_card.dart';
+import '../../../../constants/color.dart';
+import '../../../../utils/app_theme.dart';
+import '../../../echeck/presentation/pages/echeck_page.dart';
+import '../controller/trip_page_controller.dart';
+import 'trip_documents_page.dart';
 
 class LoadDetailsPage extends ConsumerStatefulWidget {
   final String tripId;

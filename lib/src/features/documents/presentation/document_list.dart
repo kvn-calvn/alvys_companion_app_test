@@ -1,5 +1,5 @@
 import '../domain/app_document/app_document.dart';
-import 'trip_docs_controller.dart';
+import 'docs_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 

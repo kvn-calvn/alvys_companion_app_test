@@ -1,4 +1,4 @@
-import 'package:alvys3/src/features/echeck/presentation/controller/echeck_page_controller.dart';
+import '../controller/echeck_page_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';

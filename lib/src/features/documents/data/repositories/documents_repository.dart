@@ -1,15 +1,15 @@
 import 'dart:async';
 import 'dart:io';
 
-import '../../../../network/http_client.dart';
-import '../../../../utils/helpers.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart';
 
 import '../../../../constants/api_routes.dart';
-import '../../../../network/api_client.dart';
+import '../../../../network/file_upload_process_provider.dart';
+import '../../../../network/http_client.dart';
 import '../../../../utils/extensions.dart';
+import '../../../../utils/helpers.dart';
 import '../../../../utils/magic_strings.dart';
 import '../../../authentication/domain/models/driver_user/driver_user.dart';
 import '../../domain/app_document/app_document.dart';
@@ -25,16 +25,15 @@ abstract class DocumentsRepository<T> {
 }
 
 class AppDocumentRepository<T> implements DocumentsRepository<T> {
-  final ApiClient client;
   final AlvysHttpClient httpClient;
   final FileUploadProgressNotifier fileProgress;
-  AppDocumentRepository(this.fileProgress, this.client, this.httpClient);
+  AppDocumentRepository(this.fileProgress, this.httpClient);
   @override
   Future<List<AppDocument>> getPaystubs(String companyCode, DriverUser user, [int top = 10]) async {
     await Helpers.setCompanyCode(companyCode);
     var driverId = user.userTenants.firstWhereOrNull((element) => element.companyOwnedAsset ?? false)?.assetId;
     if (driverId == null) return [];
-    var dto = DriverPaystubDTO(top: top, driverId: driverId);
+    var dto = DriverPaystubDTO(top: top.toString(), driverId: driverId);
     var res = await httpClient.getData<T>(ApiRoutes.paystubs(dto));
     return (res.body.toDecodedJson as List<dynamic>?).toListNotNull().map((x) => AppDocument.fromJson(x)).toList();
   }
@@ -84,7 +83,6 @@ class AppDocumentRepository<T> implements DocumentsRepository<T> {
 
 final documentsRepositoryProvider = Provider<AppDocumentRepository<UploadDocumentsController>>((ref) {
   final fileProgress = ref.watch(fileUploadProvider.notifier);
-  final apiClient = ref.read(apiClientProvider);
   final httpClient = ref.read(httpClientProvider);
-  return AppDocumentRepository(fileProgress, apiClient, httpClient);
+  return AppDocumentRepository(fileProgress, httpClient);
 });

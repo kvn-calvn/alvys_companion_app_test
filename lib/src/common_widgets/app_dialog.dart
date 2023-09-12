@@ -1,7 +1,8 @@
 import 'dart:ui';
 
-import 'buttons.dart';
 import 'package:flutter/material.dart';
+
+import 'buttons.dart';
 
 class AppDialogAction {
   final String label;

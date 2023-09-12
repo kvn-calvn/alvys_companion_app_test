@@ -1,8 +1,7 @@
-import 'dart:convert';
-
-import '../../../../../models/address/address.dart';
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
+import '../../../../../models/address/address.dart';
 import 'user_tenant.dart';
 
 part 'driver_user.freezed.dart';
@@ -31,5 +30,6 @@ class DriverUser with _$DriverUser {
   }) = _DriverUser;
   DriverUser._();
   factory DriverUser.fromJson(Map<String, dynamic> json) => _$DriverUserFromJson(json);
-  String toStringJson() => jsonEncode(this);
+
+  String get companyCodes => userTenants.map((e) => e.companyCode).removeNulls.join(',');
 }

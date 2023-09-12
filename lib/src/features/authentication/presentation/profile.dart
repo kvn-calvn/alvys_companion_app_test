@@ -1,4 +1,4 @@
-import 'package:alvys3/src/utils/app_theme.dart';
+import '../../../utils/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -55,7 +55,7 @@ class ProfileList extends ConsumerWidget {
           title: userState.value!.driver!.name!,
           profileImageUrl: 'https://i.pravatar.cc/300',
           onPressed: () {
-            context.pushNamed(RouteName.userDetails.name);
+            context.goNamed(RouteName.userDetails.name);
           },
         ),
         LargeNavButton(
@@ -73,7 +73,7 @@ class ProfileList extends ConsumerWidget {
         LargeNavButton(
           title: "Trip Report",
           onPressed: () {
-            context.pushNamed(RouteName.tripReportDocumentList.name);
+            context.goNamed(RouteName.tripReportDocumentList.name);
           },
         ),
       ],
