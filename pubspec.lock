@@ -237,17 +237,10 @@ packages:
     dependency: "direct main"
     description:
       name: coder_matthews_extensions
-<<<<<<< Updated upstream
-      sha256: "0a18e995dd5fa7d4e49f677b94d4adea8d0db36127743f126e2455a45584b584"
-      url: "https://pub.dev"
-    source: hosted
-    version: "1.2.0"
-=======
       sha256: "8a15eddd511d81ae0ee244b4426ed6d3014968f03152816582d91e3cf3d0cb68"
       url: "https://pub.dev"
     source: hosted
     version: "1.2.1"
->>>>>>> Stashed changes
   collection:
     dependency: transitive
     description:
