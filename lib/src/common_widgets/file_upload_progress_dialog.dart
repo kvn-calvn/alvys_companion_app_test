@@ -1,6 +1,7 @@
-import '../network/file_upload_process_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../network/file_upload_process_provider.dart';
 
 Future<T?> showDocumentProgressDialog<T>(BuildContext context) => showGeneralDialog(
     context: context,

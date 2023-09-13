@@ -18,4 +18,8 @@ class Address with _$Address {
   }) = _Address;
 
   factory Address.fromJson(Map<String, dynamic> json) => _$AddressFromJson(json);
+  Address._();
+
+  String get formattedAddress => '''$street
+$city, $state $zip''';
 }

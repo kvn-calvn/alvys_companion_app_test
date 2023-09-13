@@ -1,14 +1,14 @@
-import '../../../common_widgets/custom_bottom_sheet.dart';
-import '../../../common_widgets/load_more_button.dart';
-import '../../../common_widgets/shimmers/documents_shimmer.dart';
-import 'document_list.dart';
-import 'docs_controller.dart';
-import 'upload_options.dart';
-import '../../../utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../common_widgets/custom_bottom_sheet.dart';
+import '../../../common_widgets/load_more_button.dart';
+import '../../../common_widgets/shimmers/documents_shimmer.dart';
 import '../../../utils/app_theme.dart';
+import '../../../utils/magic_strings.dart';
+import 'docs_controller.dart';
+import 'document_list.dart';
+import 'upload_options.dart';
 
 class DocumentsPage extends ConsumerStatefulWidget {
   final DocumentsArgs args;

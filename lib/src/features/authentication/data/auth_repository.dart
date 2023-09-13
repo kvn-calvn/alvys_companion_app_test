@@ -13,7 +13,7 @@ abstract class AuthRepository<T> {
   Future<DriverUser> verifyDriverCode(String phone, String code);
   Future<String> signInDriverByPhone(String phone);
   Future<DriverUser> getDriverUser(String companyCode, String id);
-  Future<DriverUser> updateDriverUser(String companyCode, UpdateUserDTO dto);
+  Future<DriverUser> updateDriverUser<K>(String companyCode, UpdateUserDTO dto);
 }
 
 class AvysAuthRepository<T> implements AuthRepository<T> {
@@ -44,9 +44,9 @@ class AvysAuthRepository<T> implements AuthRepository<T> {
   }
 
   @override
-  Future<DriverUser> updateDriverUser(String companyCode, UpdateUserDTO dto) async {
+  Future<DriverUser> updateDriverUser<K>(String companyCode, UpdateUserDTO dto) async {
     await Helpers.setCompanyCode(companyCode);
-    var res = await httpClient.putData(ApiRoutes.driverInfo, body: dto.toJson().toJsonEncodedString);
+    var res = await httpClient.putData<K>(ApiRoutes.driverInfo, body: dto.toJson().toJsonEncodedString);
     return DriverUser.fromJson(res.body.toDecodedJson);
   }
 }

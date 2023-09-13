@@ -1,3 +1,5 @@
+import '../features/authentication/presentation/edit_profile.dart';
+
 import '../common_widgets/empty_view.dart';
 import '../common_widgets/tablet_view.dart';
 import 'package:flutter/material.dart';
@@ -21,7 +23,7 @@ import '../features/permission/location/presentation/request_location.dart';
 import '../features/permission/notification/request_notification.dart';
 import '../features/settings/presentation/about_page.dart';
 import '../features/settings/presentation/settings_page.dart';
-import '../features/settings/presentation/user_details_page.dart';
+import '../features/authentication/presentation/user_details_page.dart';
 import '../features/trips/presentation/pages/stop_details_page.dart';
 import '../features/trips/presentation/pages/trip_details_page.dart';
 import '../features/trips/presentation/pages/trips_page.dart';
@@ -227,12 +229,20 @@ Provider<GoRouter> routerProvider = Provider(
                     ],
                   ),
                   GoRoute(
-                    name: RouteName.userDetails.name,
-                    path: RouteName.userDetails.name,
-                    builder: (context, state) {
-                      return const UserDetailsPage();
-                    },
-                  ),
+                      name: RouteName.userDetails.name,
+                      path: RouteName.userDetails.name,
+                      builder: (context, state) {
+                        return const UserDetailsPage();
+                      },
+                      routes: [
+                        GoRoute(
+                          name: RouteName.editProfile.name,
+                          path: RouteName.editProfile.name,
+                          builder: (context, state) {
+                            return const EditProfile();
+                          },
+                        )
+                      ]),
                 ],
               ),
             ]),
@@ -463,12 +473,20 @@ Provider<GoRouter> tabletRouteProvider = Provider((ref) {
                   ],
                 ),
                 GoRoute(
-                  name: RouteName.userDetails.name,
-                  path: RouteName.userDetails.toRoute,
-                  builder: (context, state) {
-                    return const UserDetailsPage();
-                  },
-                ),
+                    name: RouteName.userDetails.name,
+                    path: RouteName.userDetails.toRoute,
+                    builder: (context, state) {
+                      return const UserDetailsPage();
+                    },
+                    routes: [
+                      GoRoute(
+                        name: RouteName.editProfile.name,
+                        path: RouteName.editProfile.name,
+                        builder: (context, state) {
+                          return const EditProfile();
+                        },
+                      )
+                    ]),
               ]),
               StatefulShellBranch(routes: [
                 GoRoute(

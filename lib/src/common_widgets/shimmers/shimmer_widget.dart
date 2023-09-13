@@ -27,6 +27,23 @@ class AlvysShimmer extends StatelessWidget {
   }
 }
 
+class AlvysSingleChildShimmer extends StatelessWidget {
+  final Widget child;
+  const AlvysSingleChildShimmer({super.key, required this.child});
+
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer(
+      gradient: LinearGradient(
+        begin: Alignment.topLeft,
+        end: Alignment.bottomRight,
+        colors: ColorManager.shimmerColors(Theme.of(context).brightness),
+      ),
+      child: child,
+    );
+  }
+}
+
 ///
 /// An enum defines all supported directions of shimmer effect
 ///

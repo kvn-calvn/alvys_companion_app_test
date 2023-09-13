@@ -1,15 +1,14 @@
-import '../../../../common_widgets/shimmers/documents_shimmer.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
-import '../../../documents/presentation/upload_options.dart';
-import '../../../../utils/magic_strings.dart';
 
 import '../../../../common_widgets/custom_bottom_sheet.dart';
 import '../../../../common_widgets/empty_view.dart';
 import '../../../../common_widgets/large_nav_button.dart';
+import '../../../../common_widgets/shimmers/documents_shimmer.dart';
+import '../../../../utils/magic_strings.dart';
+import '../../../documents/presentation/upload_options.dart';
 import '../controller/trip_page_controller.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class TripDocuments extends ConsumerWidget {
   final String tripId;

@@ -228,9 +228,6 @@ class AlvysOutlineBorder extends MaterialStateUnderlineInputBorder {
     if (states.contains(MaterialState.error)) {
       color = ColorManager.cancelColor;
     }
-    if (states.contains(MaterialState.disabled)) {
-      color = Colors.transparent;
-    }
     return OutlineInputBorder(
       borderSide: BorderSide(color: color, width: 1),
       borderRadius: BorderRadius.circular(10),

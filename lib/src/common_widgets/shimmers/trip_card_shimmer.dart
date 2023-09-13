@@ -1,8 +1,8 @@
-import '../../constants/color.dart';
 import 'package:fade_shimmer/fade_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../constants/color.dart';
 import 'shimmer_widget.dart';
 
 class TripListShimmer extends StatelessWidget {

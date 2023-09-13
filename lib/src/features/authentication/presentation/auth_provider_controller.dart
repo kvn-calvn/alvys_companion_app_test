@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 
+import '../domain/models/update_user_dto/update_user_dto.dart';
+
 import '../domain/models/user_details/user_details.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
@@ -121,6 +123,11 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppError
     if (state.value?.driver != null) {
       state = AsyncValue.data(state.value!.copyWith(driver: user));
     }
+  }
+
+  Future<void> updateUserProfile<K>(UpdateUserDTO dto) async {
+    var res = await authRepo.updateDriverUser(getCompanyOwned.companyCode!, dto);
+    updateUser(res);
   }
 
   void updateUserFromDetails(UserDetails user) {

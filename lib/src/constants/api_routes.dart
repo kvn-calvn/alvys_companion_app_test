@@ -24,5 +24,5 @@ class ApiRoutes {
   static Uri documents([DriverDocumentsDTO? dto]) =>
       Uri.https(FlavorConfig.instance!.rawApiBase, '/api/mobile/driver/documents', dto?.toJson());
   static String tripDocument(String tripId) => '$mobileBaseApi$tripId/trip/documents';
-  static Uri get driverInfo => Uri.parse('${mobileBaseApi}driver/status');
+  static Uri get driverInfo => Uri.parse('${mobileBaseApi}driver/info');
 }

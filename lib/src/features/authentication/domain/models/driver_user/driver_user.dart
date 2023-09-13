@@ -10,7 +10,7 @@ part 'driver_user.g.dart';
 @freezed
 class DriverUser with _$DriverUser {
   factory DriverUser({
-    @JsonKey(name: "Id") String? id,
+    String? id,
     @JsonKey(name: "UserName") String? userName,
     @JsonKey(name: "Name") String? name,
     @JsonKey(name: "Email") String? email,
@@ -32,4 +32,5 @@ class DriverUser with _$DriverUser {
   factory DriverUser.fromJson(Map<String, dynamic> json) => _$DriverUserFromJson(json);
 
   String get companyCodes => userTenants.map((e) => e.companyCode).removeNulls.join(',');
+  String get companyCodesWithSpace => userTenants.map((e) => e.companyCode).removeNulls.join(', ');
 }

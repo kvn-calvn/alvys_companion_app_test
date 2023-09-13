@@ -16,7 +16,7 @@ class UpdateUserDTO with _$UpdateUserDTO {
     @JsonKey(name: 'Email') required String email,
     @JsonKey(name: 'LicenseNum') required String licenseNum,
     @JsonKey(name: 'LicenseIssueState') required String licenseIssueState,
-    @JsonKey(name: 'LicenseExpiration') required DateTime licenseExpiration,
+    @JsonKey(name: 'LicenseExpiration') DateTime? licenseExpiration,
   }) = _UpdateUserDTO;
 
   factory UpdateUserDTO.fromJson(Map<String, dynamic> json) => _$UpdateUserDTOFromJson(json);
