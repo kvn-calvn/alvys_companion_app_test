@@ -1,14 +1,8 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-import '../../../common_widgets/file_upload_progress_dialog.dart';
-import '../../authentication/presentation/auth_provider_controller.dart';
-import '../domain/genius_scan_config/genius_scan_config.dart';
-import '../domain/genius_scan_config/genius_scan_generate_document_config.dart';
-import '../domain/upload_documents_state/upload_documents_state.dart';
-import '../../../utils/exceptions.dart';
-import '../../../utils/extensions.dart';
-import '../../../utils/magic_strings.dart';
+
+import 'package:alvys3/src/utils/provider_args_saver.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_genius_scan/flutter_genius_scan.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -17,23 +11,36 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../../common_widgets/file_upload_progress_dialog.dart';
+import '../../../routing/app_router.dart';
+import '../../../utils/exceptions.dart';
+import '../../../utils/extensions.dart';
+import '../../../utils/magic_strings.dart';
+import '../../authentication/presentation/auth_provider_controller.dart';
 import '../../trips/presentation/controller/trip_page_controller.dart';
 import '../data/repositories/documents_repository.dart';
+import '../domain/genius_scan_config/genius_scan_config.dart';
+import '../domain/genius_scan_config/genius_scan_generate_document_config.dart';
+import '../domain/upload_documents_state/upload_documents_state.dart';
+import 'docs_controller.dart';
 
 class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocumentsState, UploadDocumentArgs>
     implements IAppErrorHandler {
   late AppDocumentRepository<UploadDocumentsController> docRepo;
   late TripController trips;
+  late DocumentsNotifier docList;
   late ScanningNotifier isScanning;
   late AuthProviderNotifier userData;
   ImagePicker picker = ImagePicker();
-
+  late GoRouter router;
   @override
   UploadDocumentsState build(UploadDocumentArgs arg) {
     docRepo = ref.read(documentsRepositoryProvider);
     trips = ref.read(tripControllerProvider.notifier);
     userData = ref.read(authProvider.notifier);
     isScanning = ref.read(scanningProvider.notifier);
+    router = ref.read(getRouter);
+    docList = ref.read(documentsProvider.call(DocumentsArgs(arg.documentType, null)).notifier);
     state = UploadDocumentsState(documentType: dropDownOptions.first);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       startScan();
@@ -44,6 +51,7 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
   Future<void> startScan([bool firstScan = true]) async {
     isScanning.setState(true);
     GeniusScanConfig config;
+    ProviderArgsSaver.instance.uploadArgs = arg;
     switch (arg.uploadType) {
       case UploadType.camera:
         config = GeniusScanConfig.camera();
@@ -64,17 +72,16 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
     try {
       var res = await FlutterGeniusScan.scanWithConfiguration(config.toJson().removeNulls);
       var results = GeniusScanResults.fromJson(jsonDecode(jsonEncode(res)));
-      var ctx = arg.context;
-      if (firstScan && results.scans.isEmpty && ctx.mounted) {
-        ctx.pop();
+      if (firstScan && results.scans.isEmpty) {
+        router.pop();
       }
       state = state.copyWith(
           pages: [...state.pages, ...results.scans.map<String>((e) => Scan.toPathString(e.enhancedUrl!)).toList()]);
       firstScan = false;
     } catch (e) {
-      var ctx = arg.context;
-      if (firstScan && ctx.mounted) {
-        ctx.pop();
+      if (firstScan) {
+        isScanning.setState(false);
+        router.pop();
       }
       debugPrint('$e');
       state = state;
@@ -98,9 +105,9 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
     state = state.copyWith(documentType: doc);
   }
 
-  Future<void> uploadFile() async {
+  Future<void> uploadFile(BuildContext context) async {
     //generate document before sending
-    showDocumentProgressDialog(arg.context);
+    showDocumentProgressDialog(context);
     var path = '${(await getTemporaryDirectory()).path}/scan.pdf';
 
     await FlutterGeniusScan.generateDocument(
@@ -111,25 +118,26 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
     var pdfFile = File(path);
     await _doUpload(pdfFile);
 
-    var ctx = arg.context;
-    if (ctx.mounted) {
-      Navigator.of(ctx).pop();
+    if (context.mounted) {
+      Navigator.of(context, rootNavigator: true).pop();
+      Navigator.of(context).pop();
     }
   }
 
-  Future<void> _doUpload(File pdfFile) {
+  Future<void> _doUpload(File pdfFile) async {
     switch (arg.documentType) {
       case DocumentType.tripDocuments:
         var trip = trips.getTrip(arg.tripId!);
-        return docRepo.uploadTripDocuments(trip!.companyCode!, state.documentType!, pdfFile, arg.tripId!);
-
+        await docRepo.uploadTripDocuments(trip!.companyCode!, state.documentType!, pdfFile, arg.tripId!);
+        await trips.refreshCurrentTrip(arg.tripId!);
       case DocumentType.personalDocuments:
-        return docRepo.uploadPersonalDocuments(state.documentType!, pdfFile);
+        await docRepo.uploadPersonalDocuments(state.documentType!, pdfFile);
+        await docList.getDocuments();
       case DocumentType.paystubs:
-        return Future.value(null);
-
+        await Future.value(null);
       case DocumentType.tripReport:
-        return docRepo.uploadTripReport(userData.getCompanyOwned.companyCode!, state.documentType!, pdfFile);
+        await docRepo.uploadTripReport(userData.getCompanyOwned.companyCode!, state.documentType!, pdfFile);
+        await docList.getDocuments();
     }
   }
 
@@ -162,9 +170,8 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
 
   @override
   FutureOr<void> onError() {
-    var ctx = arg.context;
-    if (ctx.mounted) {
-      Navigator.of(ctx, rootNavigator: true).pop();
+    if (router.routerDelegate.navigatorKey.currentContext?.mounted ?? false) {
+      Navigator.of(router.routerDelegate.navigatorKey.currentContext!, rootNavigator: true).pop();
     }
   }
 }
@@ -188,8 +195,7 @@ class UploadDocumentArgs {
   final UploadType uploadType;
   final DocumentType documentType;
   final String? tripId;
-  final BuildContext context;
-  UploadDocumentArgs({this.tripId, required this.uploadType, required this.documentType, required this.context});
+  UploadDocumentArgs({this.tripId, required this.uploadType, required this.documentType});
 }
 
 class UploadDocumentOptions {

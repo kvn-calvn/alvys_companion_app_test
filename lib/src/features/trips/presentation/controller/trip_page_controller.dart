@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:alvys3/src/features/trips/domain/app_trip/echeck.dart';
+import '../../domain/app_trip/echeck.dart';
 
 import '../../domain/app_trip/stop.dart';
 import '../../domain/update_stop_time_record/update_stop_time_record.dart';
@@ -101,7 +101,7 @@ class TripController extends _$TripController implements IAppErrorHandler {
 
   Future<void> checkIn(String tripId, String stopId) async {
     state = AsyncValue.data(state.value!.copyWith(loadingStopId: stopId, checkIn: true));
-    var trip = state.value!.getTripOrNull(tripId);
+    var trip = state.value!.tryGetTrip(tripId);
     if (trip == null) return;
     var stop = trip.stops!.firstWhereOrNull((element) => element.stopId == stopId);
     if (stop == null) return;
@@ -124,7 +124,7 @@ class TripController extends _$TripController implements IAppErrorHandler {
 
   Future<void> checkOut(String tripId, String stopId) async {
     state = AsyncValue.data(state.value!.copyWith(loadingStopId: stopId, checkIn: false));
-    var trip = state.value!.getTripOrNull(tripId);
+    var trip = state.value!.tryGetTrip(tripId);
     if (trip == null) return;
     var location = await Helpers.getUserPosition(() {
       state = AsyncValue.data(state.value!.copyWith(loadingStopId: null));

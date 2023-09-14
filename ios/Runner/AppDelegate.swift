@@ -51,6 +51,9 @@ import GoogleMaps
                 LocationManager.shared.url = (args["url"] as? String)
                 LocationManager.shared.companyCode = (args["companyCode"] as? String)
                 LocationManager.shared.token = (args["token"] as? String)
+                
+            case "isTablet":
+                result(UIDevice.current.userInterfaceIdiom == .pad)
             default:
                 result(FlutterMethodNotImplemented)
             }

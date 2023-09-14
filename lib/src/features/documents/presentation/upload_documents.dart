@@ -42,7 +42,7 @@ class _UploadDocumentsState extends ConsumerState<UploadDocuments> {
                 DocumentUploadButton.add(widget.args),
                 if (uploadDocsNotifier.shouldShowDeleteAndUploadButton) ...[
                   DocumentUploadButton.delete(widget.args),
-                  DocumentUploadButton.upload(widget.args)
+                  DocumentUploadButton.upload(widget.args, context)
                 ],
               ],
             ),

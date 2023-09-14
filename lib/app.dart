@@ -9,11 +9,12 @@ import 'src/utils/theme_handler.dart';
 //import './src/routing/route_generator.dart';
 
 class App extends ConsumerWidget {
-  const App(this.driver, {Key? key}) : super(key: key);
+  const App(this.driver, this.isTablet, {Key? key}) : super(key: key);
   final DriverUser? driver;
+  final bool isTablet;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final router = ref.read(routerProvider);
+    final router = isTablet ? ref.read(tabletRouteProvider) : ref.read(routerProvider);
     return MaterialApp.router(
       //useInheritedMediaQuery: true,
       themeMode: ref.watch(themeHandlerProvider),

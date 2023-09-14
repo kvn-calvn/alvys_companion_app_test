@@ -37,4 +37,15 @@ class PlatformChannel {
       );
     }
   }
+
+  static Future<bool> isTablet() async {
+    try {
+      return await platform.invokeMethod("isTablet", <String, dynamic>{});
+    } on PlatformException catch (e) {
+      debugPrint(
+        "Determining if device is a tablet was unsuccessful: \n $e",
+      );
+      return false;
+    }
+  }
 }

@@ -1,8 +1,8 @@
-import 'package:alvys3/src/constants/api_routes.dart';
-import 'package:alvys3/src/features/echeck/domain/generate_echeck/generate_echeck_request.dart';
-import 'package:alvys3/src/features/trips/domain/app_trip/echeck.dart';
-import 'package:alvys3/src/network/http_client.dart';
-import 'package:alvys3/src/utils/helpers.dart';
+import '../../../constants/api_routes.dart';
+import '../domain/generate_echeck/generate_echeck_request.dart';
+import '../../trips/domain/app_trip/echeck.dart';
+import '../../../network/http_client.dart';
+import '../../../utils/helpers.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

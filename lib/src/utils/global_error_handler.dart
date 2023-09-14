@@ -1,3 +1,11 @@
+import 'package:alvys3/src/features/authentication/presentation/edit_profile_controller.dart';
+import 'package:alvys3/src/features/echeck/presentation/controller/echeck_page_controller.dart';
+import 'package:alvys3/src/features/trips/presentation/controller/trip_page_controller.dart';
+import 'package:alvys3/src/utils/provider_args_saver.dart';
+
+import '../network/http_client.dart';
+import 'package:azure_application_insights/azure_application_insights.dart';
+
 import '../common_widgets/app_dialog.dart';
 import 'exceptions.dart';
 import 'package:flutter/material.dart';
@@ -7,20 +15,31 @@ import '../features/authentication/presentation/auth_provider_controller.dart';
 import '../features/documents/presentation/upload_documents_controller.dart';
 
 final globalErrorHandlerProvider = Provider<GlobalErrorHandler>((ref) {
-  return GlobalErrorHandler(ref: ref);
+  return GlobalErrorHandler(ref: ref, telemetry: ref.read(httpClientProvider));
 });
 
 class GlobalErrorHandler {
   final ProviderRef<GlobalErrorHandler> ref;
+  final AlvysHttpClient telemetry;
   LabeledGlobalKey<NavigatorState> navKey = LabeledGlobalKey<NavigatorState>("MainNavKey");
-  GlobalErrorHandler({required this.ref});
+  GlobalErrorHandler({required this.ref, required this.telemetry});
   void handle(FlutterErrorDetails? details, bool flutterError, [Object? error, StackTrace? trace]) {
     _handleError(
       flutterError ? details!.exception : error!,
       () {
         if (flutterError) {
-          FlutterError.presentError(details!);
+          telemetry.telemetryClient
+              .trackTrace(severity: Severity.error, message: 'mobile_app_client_error', additionalProperties: {
+            "Error": details!.exception.toString(),
+            "StackTrace": details.stack.toString(),
+          });
+          FlutterError.presentError(details);
         } else {
+          telemetry.telemetryClient
+              .trackTrace(severity: Severity.error, message: 'mobile_app_client_error', additionalProperties: {
+            "Error": error.toString(),
+            "StackTrace": trace.toString(),
+          });
           debugPrint("$error");
           debugPrintStack(stackTrace: trace);
         }
@@ -79,7 +98,14 @@ class GlobalErrorHandler {
         ref.read(authProvider.notifier).onError();
         break;
       case UploadDocumentsController:
+        ref.read(uploadDocumentsController.call(ProviderArgsSaver.instance.uploadArgs!).notifier).onError();
         break;
+      case EditProfileNotifier:
+        ref.read(editProfileProvider.notifier).onError();
+      case TripController:
+        ref.read(tripControllerProvider.notifier).onError();
+      case EcheckPageController:
+        ref.read(echeckPageControllerProvider.notifier).onError();
     }
   }
 

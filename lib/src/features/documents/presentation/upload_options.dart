@@ -12,7 +12,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 class UploadOptions extends ConsumerWidget {
   final DocumentType documentType;
-  final String tripId;
+  final String? tripId;
   final bool mounted;
   const UploadOptions({required this.tripId, required this.documentType, required this.mounted, super.key});
   String get route {
@@ -48,7 +48,7 @@ class UploadOptions extends ConsumerWidget {
                 context.goNamed(
                   route,
                   extra: UploadType.camera,
-                  pathParameters: {ParamType.tripId.name: tripId},
+                  pathParameters: tripId != null ? {ParamType.tripId.name: tripId!} : {},
                 );
               }
             },
@@ -69,7 +69,7 @@ class UploadOptions extends ConsumerWidget {
                 context.goNamed(
                   route,
                   extra: UploadType.gallery,
-                  pathParameters: {ParamType.tripId.name: tripId},
+                  pathParameters: tripId != null ? {ParamType.tripId.name: tripId!} : {},
                 );
               }
             },
@@ -90,9 +90,9 @@ class DocumentUploadButton extends ConsumerWidget {
     required this.icon,
     required this.title,
   });
-  static DocumentUploadButton upload(UploadDocumentArgs args) => DocumentUploadButton(
+  static DocumentUploadButton upload(UploadDocumentArgs args, BuildContext context) => DocumentUploadButton(
       onTap: (ref) async {
-        await ref.read(uploadDocumentsController.call(args).notifier).uploadFile();
+        await ref.read(uploadDocumentsController.call(args).notifier).uploadFile(context);
       },
       icon: Alvys3Icons.upload,
       title: 'Upload');

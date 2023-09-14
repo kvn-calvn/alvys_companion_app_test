@@ -66,7 +66,6 @@ class MainActivity : FlutterActivity() {
                                 resources.displayMetrics.density
                         var larger = if(widthDp > heightDp) widthDp else heightDp
                        result.success(larger > 900f)
-
                     }
                     else -> result.notImplemented()
                 }

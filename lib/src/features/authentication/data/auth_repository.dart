@@ -1,6 +1,10 @@
+import '../domain/models/update_user_dto/update_user_dto.dart';
+import '../../../network/http_client.dart';
+import '../../../utils/helpers.dart';
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
+
 import '../../../constants/api_routes.dart';
 import '../domain/models/driver_user/driver_user.dart';
-import '../../../network/api_client.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../presentation/auth_provider_controller.dart';
@@ -8,44 +12,44 @@ import '../presentation/auth_provider_controller.dart';
 abstract class AuthRepository<T> {
   Future<DriverUser> verifyDriverCode(String phone, String code);
   Future<String> signInDriverByPhone(String phone);
-  Future<DriverUser> getDriverUser(String id);
-  Future<DriverUser> updateDriverUser();
+  Future<DriverUser> getDriverUser(String companyCode, String id);
+  Future<DriverUser> updateDriverUser<K>(String companyCode, UpdateUserDTO dto);
 }
 
 class AvysAuthRepository<T> implements AuthRepository<T> {
-  final ApiClient client;
-  AvysAuthRepository(this.client);
+  final AlvysHttpClient httpClient;
+  AvysAuthRepository(this.httpClient);
   @override
-  Future<DriverUser> getDriverUser(String id) async {
-    var res = await client.getData<T>(ApiRoutes.userData(id));
-    return DriverUser.fromJson(res.data);
+  Future<DriverUser> getDriverUser(String companyCode, String id) async {
+    await Helpers.setCompanyCode(companyCode);
+    var res = await httpClient.getData<T>(Uri.parse(ApiRoutes.userData(id)));
+    return DriverUser.fromJson(res.body.toDecodedJson);
   }
 
   @override
   Future<String> signInDriverByPhone(
     String phone,
   ) async {
-    var loginRes = await client.getData<T>(ApiRoutes.authenticate(phone));
-    return loginRes.data.toString();
+    await httpClient.setTelemetryContext(extraData: {"phone": phone});
+    var loginRes = await httpClient.getData<T>(Uri.parse(ApiRoutes.authenticate(phone)));
+    return loginRes.body;
   }
 
   @override
   Future<DriverUser> verifyDriverCode(String phone, String code) async {
-    var verifyRes =
-        //await ApiClient.singleton.dio.get(Endpoint.verify(phone, code));
-        await client.getData<T>(ApiRoutes.login(phone, code));
-    return DriverUser.fromJson(verifyRes.data);
+    var verifyRes = await httpClient.getData<T>(Uri.parse(ApiRoutes.login(phone, code)));
+    var user = DriverUser.fromJson(verifyRes.body.toDecodedJson);
+    await httpClient.setTelemetryContext(user: user);
+    return user;
   }
 
   @override
-  Future<DriverUser> updateDriverUser() {
-    // ignore: todo
-    // TODO: implement updateDriverUser
-    throw UnimplementedError();
+  Future<DriverUser> updateDriverUser<K>(String companyCode, UpdateUserDTO dto) async {
+    await Helpers.setCompanyCode(companyCode);
+    var res = await httpClient.putData<K>(ApiRoutes.driverInfo, body: dto.toJson().toJsonEncodedString);
+    return DriverUser.fromJson(res.body.toDecodedJson);
   }
 }
 
-final authRepoProvider = Provider<AvysAuthRepository<AuthProviderNotifier>>((ref) {
-  final apiClient = ref.read(apiClientProvider);
-  return AvysAuthRepository(apiClient);
-});
+final authRepoProvider =
+    Provider<AvysAuthRepository<AuthProviderNotifier>>((ref) => AvysAuthRepository(ref.read(httpClientProvider)));

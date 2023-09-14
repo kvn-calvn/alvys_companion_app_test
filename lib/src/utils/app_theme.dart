@@ -1,3 +1,5 @@
+import 'tablet_utils.dart';
+
 import '../constants/color.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -8,10 +10,7 @@ import 'package:flutter/material.dart';
 class AlvysTheme {
   static ThemeData mainTheme(Brightness brightness) {
     final textTheme = appTextTheme(
-        MediaQueryData.fromView(
-                WidgetsBinding.instance.platformDispatcher.implicitView!)
-            .size
-            .width,
+        MediaQueryData.fromView(WidgetsBinding.instance.platformDispatcher.implicitView!).size.shortestSide,
         brightness);
     return ThemeData(
         textTheme: textTheme,
@@ -24,9 +23,7 @@ class AlvysTheme {
         appBarTheme: AppBarTheme(
           centerTitle: true,
           iconTheme: IconThemeData(
-            color: brightness.isLight
-                ? Colors.black
-                : Colors.white, //change your color here
+            color: brightness.isLight ? Colors.black : Colors.white, //change your color here
           ),
           backgroundColor: Colors.transparent,
           elevation: 0,
@@ -34,10 +31,7 @@ class AlvysTheme {
             statusBarBrightness: brightness,
           ),
           titleTextStyle: appTextTheme(
-                  MediaQueryData.fromView(WidgetsBinding
-                          .instance.platformDispatcher.implicitView!)
-                      .size
-                      .width,
+                  MediaQueryData.fromView(WidgetsBinding.instance.platformDispatcher.implicitView!).size.width,
                   brightness)
               .bodyLarge!
               .copyWith(
@@ -54,10 +48,7 @@ class AlvysTheme {
               borderRadius: BorderRadius.circular(10.0),
             ),
             textStyle: appTextTheme(
-                    MediaQueryData.fromView(WidgetsBinding
-                            .instance.platformDispatcher.implicitView!)
-                        .size
-                        .width,
+                    MediaQueryData.fromView(WidgetsBinding.instance.platformDispatcher.implicitView!).size.shortestSide,
                     brightness)
                 .labelMedium!
                 .copyWith(
@@ -74,8 +65,7 @@ class AlvysTheme {
         ),
         inputDecorationTheme: InputDecorationTheme(
           isDense: true,
-          fillColor:
-              brightness.isLight ? Colors.white : ColorManager.lightgrey2,
+          fillColor: brightness.isLight ? Colors.white : ColorManager.lightgrey2,
           filled: true,
           border: AlvysOutlineBorder(brightness),
         ),
@@ -89,8 +79,7 @@ class AlvysTheme {
         ),
         cardTheme: CardTheme(
           elevation: 0,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),
         progressIndicatorTheme: ProgressIndicatorThemeData(
           color: ColorManager.primary(brightness),
@@ -117,17 +106,13 @@ class AlvysTheme {
           onSurface: brightness.isLight ? Colors.black : Colors.white,
         ),
         snackBarTheme: SnackBarThemeData(
-            backgroundColor: ColorManager.cardColor(brightness),
-            contentTextStyle: textTheme.bodyMedium),
+            backgroundColor: ColorManager.cardColor(brightness), contentTextStyle: textTheme.bodyMedium),
         dialogTheme: DialogTheme(contentTextStyle: textTheme.labelMedium));
   }
 
   static TextStyle appbarTextStyle(BuildContext context, bool small) {
     return small
-        ? Theme.of(context)
-            .textTheme
-            .headlineLarge!
-            .copyWith(fontWeight: FontWeight.w700)
+        ? Theme.of(context).textTheme.headlineLarge!.copyWith(fontWeight: FontWeight.w700)
         : Theme.of(context).textTheme.headlineLarge!;
   }
 
@@ -225,7 +210,7 @@ class AlvysTheme {
       );
   static TextTheme appTextTheme(double width, Brightness brightness) {
     return GoogleFonts.poppinsTextTheme(defaultTextTheme(brightness).apply(
-      fontSizeFactor: (width / 1000) * 2.55,
+      fontSizeFactor: (width / 1000) * 2.55 * (TabletUtils.instance.isTablet ? 0.6 : 1),
     ));
   }
 }
@@ -242,9 +227,6 @@ class AlvysOutlineBorder extends MaterialStateUnderlineInputBorder {
     }
     if (states.contains(MaterialState.error)) {
       color = ColorManager.cancelColor;
-    }
-    if (states.contains(MaterialState.disabled)) {
-      color = Colors.transparent;
     }
     return OutlineInputBorder(
       borderSide: BorderSide(color: color, width: 1),
@@ -266,8 +248,7 @@ class AlvysMaterialStateColor extends MaterialStateColor {
     if (states.contains(MaterialState.disabled)) {
       color = Colors.grey.withOpacity(0.5);
     }
-    if (states.contains(MaterialState.focused) ||
-        states.contains(MaterialState.selected)) {
+    if (states.contains(MaterialState.focused) || states.contains(MaterialState.selected)) {
       color = ColorManager.primary(brightness).withOpacity(0.8);
     }
     return color;

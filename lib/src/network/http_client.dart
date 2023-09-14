@@ -2,18 +2,46 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'custom_multipart_request.dart';
-import '../utils/exceptions.dart';
-import '../utils/magic_strings.dart';
+import 'package:azure_application_insights/azure_application_insights.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
+import 'package:package_info_plus/package_info_plus.dart';
+import 'package:uuid/uuid.dart';
+import 'package:uuid/uuid_util.dart';
+
+import '../../flavor_config.dart';
+import '../features/authentication/domain/models/driver_user/driver_user.dart';
+import '../utils/exceptions.dart';
+import '../utils/magic_strings.dart';
+import 'custom_multipart_request.dart';
 
 final httpClientProvider = Provider<AlvysHttpClient>((ref) => AlvysHttpClient());
 
-class AlvysHttpClient extends BaseClient {
+class AlvysHttpClient {
+  late TelemetryClient telemetryClient;
+  late TelemetryHttpClient telemetryHttpClient;
+  FlutterSecureStorage storage = const FlutterSecureStorage();
+  AlvysHttpClient() {
+    final client = Client();
+    final processor = TransmissionProcessor(
+      instrumentationKey: FlavorConfig.instance!.azureTelemetryKey,
+      httpClient: client,
+      timeout: const Duration(seconds: 10),
+    );
+
+    telemetryClient = TelemetryClient(
+      processor: processor,
+    );
+
+    telemetryHttpClient = TelemetryHttpClient(
+      telemetryClient: telemetryClient,
+      inner: client,
+    );
+  }
+
   Future<Map<String, String>> get getBaseHeaders async {
-    var storage = const FlutterSecureStorage();
     var token = await storage.read(key: StorageKey.driverToken.name);
     var companyCode = await storage.read(key: StorageKey.companyCode.name);
     return token == null
@@ -33,14 +61,9 @@ class AlvysHttpClient extends BaseClient {
     return newHeaders;
   }
 
-  @override
-  Future<StreamedResponse> send(BaseRequest request) async {
-    return request.send();
-  }
-
   Future<StreamedResponse> sendData<T>(BaseRequest request) async {
     try {
-      var streamedRes = await request.send();
+      var streamedRes = await telemetryHttpClient.send(request);
       _handleResponse(await Response.fromStream(streamedRes));
       return streamedRes;
     } on SocketException {
@@ -75,31 +98,34 @@ class AlvysHttpClient extends BaseClient {
   }
 
   Future<Response> getData<T>(Uri uri, {Map<String, String>? headers}) {
-    return _executeRequest<T>(() async => this.get(uri, headers: await getHeaders(headers)));
+    return _executeRequest<T>(() async => telemetryHttpClient.get(uri, headers: await getHeaders(headers)));
   }
 
   Future<Response> postData<T>(Uri uri, {Map<String, String>? headers, Object? body, Encoding? encoding}) {
     return _executeRequest<T>(
-        () async => this.post(uri, headers: await getHeaders(headers), body: body, encoding: encoding));
+        () async => telemetryHttpClient.post(uri, headers: await getHeaders(headers), body: body, encoding: encoding));
   }
 
   Future<Response> putData<T>(Uri uri, {Map<String, String>? headers, Object? body, Encoding? encoding}) {
     return _executeRequest<T>(
-        () async => this.put(uri, headers: await getHeaders(headers), body: body, encoding: encoding));
+        () async => telemetryHttpClient.put(uri, headers: await getHeaders(headers), body: body, encoding: encoding));
   }
 
   Future<Response> deleteData<T>(Uri uri, {Map<String, String>? headers, Object? body, Encoding? encoding}) {
-    return _executeRequest<T>(
-        () async => this.delete(uri, headers: await getHeaders(headers), body: body, encoding: encoding));
+    return _executeRequest<T>(() async =>
+        telemetryHttpClient.delete(uri, headers: await getHeaders(headers), body: body, encoding: encoding));
   }
 
   Future<Response> patchData<T>(Uri uri, {Map<String, String>? headers, Object? body, Encoding? encoding}) {
     return _executeRequest<T>(
-        () async => this.patch(uri, headers: await getHeaders(headers), body: body, encoding: encoding));
+        () async => telemetryHttpClient.patch(uri, headers: await getHeaders(headers), body: body, encoding: encoding));
   }
 
   Future<Response> _executeRequest<T>(Future<Response> Function() op) async {
     try {
+      var companyCode = await storage.read(key: StorageKey.companyCode.name);
+      if (companyCode != null) telemetryClient.context.properties['tenantId'] = companyCode;
+      telemetryClient.context.operation.id = const Uuid().v4(options: {'rng': UuidUtil.cryptoRNG});
       var res = await op();
       return _handleResponse(res);
     } on SocketException {
@@ -125,5 +151,42 @@ class AlvysHttpClient extends BaseClient {
       default:
         return Future.value(response);
     }
+  }
+
+  Future<void> setTelemetryContext({DriverUser? user, String? companyCode, Map<String, dynamic>? extraData}) async {
+    assert((user == null && extraData != null) || (user != null && extraData == null));
+    Map<String, dynamic> driver = user == null
+        ? extraData!
+        : {
+            "email": user.email,
+            "phone": user.phone,
+            "tenantId": user.companyCodes,
+            "name": user.name,
+          };
+    late IosDeviceInfo iosInfo;
+    late AndroidDeviceInfo androidInfo;
+    PackageInfo packageInfo = await PackageInfo.fromPlatform();
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    if (Platform.isIOS) {
+      iosInfo = await deviceInfo.iosInfo;
+    } else if (Platform.isAndroid) {
+      androidInfo = await deviceInfo.androidInfo;
+    }
+    telemetryClient.context
+      ..device.model = Platform.isAndroid
+          ? "${androidInfo.manufacturer} ${androidInfo.model}"
+          : Platform.isIOS
+              ? iosInfo.utsname.machine
+              : ""
+      ..device.osVersion = Platform.isAndroid
+          ? "Android ${androidInfo.version.release} SDK(${androidInfo.version.sdkInt})"
+          : Platform.isIOS
+              ? "${iosInfo.systemName} ${iosInfo.systemVersion}"
+              : ""
+      ..device.type = "mobile"
+      ..applicationVersion = packageInfo.version
+      ..user.accountId = user?.id
+      ..properties['user'] = jsonEncode(driver)
+      ..device.id = Platform.isAndroid ? androidInfo.id : iosInfo.identifierForVendor;
   }
 }

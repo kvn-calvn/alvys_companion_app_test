@@ -1,22 +1,22 @@
+import '../utils/tablet_utils.dart';
 import 'package:flutter/material.dart';
 
-Future<T?> showCustomBottomSheet<T>(BuildContext context, Widget child,
-        {Widget? title}) =>
-    showModalBottomSheet(
-        useRootNavigator: true,
-        backgroundColor: Colors.transparent,
-        context: context,
-        builder: (context) => CustomBottomSheet(
-              title: title,
-              child: child,
-            ));
+Future<T?> showCustomBottomSheet<T>(BuildContext context, Widget child, {Widget? title}) => showModalBottomSheet(
+    useRootNavigator: true,
+    backgroundColor: Colors.transparent,
+    context: context,
+    constraints:
+        BoxConstraints(maxHeight: double.infinity, maxWidth: TabletUtils.instance.isTablet ? 600 : double.infinity),
+    builder: (context) => CustomBottomSheet(
+          title: title,
+          child: child,
+        ));
 
 class CustomBottomSheet extends StatefulWidget {
   final Widget child;
   final Widget? title;
 
-  const CustomBottomSheet({Key? key, required this.child, this.title})
-      : super(key: key);
+  const CustomBottomSheet({Key? key, required this.child, this.title}) : super(key: key);
 
   @override
   State<CustomBottomSheet> createState() => _CustomBottomSheetState();
@@ -34,8 +34,7 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
           topRight: Radius.circular(20),
         ),
         child: Container(
-          constraints: BoxConstraints(
-              maxHeight: MediaQuery.of(context).size.height * 0.5),
+          constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.5),
           child: SafeArea(
             child: Column(
               mainAxisSize: MainAxisSize.min,
@@ -58,9 +57,7 @@ class _CustomBottomSheetState extends State<CustomBottomSheet> {
                         const SizedBox(
                           height: 17,
                         ),
-                        DefaultTextStyle.merge(
-                            child: widget.title!,
-                            style: Theme.of(context).textTheme.titleLarge),
+                        DefaultTextStyle.merge(child: widget.title!, style: Theme.of(context).textTheme.titleLarge),
                       ],
                       Flexible(
                         child: SingleChildScrollView(

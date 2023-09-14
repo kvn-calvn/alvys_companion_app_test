@@ -1,15 +1,16 @@
-import '../../../../custom_icons/alvys3_icons.dart';
-import '../../../../flavor_config.dart';
-import '../../../common_widgets/buttons.dart';
-import '../../../constants/color.dart';
-import '../../authentication/presentation/auth_provider_controller.dart';
-import '../../../utils/magic_strings.dart';
-import '../../../utils/platform_channel.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
+
+import '../../../../custom_icons/alvys3_icons.dart';
+import '../../../../flavor_config.dart';
+import '../../../common_widgets/buttons.dart';
+import '../../../constants/color.dart';
+import '../../../utils/magic_strings.dart';
+import '../../../utils/platform_channel.dart';
+import '../../authentication/presentation/auth_provider_controller.dart';
 
 class RequestNotification extends ConsumerWidget {
   const RequestNotification({Key? key}) : super(key: key);
