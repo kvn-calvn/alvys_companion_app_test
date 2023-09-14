@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 import '../domain/models/update_user_dto/update_user_dto.dart';
 
@@ -82,6 +83,8 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState>
         .setUserProperty(name: 'driver_name', value: driverRes.name);
     await FirebaseAnalytics.instance
         .setUserProperty(name: 'company_code', value: driverRes.name);
+    await FirebaseCrashlytics.instance
+        .setUserIdentifier(driverRes.phone.toString());
 
     var locationStatus = await Permission.location.status;
     var notificationStatus = await Permission.notification.status;
