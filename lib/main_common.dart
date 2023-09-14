@@ -2,11 +2,15 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_genius_scan/flutter_genius_scan.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:stack_trace/stack_trace.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
 
 import 'app.dart';
 import 'flavor_config.dart';
@@ -29,17 +33,23 @@ Future<void> mainCommon() async {
           ? FlavorConfig.instance!.androidGeniusScanSDKKey
           : FlavorConfig.instance!.iosGeniusScanSDKKey);
     }
+    await Firebase.initializeApp(
+      options: DefaultFirebaseOptions.currentPlatform,
+    );
 
     var storage = const FlutterSecureStorage();
     String? driverData = await storage.read(key: StorageKey.driverData.name);
-    ThemeMode? appThemeMode = ThemeMode.values.byNameOrNull(await storage.read(key: StorageKey.themeMode.name));
+    ThemeMode? appThemeMode = ThemeMode.values
+        .byNameOrNull(await storage.read(key: StorageKey.themeMode.name));
     var isTablet = await PlatformChannel.isTablet();
     TabletUtils.instance.isTablet = isTablet;
     DriverUser? driverUser;
     container = ProviderContainer(
       overrides: [
-        authProvider.overrideWith(() => AuthProviderNotifier(driver: driverUser)),
-        themeHandlerProvider.overrideWith(() => ThemeHandlerNotifier(appThemeMode)),
+        authProvider
+            .overrideWith(() => AuthProviderNotifier(driver: driverUser)),
+        themeHandlerProvider
+            .overrideWith(() => ThemeHandlerNotifier(appThemeMode)),
       ],
     );
     FlutterError.onError = (details) {
@@ -54,12 +64,23 @@ Future<void> mainCommon() async {
     if (driverData != null) {
       driverUser = DriverUser.fromJson(jsonDecode(driverData));
     }
+    //Crashlytics
+    FlutterError.onError = (errorDetails) {
+      FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
+    };
+    // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
+    PlatformDispatcher.instance.onError = (error, stack) {
+      FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
+      return true;
+    };
     runApp(UncontrolledProviderScope(
       container: container,
       child: App(driverUser, isTablet),
     ));
   }, (error, stack) {
-    container.read(globalErrorHandlerProvider).handle(null, false, error, stack);
+    container
+        .read(globalErrorHandlerProvider)
+        .handle(null, false, error, stack);
   });
   //FlutterNativeSplash.remove();
 }

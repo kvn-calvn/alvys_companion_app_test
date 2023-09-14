@@ -58,6 +58,9 @@ dependencies:
   geolocator: ^10.0.0
   azure_application_insights: ^3.1.0
   uuid: ^3.0.7
+  firebase_core: ^2.15.1
+  firebase_analytics: ^10.4.5
+  firebase_crashlytics: ^3.3.5
 dev_dependencies:
   flutter_test:
     sdk: flutter
