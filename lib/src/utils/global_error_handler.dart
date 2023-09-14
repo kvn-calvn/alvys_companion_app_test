@@ -1,3 +1,8 @@
+import 'package:alvys3/src/features/authentication/presentation/edit_profile_controller.dart';
+import 'package:alvys3/src/features/echeck/presentation/controller/echeck_page_controller.dart';
+import 'package:alvys3/src/features/trips/presentation/controller/trip_page_controller.dart';
+import 'package:alvys3/src/utils/provider_args_saver.dart';
+
 import '../network/http_client.dart';
 import 'package:azure_application_insights/azure_application_insights.dart';
 
@@ -93,7 +98,14 @@ class GlobalErrorHandler {
         ref.read(authProvider.notifier).onError();
         break;
       case UploadDocumentsController:
+        ref.read(uploadDocumentsController.call(ProviderArgsSaver.instance.uploadArgs!).notifier).onError();
         break;
+      case EditProfileNotifier:
+        ref.read(editProfileProvider.notifier).onError();
+      case TripController:
+        ref.read(tripControllerProvider.notifier).onError();
+      case EcheckPageController:
+        ref.read(echeckPageControllerProvider.notifier).onError();
     }
   }
 

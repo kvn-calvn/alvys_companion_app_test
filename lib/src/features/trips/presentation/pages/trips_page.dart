@@ -21,8 +21,7 @@ class LoadListPage extends ConsumerStatefulWidget {
   ConsumerState<LoadListPage> createState() => _LoadListPageState();
 }
 
-class _LoadListPageState extends ConsumerState<LoadListPage>
-    with TickerProviderStateMixin {
+class _LoadListPageState extends ConsumerState<LoadListPage> with TickerProviderStateMixin {
   String dropdownvalue = 'Online';
   late TabController _tabController;
   var items = [
@@ -41,27 +40,23 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
   }
 
   Future<void> checkLocationPermission(BuildContext context) async {
-    if (await Permission.location.isPermanentlyDenied ||
-        await Permission.location.isDenied) {
+    if (await Permission.location.isPermanentlyDenied || await Permission.location.isDenied) {
       if (mounted) {
         await showDialog(
           context: context,
           builder: (BuildContext context) {
             return AppDialog(
               title: "Alvys wants to use your location.",
-              description:
-                  "Alvys uses your location data to track the movement of loads you have been assigned.",
+              description: "Alvys uses your location data to track the movement of loads you have been assigned.",
               actions: [
                 AppDialogAction(
                     label: 'Allow',
                     action: () {
-                      AppSettings.openAppSettings(
-                              type: AppSettingsType.location)
+                      AppSettings.openAppSettings(type: AppSettingsType.location)
                           .then((value) => GoRouter.of(context).pop());
                     },
                     primary: true),
-                AppDialogAction(
-                    label: 'Not Now', action: GoRouter.of(context).pop),
+                AppDialogAction(label: 'Not Now', action: GoRouter.of(context).pop),
               ],
             );
           },
@@ -104,8 +99,7 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
                       },
                       child: Row(
                         children: [
-                          Lottie.asset('assets/lottie/green_pulse.json',
-                              width: 30, height: 30),
+                          Lottie.asset('assets/lottie/green_pulse.json', width: 30, height: 30),
                           /*Icon(
                             Icons.brightness_1,
                             color: Colors.green.shade600,
@@ -199,48 +193,29 @@ class TripList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final tripsState = ref.watch(tripControllerProvider);
-    return tripsState.when(
-        // skipError: true,
-        loading: (() {
-      return const TripListShimmer();
-    }), error: (error, stack) {
-      return RefreshIndicator(
-        onRefresh: () async {
-          await ref.read(tripControllerProvider.notifier).refreshTrips();
-        },
-        child: const EmptyView(
-          title: "Error Occured",
-          description: "Try pull to refresh.",
-        ),
-      );
-    }, data: (value) {
-      return Padding(
-        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-        child: Column(
-          children: [
-            Expanded(
-              child: RefreshIndicator(
-                onRefresh: () async {
-                  await ref
-                      .read(tripControllerProvider.notifier)
-                      .refreshTrips();
-                },
-                child: value.activeTrips.isNotEmpty
-                    ? ListView(
-                        padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-                        children: value.activeTrips
-                            .map((trip) => TripCard(trip: trip))
-                            .toList(),
-                      )
-                    : const EmptyView(
-                        title: "No Trips",
-                        description: "Assigned trips will appear here.",
-                      ),
-              ),
+    if (tripsState.isLoading) return const TripListShimmer();
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+      child: Column(
+        children: [
+          Expanded(
+            child: RefreshIndicator(
+              onRefresh: () async {
+                await ref.read(tripControllerProvider.notifier).refreshTrips();
+              },
+              child: tripsState.value!.activeTrips.isNotEmpty
+                  ? ListView(
+                      padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
+                      children: tripsState.value!.activeTrips.map((trip) => TripCard(trip: trip)).toList(),
+                    )
+                  : const EmptyView(
+                      title: "No Trips",
+                      description: "Assigned trips will appear here.",
+                    ),
             ),
-          ],
-        ),
-      );
-    });
+          ),
+        ],
+      ),
+    );
   }
 }

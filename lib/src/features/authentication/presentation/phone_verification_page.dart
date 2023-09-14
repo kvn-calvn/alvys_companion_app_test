@@ -161,9 +161,7 @@ class _PhoneNumberVerificationPageState extends ConsumerState<PhoneNumberVerific
                       SizedBox(
                         width: double.infinity,
                         child: TextButton(
-                          onPressed: () {
-                            ref.read(authProvider.notifier).resendCode();
-                          },
+                          onPressed: ref.read(authProvider.notifier).resendCode,
                           child: const Text(
                             'Resend Code',
                             style: TextStyle(color: Colors.blue),
@@ -171,94 +169,6 @@ class _PhoneNumberVerificationPageState extends ConsumerState<PhoneNumberVerific
                         ),
                       ),
                     ]
-
-                    /*Consumer(
-                    builder: ((context, ref, _) {
-                      final state = ref.watch(verificationPageController);
-                      final isloading = state is AsyncLoading;
-              
-                      state.whenData((Verified? value) {
-                        if (value!.errorCode == 0) {
-                          WidgetsBinding.instance.addPostFrameCallback((_) {
-                            Navigator.pushNamed(context, Routes.tripPageRoute);
-                          });
-                        }
-                      });
-              
-                      ref.listen<AsyncValue<void>>(
-                        verificationPageController,
-                        (_, state) => state.whenOrNull(
-                          error: (error, stackTrace) {
-                            Alert(
-                                context: context,
-                                type: AlertType.error,
-                                desc: error.toString(),
-                                style: getLightErrorAlertStyle(),
-                                buttons: [
-                                  DialogButton(
-                                    onPressed: () => Navigator.pop(context),
-                                    color: ColorManager.primary,
-                                    child: const Text(
-                                      "Ok",
-                                      style: TextStyle(
-                                          color: Colors.white, fontSize: 20),
-                                    ),
-                                  )
-                                ]).show();
-                          },
-                        ),
-                      );
-                      return ReactiveForm(
-                        formGroup: form,
-                        child: Column(
-                          children: [
-                            ReactiveTextField(
-                              formControlName: 'verify',
-                              keyboardType: TextInputType.number,
-                              maxLength: 6,
-                              autofocus: true,
-                              validationMessages: (control) => {'required': ''},
-                              decoration: InputDecoration(
-                                fillColor: Colors.white,
-                                filled: true,
-                                enabledBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: Color(0xffE5E5E5), width: 2.0),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderSide: const BorderSide(
-                                      color: Color(0xffE5E5E5), width: 2.0),
-                                  borderRadius: BorderRadius.circular(10),
-                                ),
-                              ),
-                            ),
-                            ReactiveFormConsumer(
-                                builder: ((context, formGroup, child) {
-                              return ButtonStyle1(
-                                  isDisable: !form.valid,
-                                  onPressAction: () {
-                                    Navigator.pushNamed(
-                                        context, Routes.tripPageRoute);
-                                    // ignore: unused_local_variable
-                                    var code = formGroup.control('verify').value;
-              /*
-                                    formGroup.valid
-                                        ? ref
-                                            .read(verificationPageController
-                                                .notifier)
-                                            .verifyPhoneNumber('', code)
-                                        : null;*/
-                                  },
-                                  title: "Continue",
-                                  isLoading: isloading);
-                            }))
-                          ],
-                        ),
-                      );
-                    }),
-                  ),
-                  */
                   ],
                 ),
               ),
