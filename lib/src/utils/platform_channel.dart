@@ -30,7 +30,7 @@ class PlatformChannel {
 
   static void stopLocationTracking() async {
     try {
-      await platform.invokeMethod("stopLocationTracking");
+      await platform.invokeMethod("stopLocationTracking", <String, dynamic>{});
     } on PlatformException catch (e) {
       debugPrint(
         "Invoke stopLocationTracking unsuccessful: \n $e",

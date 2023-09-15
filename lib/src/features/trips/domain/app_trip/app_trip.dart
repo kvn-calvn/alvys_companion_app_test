@@ -1,3 +1,4 @@
+import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 
 import '../../../documents/domain/app_document/app_document.dart';
@@ -67,4 +68,24 @@ class AppTrip with _$AppTrip {
       ?.firstWhereOrNull(
           (element) => element.timeRecord?.driver?.timeIn == null || element.timeRecord?.driver?.timeOut == null)
       ?.stopId;
+  String? driverPayable(String driverId) =>
+      payableDriverAmounts.firstWhereOrNull((element) => element.id == driverId)?.amount?.toStringAsFixed(2);
+  List<AppDocument> getAttachments(bool canViewCustomerConfirmation, bool canViewCarrierConfirmation) {
+    return attachments
+        .map((e) {
+          if (DocumentTypes.customerConfirmationDocTypes.isInIgnoreCase(e.documentType)) {
+            if (canViewCustomerConfirmation) {
+              return e;
+            }
+          } else if (DocumentTypes.carrierRateConfirmation.toLowerCase() == e.documentType.toLowerCase()) {
+            if (canViewCarrierConfirmation) {
+              return e;
+            }
+          } else {
+            return e;
+          }
+        })
+        .removeNulls
+        .toList();
+  }
 }

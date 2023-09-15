@@ -1,23 +1,20 @@
 import 'package:flutter/material.dart';
 
 class LargeNavButton extends StatelessWidget {
-  const LargeNavButton({
-    Key? key,
-    required this.title,
-    required this.onPressed,
-    this.suffix,
-    this.icon,
-  }) : super(key: key);
+  const LargeNavButton(
+      {Key? key, required this.title, required this.onPressed, this.suffix, this.icon, this.padding = 16})
+      : super(key: key);
 
   final String title;
   final Icon? icon;
+  final double padding;
   final Widget? suffix;
   final void Function()? onPressed;
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 5.0),
+      padding: const EdgeInsets.symmetric(vertical: 5),
       child: Material(
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(12),
@@ -27,7 +24,7 @@ class LargeNavButton extends StatelessWidget {
           child: InkWell(
             onTap: onPressed,
             child: Padding(
-              padding: const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
+              padding: EdgeInsets.symmetric(vertical: padding, horizontal: 12),
               child: Row(
                 children: [
                   if (icon != null) icon!,

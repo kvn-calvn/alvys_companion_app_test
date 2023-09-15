@@ -1,3 +1,4 @@
+import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../../../utils/extensions.dart';
@@ -15,6 +16,9 @@ class DocumentState with _$DocumentState {
     @Default('') String title,
   }) = _DocumentState;
   DocumentState._();
-  List<AppDocument> get displayPaystubs => documentList.where((element) => element.date.isNullOrAfterNow).toList();
+  List<AppDocument> displayPaystubs(bool shouldDisplay) =>
+      shouldDisplay ? documentList.where((element) => element.date.isNullOrAfterNow).toList() : [];
+  List<AppDocument> documents(DisplayDocumentType type, [bool shouldDisplay = true]) =>
+      type == DisplayDocumentType.paystubs ? displayPaystubs(shouldDisplay) : documentList;
   factory DocumentState.fromJson(Map<String, dynamic> json) => _$DocumentStateFromJson(json);
 }

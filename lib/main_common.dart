@@ -39,21 +39,20 @@ Future<void> mainCommon() async {
 
     var storage = const FlutterSecureStorage();
     String? driverData = await storage.read(key: StorageKey.driverData.name);
-    ThemeMode? appThemeMode = ThemeMode.values
-        .byNameOrNull(await storage.read(key: StorageKey.themeMode.name));
+    ThemeMode? appThemeMode = ThemeMode.values.byNameOrNull(await storage.read(key: StorageKey.themeMode.name));
     var isTablet = await PlatformChannel.isTablet();
     TabletUtils.instance.isTablet = isTablet;
     DriverUser? driverUser;
+    var status = await storage.read(key: StorageKey.driverStatus.name);
     container = ProviderContainer(
       overrides: [
-        authProvider
-            .overrideWith(() => AuthProviderNotifier(driver: driverUser)),
-        themeHandlerProvider
-            .overrideWith(() => ThemeHandlerNotifier(appThemeMode)),
+        authProvider.overrideWith(() => AuthProviderNotifier(driver: driverUser, status: status)),
+        themeHandlerProvider.overrideWith(() => ThemeHandlerNotifier(appThemeMode)),
       ],
     );
     FlutterError.onError = (details) {
       container.read(globalErrorHandlerProvider).handle(details, true);
+      FirebaseCrashlytics.instance.recordFlutterFatalError(details);
     };
     FlutterError.demangleStackTrace = (stack) {
       if (stack is Trace) return stack.vmTrace;
@@ -64,10 +63,7 @@ Future<void> mainCommon() async {
     if (driverData != null) {
       driverUser = DriverUser.fromJson(jsonDecode(driverData));
     }
-    //Crashlytics
-    FlutterError.onError = (errorDetails) {
-      FirebaseCrashlytics.instance.recordFlutterFatalError(errorDetails);
-    };
+
     // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
     PlatformDispatcher.instance.onError = (error, stack) {
       FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
@@ -75,12 +71,10 @@ Future<void> mainCommon() async {
     };
     runApp(UncontrolledProviderScope(
       container: container,
-      child: App(driverUser, isTablet),
+      child: App(isTablet),
     ));
   }, (error, stack) {
-    container
-        .read(globalErrorHandlerProvider)
-        .handle(null, false, error, stack);
+    container.read(globalErrorHandlerProvider).handle(null, false, error, stack);
   });
   //FlutterNativeSplash.remove();
 }

@@ -112,9 +112,9 @@ class ButtonStyle1 extends StatelessWidget {
                     Navigator.pushNamed(context, '/verifyphone');
                   },*/
       style: ElevatedButton.styleFrom(
-        minimumSize: const Size.fromHeight(60),
+        minimumSize: const Size.fromHeight(50),
         backgroundColor: ColorManager.primary(Theme.of(context).brightness),
-        textStyle: Theme.of(context).textTheme.titleLarge,
+        textStyle: Theme.of(context).textTheme.titleMedium,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(10.0),
         ),

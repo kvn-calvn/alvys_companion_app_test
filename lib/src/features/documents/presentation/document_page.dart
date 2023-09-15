@@ -1,3 +1,4 @@
+import 'package:alvys3/src/features/authentication/presentation/auth_provider_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -22,11 +23,11 @@ class DocumentsPage extends ConsumerStatefulWidget {
 class _DocumentsPageState extends ConsumerState<DocumentsPage> {
   bool get showFAB {
     switch (widget.args.documentType) {
-      case DocumentType.tripDocuments:
-      case DocumentType.personalDocuments:
-      case DocumentType.tripReport:
+      case DisplayDocumentType.tripDocuments:
+      case DisplayDocumentType.personalDocuments:
+      case DisplayDocumentType.tripReport:
         return true;
-      case DocumentType.paystubs:
+      case DisplayDocumentType.paystubs:
         return false;
     }
   }
@@ -34,7 +35,8 @@ class _DocumentsPageState extends ConsumerState<DocumentsPage> {
   @override
   Widget build(BuildContext context) {
     final docsState = ref.watch(documentsProvider.call(widget.args));
-    final docsNotifier = ref.watch(documentsProvider.call(widget.args).notifier);
+    final authState = ref.watch(authProvider);
+    final docsNotifier = ref.read(documentsProvider.call(widget.args).notifier);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -61,7 +63,7 @@ class _DocumentsPageState extends ConsumerState<DocumentsPage> {
           child: docsState.isLoading
               ? const DocumentsShimmer()
               : DocumentList(
-                  documents: docsState.value!.documentList,
+                  documents: docsState.value!.documents(widget.args.documentType, authState.value!.canViewPaystubs),
                   refreshFunction: () async {
                     await ref.read(documentsProvider.call(widget.args).notifier).getDocuments();
                   },

@@ -9,7 +9,7 @@ class ApiRoutes {
   static String locationTracking = '${mobileBaseApi}tracking';
   static String authenticate(String phone) => '$mobileBaseApi$phone/authenticate';
   static String login(String phone, String code) => '$mobileBaseApi$phone/login/$code';
-  static String userData(String userId) => '${baseUrl}driveruserdata/$userId';
+  static String userData(String userId) => '${baseUrl}newusers/GetUser/$userId';
   static String trips = '${mobileBaseApi}trips';
   static String tripDetails(String tripId) => '$mobileBaseApi$tripId/trip';
   static String timeStopRecord(String tripId, String stopId) => '$mobileBaseApi$tripId/$stopId/time_record';
@@ -25,4 +25,5 @@ class ApiRoutes {
       Uri.https(FlavorConfig.instance!.rawApiBase, '/api/mobile/driver/documents', dto?.toJson());
   static String tripDocument(String tripId) => '$mobileBaseApi$tripId/trip/documents';
   static Uri get driverInfo => Uri.parse('${mobileBaseApi}driver/info');
+  static Uri driverAsset(String id) => Uri.parse('${baseUrl}drivers/$id');
 }

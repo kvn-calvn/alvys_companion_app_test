@@ -12,6 +12,18 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 import '../../../../utils/app_theme.dart';
 
+Future<T?> showGenerateEcheckDialog<T>(BuildContext context, String tripId) => showGeneralDialog<T>(
+    context: context,
+    useRootNavigator: true,
+    pageBuilder: (c, anim1, anim2) => ProviderScope(
+          parent: ProviderScope.containerOf(context),
+          child: SafeArea(
+              child: Dialog(
+            insetPadding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 30.0),
+            child: GenerateEcheck(tripId),
+          )),
+        ));
+
 class GenerateEcheck extends ConsumerStatefulWidget {
   final String tripId;
   const GenerateEcheck(this.tripId, {Key? key}) : super(key: key);
@@ -35,90 +47,83 @@ class _GenerateEcheckState extends ConsumerState<GenerateEcheck> {
             'Generate E-Check',
             style: AlvysTheme.appbarTextStyle(context, true),
           ),
-          leading: IconButton(
-            icon: Icon(
-              Icons.adaptive.arrow_back,
-            ),
-            onPressed: () {
-              GoRouter.of(context).pop();
-            },
-          ),
+          leading: const SizedBox.shrink(),
           centerTitle: true,
           elevation: 0,
         ),
         body: SingleChildScrollView(
           child: Padding(
             padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const SizedBox(
-                  height: 16,
-                ),
-                TextField(
-                  autofocus: true,
-                  inputFormatters: [amountMaskFormatter],
-                  keyboardType: TextInputType.number,
-                  onChanged: notifier.setAmount,
-                  decoration: const InputDecoration(hintText: "Amount"),
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                DropdownButtonFormField(
+            child: Form(
+              key: formGlobalKey,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  TextFormField(
+                    autofocus: true,
+                    inputFormatters: [amountMaskFormatter],
+                    keyboardType: TextInputType.number,
+                    onChanged: notifier.setAmount,
+                    validator: notifier.validDouble,
+                    decoration: const InputDecoration(hintText: "Amount"),
+                  ),
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  DropdownButtonFormField(
                     isDense: true,
                     value: state.value!.reason,
                     hint: const Text('Reason'),
                     onChanged: notifier.setReason,
-                    items: notifier.reasonsDropdown),
-                const SizedBox(
-                  height: 16,
-                ),
-                if (state.value!.showStopDropdown) ...[
-                  const Text("Select a Stop"),
-                  for (Stop stop in ref.watch(tripControllerProvider).value!.getTrip(widget.tripId).stops!)
-                    ECheckStopCard(
-                      stop: stop,
-                      onTap: notifier.setStopId,
-                      currentStopId: state.value!.stopId,
-                      selectedColor: ColorManager.primary(Theme.of(context).brightness),
-                    ),
-                  // const ECheckStopCard(
-                  //   stopType: "Pickup",
-                  //   stopName: "Eufaula Fresh Proc",
-                  //   city: "Eufaula",
-                  //   state: "AL",
-                  //   zip: "36027",
-                  // ),
-                  // const ECheckStopCard(
-                  //   stopType: "Delivery",
-                  //   stopName: "Stop & Shop Freetown",
-                  //   city: "Freetown",
-                  //   state: "MA",
-                  //   zip: "02702",
-                  // ),
+                    items: notifier.reasonsDropdown,
+                  ),
                   const SizedBox(
                     height: 16,
                   ),
-                ],
-                const Scrollbar(
-                  thickness: 2,
-                  child: TextField(
-                    decoration: InputDecoration(hintText: "Note"),
-                    maxLines: 6,
-                    minLines: 2,
-                    keyboardType: TextInputType.multiline,
+                  if (state.value!.showStopDropdown) ...[
+                    const Text("Select a Stop"),
+                    for (Stop stop in ref.watch(tripControllerProvider).value!.getTrip(widget.tripId).stops!)
+                      ECheckStopCard(
+                        stop: stop,
+                        onTap: notifier.setStopId,
+                        currentStopId: state.value!.stopId,
+                        selectedColor: ColorManager.primary(Theme.of(context).brightness),
+                      ),
+                    const SizedBox(
+                      height: 16,
+                    ),
+                  ],
+                  Scrollbar(
+                    thickness: 2,
+                    child: TextField(
+                      decoration: const InputDecoration(hintText: "Note"),
+                      maxLines: 6,
+                      minLines: 2,
+                      keyboardType: TextInputType.multiline,
+                      onChanged: notifier.setNote,
+                    ),
                   ),
-                ),
-                const SizedBox(
-                  height: 16,
-                ),
-                ButtonStyle1(
-                  isDisable: !state.value!.showGenerateButton,
-                  onPressAction: () async => await notifier.generateEcheck(widget.tripId),
-                  title: "Generate",
-                )
-              ],
+                  const SizedBox(
+                    height: 16,
+                  ),
+                  ButtonStyle1(
+                    isDisable: !state.value!.showGenerateButton,
+                    onPressAction: () async => await notifier.generateEcheck(formGlobalKey, context, widget.tripId),
+                    title: "Generate",
+                  ),
+                  const SizedBox(
+                    height: 12,
+                  ),
+                  ButtonStyle1(
+                    onPressAction: () => context.pop(),
+                    title: "Cancel",
+                  ),
+                ],
+              ),
             ),
           ),
         ),

@@ -35,13 +35,13 @@ class DocumentList extends StatelessWidget {
                     title: doc.documentType,
                     onPressed: () {
                       switch (args.documentType) {
-                        case DocumentType.tripDocuments:
+                        case DisplayDocumentType.tripDocuments:
                           context.pushNamed(RouteName.tripDocumentView.name,
                               extra: doc, pathParameters: {ParamType.tripId.name: args.tripId!});
                           break;
-                        case DocumentType.personalDocuments:
-                        case DocumentType.paystubs:
-                        case DocumentType.tripReport:
+                        case DisplayDocumentType.personalDocuments:
+                        case DisplayDocumentType.paystubs:
+                        case DisplayDocumentType.tripReport:
                           context.pushNamed(RouteName.documentView.name, extra: doc);
                           break;
                       }
