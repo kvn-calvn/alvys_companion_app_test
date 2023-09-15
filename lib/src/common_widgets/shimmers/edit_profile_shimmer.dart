@@ -1,7 +1,8 @@
-import 'shimmer_widget.dart';
-import '../../constants/color.dart';
 import 'package:fade_shimmer/fade_shimmer.dart';
 import 'package:flutter/material.dart';
+
+import '../../constants/color.dart';
+import 'shimmer_widget.dart';
 
 class EditProfileShimmer extends StatelessWidget {
   const EditProfileShimmer({super.key});

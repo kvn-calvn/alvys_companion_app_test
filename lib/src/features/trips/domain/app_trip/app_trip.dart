@@ -1,5 +1,6 @@
-import 'package:alvys3/src/utils/magic_strings.dart';
+import '../../../../utils/magic_strings.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../../documents/domain/app_document/app_document.dart';
 import 'payable_driver.dart';
@@ -88,4 +89,11 @@ class AppTrip with _$AppTrip {
         .removeNulls
         .toList();
   }
+
+  List<LatLng> get stopLocations =>
+      stops
+          ?.map((e) => LatLng(double.tryParse(e.latitude ?? '0') ?? 0, double.tryParse(e.longitude ?? '0') ?? 0))
+          .where((element) => element.latitude != 0 && element.longitude != 0)
+          .toList() ??
+      [];
 }

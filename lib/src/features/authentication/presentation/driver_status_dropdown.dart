@@ -1,6 +1,7 @@
-import 'package:alvys3/src/features/authentication/presentation/auth_provider_controller.dart';
-import 'package:alvys3/src/features/trips/presentation/controller/trip_page_controller.dart';
-import 'package:alvys3/src/utils/magic_strings.dart';
+import 'auth_provider_controller.dart';
+import '../../trips/presentation/controller/trip_page_controller.dart';
+import '../../tutorial/tutorial_controller.dart';
+import '../../../utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
@@ -14,6 +15,7 @@ class DriverStatusDropdown extends ConsumerWidget {
     var status = authState.value!.driverStatus;
     var tripController = ref.read(tripControllerProvider.notifier);
     return DropdownButtonHideUnderline(
+      key: ref.read(tutorialProvider).sleepDropdown,
       child: DropdownButton(
         value: status ?? DriverStatus.online,
         isDense: true,

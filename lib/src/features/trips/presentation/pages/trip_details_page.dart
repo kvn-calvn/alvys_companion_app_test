@@ -1,10 +1,10 @@
-import 'package:alvys3/src/features/authentication/presentation/auth_provider_controller.dart';
+import '../../../authentication/presentation/auth_provider_controller.dart';
+import '../../../google_maps_helper/presentation/trip_google_map.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../../../common_widgets/empty_view.dart';
 import '../../../../common_widgets/shimmers/trip_details_shimmer.dart';
@@ -93,8 +93,8 @@ class TripDetails extends ConsumerWidget {
     final tripDetailsState = ref.watch(tripControllerProvider);
     var trip = tripDetailsState.value!.tryGetTrip(tripId);
     // return TripDetailsShimmer();
-    if (trip == null) return const EmptyView(title: 'Trip Not found', description: 'Return to the previous page');
     if (tripDetailsState.isLoading) return const TripDetailsShimmer();
+    if (trip == null) return const EmptyView(title: 'Trip Not found', description: 'Return to the previous page');
 
     var equipment = "${trip.equipment} ${trip.equipmentLength}";
 
@@ -115,30 +115,7 @@ class TripDetails extends ConsumerWidget {
                 const SizedBox(
                   height: 20,
                 ),
-                const SizedBox(
-                  height: 200,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.all(
-                      Radius.circular(10.0),
-                    ),
-                    child: GoogleMap(
-                      initialCameraPosition: CameraPosition(
-                        tilt: 20,
-                        target: LatLng(37.6, -95.665),
-                        zoom: 21,
-                      ),
-                      mapToolbarEnabled: false,
-                      rotateGesturesEnabled: false,
-                      scrollGesturesEnabled: false,
-                      tiltGesturesEnabled: false,
-                      zoomGesturesEnabled: false,
-                      myLocationButtonEnabled: false,
-                      zoomControlsEnabled: false,
-                      compassEnabled: false,
-                      mapType: MapType.normal,
-                    ),
-                  ),
-                ),
+                TripGoogleMap(trip.id!),
                 Column(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.center,

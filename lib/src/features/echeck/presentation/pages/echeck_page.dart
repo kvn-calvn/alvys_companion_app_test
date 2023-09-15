@@ -1,4 +1,4 @@
-import 'package:alvys3/src/features/authentication/presentation/auth_provider_controller.dart';
+import '../../../authentication/presentation/auth_provider_controller.dart';
 
 import '../controller/echeck_page_controller.dart';
 import 'package:flutter/material.dart';

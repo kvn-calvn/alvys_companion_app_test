@@ -1,4 +1,4 @@
-import 'package:alvys3/src/features/authentication/domain/models/driver_asset/driver_asset.dart';
+import '../domain/models/driver_asset/driver_asset.dart';
 
 import '../domain/models/update_driver_status_dto/update_driver_status_dto.dart';
 import '../domain/models/update_user_dto/update_user_dto.dart';
@@ -17,7 +17,7 @@ abstract class AuthRepository<T> {
   Future<String> signInDriverByPhone(String phone);
   Future<DriverUser> getDriverUser(String companyCode, String id);
   Future<DriverUser> updateDriverUser<K>(String companyCode, UpdateUserDTO dto);
-  Future<DriverAsset> getDriverAsset<K>(String companyCode, String driverId);
+  Future<DriverAsset> getDriverAsset(String companyCode, String driverId);
   Future<void> updateDriverStatus(String companyCode, UpdateDriverStatusDTO dto);
 }
 
@@ -56,9 +56,10 @@ class AvysAuthRepository<T> implements AuthRepository<T> {
   }
 
   @override
-  Future<DriverAsset> getDriverAsset<K>(String companyCode, String driverId) async {
+  Future<DriverAsset> getDriverAsset(String companyCode, String driverId) async {
     await Helpers.setCompanyCode(companyCode);
-    var res = await httpClient.getData<K>(ApiRoutes.driverInfo);
+    print('${ApiRoutes.driverAsset(driverId)}+ $companyCode');
+    var res = await httpClient.getData<T>(ApiRoutes.driverAsset(driverId));
     return DriverAsset.fromJson(res.body.toDecodedJson);
   }
 

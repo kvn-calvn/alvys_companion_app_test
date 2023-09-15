@@ -1,3 +1,4 @@
+import '../features/tutorial/tutorial_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -26,6 +27,7 @@ class _MainBottomNavState extends ConsumerState<MainBottomNav> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      ref.read(tutorialProvider).startTutorial(context);
       await ref.read(websocketProvider).restartConnection();
     });
   }
@@ -53,17 +55,23 @@ class _MainBottomNavState extends ConsumerState<MainBottomNav> {
           //     context.goNamed(RouteName.settings.name);
           // }
         },
-        items: const [
+        items: [
           BottomNavigationBarItem(
-            icon: Icon(Alvys3Icons.homeIco),
+            icon: Icon(Alvys3Icons.tripIcon),
             label: 'Trips',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Symbols.person),
+            icon: Icon(
+              Symbols.person,
+              key: ref.read(tutorialProvider).profileButton,
+            ),
             label: 'Profile',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Symbols.settings),
+            icon: Icon(
+              Symbols.settings,
+              key: ref.read(tutorialProvider).settingsButton,
+            ),
             label: 'Settings',
           ),
         ],

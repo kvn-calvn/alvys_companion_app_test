@@ -25,7 +25,8 @@ enum RouteName {
   tripReportDocumentList,
   uploadTripReport,
   notifications,
-  emptyView
+  emptyView,
+  mapView,
 }
 
 enum TripFilterType { processing, delivered }
@@ -44,6 +45,13 @@ class DriverStatus {
       online = 'Online',
       offline = 'Offline';
   static const List<String> driverStatuses = [online, offline];
+  static String initStatus(String status) {
+    if (driverStatuses.contains(status)) {
+      return status;
+    } else {
+      return offline;
+    }
+  }
 }
 
 class UserPermissions {

@@ -1,4 +1,5 @@
-import 'package:alvys3/src/features/authentication/presentation/driver_status_dropdown.dart';
+import '../../../authentication/presentation/driver_status_dropdown.dart';
+import '../../../tutorial/tutorial_controller.dart';
 
 import '../../../../common_widgets/empty_view.dart';
 import '../../../../common_widgets/app_dialog.dart';
@@ -64,25 +65,33 @@ class _LoadListPageState extends ConsumerState<LoadListPage> with TickerProvider
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        leading: const DriverStatusDropdown(),
+        leadingWidth: 100,
         title: Text(
           'Trips',
           style: AlvysTheme.appbarTextStyle(context, true),
         ),
         actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 16.0),
-            child: Container(
-                //
-                padding: const EdgeInsets.symmetric(horizontal: 5),
-                /* decoration: BoxDecoration(
-                color: Colors.green.shade50,
-                border: Border.all(color: Colors.transparent),
-                borderRadius: BorderRadius.circular(10),
-              ),*/
-                child: const DriverStatusDropdown()),
-          ),
+          IconButton(
+              key: ref.read(tutorialProvider).refresh,
+              onPressed: () async {
+                await ref.read(tripControllerProvider.notifier).refreshTrips(true);
+              },
+              icon: const Icon(Icons.refresh))
+          // Padding(
+          //   padding: const EdgeInsets.only(right: 16.0),
+          //   child: Container(
+          //       //
+          //       padding: const EdgeInsets.symmetric(horizontal: 5),
+          //       /* decoration: BoxDecoration(
+          //       color: Colors.green.shade50,
+          //       border: Border.all(color: Colors.transparent),
+          //       borderRadius: BorderRadius.circular(10),
+          //     ),*/
+          //       child: const DriverStatusDropdown()),
+          // ),
         ],
-        centerTitle: false,
+        centerTitle: true,
         bottom: TabBar(
           controller: _tabController,
           labelStyle: Theme.of(context).textTheme.bodyLarge,

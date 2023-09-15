@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../google_address_autocomplete/domain/google_places_details_result.dart';
+import '../../google_maps_helper/domain/google_places_details_result.dart';
 
 final editProfileProvider =
     AutoDisposeAsyncNotifierProvider<EditProfileNotifier, UpdateUserProfileState>(EditProfileNotifier.new);

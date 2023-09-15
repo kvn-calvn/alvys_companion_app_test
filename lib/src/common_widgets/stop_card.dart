@@ -1,5 +1,5 @@
-import 'package:alvys3/src/features/authentication/presentation/auth_provider_controller.dart';
-import 'package:alvys3/src/features/echeck/presentation/pages/generate_echeck.dart';
+import '../features/authentication/presentation/auth_provider_controller.dart';
+import '../features/echeck/presentation/pages/generate_echeck.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

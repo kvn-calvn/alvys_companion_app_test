@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:alvys3/src/utils/provider_args_saver.dart';
+import '../../../utils/provider_args_saver.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_genius_scan/flutter_genius_scan.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

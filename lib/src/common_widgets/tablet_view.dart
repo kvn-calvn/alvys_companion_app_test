@@ -50,7 +50,7 @@ class _TabletLeftNavState extends State<TabletLeftNav> {
         },
         items: const [
           BottomNavigationBarItem(
-            icon: Icon(Alvys3Icons.homeIco),
+            icon: Icon(Alvys3Icons.tripIcon),
             label: 'Trips',
           ),
           BottomNavigationBarItem(

@@ -136,16 +136,16 @@ class AlvysHttpClient {
   }
 
   Future<Response> _handleResponse<T>(Response response) {
-    var body = response.statusCode != 200 ? jsonDecode(response.body) : {};
+    print(response.statusCode);
     switch (response.statusCode) {
       case (400):
-        return Future.error(AlvysClientException(body, T));
+        return Future.error(AlvysClientException(jsonDecode(response.body), T));
       case (404):
-        return Future.error(AlvysEntityNotFoundException(body, T));
+        return Future.error(AlvysEntityNotFoundException(jsonDecode(response.body), T));
       case (401):
         return Future.error(AlvysUnauthorizedException(T));
       case (504):
-        return Future.error(AlvysDependencyException(body, T));
+        return Future.error(AlvysDependencyException(jsonDecode(response.body), T));
       case 500:
         return Future.error(ApiServerException(T));
       default:

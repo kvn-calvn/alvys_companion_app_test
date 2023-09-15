@@ -2,7 +2,7 @@ import '../../../common_widgets/shimmers/edit_profile_shimmer.dart';
 import '../../../common_widgets/unfocus_widget.dart';
 import 'edit_profile_controller.dart';
 import 'user_details_page.dart';
-import '../../google_address_autocomplete/presentation/google_address_autocomplete.dart';
+import '../../google_maps_helper/presentation/google_address_autocomplete.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

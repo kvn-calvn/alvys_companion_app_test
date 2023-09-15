@@ -1,3 +1,4 @@
+import '../features/google_maps_helper/presentation/google_map_full_view.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
 import '../features/authentication/presentation/edit_profile.dart';
@@ -83,6 +84,7 @@ Provider<GoRouter> routerProvider = Provider(
         },
       ),
       StatefulShellRoute(
+          parentNavigatorKey: ref.read(globalErrorHandlerProvider).navKey,
           pageBuilder: (context, state, navigationShell) => NoTransitionPage(child: navigationShell),
           navigatorContainerBuilder: (context, navigationShell, children) => MainBottomNav(
                 navShell: navigationShell,
@@ -304,6 +306,9 @@ Provider<GoRouter> tabletRouteProvider = Provider((ref) {
       initialLocation:
           ref.read(authProvider).value!.driver == null ? RouteName.signIn.toRoute : RouteName.emptyView.toRoute,
       debugLogDiagnostics: false,
+      observers: [
+        FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance),
+      ],
       routes: [
         GoRoute(
           name: RouteName.landing.name,
@@ -342,6 +347,7 @@ Provider<GoRouter> tabletRouteProvider = Provider((ref) {
           },
         ),
         StatefulShellRoute(
+            parentNavigatorKey: ref.read(globalErrorHandlerProvider).navKey,
             pageBuilder: (context, state, navigationShell) => NoTransitionPage(child: navigationShell),
             navigatorContainerBuilder: (context, navigationShell, children) => TabletView(
                   navigationShell,

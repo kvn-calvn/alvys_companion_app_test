@@ -85,7 +85,8 @@ class TripController extends _$TripController implements IAppErrorHandler {
 
   AppTrip? getTrip(String tripID) => state.value!.getTrip(tripID);
 
-  Future<void> refreshTrips() async {
+  Future<void> refreshTrips([bool addLoading = false]) async {
+    if (addLoading) state = const AsyncLoading();
     final result = await tripRepo.getTrips<TripController>();
     await auth.refreshDriverUser();
     var dataToGet = result.toListNotNull();

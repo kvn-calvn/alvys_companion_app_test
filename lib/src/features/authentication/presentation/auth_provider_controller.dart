@@ -65,18 +65,19 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppError
     state = const AsyncValue.loading();
     var driverRes = await authRepo.verifyDriverCode(state.value!.phone, state.value!.verificationCode);
     var driverTenant = driverRes.userTenants.firstWhereOrNull((element) => element.companyOwnedAsset!);
-    String? driverStatus;
-    if (driverTenant != null) {
-      var driverAsset = await authRepo.getDriverAsset(driverTenant.companyCode!, driverTenant.assetId!);
-      await storage.write(key: StorageKey.driverData.name, value: driverAsset.status);
-      driverStatus = driverAsset.status;
-    }
-    state = AsyncValue.data(state.value!.copyWith(driver: driverRes, driverStatus: driverStatus));
     await storage.write(key: StorageKey.driverData.name, value: driverRes.toJson().toJsonEncodedString);
     await storage.write(
       key: StorageKey.driverToken.name,
       value: base64.encode(utf8.encode("${driverRes.userName}:${driverRes.appToken}")),
     );
+    String? driverStatus;
+    if (driverTenant != null) {
+      var driverAsset = await authRepo.getDriverAsset(driverTenant.companyCode!, driverTenant.assetId!);
+      await storage.write(
+          key: StorageKey.driverStatus.name, value: DriverStatus.initStatus(driverAsset.status).titleCase);
+      driverStatus = driverAsset.status;
+    }
+    state = AsyncValue.data(state.value!.copyWith(driver: driverRes, driverStatus: driverStatus?.titleCase));
     await FirebaseAnalytics.instance.setUserId(id: driverRes.phone);
     await FirebaseAnalytics.instance.setUserProperty(name: 'driver_name', value: driverRes.name);
     await FirebaseAnalytics.instance.setUserProperty(name: 'company_code', value: driverRes.name);
@@ -143,7 +144,7 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppError
   }
 
   Future<void> updateUserProfile<K>(UpdateUserDTO dto) async {
-    var res = await authRepo.updateDriverUser(getCompanyOwned.companyCode!, dto);
+    var res = await authRepo.updateDriverUser<K>(getCompanyOwned.companyCode!, dto);
     updateUser(res);
   }
 

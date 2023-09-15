@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +47,7 @@ Future<void> mainCommon() async {
     var status = await storage.read(key: StorageKey.driverStatus.name);
     container = ProviderContainer(
       overrides: [
-        authProvider.overrideWith(() => AuthProviderNotifier(driver: driverUser, status: status)),
+        authProvider.overrideWith(() => AuthProviderNotifier(driver: driverUser, status: status.titleCase)),
         themeHandlerProvider.overrideWith(() => ThemeHandlerNotifier(appThemeMode)),
       ],
     );
