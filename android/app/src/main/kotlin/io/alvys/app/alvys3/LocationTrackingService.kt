@@ -53,7 +53,7 @@ class LocationTrackingService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        //prepareForegroundNotification()
+        prepareForegroundNotification()
         startLocationUpdates()
         return START_STICKY
     }

@@ -11,18 +11,18 @@ import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class UploadOptions extends ConsumerWidget {
-  final DocumentType documentType;
+  final DisplayDocumentType documentType;
   final String? tripId;
   final bool mounted;
   const UploadOptions({required this.tripId, required this.documentType, required this.mounted, super.key});
   String get route {
     switch (documentType) {
-      case DocumentType.tripDocuments:
+      case DisplayDocumentType.tripDocuments:
         return RouteName.uploadTripDocument.name;
-      case DocumentType.personalDocuments:
+      case DisplayDocumentType.personalDocuments:
         return RouteName.uploadPersonalDocument.name;
-      case DocumentType.paystubs:
-      case DocumentType.tripReport:
+      case DisplayDocumentType.paystubs:
+      case DisplayDocumentType.tripReport:
         return RouteName.uploadTripReport.name;
     }
   }

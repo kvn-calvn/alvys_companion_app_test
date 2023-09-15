@@ -28,18 +28,25 @@ part 'trip_page_controller.g.dart';
 @riverpod
 class TripController extends _$TripController implements IAppErrorHandler {
   late TripRepository tripRepo;
-
+  late AuthProviderNotifier auth;
   @override
   FutureOr<TripListState> build() async {
     tripRepo = ref.read(tripRepoProvider);
+    auth = ref.read(authProvider.notifier);
     state = AsyncValue.data(TripListState());
     await getTrips();
 
-    if (state.value!.activeTrips.isNotEmpty) {
+    return state.value!;
+  }
+
+  Future<void> startLocationTracking() async {
+    var storage = const FlutterSecureStorage();
+    if (state.value!.activeTrips.isNotEmpty &&
+        (await storage.read(key: StorageKey.driverStatus.name) == DriverStatus.online)) {
       var trackingTrip = state.value!.activeTrips.firstWhereOrNull((e) => e.status == TripStatus.inTransit) ??
           state.value!.activeTrips.first;
-      var userState = ref.watch(authProvider);
-      var storage = const FlutterSecureStorage();
+      var userState = ref.read(authProvider);
+
       var authToken = await storage.read(key: StorageKey.driverToken.name);
       if (await Permission.location.isGranted) {
         PlatformChannel.startLocationTracking(
@@ -53,22 +60,34 @@ class TripController extends _$TripController implements IAppErrorHandler {
         );
       }
     } else {
+      PlatformChannel.stopLocationTracking();
       debugPrint("No trackable trips.");
     }
+  }
 
-    return state.value!;
+  Future<void> updateDriverStatus(String? status) async {
+    if (status != null) {
+      if (status == DriverStatus.online) {
+        startLocationTracking();
+      } else {
+        PlatformChannel.stopLocationTracking();
+      }
+      auth.updateDriverStatus(status);
+    }
   }
 
   Future<void> getTrips() async {
     state = const AsyncValue.loading();
     final result = await tripRepo.getTrips<TripController>();
     state = AsyncValue.data(state.value!.copyWith(trips: result));
+    await startLocationTracking();
   }
 
   AppTrip? getTrip(String tripID) => state.value!.getTrip(tripID);
 
   Future<void> refreshTrips() async {
     final result = await tripRepo.getTrips<TripController>();
+    await auth.refreshDriverUser();
     var dataToGet = result.toListNotNull();
     state = AsyncValue.data(state.value!.copyWith(trips: dataToGet));
   }
@@ -81,7 +100,7 @@ class TripController extends _$TripController implements IAppErrorHandler {
         trips[index] = trip;
         state = AsyncValue.data(state.value!.copyWith(trips: trips));
       } else {
-        var user = ref.read(authProvider.notifier).driver;
+        var user = auth.driver;
         if (trip.drivers!.removeNulls.contains(user?.phone)) {
           trips.add(trip);
           state = AsyncValue.data(state.value!.copyWith(trips: trips));

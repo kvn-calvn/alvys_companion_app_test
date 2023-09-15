@@ -1,3 +1,5 @@
+import 'package:alvys3/src/features/authentication/presentation/auth_provider_controller.dart';
+import 'package:alvys3/src/features/echeck/presentation/pages/generate_echeck.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -20,6 +22,7 @@ class StopCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var tripNotifier = ref.read(tripControllerProvider.notifier);
     var tripState = ref.read(tripControllerProvider);
+    var authState = ref.watch(authProvider);
     return LayoutBuilder(builder: (context, constraints) {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -108,7 +111,10 @@ class StopCard extends ConsumerWidget {
                             ),
                       const SizedBox(width: 5),
                       ButtonStyle2(
-                        onPressAction: () => {debugPrint("")},
+                        onPressAction:
+                            authState.value!.shouldShowEcheckButton(tripState.value!.getTrip(tripId).companyCode!)
+                                ? () => showGenerateEcheckDialog(context, tripId)
+                                : null,
                         title: "E-Check",
                         isLoading: false,
                       ),

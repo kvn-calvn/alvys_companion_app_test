@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../common_widgets/large_nav_button.dart';
-import '../../../common_widgets/profile_nav_button.dart';
 import '../../../utils/magic_strings.dart';
 import 'auth_provider_controller.dart';
 
@@ -45,38 +44,42 @@ class ProfileList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var userState = ref.watch(authProvider);
-    return ListView(
-      scrollDirection: Axis.vertical,
-      children: [
-        const SizedBox(
-          height: 10,
-        ),
-        ProfileNavButton(
-          title: userState.value!.driver!.name!,
-          profileImageUrl: 'https://i.pravatar.cc/300',
-          onPressed: () {
-            context.goNamed(RouteName.userDetails.name);
-          },
-        ),
-        LargeNavButton(
-          title: "My Documents",
-          onPressed: () {
-            context.goNamed(RouteName.personalDocumentsList.name);
-          },
-        ),
-        LargeNavButton(
-          title: "Paystubs",
-          onPressed: () {
-            context.goNamed(RouteName.paystubs.name);
-          },
-        ),
-        LargeNavButton(
-          title: "Trip Report",
-          onPressed: () {
-            context.goNamed(RouteName.tripReportDocumentList.name);
-          },
-        ),
-      ],
+    var userNotifier = ref.watch(authProvider.notifier);
+    return RefreshIndicator.adaptive(
+      onRefresh: userNotifier.refreshDriverUser,
+      child: ListView(
+        scrollDirection: Axis.vertical,
+        children: [
+          const SizedBox(
+            height: 10,
+          ),
+          LargeNavButton(
+            title: userState.value!.driver!.name!,
+            padding: 24,
+            onPressed: () {
+              context.goNamed(RouteName.userDetails.name);
+            },
+          ),
+          LargeNavButton(
+            title: "My Documents",
+            onPressed: () {
+              context.goNamed(RouteName.personalDocumentsList.name);
+            },
+          ),
+          LargeNavButton(
+            title: "Paystubs",
+            onPressed: () {
+              context.goNamed(RouteName.paystubs.name);
+            },
+          ),
+          LargeNavButton(
+            title: "Trip Report",
+            onPressed: () {
+              context.goNamed(RouteName.tripReportDocumentList.name);
+            },
+          ),
+        ],
+      ),
     );
   }
 }

@@ -7,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../data/repositories/documents_repository.dart';
 
 class DocumentsArgs {
-  final DocumentType documentType;
+  final DisplayDocumentType documentType;
   final String? tripId;
 
   DocumentsArgs(this.documentType, this.tripId);
@@ -34,18 +34,18 @@ class DocumentsNotifier extends AutoDisposeFamilyAsyncNotifier<DocumentState, Do
 
   Future<void> getDocuments() async {
     switch (arg.documentType) {
-      case DocumentType.tripDocuments:
+      case DisplayDocumentType.tripDocuments:
         break;
-      case DocumentType.personalDocuments:
+      case DisplayDocumentType.personalDocuments:
         var res = await docRepo.getPersonalDocs(auth.driver!);
         state = AsyncValue.data(state.value!.copyWith(documentList: res));
         break;
-      case DocumentType.paystubs:
+      case DisplayDocumentType.paystubs:
         await getPaystubs();
         state = AsyncValue.data(state.value!.copyWith(canLoadMore: state.value!.documentList.length == top));
 
         break;
-      case DocumentType.tripReport:
+      case DisplayDocumentType.tripReport:
         var res = await docRepo.getTripReportDocs(auth.getCompanyOwned.companyCode!, auth.driver!);
         state = AsyncValue.data(state.value!.copyWith(documentList: res));
         break;
@@ -53,29 +53,35 @@ class DocumentsNotifier extends AutoDisposeFamilyAsyncNotifier<DocumentState, Do
   }
 
   Future<void> getPaystubs() async {
-    var res = await docRepo.getPaystubs(
-      auth.getCompanyOwned.companyCode!,
-      auth.driver!,
-      top = top,
-    );
-    state = AsyncValue.data(state.value!.copyWith(documentList: res));
+    if (auth.state.value!.canViewPaystubs) {
+      var res = await docRepo.getPaystubs(
+        auth.getCompanyOwned.companyCode!,
+        auth.driver!,
+        top = top,
+      );
+      state = AsyncValue.data(state.value!.copyWith(documentList: res));
+    } else {
+      state = AsyncValue.data(state.value!.copyWith(documentList: []));
+    }
   }
 
   String get pageTitle {
     switch (arg.documentType) {
-      case DocumentType.tripDocuments:
+      case DisplayDocumentType.tripDocuments:
         return 'Trip Documents';
-      case DocumentType.personalDocuments:
+      case DisplayDocumentType.personalDocuments:
         return 'Personal Documents';
-      case DocumentType.paystubs:
+      case DisplayDocumentType.paystubs:
         return 'Paystubs';
-      case DocumentType.tripReport:
+      case DisplayDocumentType.tripReport:
         return 'Trip Reports';
     }
   }
 
   Future<void> loadMorePaystubs() async {
-    if (arg.documentType == DocumentType.paystubs && state.value!.canLoadMore) {
+    if (arg.documentType == DisplayDocumentType.paystubs &&
+        state.value!.canLoadMore &&
+        auth.state.value!.canViewPaystubs) {
       top += 10;
       await getPaystubs();
       if (state.value!.documentList.length < top) {

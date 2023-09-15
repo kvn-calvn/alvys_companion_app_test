@@ -126,16 +126,16 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
 
   Future<void> _doUpload(File pdfFile) async {
     switch (arg.documentType) {
-      case DocumentType.tripDocuments:
+      case DisplayDocumentType.tripDocuments:
         var trip = trips.getTrip(arg.tripId!);
         await docRepo.uploadTripDocuments(trip!.companyCode!, state.documentType!, pdfFile, arg.tripId!);
         await trips.refreshCurrentTrip(arg.tripId!);
-      case DocumentType.personalDocuments:
+      case DisplayDocumentType.personalDocuments:
         await docRepo.uploadPersonalDocuments(state.documentType!, pdfFile);
         await docList.getDocuments();
-      case DocumentType.paystubs:
+      case DisplayDocumentType.paystubs:
         await Future.value(null);
-      case DocumentType.tripReport:
+      case DisplayDocumentType.tripReport:
         await docRepo.uploadTripReport(userData.getCompanyOwned.companyCode!, state.documentType!, pdfFile);
         await docList.getDocuments();
     }
@@ -145,7 +145,7 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
 
   List<UploadDocumentOptions> get dropDownOptions {
     switch (arg.documentType) {
-      case DocumentType.tripDocuments:
+      case DisplayDocumentType.tripDocuments:
         var trip = trips.getTrip(arg.tripId!);
         return UploadDocumentOptions.getOptionsList([
           'Unclassified',
@@ -159,11 +159,11 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
           'Other'
         ], trip?.companyCode);
 
-      case DocumentType.personalDocuments:
+      case DisplayDocumentType.personalDocuments:
         return UploadDocumentOptions.getOptionsList(["License", "Medical"], userData.getCompanyOwned.companyCode!);
-      case DocumentType.paystubs:
+      case DisplayDocumentType.paystubs:
         return [];
-      case DocumentType.tripReport:
+      case DisplayDocumentType.tripReport:
         return UploadDocumentOptions.getOptionsList(['Trip Report'], userData.getCompanyOwned.companyCode!);
     }
   }
@@ -193,7 +193,7 @@ class ScanningNotifier extends Notifier<bool> {
 
 class UploadDocumentArgs {
   final UploadType uploadType;
-  final DocumentType documentType;
+  final DisplayDocumentType documentType;
   final String? tripId;
   UploadDocumentArgs({this.tripId, required this.uploadType, required this.documentType});
 }

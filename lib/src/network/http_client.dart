@@ -127,7 +127,7 @@ class AlvysHttpClient {
       if (companyCode != null) telemetryClient.context.properties['tenantId'] = companyCode;
       telemetryClient.context.operation.id = const Uuid().v4(options: {'rng': UuidUtil.cryptoRNG});
       var res = await op();
-      return _handleResponse(res);
+      return _handleResponse<T>(res);
     } on SocketException {
       return Future.error(AlvysSocketException(T));
     } on TimeoutException {

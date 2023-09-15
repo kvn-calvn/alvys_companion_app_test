@@ -11,7 +11,7 @@ import '../../data/echeck_repository.dart';
 import '../../domain/echeck_state/echeck_state.dart';
 import '../../domain/generate_echeck/generate_echeck_request.dart';
 
-class EcheckPageController extends AutoDisposeAsyncNotifier<ECheckState> implements IAppErrorHandler {
+class EcheckPageController extends AsyncNotifier<ECheckState> implements IAppErrorHandler {
   late TripController tripController;
   late EcheckRepository repo;
   late AuthProviderNotifier auth;
@@ -23,11 +23,10 @@ class EcheckPageController extends AutoDisposeAsyncNotifier<ECheckState> impleme
 
   @override
   FutureOr<ECheckState> build() {
-    state = AsyncValue.data(ECheckState());
     tripController = ref.read(tripControllerProvider.notifier);
     repo = ref.read(eCheckRepoProvider);
     auth = ref.read(authProvider.notifier);
-    return state.value!;
+    return ECheckState();
   }
 
   List<DropdownMenuItem<String>> get reasonsDropdown => state.value!.reasons
@@ -37,8 +36,11 @@ class EcheckPageController extends AutoDisposeAsyncNotifier<ECheckState> impleme
           ))
       .toList();
 
-  void setReason(String? reason) {
-    state = AsyncValue.data(state.value!.copyWith(reason: reason));
+  void setReason(String? val) {
+    print(val);
+    print(state.value!.reason);
+    state = AsyncData(state.value!.copyWith(reason: val));
+    print(state.value!.reason);
     if (!state.value!.showStopDropdown) {
       setStopId(null);
     }
@@ -50,24 +52,41 @@ class EcheckPageController extends AutoDisposeAsyncNotifier<ECheckState> impleme
 
   void setAmount(String? amount) {
     state = AsyncValue.data(state.value!.copyWith(amount: double.tryParse(amount.currencyNumbersOnly) ?? 0));
+    print(state.value!.amount);
   }
 
-  Future<void> generateEcheck(String tripId) async {
-    state = const AsyncLoading();
-    var firstName = auth.driver!.name!.split('').first;
-    var lastName = auth.driver!.name!.split('').elementAtOrNull(1) ?? '';
-    var trip = tripController.getTrip(tripId)!;
-    var req = GenerateECheckRequest(
-        tripId: trip.id!,
-        reason: state.value!.reason!,
-        note: state.value!.note,
-        firstName: firstName,
-        lastName: lastName,
-        driverId: trip.driver1Id!,
-        amount: state.value!.amount);
-    var res = await repo.generateEcheck<EcheckPageController>(trip.companyCode!, req);
-    tripController.addEcheck(trip.id!, res);
-    state = AsyncData(state.value!);
+  void setNote(String? note) {
+    state = AsyncValue.data(state.value!.copyWith(note: note ?? ''));
+  }
+
+  String? validDouble(String? val) {
+    if (double.tryParse(val.currencyNumbersOnly) == null) {
+      return 'Enter a valid currency value';
+    }
+    return null;
+  }
+
+  Future<void> generateEcheck(GlobalKey<FormState> formKey, BuildContext context, String tripId) async {
+    if (formKey.currentState?.validate() ?? false) {
+      state = const AsyncLoading();
+      var firstName = auth.driver!.name!.split('').first;
+      var lastName = auth.driver!.name!.split('').elementAtOrNull(1) ?? '';
+      var trip = tripController.getTrip(tripId)!;
+      var req = GenerateECheckRequest(
+          tripId: trip.id!,
+          reason: state.value!.reason!,
+          note: state.value!.note,
+          firstName: firstName,
+          lastName: lastName,
+          driverId: trip.driver1Id!,
+          amount: state.value!.amount);
+      var res = await repo.generateEcheck<EcheckPageController>(trip.companyCode!, req);
+      tripController.addEcheck(trip.id!, res);
+      state = AsyncData(state.value!);
+      if (context.mounted) {
+        Navigator.of(context, rootNavigator: true).pop();
+      }
+    }
   }
 
   Future<void> cancelEcheck(String tripId, String echeckNumber) async {
@@ -88,5 +107,4 @@ class EcheckPageController extends AutoDisposeAsyncNotifier<ECheckState> impleme
   }
 }
 
-final echeckPageControllerProvider =
-    AutoDisposeAsyncNotifierProvider<EcheckPageController, ECheckState>(EcheckPageController.new);
+final echeckPageControllerProvider = AsyncNotifierProvider<EcheckPageController, ECheckState>(EcheckPageController.new);

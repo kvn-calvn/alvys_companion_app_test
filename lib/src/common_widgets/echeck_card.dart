@@ -1,3 +1,5 @@
+import 'package:alvys3/src/features/authentication/presentation/auth_provider_controller.dart';
+
 import '../features/echeck/presentation/controller/echeck_page_controller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -11,12 +13,14 @@ import 'package:google_fonts/google_fonts.dart';
 
 class EcheckCard extends ConsumerWidget {
   final ECheck eCheck;
-  final String tripId;
+  final String tripId, companyCode;
+
   final Function(String echeckNumber) cancelECheck;
-  const EcheckCard({Key? key, required this.eCheck, required this.cancelECheck, required this.tripId})
+  const EcheckCard(
+      {required this.companyCode, Key? key, required this.eCheck, required this.cancelECheck, required this.tripId})
       : super(key: key);
 
-  void showEcheckMenu(BuildContext context, String? checkNumber) {
+  void showEcheckMenu(BuildContext context, bool canCancelEcheck, String? checkNumber) {
     if (checkNumber == null) return;
     showCustomPopup<EcheckOption>(
       context: context,
@@ -53,7 +57,10 @@ class EcheckCard extends ConsumerWidget {
         }
       },
       items: (context) => EcheckOption.values
-          .map<AlvysPopupItem<EcheckOption>>((e) => AlvysPopupItem(value: e, child: Text(e.name.titleCase)))
+          .map<AlvysPopupItem<EcheckOption>?>((e) => !canCancelEcheck && e == EcheckOption.cancel
+              ? null
+              : AlvysPopupItem(value: e, child: Text(e.name.titleCase)))
+          .removeNulls
           .toList(),
     );
   }
@@ -61,6 +68,7 @@ class EcheckCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var state = ref.watch(echeckPageControllerProvider);
+    var authState = ref.watch(authProvider);
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 12),
       child: Material(
@@ -72,7 +80,8 @@ class EcheckCard extends ConsumerWidget {
             ? const Center(child: CircularProgressIndicator())
             : InkWell(
                 onLongPress: () {
-                  showEcheckMenu(context, state.value!.loadingEcheckNumber);
+                  showEcheckMenu(context, authState.value!.shouldShowCancelEcheckButton(companyCode),
+                      state.value!.loadingEcheckNumber);
                 },
                 child: Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
@@ -123,7 +132,8 @@ class EcheckCard extends ConsumerWidget {
                         constraints: const BoxConstraints(),
                         splashRadius: 24,
                         onPressed: () {
-                          showEcheckMenu(context, state.value!.loadingEcheckNumber);
+                          showEcheckMenu(context, authState.value!.shouldShowCancelEcheckButton(companyCode),
+                              state.value!.loadingEcheckNumber);
                         },
                         icon: const Icon(Icons.more_vert),
                       )

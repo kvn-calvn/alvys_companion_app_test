@@ -56,6 +56,7 @@ class AlvysTheme {
                 ),
           ),
         ),
+        chipTheme: ChipThemeData(backgroundColor: ColorManager.chipColor(brightness)),
         cardColor: ColorManager.cardColor(brightness),
         bottomNavigationBarTheme: BottomNavigationBarThemeData(
           backgroundColor: Colors.transparent,

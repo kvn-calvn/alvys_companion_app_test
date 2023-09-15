@@ -30,11 +30,31 @@ enum RouteName {
 
 enum TripFilterType { processing, delivered }
 
-enum DocumentType { tripDocuments, personalDocuments, paystubs, tripReport }
+enum DisplayDocumentType { tripDocuments, personalDocuments, paystubs, tripReport }
 
 enum Environment { dev, qa, sandbox }
 
-enum StorageKey { driverData, themeMode, driverToken, companyCode }
+enum StorageKey { driverData, themeMode, driverToken, companyCode, driverStatus }
+
+class DriverStatus {
+  static const String sleeping = 'Sleeping',
+      driving = 'Driving',
+      onDuty = 'On Duty',
+      offDuty = 'Off Duty',
+      online = 'Online',
+      offline = 'Offline';
+  static const List<String> driverStatuses = [online, offline];
+}
+
+class UserPermissions {
+  static const String generateEcheck = 'Comchek',
+      cancelEcheck = 'CancelComchek',
+      viewPaystubs = 'ViewAppPaystubs',
+      viewOOPRate = 'OOPRate',
+      viewPayableAmount = 'ViewPayableAmount',
+      viewCarrierRateConfirmation = 'ViewCarrierRateConfirmation',
+      viewCustomerRateConfirmation = 'ViewCustomerRateConfirmation';
+}
 
 enum EcheckOption { copy, cancel }
 
@@ -48,7 +68,16 @@ class DocumentTypes {
   static const String medical = 'Medical',
       tripReport = 'Trip Report',
       license = 'License',
-      driverLicense = 'DriverLicense';
+      driverLicense = 'DriverLicense',
+      carrierRateConfirmation = 'Carrier Rate Confirmation',
+      customerRateAndLoadConfirmation = 'Customer Rate and Load Confirmation',
+      customerRateConfirmation = 'Customer Rate Confirmation',
+      customerLoadConfirmation = 'Customer Load Confirmation';
+  static const List<String> customerConfirmationDocTypes = [
+    customerLoadConfirmation,
+    customerRateAndLoadConfirmation,
+    customerRateConfirmation
+  ];
 }
 
 class TripStatus {

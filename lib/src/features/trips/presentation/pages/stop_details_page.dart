@@ -66,6 +66,8 @@ class StopDetails extends ConsumerWidget {
     final stopDetailsState = ref.watch(tripControllerProvider);
     if (stopDetailsState.isLoading) return const StopDetailsShimmer();
     var currentStop = stopDetailsState.value!.tryGetStop(tripId, stopId);
+    var trip = stopDetailsState.value!.tryGetTrip(tripId);
+    if (trip == null) return const EmptyView(title: 'Trip Not found', description: 'Return to the previous page.');
     return RefreshIndicator(
       onRefresh: () async {
         await ref.read(tripControllerProvider.notifier).refreshCurrentTrip(tripId);

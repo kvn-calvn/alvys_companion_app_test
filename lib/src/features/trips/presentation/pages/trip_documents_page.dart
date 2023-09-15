@@ -1,3 +1,4 @@
+import 'package:alvys3/src/features/authentication/presentation/auth_provider_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -18,12 +19,15 @@ class TripDocuments extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var state = ref.watch(tripControllerProvider);
     var notifier = ref.read(tripControllerProvider.notifier);
+    var authState = ref.watch(authProvider);
+    var trip = state.value!.tryGetTrip(tripId);
+    if (trip == null) return const EmptyView(title: 'Trip Not found', description: 'Return to the previous page');
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           showCustomBottomSheet(
             context,
-            UploadOptions(documentType: DocumentType.tripDocuments, tripId: tripId, mounted: context.mounted),
+            UploadOptions(documentType: DisplayDocumentType.tripDocuments, tripId: tripId, mounted: context.mounted),
           );
         },
         child: const Icon(Icons.cloud_upload),
@@ -34,10 +38,13 @@ class TripDocuments extends ConsumerWidget {
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: RefreshIndicator(
                 onRefresh: () => notifier.refreshCurrentTrip(tripId),
-                child: state.value!.getTrip(tripId).attachments.isEmpty
+                child: trip.attachments.isEmpty
                     ? const EmptyView(title: 'No Load Documents', description: 'Uploaded documents will appear here.')
                     : ListView.builder(
-                        itemCount: state.value!.getTrip(tripId).attachments.length,
+                        itemCount: trip
+                            .getAttachments(authState.value!.shouldShowCustomerRateConfirmations(trip.companyCode!),
+                                authState.value!.shouldShowCarrierConfirmations(trip.companyCode!))
+                            .length,
                         itemBuilder: (context, index) {
                           var doc = state.value!.getTrip(tripId).attachments[index];
                           return LargeNavButton(
