@@ -60,9 +60,8 @@ import GoogleMaps
         }
         
         GMSServices.provideAPIKey("AIzaSyDe8oPVBFDy1cfY0D8yHw9DCr7TLUdxVHs")
-        GeneratedPluginRegistrant.register(with: self)
         FirebaseApp.configure()
-        
+        GeneratedPluginRegistrant.register(with: self)
         return super.application(application, didFinishLaunchingWithOptions: launchOptions)
     }
     
