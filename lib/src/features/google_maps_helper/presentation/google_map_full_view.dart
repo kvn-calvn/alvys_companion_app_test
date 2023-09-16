@@ -1,3 +1,5 @@
+import 'package:go_router/go_router.dart';
+
 import 'full_map_stop_card.dart';
 import 'map_controller.dart';
 import '../../../utils/tablet_utils.dart';
@@ -20,10 +22,23 @@ class FullScreenMap extends ConsumerWidget {
         children: [
           GoogleMap(
             onMapCreated: (controller) => mapNotifier.onMapCreated(controller, true),
+            mapType: mapState.value!.mapType,
             markers: mapState.value?.markers ?? {},
             polylines: mapState.value?.polyLines ?? {},
             initialCameraPosition: const CameraPosition(
               target: LatLng(37.0902, -95.7129),
+            ),
+          ),
+          Positioned(
+            top: 10,
+            left: 10,
+            child: SafeArea(
+              child: Column(
+                children: [
+                  MapButton(icon: Icons.adaptive.arrow_back, onTap: Navigator.of(context).pop),
+                  MapButton(icon: Icons.map, onTap: mapNotifier.setMapType),
+                ],
+              ),
             ),
           ),
           Positioned(
@@ -68,5 +83,23 @@ class _MapStopsViewState extends ConsumerState<MapStopsView> {
           var stop = widget.stops![index];
           return FullMapStopCard(stop);
         });
+  }
+}
+
+class MapButton extends StatelessWidget {
+  final IconData icon;
+  final void Function() onTap;
+
+  const MapButton({super.key, required this.icon, required this.onTap});
+
+  @override
+  Widget build(BuildContext context) {
+    return RawMaterialButton(
+        shape: const CircleBorder(),
+        constraints: const BoxConstraints(),
+        fillColor: Theme.of(context).cardColor,
+        onPressed: onTap,
+        padding: const EdgeInsets.all(8),
+        child: Icon(icon));
   }
 }

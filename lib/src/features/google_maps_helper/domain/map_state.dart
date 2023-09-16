@@ -8,5 +8,6 @@ class MapState with _$MapState {
   factory MapState({
     @Default({}) Set<Marker> markers,
     @Default({}) Set<Polyline> polyLines,
+    @Default(MapType.normal) MapType mapType,
   }) = _MapState;
 }

@@ -21,7 +21,7 @@ class MapNotifier extends AutoDisposeFamilyAsyncNotifier<MapState, String> {
     repo = ref.read(googleMapsRepo);
     trips = ref.watch(tripControllerProvider);
     state = AsyncData(MapState());
-    setMapStyle();
+
     await getPolyLinesAndMarkers();
     return state.value!;
   }
@@ -44,13 +44,14 @@ class MapNotifier extends AutoDisposeFamilyAsyncNotifier<MapState, String> {
 
   void onMapCreated(GoogleMapController controller, [bool fullMap = false]) {
     if (fullMap) {
-      // this.controller.complete(controller);
+      this.controller.complete(controller);
+      setMapStyle();
       controller.animateCamera(
           CameraUpdate.newCameraPosition(CameraPosition(target: state.value!.markers.first.position, zoom: 15)));
     } else {
       miniController.complete(controller);
+      setMiniMapStyle();
     }
-    setMapStyle();
   }
 
   Future<void> onStopChanged(int index) async {
@@ -61,31 +62,50 @@ class MapNotifier extends AutoDisposeFamilyAsyncNotifier<MapState, String> {
     }
   }
 
-  Future setMapStyle() async {
+  Future setMiniMapStyle() async {
     var mode = ref.read(themeHandlerProvider);
-    final controller = await this.controller.future;
     final miniController = await this.miniController.future;
     if (mode == ThemeMode.system) {
       final theme = WidgetsBinding.instance.platformDispatcher.platformBrightness;
 
       if (theme == Brightness.dark) {
-        controller.setMapStyle(darkMapStyle);
         miniController.setMapStyle(darkMapStyle);
       } else {
-        controller.setMapStyle(liteMapStyle);
-
         miniController.setMapStyle(liteMapStyle);
       }
     } else {
       if (mode == ThemeMode.dark) {
-        controller.setMapStyle(darkMapStyle);
         miniController.setMapStyle(darkMapStyle);
       } else {
-        controller.setMapStyle(liteMapStyle);
-
         miniController.setMapStyle(liteMapStyle);
       }
     }
+  }
+
+  Future setMapStyle() async {
+    var mode = ref.read(themeHandlerProvider);
+    final controller = await this.controller.future;
+    if (mode == ThemeMode.system) {
+      final theme = WidgetsBinding.instance.platformDispatcher.platformBrightness;
+
+      if (theme == Brightness.dark) {
+        controller.setMapStyle(darkMapStyle);
+      } else {
+        controller.setMapStyle(liteMapStyle);
+      }
+    } else {
+      if (mode == ThemeMode.dark) {
+        controller.setMapStyle(darkMapStyle);
+      } else {
+        controller.setMapStyle(liteMapStyle);
+      }
+    }
+  }
+
+  void setMapType() {
+    var mapType = state.value!.mapType;
+    state =
+        AsyncValue.data(state.value!.copyWith(mapType: mapType == MapType.hybrid ? MapType.normal : MapType.hybrid));
   }
 }
 
