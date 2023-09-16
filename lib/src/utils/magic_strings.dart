@@ -45,9 +45,9 @@ class DriverStatus {
       online = 'Online',
       offline = 'Offline';
   static const List<String> driverStatuses = [online, offline];
-  static String initStatus(String status) {
+  static String initStatus(String? status) {
     if (driverStatuses.contains(status)) {
-      return status;
+      return status!;
     } else {
       return offline;
     }

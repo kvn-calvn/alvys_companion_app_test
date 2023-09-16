@@ -43,7 +43,7 @@ class _TutorialState extends ConsumerState<Tutorial> with SingleTickerProviderSt
                 height: screenSize.height * 2),
             end: (widget.position.localToGlobal(Offset.zero) & widget.position.size))
         .animate(controller);
-    controller.forward().then((value) => setState(() => isCleaningUp = false));
+    controller.forward().then((value) => isCleaningUp = false);
   }
 
   @override
@@ -54,20 +54,17 @@ class _TutorialState extends ConsumerState<Tutorial> with SingleTickerProviderSt
 
   Future<void> cleanUp() async {
     if (isCleaningUp) return;
-    setState(() {
-      isCleaningUp = true;
-    });
+    isCleaningUp = true;
+
     await controller.fling(velocity: -2);
     ref.read(tutorialProvider).entry?.remove();
-    setState(() {
-      isCleaningUp = false;
-    });
+    isCleaningUp = false;
   }
 
   @override
   Widget build(BuildContext context) {
     return Theme(
-      data: ThemeData.dark(),
+      data: Theme.of(context).brightness.isLight ? ThemeData.dark() : ThemeData.light(),
       child: Scaffold(
         backgroundColor: Colors.transparent,
         body: AnimatedBuilder(

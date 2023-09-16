@@ -1,4 +1,3 @@
-import '../features/google_maps_helper/presentation/google_map_full_view.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
 import '../features/authentication/presentation/edit_profile.dart';

@@ -41,8 +41,8 @@ class TripController extends _$TripController implements IAppErrorHandler {
 
   Future<void> startLocationTracking() async {
     var storage = const FlutterSecureStorage();
-    if (state.value!.activeTrips.isNotEmpty &&
-        (await storage.read(key: StorageKey.driverStatus.name) == DriverStatus.online)) {
+    var status = await storage.read(key: StorageKey.driverStatus.name);
+    if (state.value!.activeTrips.isNotEmpty && (status == DriverStatus.online || status == null)) {
       var trackingTrip = state.value!.activeTrips.firstWhereOrNull((e) => e.status == TripStatus.inTransit) ??
           state.value!.activeTrips.first;
       var userState = ref.read(authProvider);

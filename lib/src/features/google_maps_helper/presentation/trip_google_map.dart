@@ -4,14 +4,38 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class TripGoogleMap extends ConsumerWidget {
+class TripGoogleMap extends ConsumerStatefulWidget {
   final String tripId;
   const TripGoogleMap(this.tripId, {super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    var mapState = ref.watch(mapProvider.call(tripId));
-    var mapNotifier = ref.read(mapProvider.call(tripId).notifier);
+  ConsumerState<ConsumerStatefulWidget> createState() => _TripGoogleMapState();
+}
+
+class _TripGoogleMapState extends ConsumerState<TripGoogleMap> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangePlatformBrightness() {
+    super.didChangePlatformBrightness();
+    var mapNotifier = ref.read(mapProvider.call(widget.tripId).notifier);
+    mapNotifier.setMapStyle();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var mapState = ref.watch(mapProvider.call(widget.tripId));
+    var mapNotifier = ref.read(mapProvider.call(widget.tripId).notifier);
     return SizedBox(
       height: 200,
       child: ClipRRect(
@@ -22,7 +46,7 @@ class TripGoogleMap extends ConsumerWidget {
           onTap: (argument) {
             if (!mapState.isLoading) {
               Navigator.of(context, rootNavigator: true)
-                  .push(MaterialPageRoute(builder: (context) => FullScreenMap(tripId)));
+                  .push(MaterialPageRoute(builder: (context) => FullScreenMap(widget.tripId)));
             }
           },
           onMapCreated: (controller) => mapNotifier.onMapCreated(controller, false),

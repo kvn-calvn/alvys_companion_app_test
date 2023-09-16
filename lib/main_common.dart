@@ -47,7 +47,8 @@ Future<void> mainCommon() async {
     var status = await storage.read(key: StorageKey.driverStatus.name);
     container = ProviderContainer(
       overrides: [
-        authProvider.overrideWith(() => AuthProviderNotifier(driver: driverUser, status: status.titleCase)),
+        authProvider.overrideWith(
+            () => AuthProviderNotifier(driver: driverUser, status: status?.titleCase ?? DriverStatus.online)),
         themeHandlerProvider.overrideWith(() => ThemeHandlerNotifier(appThemeMode)),
       ],
     );

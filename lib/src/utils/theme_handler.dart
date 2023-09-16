@@ -23,7 +23,7 @@ class ThemeHandlerNotifier extends Notifier<ThemeMode> {
 
   Future<void> saveToStorage() async {
     var storage = const FlutterSecureStorage();
-    storage.write(key: StorageKey.themeMode.name, value: state.name);
+    await storage.write(key: StorageKey.themeMode.name, value: state.name);
   }
 }
 

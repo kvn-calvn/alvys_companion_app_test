@@ -1,5 +1,9 @@
 import 'dart:async';
 
+import 'package:alvys3/src/utils/map_styles.dart';
+import 'package:alvys3/src/utils/theme_handler.dart';
+import 'package:flutter/material.dart';
+
 import '../data/google_maps_repository.dart';
 import '../domain/map_state.dart';
 import '../../trips/domain/app_trip/trip_list_state.dart';
@@ -17,6 +21,7 @@ class MapNotifier extends AutoDisposeFamilyAsyncNotifier<MapState, String> {
     repo = ref.read(googleMapsRepo);
     trips = ref.watch(tripControllerProvider);
     state = AsyncData(MapState());
+    setMapStyle();
     await getPolyLinesAndMarkers();
     return state.value!;
   }
@@ -31,9 +36,6 @@ class MapNotifier extends AutoDisposeFamilyAsyncNotifier<MapState, String> {
       state = AsyncData(state.value!.copyWith(markers: markers));
       var polylines = await repo.getPolyLines(trip.stopLocations);
       state = AsyncData(MapState(markers: markers, polyLines: polylines.values.toSet()));
-      GoogleMapController controller = await this.controller.future;
-      controller.animateCamera(
-          CameraUpdate.newLatLngBounds(repo.boundsFromLatLngList(markers.map((e) => e.position).toList()), 72));
       GoogleMapController miniController = await this.miniController.future;
       miniController.animateCamera(
           CameraUpdate.newLatLngBounds(repo.boundsFromLatLngList(markers.map((e) => e.position).toList()), 72));
@@ -42,12 +44,13 @@ class MapNotifier extends AutoDisposeFamilyAsyncNotifier<MapState, String> {
 
   void onMapCreated(GoogleMapController controller, [bool fullMap = false]) {
     if (fullMap) {
-      this.controller.complete(controller);
+      // this.controller.complete(controller);
       controller.animateCamera(
           CameraUpdate.newCameraPosition(CameraPosition(target: state.value!.markers.first.position, zoom: 15)));
     } else {
       miniController.complete(controller);
     }
+    setMapStyle();
   }
 
   Future<void> onStopChanged(int index) async {
@@ -55,6 +58,33 @@ class MapNotifier extends AutoDisposeFamilyAsyncNotifier<MapState, String> {
     if (pos != null) {
       GoogleMapController controller = await this.controller.future;
       controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: pos.position, zoom: 15)));
+    }
+  }
+
+  Future setMapStyle() async {
+    var mode = ref.read(themeHandlerProvider);
+    final controller = await this.controller.future;
+    final miniController = await this.miniController.future;
+    if (mode == ThemeMode.system) {
+      final theme = WidgetsBinding.instance.platformDispatcher.platformBrightness;
+
+      if (theme == Brightness.dark) {
+        controller.setMapStyle(darkMapStyle);
+        miniController.setMapStyle(darkMapStyle);
+      } else {
+        controller.setMapStyle(liteMapStyle);
+
+        miniController.setMapStyle(liteMapStyle);
+      }
+    } else {
+      if (mode == ThemeMode.dark) {
+        controller.setMapStyle(darkMapStyle);
+        miniController.setMapStyle(darkMapStyle);
+      } else {
+        controller.setMapStyle(liteMapStyle);
+
+        miniController.setMapStyle(liteMapStyle);
+      }
     }
   }
 }

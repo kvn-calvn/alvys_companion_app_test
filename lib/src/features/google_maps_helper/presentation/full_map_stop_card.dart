@@ -48,8 +48,6 @@ class FullMapStopCard extends ConsumerWidget {
                         '${stop.address?.city ?? ''} ${stop.address?.state ?? ''} ${stop.address?.zip ?? ''}',
                         style: Theme.of(context).textTheme.bodyMedium,
                       ),
-                      Text(DateFormat("MMM dd, yyyy @ hh:mm").formatNullDate(stop.stopDate),
-                          style: Theme.of(context).textTheme.bodySmall),
                     ],
                   ),
                 ),
