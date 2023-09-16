@@ -29,7 +29,7 @@ class _TripGoogleMapState extends ConsumerState<TripGoogleMap> with WidgetsBindi
   void didChangePlatformBrightness() {
     super.didChangePlatformBrightness();
     var mapNotifier = ref.read(mapProvider.call(widget.tripId).notifier);
-    mapNotifier.setMapStyle();
+    mapNotifier.setMapStyle().then((value) => mapNotifier.setMiniMapStyle());
   }
 
   @override
