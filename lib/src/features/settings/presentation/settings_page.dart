@@ -26,7 +26,7 @@ class _SettingsPageState extends State<SettingsPage> {
         automaticallyImplyLeading: false,
         title: Text(
           'Settings',
-          style: AlvysTheme.appbarTextStyle(context, true),
+          style: AlvysTheme.appbarTextStyle(context, false),
         ),
         centerTitle: false,
         elevation: 0,

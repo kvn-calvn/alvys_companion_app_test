@@ -56,7 +56,7 @@ class _MainBottomNavState extends ConsumerState<MainBottomNav> {
           // }
         },
         items: [
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Alvys3Icons.tripIcon),
             label: 'Trips',
           ),

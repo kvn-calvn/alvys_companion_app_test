@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -11,7 +12,8 @@ import '../../data/echeck_repository.dart';
 import '../../domain/echeck_state/echeck_state.dart';
 import '../../domain/generate_echeck/generate_echeck_request.dart';
 
-class EcheckPageController extends AsyncNotifier<ECheckState> implements IAppErrorHandler {
+class EcheckPageController extends AsyncNotifier<ECheckState>
+    implements IAppErrorHandler {
   late TripController tripController;
   late EcheckRepository repo;
   late AuthProviderNotifier auth;
@@ -37,10 +39,16 @@ class EcheckPageController extends AsyncNotifier<ECheckState> implements IAppErr
       .toList();
 
   void setReason(String? val) {
-    print(val);
-    print(state.value!.reason);
+    if (kDebugMode) {
+      print(val);
+    }
+    if (kDebugMode) {
+      print(state.value!.reason);
+    }
     state = AsyncData(state.value!.copyWith(reason: val));
-    print(state.value!.reason);
+    if (kDebugMode) {
+      print(state.value!.reason);
+    }
     if (!state.value!.showStopDropdown) {
       setStopId(null);
     }
@@ -51,8 +59,8 @@ class EcheckPageController extends AsyncNotifier<ECheckState> implements IAppErr
   }
 
   void setAmount(String? amount) {
-    state = AsyncValue.data(state.value!.copyWith(amount: double.tryParse(amount.currencyNumbersOnly) ?? 0));
-    print(state.value!.amount);
+    state = AsyncValue.data(state.value!
+        .copyWith(amount: double.tryParse(amount.currencyNumbersOnly) ?? 0));
   }
 
   void setNote(String? note) {
@@ -66,7 +74,8 @@ class EcheckPageController extends AsyncNotifier<ECheckState> implements IAppErr
     return null;
   }
 
-  Future<void> generateEcheck(GlobalKey<FormState> formKey, BuildContext context, String tripId) async {
+  Future<void> generateEcheck(
+      GlobalKey<FormState> formKey, BuildContext context, String tripId) async {
     if (formKey.currentState?.validate() ?? false) {
       state = const AsyncLoading();
       var firstName = auth.driver!.name!.split('').first;
@@ -80,7 +89,8 @@ class EcheckPageController extends AsyncNotifier<ECheckState> implements IAppErr
           lastName: lastName,
           driverId: trip.driver1Id!,
           amount: state.value!.amount);
-      var res = await repo.generateEcheck<EcheckPageController>(trip.companyCode!, req);
+      var res = await repo.generateEcheck<EcheckPageController>(
+          trip.companyCode!, req);
       tripController.addEcheck(trip.id!, res);
       state = AsyncData(state.value!);
       if (context.mounted) {
@@ -107,4 +117,6 @@ class EcheckPageController extends AsyncNotifier<ECheckState> implements IAppErr
   }
 }
 
-final echeckPageControllerProvider = AsyncNotifierProvider<EcheckPageController, ECheckState>(EcheckPageController.new);
+final echeckPageControllerProvider =
+    AsyncNotifierProvider<EcheckPageController, ECheckState>(
+        EcheckPageController.new);

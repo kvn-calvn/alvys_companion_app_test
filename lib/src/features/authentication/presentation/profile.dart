@@ -22,7 +22,7 @@ class _SettingsPageState extends State<ProfilePage> {
         automaticallyImplyLeading: false,
         title: Text(
           'Profile',
-          style: AlvysTheme.appbarTextStyle(context, true),
+          style: AlvysTheme.appbarTextStyle(context, false),
         ),
         centerTitle: false,
         elevation: 0,
@@ -61,7 +61,7 @@ class ProfileList extends ConsumerWidget {
             },
           ),
           LargeNavButton(
-            title: "My Documents",
+            title: "Personal Documents",
             onPressed: () {
               context.goNamed(RouteName.personalDocumentsList.name);
             },

@@ -23,7 +23,8 @@ class LoadDetailsPage extends ConsumerStatefulWidget {
   ConsumerState<LoadDetailsPage> createState() => _LoadDetailsPageState();
 }
 
-class _LoadDetailsPageState extends ConsumerState<LoadDetailsPage> with TickerProviderStateMixin {
+class _LoadDetailsPageState extends ConsumerState<LoadDetailsPage>
+    with TickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -94,126 +95,145 @@ class TripDetails extends ConsumerWidget {
     var trip = tripDetailsState.value!.tryGetTrip(tripId);
     // return TripDetailsShimmer();
     if (tripDetailsState.isLoading) return const TripDetailsShimmer();
-    if (trip == null) return const EmptyView(title: 'Trip Not found', description: 'Return to the previous page');
+    if (trip == null) {
+      return const EmptyView(
+          title: 'Trip Not found', description: 'Return to the previous page');
+    }
 
     var equipment = "${trip.equipment} ${trip.equipmentLength}";
 
     return RefreshIndicator(
       onRefresh: () async {
-        await ref.read(tripControllerProvider.notifier).refreshCurrentTrip(tripId);
+        await ref
+            .read(tripControllerProvider.notifier)
+            .refreshCurrentTrip(tripId);
       },
-      child: ListView(scrollDirection: Axis.vertical, padding: const EdgeInsets.symmetric(horizontal: 16.0), children: [
-        Column(
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.start,
+      child: ListView(
+          scrollDirection: Axis.vertical,
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
           children: [
             Column(
               mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                const SizedBox(
-                  height: 20,
-                ),
-                TripGoogleMap(trip.id!),
                 Column(
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Padding(
-                      padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 15, 0),
-                      child: Wrap(
-                        spacing: 5,
-                        runSpacing: 5,
-                        children: [
-                          if (equipment.isNotNullOrEmpty) ...[
-                            Chip(
-                              label: Text(
-                                '${trip.equipment!} ${trip.equipmentLength ?? ''}',
-                                style: Theme.of(context).textTheme.bodyMedium!,
-                              ),
-                            ),
-                          ],
-                          if (trip.totalWeight != null) ...[
-                            Chip(
-                              label: Text(
-                                '${NumberFormat.decimalPattern().format(trip.totalWeight)} lbs',
-                                style: Theme.of(context).textTheme.bodyMedium!,
-                              ),
-                            ),
-                          ],
-                          if (trip.temperature != null) ...[
-                            Chip(
-                              label: Text(
-                                '${trip.temperature!.toStringAsFixed(1)} °f',
-                                style: Theme.of(context).textTheme.bodyMedium!,
-                              ),
-                            ),
-                          ],
-                          if (trip.totalMiles != null) ...[
-                            Chip(
-                              label: Text(
-                                '${NumberFormat.decimalPattern().format(trip.totalMiles)} mi',
-                                style: Theme.of(context).textTheme.bodyMedium!,
-                              ),
-                            ),
-                          ],
-                          if (trip.trailerNum.isNotNullOrEmpty) ...[
-                            Chip(
-                              label: Text(
-                                'Trailer ${trip.trailerNum}',
-                                style: Theme.of(context).textTheme.bodyMedium!,
-                              ),
-                            ),
-                          ],
-                          if (trip.driverPayable(authState.value!.currentUserTenant(trip.companyCode!).assetId!) !=
-                                  null &&
-                              authState.value!.shouldShowPayableAmount(trip.companyCode!)) ...[
-                            Chip(
-                              label: Text(
-                                'Driver Payable ${NumberFormat.simpleCurrency().format(trip.driverPayable(authState.value!.currentUserTenant(trip.companyCode!).assetId!))}',
-                                style: Theme.of(context).textTheme.bodyMedium!,
-                              ),
-                            ),
-                          ],
-                        ],
-                      ),
+                    const SizedBox(
+                      height: 20,
                     ),
-                  ],
-                ),
-                if (trip.stops.isNullOrEmpty) ...{
-                  Center(
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
+                    TripGoogleMap(trip.id!),
+                    Column(
+                      mainAxisSize: MainAxisSize.max,
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        const SizedBox(
-                          height: 100,
+                        Padding(
+                          padding: const EdgeInsetsDirectional.fromSTEB(
+                              0, 10, 15, 0),
+                          child: Wrap(
+                            spacing: 5,
+                            runSpacing: 5,
+                            children: [
+                              if (equipment.isNotNullOrEmpty) ...[
+                                Chip(
+                                  label: Text(
+                                    '${trip.equipment!} ${trip.equipmentLength ?? ''}',
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium!,
+                                  ),
+                                ),
+                              ],
+                              if (trip.totalWeight != null) ...[
+                                Chip(
+                                  label: Text(
+                                    '${NumberFormat.decimalPattern().format(trip.totalWeight)} lbs',
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium!,
+                                  ),
+                                ),
+                              ],
+                              if (trip.temperature != null) ...[
+                                Chip(
+                                  label: Text(
+                                    '${trip.temperature!.toStringAsFixed(1)} °f',
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium!,
+                                  ),
+                                ),
+                              ],
+                              if (trip.totalMiles != null) ...[
+                                Chip(
+                                  label: Text(
+                                    '${NumberFormat.decimalPattern().format(trip.totalMiles)} mi',
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium!,
+                                  ),
+                                ),
+                              ],
+                              if (trip.trailerNum.isNotNullOrEmpty) ...[
+                                Chip(
+                                  label: Text(
+                                    'Trailer ${trip.trailerNum}',
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium!,
+                                  ),
+                                ),
+                              ],
+                              if (trip.driverPayable(authState.value!
+                                          .currentUserTenant(trip.companyCode!)
+                                          .assetId!) !=
+                                      null &&
+                                  authState.value!.shouldShowPayableAmount(
+                                      trip.companyCode!)) ...[
+                                Chip(
+                                  label: Text(
+                                    'Driver Payable ${NumberFormat.simpleCurrency().format(trip.driverPayable(authState.value!.currentUserTenant(trip.companyCode!).assetId!))}',
+                                    style:
+                                        Theme.of(context).textTheme.bodyMedium!,
+                                  ),
+                                ),
+                              ],
+                            ],
+                          ),
                         ),
-                        Text(
-                          "No Stops",
-                          style: Theme.of(context).textTheme.bodyLarge,
-                        ),
-                        Text("There are no stops on this trip.", style: Theme.of(context).textTheme.bodyMedium)
                       ],
                     ),
-                  ),
-                } else ...{
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      ...trip.stops!.map((stop) => StopCard(
-                            stop: stop,
-                            tripId: trip.id!,
-                            canCheckInOutStopId: trip.canCheckInOutStopId,
-                          ))
-                    ],
-                  ),
-                }
+                    if (trip.stops.isNullOrEmpty) ...{
+                      Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const SizedBox(
+                              height: 100,
+                            ),
+                            Text(
+                              "No Stops",
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
+                            Text("There are no stops on this trip.",
+                                style: Theme.of(context).textTheme.bodyMedium)
+                          ],
+                        ),
+                      ),
+                    } else ...{
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          ...trip.stops!.map((stop) => StopCard(
+                                stop: stop,
+                                tripId: trip.id!,
+                                canCheckInOutStopId: trip.canCheckInOutStopId,
+                              ))
+                        ],
+                      ),
+                    }
+                  ],
+                ),
               ],
-            ),
-          ],
-        )
-      ]),
+            )
+          ]),
     );
   }
 }
