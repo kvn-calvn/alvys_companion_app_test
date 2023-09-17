@@ -64,49 +64,54 @@ class _TutorialState extends ConsumerState<Tutorial> with SingleTickerProviderSt
         body: AnimatedBuilder(
           animation: controller.view,
           builder: (context, child) {
-            return GestureDetector(
-              onTap: () async {
-                if (isCleaningUp) return;
-                await cleanUp();
-                widget.skip();
-              },
-              child: Stack(
-                children: [
-                  ClipPath(
-                    clipper: TutorialClipper(widget.data, clipAnimation.map((e) => e.value ?? Rect.zero).toList()),
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: !Theme.of(context).brightness.isLight
-                            ? const Color.fromRGBO(0, 0, 0, 0.8)
-                            : const Color.fromRGBO(255, 255, 255, 0.8),
-                      ),
+            return Stack(
+              children: [
+                ClipPath(
+                  clipper: TutorialClipper(widget.data, clipAnimation.map((e) => e.value ?? Rect.zero).toList()),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: !Theme.of(context).brightness.isLight
+                          ? const Color.fromRGBO(0, 0, 0, 0.8)
+                          : const Color.fromRGBO(255, 255, 255, 0.8),
                     ),
                   ),
-                  ...widget.data.map((e) => e.content),
-                  Positioned(
-                    bottom: 30,
-                    left: 10,
-                    child: TextButton(
-                        onPressed: () async {
-                          if (isCleaningUp) return;
-                          await cleanUp();
-                          await widget.endTutorial();
-                        },
-                        child: const Text('Skip Tutorial')),
+                ),
+                ...widget.data.map((e) => e.content),
+                GestureDetector(
+                  onTap: () async {
+                    if (isCleaningUp) return;
+                    await cleanUp();
+                    widget.skip();
+                  },
+                  child: Container(
+                    color: Colors.transparent,
+                    width: screenSize.width,
+                    height: screenSize.height,
                   ),
-                  Positioned(
-                    bottom: 30,
-                    right: 10,
-                    child: TextButton(
-                        onPressed: () async {
-                          if (isCleaningUp) return;
-                          await cleanUp();
-                          widget.skip();
-                        },
-                        child: Text(widget.finalTutorial ? 'Finish' : 'Next')),
-                  ),
-                ],
-              ),
+                ),
+                Positioned(
+                  bottom: 30,
+                  left: 10,
+                  child: TextButton(
+                      onPressed: () async {
+                        if (isCleaningUp) return;
+                        await cleanUp();
+                        await widget.endTutorial();
+                      },
+                      child: const Text('Skip Tutorial')),
+                ),
+                Positioned(
+                  bottom: 30,
+                  right: 10,
+                  child: TextButton(
+                      onPressed: () async {
+                        if (isCleaningUp) return;
+                        await cleanUp();
+                        widget.skip();
+                      },
+                      child: Text(widget.finalTutorial ? 'Finish' : 'Next')),
+                ),
+              ],
             );
           },
         ),
