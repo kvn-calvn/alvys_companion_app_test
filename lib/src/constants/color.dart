@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import '../utils/extensions.dart';
 
 class ColorManager {
-  static Color primary(Brightness brightness) => brightness.isLight ? const Color(0XFF233E90) : const Color(0XFF265CFF);
+  static Color primary(Brightness brightness) =>
+      brightness.isLight ? const Color(0XFF233E90) : const Color(0XFF265CFF);
   static Color greyColorScheme1(Brightness brightness) =>
       brightness.isLight ? const Color(0XFF1F1F1F) : const Color(0XFFEDEEF1);
   static Color greyColorScheme2 = const Color(0XFF7C7C7C);
@@ -33,10 +34,12 @@ class ColorManager {
       brightness.isLight ? const Color(0xFFFFFFFF) : const Color(0XFF141414);
   static Color chipColor(Brightness brightness) =>
       brightness.isLight ? const Color(0XFFEBF2FF) : const Color(0XFF233E90);
-  static Color shimmerHighlight(Brightness brightness) =>
-      brightness.isLight ? const Color.fromARGB(255, 233, 235, 238) : const Color(0xFF4C4C4C);
-  static Color shimmerBaseColor(Brightness brightness) =>
-      brightness.isLight ? const Color.fromARGB(255, 214, 217, 221) : const Color(0xFF2A2A2A);
+  static Color shimmerHighlight(Brightness brightness) => brightness.isLight
+      ? const Color.fromARGB(255, 233, 235, 238)
+      : const Color(0xFF4C4C4C);
+  static Color shimmerBaseColor(Brightness brightness) => brightness.isLight
+      ? const Color.fromARGB(255, 214, 217, 221)
+      : const Color(0xFF2A2A2A);
   static List<Color> shimmerColors(Brightness brightness) => [
         shimmerBaseColor(brightness),
         shimmerBaseColor(brightness),

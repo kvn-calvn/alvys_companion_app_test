@@ -17,10 +17,12 @@ class PhoneNumberVerificationPage extends ConsumerStatefulWidget {
 
   @override
   // ignore: library_private_types_in_public_api
-  ConsumerState<ConsumerStatefulWidget> createState() => _PhoneNumberVerificationPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _PhoneNumberVerificationPageState();
 }
 
-class _PhoneNumberVerificationPageState extends ConsumerState<PhoneNumberVerificationPage> {
+class _PhoneNumberVerificationPageState
+    extends ConsumerState<PhoneNumberVerificationPage> {
   final pinController = TextEditingController();
   final focusNode = FocusNode();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -56,7 +58,10 @@ class _PhoneNumberVerificationPageState extends ConsumerState<PhoneNumberVerific
           color: Theme.of(context).inputDecorationTheme.fillColor,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: (Theme.of(context).brightness.isLight ? Colors.black : Colors.white).withOpacity(0.5),
+            color: (Theme.of(context).brightness.isLight
+                    ? Colors.black
+                    : Colors.white)
+                .withOpacity(0.5),
           ),
         ),
       );
@@ -83,7 +88,8 @@ class _PhoneNumberVerificationPageState extends ConsumerState<PhoneNumberVerific
           child: Center(
             child: Container(
               constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.longestSide * (TabletUtils.instance.isTablet ? 0.5 : 1)),
+                  maxWidth: MediaQuery.of(context).size.longestSide *
+                      (TabletUtils.instance.isTablet ? 0.5 : 1)),
               padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
               child: Form(
                 key: formKey,
@@ -95,16 +101,24 @@ class _PhoneNumberVerificationPageState extends ConsumerState<PhoneNumberVerific
                     const SizedBox(
                       height: 25,
                     ),
-                    Text('Verification', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headlineLarge),
+                    Text('Verification',
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.headlineLarge),
                     const SizedBox(
                       height: 20,
                     ),
                     const Text(
-                      'Enter the code sent to the number.',
+                      'Enter the code sent to the number',
                       textAlign: TextAlign.center,
                     ),
-                    Text(ref.watch(authProvider).value!.phone.toPhoneNumberString,
-                        textAlign: TextAlign.center, style: Theme.of(context).textTheme.titleMedium),
+                    Text(
+                        ref
+                            .watch(authProvider)
+                            .value!
+                            .phone
+                            .toPhoneNumberString,
+                        textAlign: TextAlign.center,
+                        style: Theme.of(context).textTheme.titleMedium),
                     const SizedBox(
                       height: 40,
                     ),
@@ -112,12 +126,16 @@ class _PhoneNumberVerificationPageState extends ConsumerState<PhoneNumberVerific
                       length: length,
                       controller: pinController,
                       focusNode: focusNode,
-                      onChanged: ref.watch(authProvider.notifier).setVerificationCode,
+                      onChanged:
+                          ref.watch(authProvider.notifier).setVerificationCode,
                       defaultPinTheme: defaultPinTheme(context),
                       cursor: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 12.0),
                         child: Container(
-                          decoration: BoxDecoration(color: Theme.of(context).textSelectionTheme.cursorColor),
+                          decoration: BoxDecoration(
+                              color: Theme.of(context)
+                                  .textSelectionTheme
+                                  .cursorColor),
                           height: double.infinity,
                           width: 2,
                         ),
@@ -126,14 +144,19 @@ class _PhoneNumberVerificationPageState extends ConsumerState<PhoneNumberVerific
                         FilteringTextInputFormatter.allow(RegExp('[0-9]')),
                       ],
                       onCompleted: (pin) async {
-                        await ref.read(authProvider.notifier).verifyDriver(context, mounted);
+                        await ref
+                            .read(authProvider.notifier)
+                            .verifyDriver(context, mounted);
                       },
                       focusedPinTheme: defaultPinTheme(context).copyWith(
-                        decoration: defaultPinTheme(context).decoration!.copyWith(
-                              border: Border.all(
-                                color: ColorManager.primary(Theme.of(context).brightness).withOpacity(0.8),
-                              ),
-                            ),
+                        decoration:
+                            defaultPinTheme(context).decoration!.copyWith(
+                                  border: Border.all(
+                                    color: ColorManager.primary(
+                                            Theme.of(context).brightness)
+                                        .withOpacity(0.8),
+                                  ),
+                                ),
                       ),
                       errorPinTheme: defaultPinTheme(context).copyWith(
                         decoration: BoxDecoration(
@@ -152,9 +175,16 @@ class _PhoneNumberVerificationPageState extends ConsumerState<PhoneNumberVerific
                       )
                     else ...[
                       ButtonStyle1(
-                          isDisable: ref.watch(authProvider).value!.verificationCode.length != 6,
+                          isDisable: ref
+                                  .watch(authProvider)
+                                  .value!
+                                  .verificationCode
+                                  .length !=
+                              6,
                           onPressAction: () async {
-                            await ref.read(authProvider.notifier).verifyDriver(context, mounted);
+                            await ref
+                                .read(authProvider.notifier)
+                                .verifyDriver(context, mounted);
                           },
                           title: "Verify",
                           isLoading: false),

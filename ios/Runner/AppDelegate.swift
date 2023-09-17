@@ -40,8 +40,7 @@ import GoogleMaps
                 print("\n\nSTART_TRACKING\n\n")
                 
                 guard let args = call.arguments as? Dictionary<String, Any> else {return}
-                print("TRACKING_ARGS: ")
-                print(args)
+               
                 
                 LocationManager.shared.setUpLocation()
                 LocationManager.shared.driverId = (args["DriverId"] as? String)
@@ -51,6 +50,8 @@ import GoogleMaps
                 LocationManager.shared.url = (args["url"] as? String)
                 LocationManager.shared.companyCode = (args["companyCode"] as? String)
                 LocationManager.shared.token = (args["token"] as? String)
+            case "stopLocationTracking":
+                LocationManager.shared.stopLocation()
                 
             case "isTablet":
                 result(UIDevice.current.userInterfaceIdiom == .pad)

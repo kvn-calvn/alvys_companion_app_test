@@ -17,7 +17,8 @@ import '../utils/exceptions.dart';
 import '../utils/magic_strings.dart';
 import 'custom_multipart_request.dart';
 
-final httpClientProvider = Provider<AlvysHttpClient>((ref) => AlvysHttpClient());
+final httpClientProvider =
+    Provider<AlvysHttpClient>((ref) => AlvysHttpClient());
 
 class AlvysHttpClient {
   late TelemetryClient telemetryClient;
@@ -98,34 +99,42 @@ class AlvysHttpClient {
   }
 
   Future<Response> getData<T>(Uri uri, {Map<String, String>? headers}) {
-    return _executeRequest<T>(() async => telemetryHttpClient.get(uri, headers: await getHeaders(headers)));
-  }
-
-  Future<Response> postData<T>(Uri uri, {Map<String, String>? headers, Object? body, Encoding? encoding}) {
-    return _executeRequest<T>(
-        () async => telemetryHttpClient.post(uri, headers: await getHeaders(headers), body: body, encoding: encoding));
-  }
-
-  Future<Response> putData<T>(Uri uri, {Map<String, String>? headers, Object? body, Encoding? encoding}) {
-    return _executeRequest<T>(
-        () async => telemetryHttpClient.put(uri, headers: await getHeaders(headers), body: body, encoding: encoding));
-  }
-
-  Future<Response> deleteData<T>(Uri uri, {Map<String, String>? headers, Object? body, Encoding? encoding}) {
     return _executeRequest<T>(() async =>
-        telemetryHttpClient.delete(uri, headers: await getHeaders(headers), body: body, encoding: encoding));
+        telemetryHttpClient.get(uri, headers: await getHeaders(headers)));
   }
 
-  Future<Response> patchData<T>(Uri uri, {Map<String, String>? headers, Object? body, Encoding? encoding}) {
-    return _executeRequest<T>(
-        () async => telemetryHttpClient.patch(uri, headers: await getHeaders(headers), body: body, encoding: encoding));
+  Future<Response> postData<T>(Uri uri,
+      {Map<String, String>? headers, Object? body, Encoding? encoding}) {
+    return _executeRequest<T>(() async => telemetryHttpClient.post(uri,
+        headers: await getHeaders(headers), body: body, encoding: encoding));
+  }
+
+  Future<Response> putData<T>(Uri uri,
+      {Map<String, String>? headers, Object? body, Encoding? encoding}) {
+    return _executeRequest<T>(() async => telemetryHttpClient.put(uri,
+        headers: await getHeaders(headers), body: body, encoding: encoding));
+  }
+
+  Future<Response> deleteData<T>(Uri uri,
+      {Map<String, String>? headers, Object? body, Encoding? encoding}) {
+    return _executeRequest<T>(() async => telemetryHttpClient.delete(uri,
+        headers: await getHeaders(headers), body: body, encoding: encoding));
+  }
+
+  Future<Response> patchData<T>(Uri uri,
+      {Map<String, String>? headers, Object? body, Encoding? encoding}) {
+    return _executeRequest<T>(() async => telemetryHttpClient.patch(uri,
+        headers: await getHeaders(headers), body: body, encoding: encoding));
   }
 
   Future<Response> _executeRequest<T>(Future<Response> Function() op) async {
     try {
       var companyCode = await storage.read(key: StorageKey.companyCode.name);
-      if (companyCode != null) telemetryClient.context.properties['tenantId'] = companyCode;
-      telemetryClient.context.operation.id = const Uuid().v4(options: {'rng': UuidUtil.cryptoRNG});
+      if (companyCode != null) {
+        telemetryClient.context.properties['tenantId'] = companyCode;
+      }
+      telemetryClient.context.operation.id =
+          const Uuid().v4(options: {'rng': UuidUtil.cryptoRNG});
       var res = await op();
       return _handleResponse<T>(res);
     } on SocketException {
@@ -140,11 +149,13 @@ class AlvysHttpClient {
       case (400):
         return Future.error(AlvysClientException(jsonDecode(response.body), T));
       case (404):
-        return Future.error(AlvysEntityNotFoundException(jsonDecode(response.body), T));
+        return Future.error(
+            AlvysEntityNotFoundException(jsonDecode(response.body), T));
       case (401):
         return Future.error(AlvysUnauthorizedException(T));
       case (504):
-        return Future.error(AlvysDependencyException(jsonDecode(response.body), T));
+        return Future.error(
+            AlvysDependencyException(jsonDecode(response.body), T));
       case 500:
         return Future.error(ApiServerException(T));
       default:
@@ -152,8 +163,12 @@ class AlvysHttpClient {
     }
   }
 
-  Future<void> setTelemetryContext({DriverUser? user, String? companyCode, Map<String, dynamic>? extraData}) async {
-    assert((user == null && extraData != null) || (user != null && extraData == null));
+  Future<void> setTelemetryContext(
+      {DriverUser? user,
+      String? companyCode,
+      Map<String, dynamic>? extraData}) async {
+    assert((user == null && extraData != null) ||
+        (user != null && extraData == null));
     Map<String, dynamic> driver = user == null
         ? extraData!
         : {
@@ -186,6 +201,7 @@ class AlvysHttpClient {
       ..applicationVersion = packageInfo.version
       ..user.accountId = user?.id
       ..properties['user'] = jsonEncode(driver)
-      ..device.id = Platform.isAndroid ? androidInfo.id : iosInfo.identifierForVendor;
+      ..device.id =
+          Platform.isAndroid ? androidInfo.id : iosInfo.identifierForVendor;
   }
 }
