@@ -129,7 +129,7 @@ class StopCard extends ConsumerWidget {
                       ButtonStyle2(
                         onPressAction:
                             authState.value!.shouldShowEcheckButton(tripState.value!.getTrip(tripId).companyCode!)
-                                ? () => showGenerateEcheckDialog(context, tripId)
+                                ? () => showGenerateEcheckDialog(context, tripId, stop.stopId)
                                 : null,
                         title: "E-Check",
                         isLoading: false,

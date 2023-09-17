@@ -59,7 +59,7 @@ class _EcheckPageState extends ConsumerState<EcheckPage> {
           floatingActionButton: authState.value!.shouldShowEcheckButton(trip.companyCode!) || trip.id == testTrip.id!
               ? FloatingActionButton(
                   onPressed: () {
-                    showGenerateEcheckDialog(context, widget.tripId);
+                    showGenerateEcheckDialog(context, widget.tripId, null);
                   },
                   backgroundColor: ColorManager.primary(Theme.of(context).brightness),
                   child: const Icon(Icons.attach_money, color: Colors.white),
