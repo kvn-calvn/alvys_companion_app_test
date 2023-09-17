@@ -74,6 +74,7 @@ class EcheckPageController extends AutoDisposeAsyncNotifier<ECheckState> impleme
           note: state.value!.note,
           firstName: firstName,
           lastName: lastName,
+          stopId: state.value!.showStopDropdown ? state.value!.stopId : null,
           driverId: trip.driver1Id!,
           amount: state.value!.amount);
       var res = await repo.generateEcheck<EcheckPageController>(trip.companyCode!, req);
@@ -100,6 +101,7 @@ class EcheckPageController extends AutoDisposeAsyncNotifier<ECheckState> impleme
   @override
   FutureOr<void> onError() {
     state = AsyncData(state.value!.copyWith(loadingEcheckNumber: null));
+    print(state.value);
   }
 }
 
