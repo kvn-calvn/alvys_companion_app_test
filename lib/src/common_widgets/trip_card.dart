@@ -138,7 +138,9 @@ class TripCard extends ConsumerWidget {
                       children: [
                         TripCardDetail(
                           title: 'Deadhead',
-                          details: '${intl.NumberFormat.decimalPattern().format(trip.emptyMiles)} mi',
+                          details: trip.emptyMiles == null
+                              ? '-'
+                              : '${intl.NumberFormat.decimalPattern().format(trip.emptyMiles)} mi',
                         ),
                         const SizedBox(
                           height: 32,
