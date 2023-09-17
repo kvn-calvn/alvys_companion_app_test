@@ -7,7 +7,7 @@ part 'client_error.g.dart';
 class ClientError with _$ClientError {
   factory ClientError({
     String? title,
-    String? details,
+    String? detail,
     required int status,
     required Map<String, Map<String, List<String>>> errors,
   }) = _ClientError;

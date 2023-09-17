@@ -136,20 +136,12 @@ Provider<GoRouter> routerProvider = Provider(
                         },
                       ),
                       GoRoute(
-                          name: RouteName.eCheck.name,
-                          path: RouteName.eCheck.name,
-                          builder: (context, state) {
-                            return EcheckPage(state.pathParameters[ParamType.tripId.name]!);
-                          },
-                          routes: [
-                            GoRoute(
-                              name: RouteName.generateEcheck.name,
-                              path: RouteName.generateEcheck.name,
-                              builder: (context, state) {
-                                return GenerateEcheck(state.pathParameters[ParamType.tripId.name]!);
-                              },
-                            ),
-                          ]),
+                        name: RouteName.eCheck.name,
+                        path: RouteName.eCheck.name,
+                        builder: (context, state) {
+                          return EcheckPage(state.pathParameters[ParamType.tripId.name]!);
+                        },
+                      ),
                       GoRoute(
                         name: RouteName.stopDetails.name,
                         path: ':stopId',
@@ -401,20 +393,12 @@ Provider<GoRouter> tabletRouteProvider = Provider((ref) {
                             },
                           ),
                           GoRoute(
-                              name: RouteName.eCheck.name,
-                              path: RouteName.eCheck.name,
-                              builder: (context, state) {
-                                return EcheckPage(state.pathParameters[ParamType.tripId.name]!);
-                              },
-                              routes: [
-                                GoRoute(
-                                  name: RouteName.generateEcheck.name,
-                                  path: RouteName.generateEcheck.name,
-                                  builder: (context, state) {
-                                    return GenerateEcheck(state.pathParameters[ParamType.tripId.name]!);
-                                  },
-                                ),
-                              ]),
+                            name: RouteName.eCheck.name,
+                            path: RouteName.eCheck.name,
+                            builder: (context, state) {
+                              return EcheckPage(state.pathParameters[ParamType.tripId.name]!);
+                            },
+                          ),
                           GoRoute(
                             name: RouteName.stopDetails.name,
                             path: ':stopId',
