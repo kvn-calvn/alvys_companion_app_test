@@ -19,7 +19,6 @@ import '../features/documents/presentation/pdf_viewer.dart';
 import '../features/documents/presentation/upload_documents.dart';
 import '../features/documents/presentation/upload_documents_controller.dart';
 import '../features/echeck/presentation/pages/echeck_page.dart';
-import '../features/echeck/presentation/pages/generate_echeck.dart';
 import '../features/permission/location/presentation/request_location.dart';
 import '../features/permission/notification/request_notification.dart';
 import '../features/settings/presentation/about_page.dart';
