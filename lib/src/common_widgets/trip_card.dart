@@ -136,9 +136,9 @@ class TripCard extends ConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        const TripCardDetail(
+                        TripCardDetail(
                           title: 'Deadhead',
-                          details: '0.00 mi',
+                          details: '${intl.NumberFormat.decimalPattern().format(trip.emptyMiles)} mi',
                         ),
                         const SizedBox(
                           height: 32,
