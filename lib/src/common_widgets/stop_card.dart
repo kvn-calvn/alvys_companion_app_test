@@ -1,3 +1,6 @@
+import '../features/tutorial/tutorial_controller.dart';
+import '../utils/dummy_data.dart';
+
 import '../features/authentication/presentation/auth_provider_controller.dart';
 import '../features/echeck/presentation/pages/generate_echeck.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
@@ -13,10 +16,18 @@ import '../utils/magic_strings.dart';
 import 'buttons.dart';
 
 class StopCard extends ConsumerWidget {
-  const StopCard({Key? key, required this.stop, required this.tripId, this.canCheckInOutStopId}) : super(key: key);
-
+  const StopCard({
+    Key? key,
+    required this.stop,
+    required this.tripId,
+    this.canCheckInOutStopId,
+    required this.index,
+    required this.tabIndex,
+  }) : super(key: key);
+  final int index;
   final Stop stop;
   final String tripId;
+  final int tabIndex;
   final String? canCheckInOutStopId;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -27,14 +38,19 @@ class StopCard extends ConsumerWidget {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Material(
+          key: tripId == testTrip.id! && index == 0 ? ref.read(tutorialProvider).stopCard : null,
           elevation: 0,
           color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(10),
           clipBehavior: Clip.antiAlias,
           child: InkWell(
             onTap: () {
-              context.goNamed(RouteName.stopDetails.name,
-                  pathParameters: {ParamType.tripId.name: tripId, ParamType.stopId.name: stop.stopId!});
+              context.goNamed(RouteName.stopDetails.name, pathParameters: {
+                ParamType.tripId.name: tripId,
+                ParamType.stopId.name: stop.stopId!
+              }, queryParameters: {
+                ParamType.tabIndex.name: tabIndex.toString(),
+              });
             },
             child: Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(15, 5, 15, 5),

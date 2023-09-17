@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'src/features/tutorial/tutorial_controller.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/foundation.dart';
@@ -42,11 +43,13 @@ Future<void> mainCommon() async {
     String? driverData = await storage.read(key: StorageKey.driverData.name);
     ThemeMode? appThemeMode = ThemeMode.values.byNameOrNull(await storage.read(key: StorageKey.themeMode.name));
     var isTablet = await PlatformChannel.isTablet();
+    var firstInstall = await storage.read(key: StorageKey.firstInstall.name);
     TabletUtils.instance.isTablet = isTablet;
     DriverUser? driverUser;
     var status = await storage.read(key: StorageKey.driverStatus.name);
     container = ProviderContainer(
       overrides: [
+        firstInstallProvider.overrideWith(() => FirstInstallNotifier(firstInstall == null || firstInstall == 'true')),
         authProvider.overrideWith(
             () => AuthProviderNotifier(driver: driverUser, status: status?.titleCase ?? DriverStatus.online)),
         themeHandlerProvider.overrideWith(() => ThemeHandlerNotifier(appThemeMode)),

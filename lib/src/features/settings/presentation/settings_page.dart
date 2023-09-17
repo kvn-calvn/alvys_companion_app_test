@@ -1,9 +1,11 @@
+import '../../tutorial/tutorial_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../common_widgets/custom_bottom_sheet.dart';
 import '../../../common_widgets/large_nav_button.dart';
+import '../../../common_widgets/tablet_view.dart';
 import '../../../common_widgets/theme_switcher.dart';
 import '../../../common_widgets/url_nav_button.dart';
 import '../../../utils/app_theme.dart';
@@ -64,6 +66,14 @@ class SettingsList extends ConsumerWidget {
           title: "About",
           onPressed: () {
             context.goNamed(RouteName.about.name);
+          },
+        ),
+        LargeNavButton(
+          title: "Watch Tutorial",
+          onPressed: () {
+            ref.read(firstInstallProvider.notifier).setState(true);
+            context.goNamed(RouteName.trips.name);
+            ref.read(tabletViewProvider.notifier).setState(0);
           },
         ),
         LargeNavButton(

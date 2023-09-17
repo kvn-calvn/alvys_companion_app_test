@@ -136,7 +136,6 @@ class AlvysHttpClient {
   }
 
   Future<Response> _handleResponse<T>(Response response) {
-    print(response.statusCode);
     switch (response.statusCode) {
       case (400):
         return Future.error(AlvysClientException(jsonDecode(response.body), T));

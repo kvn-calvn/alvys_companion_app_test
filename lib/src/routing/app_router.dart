@@ -1,22 +1,21 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
-
-import '../features/authentication/presentation/edit_profile.dart';
-
-import '../common_widgets/empty_view.dart';
-import '../common_widgets/tablet_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
+import '../common_widgets/empty_view.dart';
 import '../common_widgets/main_bottom_nav.dart';
+import '../common_widgets/tablet_view.dart';
 import '../features/authentication/presentation/auth_provider_controller.dart';
+import '../features/authentication/presentation/edit_profile.dart';
 import '../features/authentication/presentation/phone_verification_page.dart';
 import '../features/authentication/presentation/profile.dart';
 import '../features/authentication/presentation/sign_in_page.dart';
+import '../features/authentication/presentation/user_details_page.dart';
 import '../features/documents/domain/app_document/app_document.dart';
+import '../features/documents/presentation/docs_controller.dart';
 import '../features/documents/presentation/document_page.dart';
 import '../features/documents/presentation/pdf_viewer.dart';
-import '../features/documents/presentation/docs_controller.dart';
 import '../features/documents/presentation/upload_documents.dart';
 import '../features/documents/presentation/upload_documents_controller.dart';
 import '../features/echeck/presentation/pages/echeck_page.dart';
@@ -25,7 +24,6 @@ import '../features/permission/location/presentation/request_location.dart';
 import '../features/permission/notification/request_notification.dart';
 import '../features/settings/presentation/about_page.dart';
 import '../features/settings/presentation/settings_page.dart';
-import '../features/authentication/presentation/user_details_page.dart';
 import '../features/trips/presentation/pages/stop_details_page.dart';
 import '../features/trips/presentation/pages/trip_details_page.dart';
 import '../features/trips/presentation/pages/trips_page.dart';
@@ -110,7 +108,8 @@ Provider<GoRouter> routerProvider = Provider(
                     name: RouteName.tripDetails.name,
                     path: ':tripId',
                     builder: (context, state) {
-                      return LoadDetailsPage(state.pathParameters[ParamType.tripId.name]!);
+                      return LoadDetailsPage(state.pathParameters[ParamType.tripId.name]!,
+                          int.parse(state.uri.queryParameters[ParamType.tabIndex.name]!));
                     },
                     routes: <GoRoute>[
                       GoRoute(
@@ -374,7 +373,8 @@ Provider<GoRouter> tabletRouteProvider = Provider((ref) {
                         name: RouteName.tripDetails.name,
                         path: ':tripId',
                         builder: (context, state) {
-                          return LoadDetailsPage(state.pathParameters[ParamType.tripId.name]!);
+                          return LoadDetailsPage(state.pathParameters[ParamType.tripId.name]!,
+                              int.parse(state.uri.queryParameters[ParamType.tabIndex.name]!));
                         },
                         routes: <GoRoute>[
                           GoRoute(

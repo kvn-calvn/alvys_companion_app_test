@@ -27,21 +27,11 @@ class _StopDetailsPageState extends ConsumerState<StopDetailsPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
-        automaticallyImplyLeading: false,
         title: Text(
           'Stop Details',
           style: AlvysTheme.appbarTextStyle(context, true),
         ),
         centerTitle: true,
-        leading: IconButton(
-          // 1
-          icon: Icon(
-            Icons.adaptive.arrow_back,
-          ),
-          onPressed: () {
-            Navigator.of(context).maybePop();
-          },
-        ),
         elevation: 0,
       ),
       body: Padding(

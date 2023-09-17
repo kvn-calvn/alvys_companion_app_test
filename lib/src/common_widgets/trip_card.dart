@@ -1,3 +1,6 @@
+import '../features/tutorial/tutorial_controller.dart';
+import '../utils/dummy_data.dart';
+
 import '../features/authentication/presentation/auth_provider_controller.dart';
 
 import '../utils/magic_strings.dart';
@@ -22,13 +25,18 @@ class TripCard extends ConsumerWidget {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Material(
+          key: trip.id == testTrip.id! ? ref.read(tutorialProvider).tripCard : null,
           color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(12),
           clipBehavior: Clip.antiAlias,
           elevation: 0,
           child: InkWell(
             onTap: () {
-              context.goNamed(RouteName.tripDetails.name, pathParameters: {ParamType.tripId.name: trip.id!});
+              context.goNamed(
+                RouteName.tripDetails.name,
+                pathParameters: {ParamType.tripId.name: trip.id!},
+                queryParameters: {ParamType.tabIndex.name: 0.toString()},
+              );
             },
             child: Padding(
               padding: const EdgeInsetsDirectional.fromSTEB(15, 5, 15, 5),

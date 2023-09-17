@@ -35,7 +35,7 @@ enum DisplayDocumentType { tripDocuments, personalDocuments, paystubs, tripRepor
 
 enum Environment { dev, qa, sandbox }
 
-enum StorageKey { driverData, themeMode, driverToken, companyCode, driverStatus }
+enum StorageKey { driverData, themeMode, driverToken, companyCode, driverStatus, firstInstall }
 
 class DriverStatus {
   static const String sleeping = 'Sleeping',
@@ -68,7 +68,7 @@ enum EcheckOption { copy, cancel }
 
 enum UploadType { camera, gallery }
 
-enum ParamType { tripId, stopId }
+enum ParamType { tripId, stopId, tabIndex }
 
 enum EcheckReason { advance, trailerWash, extraLaborDelivery, lumper, palletFee }
 

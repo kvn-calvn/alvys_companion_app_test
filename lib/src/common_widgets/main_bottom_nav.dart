@@ -27,7 +27,7 @@ class _MainBottomNavState extends ConsumerState<MainBottomNav> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      ref.read(tutorialProvider).startTutorial(context);
+      //  ref.read(tutorialProvider).startTutorial(context);
       await ref.read(websocketProvider).restartConnection();
     });
   }
@@ -56,7 +56,7 @@ class _MainBottomNavState extends ConsumerState<MainBottomNav> {
           // }
         },
         items: [
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             icon: Icon(Alvys3Icons.tripIcon),
             label: 'Trips',
           ),

@@ -1,3 +1,5 @@
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
+
 import '../../../../../utils/magic_strings.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -18,14 +20,13 @@ class AuthState with _$AuthState {
     @Default('') String verificationCode,
     @Default(false) bool driverLoggedIn,
   }) = _AuthState;
-  UserTenant currentUserTenant(String companyCode) =>
-      driver!.userTenants.firstWhere((element) => element.companyCode == companyCode);
+
   UserTenant? tryGetUserTenant(String companyCode) =>
-      driver!.userTenants.firstWhere((element) => element.companyCode == companyCode);
+      driver!.userTenants.firstWhereOrNull((element) => element.companyCode == companyCode);
   factory AuthState.fromJson(Map<String, dynamic> json) => _$AuthStateFromJson(json);
 
   bool shouldShowEcheckButton(String companyCode) =>
-      tryGetUserTenant(companyCode)?.permissions.contains(UserPermissions.generateEcheck) ?? false;
+      (tryGetUserTenant(companyCode)?.permissions.contains(UserPermissions.generateEcheck) ?? false);
 
   bool shouldShowCancelEcheckButton(String companyCode) =>
       tryGetUserTenant(companyCode)?.permissions.contains(UserPermissions.cancelEcheck) ?? false;

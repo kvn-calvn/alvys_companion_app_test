@@ -113,8 +113,8 @@ class AlvysTheme {
 
   static TextStyle appbarTextStyle(BuildContext context, bool small) {
     return small
-        ? Theme.of(context).textTheme.headlineLarge!.copyWith(fontWeight: FontWeight.w700)
-        : Theme.of(context).textTheme.headlineLarge!;
+        ? Theme.of(context).textTheme.headlineMedium!.copyWith(fontWeight: FontWeight.w700)
+        : Theme.of(context).textTheme.headlineMedium!;
   }
 
   static TextTheme defaultTextTheme(Brightness brightness) => TextTheme(

@@ -1,14 +1,18 @@
+import '../../../../common_widgets/fab_animator.dart';
+import '../../../../common_widgets/shimmers/echecks_shimmer.dart';
+import '../../../tutorial/tutorial_controller.dart';
+import '../../../../utils/dummy_data.dart';
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
+
 import '../../../authentication/presentation/auth_provider_controller.dart';
 
 import '../controller/echeck_page_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 import '../../../../common_widgets/echeck_card.dart';
 import '../../../../common_widgets/empty_view.dart';
 import '../../../../constants/color.dart';
-import '../../../../utils/extensions.dart';
 import '../../../trips/presentation/controller/trip_page_controller.dart';
 import 'generate_echeck.dart';
 
@@ -31,37 +35,56 @@ class _EcheckPageState extends ConsumerState<EcheckPage> {
     var authState = ref.watch(authProvider);
     var notifier = ref.read(echeckPageControllerProvider.notifier);
     var state = ref.watch(tripControllerProvider);
+    if (state.isLoading) return const EchecksShimmer();
+
     var trip = ref.watch(tripControllerProvider).value!.tryGetTrip(widget.tripId);
     if (trip == null) return const EmptyView(title: 'Trip Not found', description: 'Return to the previous page');
-    return state.isLoading
-        ? SpinKitFoldingCube()
-        : Scaffold(
-            floatingActionButton: authState.value!.shouldShowEcheckButton(trip.companyCode!)
-                ? FloatingActionButton(
-                    onPressed: () {
-                      showGenerateEcheckDialog(context, widget.tripId);
-                    },
-                    backgroundColor: ColorManager.primary(Theme.of(context).brightness),
-                    child: const Icon(Icons.attach_money, color: Colors.white),
-                  )
-                : null,
-            body: RefreshIndicator(
-              onRefresh: () async {
-                await ref.read(tripControllerProvider.notifier).refreshCurrentTrip(widget.tripId);
-              },
-              child: trip.eChecks.isNullOrEmpty
-                  ? const EmptyView(title: 'No E-Checks', description: 'Generated E-Checks will appear here.')
-                  : ListView.builder(
-                      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                      itemCount: trip.eChecks!.length,
-                      itemBuilder: (context, index) => EcheckCard(
-                        eCheck: trip.eChecks![index],
-                        companyCode: trip.companyCode!,
-                        cancelECheck: (echeckNumber) async => await notifier.cancelEcheck(widget.tripId, echeckNumber),
-                        tripId: widget.tripId,
-                      ),
-                    ),
+    return Stack(
+      children: [
+        if (trip.id == testTrip.id!)
+          Positioned(
+            bottom: 16,
+            right: 16,
+            child: Container(
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                color: Colors.transparent,
+              ),
+              padding: const EdgeInsets.all(28),
+              key: ref.read(tutorialProvider).echeckButton,
             ),
-          );
+          ),
+        Scaffold(
+          floatingActionButtonAnimator: AlvysFloatingActionButtonAnimator(),
+          floatingActionButton: authState.value!.shouldShowEcheckButton(trip.companyCode!) || trip.id == testTrip.id!
+              ? FloatingActionButton(
+                  onPressed: () {
+                    showGenerateEcheckDialog(context, widget.tripId);
+                  },
+                  backgroundColor: ColorManager.primary(Theme.of(context).brightness),
+                  child: const Icon(Icons.attach_money, color: Colors.white),
+                )
+              : null,
+          body: RefreshIndicator(
+            onRefresh: () async {
+              await ref.read(tripControllerProvider.notifier).refreshCurrentTrip(widget.tripId);
+            },
+            child: trip.eChecks.isNullOrEmpty
+                ? const EmptyView(title: 'No E-Checks', description: 'Generated E-Checks will appear here.')
+                : ListView.builder(
+                    padding: const EdgeInsets.symmetric(horizontal: 16.0),
+                    itemCount: trip.eChecks!.length,
+                    itemBuilder: (context, index) => EcheckCard(
+                      index: index,
+                      eCheck: trip.eChecks![index],
+                      companyCode: trip.companyCode!,
+                      cancelECheck: (echeckNumber) async => await notifier.cancelEcheck(widget.tripId, echeckNumber),
+                      tripId: widget.tripId,
+                    ),
+                  ),
+          ),
+        ),
+      ],
+    );
   }
 }

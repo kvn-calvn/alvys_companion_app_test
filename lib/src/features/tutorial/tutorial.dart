@@ -8,20 +8,12 @@ enum WidgetShape { circle, square }
 Size get screenSize => MediaQueryData.fromView(WidgetsBinding.instance.platformDispatcher.implicitView!).size;
 
 class Tutorial extends ConsumerStatefulWidget {
-  final RenderBox position;
-  final WidgetShape shape;
-  final Widget content;
-  final double inflate;
+  final List<TutorialData> data;
+  final bool finalTutorial;
   final Future<void> Function() skip;
   final Future<void> Function() endTutorial;
   const Tutorial(
-      {super.key,
-      required this.inflate,
-      required this.content,
-      required this.position,
-      required this.shape,
-      required this.skip,
-      required this.endTutorial});
+      {required this.data, required this.finalTutorial, required this.skip, required this.endTutorial, super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _TutorialState();
@@ -30,19 +22,21 @@ class Tutorial extends ConsumerStatefulWidget {
 class _TutorialState extends ConsumerState<Tutorial> with SingleTickerProviderStateMixin {
   late AnimationController controller;
   late Animation<double> circleAnimation;
-  late Animation<Rect?> clipAnimation;
+  late List<Animation<Rect?>> clipAnimation;
   bool isCleaningUp = true;
   @override
   void initState() {
     super.initState();
     controller = AnimationController(value: 0, vsync: this, duration: const Duration(milliseconds: 250));
-    clipAnimation = RectTween(
-            begin: Rect.fromCenter(
-                center: widget.position.localToGlobal(Offset.zero),
-                width: screenSize.height * 2,
-                height: screenSize.height * 2),
-            end: (widget.position.localToGlobal(Offset.zero) & widget.position.size))
-        .animate(controller);
+    clipAnimation = widget.data
+        .map((e) => RectTween(
+                begin: Rect.fromCenter(
+                    center: e.position.localToGlobal(Offset(e.position.size.width / 2, e.position.size.height / 2)),
+                    width: 0,
+                    height: 0),
+                end: (e.position.localToGlobal(Offset.zero) & e.position.size))
+            .animate(controller))
+        .toList();
     controller.forward().then((value) => isCleaningUp = false);
   }
 
@@ -79,15 +73,16 @@ class _TutorialState extends ConsumerState<Tutorial> with SingleTickerProviderSt
               child: Stack(
                 children: [
                   ClipPath(
-                    clipper: TutorialClipper(
-                        clipAnimation.value ?? Rect.zero, widget.position, widget.shape, widget.inflate),
+                    clipper: TutorialClipper(widget.data, clipAnimation.map((e) => e.value ?? Rect.zero).toList()),
                     child: Container(
-                      color: !Theme.of(context).brightness.isLight
-                          ? const Color.fromRGBO(0, 0, 0, 0.8)
-                          : const Color.fromRGBO(255, 255, 255, 0.8),
+                      decoration: BoxDecoration(
+                        color: !Theme.of(context).brightness.isLight
+                            ? const Color.fromRGBO(0, 0, 0, 0.8)
+                            : const Color.fromRGBO(255, 255, 255, 0.8),
+                      ),
                     ),
                   ),
-                  widget.content,
+                  ...widget.data.map((e) => e.content),
                   Positioned(
                     bottom: 30,
                     left: 10,
@@ -95,7 +90,7 @@ class _TutorialState extends ConsumerState<Tutorial> with SingleTickerProviderSt
                         onPressed: () async {
                           if (isCleaningUp) return;
                           await cleanUp();
-                          widget.endTutorial();
+                          await widget.endTutorial();
                         },
                         child: const Text('Skip Tutorial')),
                   ),
@@ -108,7 +103,7 @@ class _TutorialState extends ConsumerState<Tutorial> with SingleTickerProviderSt
                           await cleanUp();
                           widget.skip();
                         },
-                        child: const Text('Next')),
+                        child: Text(widget.finalTutorial ? 'Finish' : 'Next')),
                   ),
                 ],
               ),
@@ -121,25 +116,26 @@ class _TutorialState extends ConsumerState<Tutorial> with SingleTickerProviderSt
 }
 
 class TutorialClipper extends CustomClipper<Path> {
-  final WidgetShape shape;
-  final Rect radius;
-  final double inflate;
-  final RenderBox position;
-  TutorialClipper(this.radius, this.position, this.shape, this.inflate);
+  final List<TutorialData> data;
+  final List<Rect> sizes;
+  TutorialClipper(this.data, this.sizes);
 
   @override
   Path getClip(Size size) {
-    if (shape == WidgetShape.square) {
-      return Path()
-        ..addRect(radius.inflate(5 + inflate))
-        ..addRect(Rect.fromLTWH(0.0, 0.0, screenSize.width, screenSize.height))
-        ..fillType = PathFillType.evenOdd;
-    } else {
-      return Path()
-        ..addOval(Rect.fromCircle(center: radius.center, radius: radius.longestSide / 2).inflate(inflate))
-        ..addRect(Rect.fromLTWH(0.0, 0.0, screenSize.width, screenSize.height))
-        ..fillType = PathFillType.evenOdd;
+    var path = Path();
+    for (var i = 0; i < data.length; i++) {
+      var element = data[i];
+      var radius = sizes[i];
+      if (element.shape == WidgetShape.square) {
+        path.addRect(radius.inflate(element.inflate));
+      } else {
+        path.addOval(Rect.fromCircle(center: radius.center, radius: radius.longestSide / 2).inflate(element.inflate));
+      }
     }
+    path.addRect(Rect.fromLTWH(0.0, 0.0, screenSize.width, screenSize.height));
+
+    path.fillType = PathFillType.evenOdd;
+    return path;
   }
 
   @override

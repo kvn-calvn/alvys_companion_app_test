@@ -1,7 +1,7 @@
 import 'dart:async';
 
-import 'package:alvys3/src/utils/map_styles.dart';
-import 'package:alvys3/src/utils/theme_handler.dart';
+import '../../../utils/map_styles.dart';
+import '../../../utils/theme_handler.dart';
 import 'package:flutter/material.dart';
 
 import '../data/google_maps_repository.dart';
@@ -62,7 +62,7 @@ class MapNotifier extends AutoDisposeFamilyAsyncNotifier<MapState, String> {
     }
   }
 
-  Future setMiniMapStyle() async {
+  Future<void> setMiniMapStyle() async {
     var mode = ref.read(themeHandlerProvider);
     final miniController = await this.miniController.future;
     if (mode == ThemeMode.system) {
@@ -82,7 +82,7 @@ class MapNotifier extends AutoDisposeFamilyAsyncNotifier<MapState, String> {
     }
   }
 
-  Future setMapStyle() async {
+  Future<void> setMapStyle() async {
     var mode = ref.read(themeHandlerProvider);
     final controller = await this.controller.future;
     if (mode == ThemeMode.system) {

@@ -1,3 +1,8 @@
+import '../../utils/dummy_data.dart';
+import '../../utils/magic_strings.dart';
+import '../../utils/tablet_utils.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+
 import 'tutorial.dart';
 import 'tutorial_widgets.dart';
 import '../../routing/app_router.dart';
@@ -11,91 +16,283 @@ class TutorialElement {
   final LabeledGlobalKey globalKey;
   final Widget Function(RelativeRect position, RenderBox box) content;
   final WidgetShape shape;
-  final Future<void> Function()? onSkip;
   final double inflate;
-  TutorialElement(
-      {required this.globalKey, required this.content, this.onSkip, this.shape = WidgetShape.square, this.inflate = 0});
+  TutorialElement({required this.globalKey, required this.content, this.shape = WidgetShape.square, this.inflate = 0});
+}
+
+class TutorialData {
+  final RenderBox position;
+  final WidgetShape shape;
+  final Widget content;
+  final double inflate;
+
+  TutorialData({
+    required this.position,
+    required this.shape,
+    required this.content,
+    required this.inflate,
+  });
+}
+
+class TutorialElementGroup {
+  final List<TutorialElement> elements;
+  final Future<void> Function()? onSkip;
+
+  TutorialElementGroup({required this.elements, this.onSkip});
 }
 
 class TutorialController {
+  var storage = const FlutterSecureStorage();
   final LabeledGlobalKey refresh = LabeledGlobalKey('refresh'),
-      tripCard = LabeledGlobalKey('sleepDropdown'),
-      sleepDropdown = LabeledGlobalKey('tripCard'),
+      tripCard = LabeledGlobalKey('tripCard'),
+      sleepDropdown = LabeledGlobalKey('sleepDropdown'),
       stopCard = LabeledGlobalKey('stopCard'),
-      stopActions = LabeledGlobalKey('stopActions'),
+      infoTab = LabeledGlobalKey('infoTab'),
       settingsButton = LabeledGlobalKey('settingsButton'),
       profileButton = LabeledGlobalKey('profileButton'),
       echeckTab = LabeledGlobalKey('echeckTab'),
+      echeckCard = LabeledGlobalKey('echeckCard'),
       echeckButton = LabeledGlobalKey('echeckButton'),
       documentTab = LabeledGlobalKey('documentTab'),
+      documentCard = LabeledGlobalKey('documentCard'),
       documentButton = LabeledGlobalKey('documentButton');
-  List<TutorialElement> get tutorials => [
-        TutorialElement(
-          globalKey: sleepDropdown,
-          content: (pos, box) => SleepButtonTutorial(
-            position: pos,
-            box: box,
-          ),
+  List<TutorialElementGroup> get tutorials => [
+        TutorialElementGroup(
+          elements: [
+            TutorialElement(
+              globalKey: sleepDropdown,
+              content: (pos, box) => SleepButtonTutorial(
+                position: pos,
+                box: box,
+              ),
+            ),
+            TutorialElement(
+              globalKey: refresh,
+              content: (pos, box) => RefreshTutorial(
+                position: pos,
+                box: box,
+              ),
+              shape: WidgetShape.circle,
+            ),
+            TutorialElement(
+              globalKey: tripCard,
+              content: (pos, box) => TripCardTutorial(
+                position: pos,
+                box: box,
+              ),
+            ),
+          ],
+          onSkip: () async {
+            navigator.goNamed(
+              RouteName.tripDetails.name,
+              pathParameters: {ParamType.tripId.name: testTrip.id!},
+              queryParameters: {ParamType.tabIndex.name: 0.toString()},
+            );
+          },
         ),
-        TutorialElement(
-          globalKey: refresh,
-          content: (pos, box) => RefreshTutorial(
-            position: pos,
-            box: box,
-          ),
-          shape: WidgetShape.circle,
+        TutorialElementGroup(
+          elements: [
+            TutorialElement(
+              globalKey: infoTab,
+              content: (pos, box) => TripDetailsTabTutorial(
+                position: pos,
+                box: box,
+              ),
+            ),
+            TutorialElement(
+              globalKey: stopCard,
+              content: (pos, box) => StopCardTutorial(
+                position: pos,
+                box: box,
+              ),
+            ),
+          ],
+          onSkip: () async {
+            TabletUtils.instance.detailsController.animateTo(1, duration: Duration.zero);
+
+            await Future.delayed(TabletUtils.instance.detailsController.animationDuration);
+          },
         ),
-        TutorialElement(
-            globalKey: profileButton,
-            content: (pos, box) => ProfileTutorial(
-                  position: pos,
-                  box: box,
-                ),
-            shape: WidgetShape.circle,
-            inflate: 20),
-        TutorialElement(
-            globalKey: settingsButton,
-            content: (pos, box) => SettingsTutorial(
-                  position: pos,
-                  box: box,
-                ),
-            shape: WidgetShape.circle,
-            inflate: 20),
+        TutorialElementGroup(
+          elements: [
+            TutorialElement(
+              globalKey: echeckTab,
+              content: (pos, box) => EcheckTabTutorial(
+                position: pos,
+                box: box,
+              ),
+            ),
+            TutorialElement(
+              globalKey: echeckCard,
+              content: (pos, box) => EcheckCardTutorial(
+                position: pos,
+                box: box,
+              ),
+            ),
+            TutorialElement(
+                globalKey: echeckButton,
+                content: (pos, box) => GenerateEcheckButtonTutorial(
+                      position: pos,
+                      box: box,
+                    ),
+                shape: WidgetShape.circle),
+          ],
+          onSkip: () async {
+            TabletUtils.instance.detailsController.animateTo(2, duration: Duration.zero);
+            await Future.delayed(TabletUtils.instance.detailsController.animationDuration);
+          },
+        ),
+        TutorialElementGroup(
+          elements: [
+            TutorialElement(
+              globalKey: documentTab,
+              content: (pos, box) => TripDocumentsTabTutorial(
+                position: pos,
+                box: box,
+              ),
+            ),
+            TutorialElement(
+              globalKey: documentCard,
+              content: (pos, box) => TripDocumentsCardTutorial(
+                position: pos,
+                box: box,
+              ),
+            ),
+            TutorialElement(
+                globalKey: documentButton,
+                content: (pos, box) => TripDocumentUploadButton(
+                      position: pos,
+                      box: box,
+                    ),
+                shape: WidgetShape.circle),
+          ],
+          onSkip: () async {
+            // TabletUtils.instance.detailsController.animateTo(2, duration: Duration.zero);
+            // await Future.delayed(TabletUtils.instance.detailsController.animationDuration);
+          },
+        ),
+        // TutorialElementGroup(
+        //   elements: [
+        //     TutorialElement(
+        //       globalKey: infoTab,
+        //       content: (pos, box) => TripDetailsTabTutorial(
+        //         position: pos,
+        //         box: box,
+        //       ),
+        //     ),
+        //     TutorialElement(
+        //       globalKey: stopCard,
+        //       content: (pos, box) => StopCardTutorial(
+        //         position: pos,
+        //         box: box,
+        //       ),
+        //     ),
+        //   ],
+        //   onSkip: () async {
+        //     TabletUtils.instance.detailsController.animateTo(2, duration: Duration.zero);
+        //   },
+        // )
       ];
 
   final GlobalKey<NavigatorState> navKey;
   final GoRouter navigator;
+  final FirstInstallNotifier firstInstall;
   int index = 0;
   OverlayEntry? entry;
-  TutorialController({required this.navigator, required this.navKey});
+  void Function()? onEnd;
+  TutorialController({required this.firstInstall, required this.navigator, required this.navKey});
+  Future<void> endTutorial() async {
+    index = 0;
+    firstInstall.setState(false);
+    await storage.write(key: StorageKey.firstInstall.name, value: 'false');
+    onEnd?.call();
+  }
 
-  void startTutorial(BuildContext context) {
-    if (index == tutorials.length) return;
+  void startTutorial(BuildContext context, void Function() onEnd, [int startIndex = 0, int? endIndex]) {
+    if (index == tutorials.length || !firstInstall.currentState) {
+      index = 0;
+      return;
+    }
+    this.onEnd = onEnd;
+    endIndex ??= tutorials.length;
+    index = startIndex;
     var item = tutorials[index];
-    var res = item.globalKey.getKeyPosition(context)!;
+
     entry = OverlayEntry(
-        builder: (context) => Tutorial(
-              position: res.widgetBox,
-              shape: item.shape,
+        builder: (c) => Tutorial(
+              data: item.elements
+                  .map((e) {
+                    var position = e.globalKey.getKeyPosition(context)!;
+                    // if (position == null) return null;
+                    return TutorialData(
+                      position: position.widgetBox,
+                      shape: e.shape,
+                      content: e.content(position.position, position.widgetBox),
+                      inflate: e.inflate,
+                    );
+                  })
+                  .removeNulls
+                  .toList(),
               endTutorial: () async {
-                index = tutorials.length;
+                await endTutorial();
               },
               skip: () async {
+                if (index >= endIndex! - 1) {
+                  await endTutorial();
+                  return;
+                }
                 await item.onSkip?.call();
-                if (context.mounted) next(context);
+                WidgetsBinding.instance.addPostFrameCallback((_) async {
+                  next(context, endIndex!);
+                });
               },
-              inflate: item.inflate,
-              content: item.content(res.position, res.widgetBox),
+              finalTutorial: index >= endIndex! - 1,
             ));
     Overlay.of(context, rootOverlay: true).insert(entry!);
   }
 
-  void next(BuildContext context) {
+  void showTutorialSection(BuildContext context, int startIndex, int endIndex, void Function() onEnd) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      // this.onEnd = onEnd;
+      firstInstall.setState(true);
+      startTutorial(context, onEnd, startIndex, endIndex);
+      firstInstall.setState(false);
+    });
+  }
+
+  void next(BuildContext context, int endIndex) {
     index++;
-    startTutorial(context);
+    startTutorial(context, onEnd!, index, endIndex);
   }
 }
 
 final tutorialProvider = Provider<TutorialController>((ref) {
-  return TutorialController(navKey: ref.read(globalErrorHandlerProvider).navKey, navigator: ref.read(getRouter));
+  return TutorialController(
+    navKey: ref.read(globalErrorHandlerProvider).navKey,
+    navigator: ref.read(getRouter),
+    firstInstall: ref.read(firstInstallProvider.notifier),
+  );
 });
+
+MapEntry<Rect, RenderBox> getKeyDetails(GlobalKey key) {
+  RenderBox target = key.currentContext!.findRenderObject() as RenderBox;
+  Rect markRect = target.localToGlobal(Offset.zero) & target.size;
+  return MapEntry(markRect, target);
+}
+
+final firstInstallProvider = NotifierProvider<FirstInstallNotifier, bool>(FirstInstallNotifier.new);
+
+class FirstInstallNotifier extends Notifier<bool> {
+  final bool firstInstall;
+
+  FirstInstallNotifier([this.firstInstall = true]);
+  @override
+  bool build() {
+    state = firstInstall;
+    return state;
+  }
+
+  void setState(bool x) => state = x;
+
+  bool get currentState => state;
+}

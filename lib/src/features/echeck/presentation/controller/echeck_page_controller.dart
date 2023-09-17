@@ -37,10 +37,7 @@ class EcheckPageController extends AsyncNotifier<ECheckState> implements IAppErr
       .toList();
 
   void setReason(String? val) {
-    print(val);
-    print(state.value!.reason);
     state = AsyncData(state.value!.copyWith(reason: val));
-    print(state.value!.reason);
     if (!state.value!.showStopDropdown) {
       setStopId(null);
     }
@@ -52,7 +49,6 @@ class EcheckPageController extends AsyncNotifier<ECheckState> implements IAppErr
 
   void setAmount(String? amount) {
     state = AsyncValue.data(state.value!.copyWith(amount: double.tryParse(amount.currencyNumbersOnly) ?? 0));
-    print(state.value!.amount);
   }
 
   void setNote(String? note) {

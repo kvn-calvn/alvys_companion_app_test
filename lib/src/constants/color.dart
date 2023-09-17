@@ -1,5 +1,6 @@
-import '../utils/extensions.dart';
 import 'package:flutter/material.dart';
+
+import '../utils/extensions.dart';
 
 class ColorManager {
   static Color primary(Brightness brightness) => brightness.isLight ? const Color(0XFF233E90) : const Color(0XFF265CFF);

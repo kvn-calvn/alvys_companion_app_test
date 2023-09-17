@@ -58,7 +58,6 @@ class AvysAuthRepository<T> implements AuthRepository<T> {
   @override
   Future<DriverAsset> getDriverAsset(String companyCode, String driverId) async {
     await Helpers.setCompanyCode(companyCode);
-    print('${ApiRoutes.driverAsset(driverId)}+ $companyCode');
     var res = await httpClient.getData<T>(ApiRoutes.driverAsset(driverId));
     return DriverAsset.fromJson(res.body.toDecodedJson);
   }

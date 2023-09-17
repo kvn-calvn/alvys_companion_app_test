@@ -26,28 +26,23 @@ class TabletView extends ConsumerWidget {
   }
 }
 
-class TabletLeftNav extends StatefulWidget {
+class TabletLeftNav extends ConsumerStatefulWidget {
   const TabletLeftNav({super.key});
 
   @override
-  State<TabletLeftNav> createState() => _TabletLeftNavState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _TabletLeftNavState();
 }
 
-class _TabletLeftNavState extends State<TabletLeftNav> {
-  int currentIndex = 0;
+class _TabletLeftNavState extends ConsumerState<TabletLeftNav> {
   var pages = <Widget>[const LoadListPage(), const ProfilePage(), const SettingsPage()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: pages[currentIndex],
+      body: pages[ref.watch(tabletViewProvider)],
       bottomNavigationBar: BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
-        currentIndex: currentIndex,
-        onTap: (i) {
-          setState(() {
-            currentIndex = i;
-          });
-        },
+        currentIndex: ref.read(tabletViewProvider),
+        onTap: ref.read(tabletViewProvider.notifier).setState,
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Alvys3Icons.tripIcon),
@@ -65,4 +60,16 @@ class _TabletLeftNavState extends State<TabletLeftNav> {
       ),
     );
   }
+}
+
+final tabletViewProvider = NotifierProvider<TabletViewNotifier, int>(TabletViewNotifier.new);
+
+class TabletViewNotifier extends Notifier<int> {
+  @override
+  int build() {
+    state = 0;
+    return state;
+  }
+
+  void setState(int x) => state = x;
 }

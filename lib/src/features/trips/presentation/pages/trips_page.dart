@@ -31,6 +31,9 @@ class _LoadListPageState extends ConsumerState<LoadListPage> with TickerProvider
     _tabController = TabController(length: 3, vsync: this);
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
+      ref
+          .read(tutorialProvider)
+          .startTutorial(context, () async => ref.read(tripControllerProvider.notifier).handleAfterTutorial(context));
       //checkLocationPermission(context);
     });
   }
@@ -73,11 +76,20 @@ class _LoadListPageState extends ConsumerState<LoadListPage> with TickerProvider
         ),
         actions: [
           IconButton(
-              key: ref.read(tutorialProvider).refresh,
-              onPressed: () async {
-                await ref.read(tripControllerProvider.notifier).refreshTrips(true);
-              },
-              icon: const Icon(Icons.refresh))
+            constraints: const BoxConstraints(),
+            onPressed: () async {
+              await ref.read(tripControllerProvider.notifier).showTripListPreview(context, 0, 0);
+            },
+            icon: const Icon(Icons.info),
+          ),
+          IconButton(
+            constraints: const BoxConstraints(),
+            key: ref.read(tutorialProvider).refresh,
+            onPressed: () async {
+              await ref.read(tripControllerProvider.notifier).refreshTrips(true);
+            },
+            icon: const Icon(Icons.refresh),
+          )
           // Padding(
           //   padding: const EdgeInsets.only(right: 16.0),
           //   child: Container(

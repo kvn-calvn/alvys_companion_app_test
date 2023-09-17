@@ -1,10 +1,11 @@
-import 'auth_provider_controller.dart';
-import '../../trips/presentation/controller/trip_page_controller.dart';
-import '../../tutorial/tutorial_controller.dart';
-import '../../../utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
+
+import '../../../utils/magic_strings.dart';
+import '../../trips/presentation/controller/trip_page_controller.dart';
+import '../../tutorial/tutorial_controller.dart';
+import 'auth_provider_controller.dart';
 
 class DriverStatusDropdown extends ConsumerWidget {
   const DriverStatusDropdown({super.key});

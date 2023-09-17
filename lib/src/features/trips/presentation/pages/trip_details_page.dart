@@ -1,3 +1,6 @@
+import '../../../../utils/extensions.dart';
+import '../../../../utils/tablet_utils.dart';
+
 import '../../../authentication/presentation/auth_provider_controller.dart';
 import '../../../google_maps_helper/presentation/trip_google_map.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
@@ -11,25 +14,32 @@ import '../../../../common_widgets/shimmers/trip_details_shimmer.dart';
 import '../../../../common_widgets/stop_card.dart';
 import '../../../../utils/app_theme.dart';
 import '../../../echeck/presentation/pages/echeck_page.dart';
+import '../../../tutorial/tutorial_controller.dart';
 import '../controller/trip_page_controller.dart';
 import 'trip_documents_page.dart';
 
 class LoadDetailsPage extends ConsumerStatefulWidget {
   final String tripId;
-
-  const LoadDetailsPage(this.tripId, {Key? key}) : super(key: key);
+  final int tabIndex;
+  const LoadDetailsPage(this.tripId, this.tabIndex, {Key? key}) : super(key: key);
 
   @override
   ConsumerState<LoadDetailsPage> createState() => _LoadDetailsPageState();
 }
 
 class _LoadDetailsPageState extends ConsumerState<LoadDetailsPage> with TickerProviderStateMixin {
-  late TabController _tabController;
+  // late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    TabletUtils.instance.detailsController = TabController(initialIndex: widget.tabIndex, length: 3, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    TabletUtils.instance.detailsController.dispose();
+    super.dispose();
   }
 
   @override
@@ -50,31 +60,58 @@ class _LoadDetailsPageState extends ConsumerState<LoadDetailsPage> with TickerPr
             GoRouter.of(context).pop();
           },
         ),
+        actions: [
+          IconButton(
+            constraints: const BoxConstraints(),
+            onPressed: () async {
+              var previousTripId = widget.tripId;
+              await ref.read(tripControllerProvider.notifier).showTripDetailsTutorialPreview(
+                  context,
+                  TabletUtils.instance.detailsController.index + 1,
+                  TabletUtils.instance.detailsController.index + 1,
+                  previousTripId);
+              // context.goNamed(RouteName.tripDetails.name, pathParameters: {ParamType.tripId.name: testTrip.id!});
+              // ref.read(tripControllerProvider.notifier).prepareTutorialPreview(context,
+              //     TabletUtils.instance.detailsController.index + 1, TabletUtils.instance.detailsController.index + 1);
+              // ref.read(tutorialProvider).showTutorialSection(context, TabletUtils.instance.detailsController.index + 1,
+              //     TabletUtils.instance.detailsController.index + 1, () async {
+              //   context.goNamed(RouteName.tripDetails.name, pathParameters: {ParamType.tripId.name: previousTripId});
+              //   // await ref.read(tripControllerProvider.notifier).refreshTrips(true);
+              // });
+            },
+            icon: const Icon(Icons.info),
+          ),
+        ],
         centerTitle: true,
         backgroundColor: Colors.transparent,
         elevation: 0,
         bottom: TabBar(
-          controller: _tabController,
+          controller: TabletUtils.instance.detailsController,
           labelStyle: Theme.of(context).textTheme.bodyLarge,
-          onTap: (value) {
-            /*if (functions.isLoading)
-                  setState(() => tabController.index = 0);*/
-          },
-          tabs: const <Widget>[
-            Tab(
-              text: 'Details',
-            ),
-            Tab(
-              text: 'E-Checks',
-            ),
-            Tab(
-              text: 'Documents',
-            )
+          tabs: <Widget>[
+            Consumer(builder: (context, ref, child) {
+              return Tab(
+                key: ref.read(tutorialProvider).infoTab,
+                text: 'Details',
+              );
+            }),
+            Consumer(builder: (context, ref, child) {
+              return Tab(
+                key: ref.read(tutorialProvider).echeckTab,
+                text: 'E-Checks',
+              );
+            }),
+            Consumer(builder: (context, ref, child) {
+              return Tab(
+                key: ref.read(tutorialProvider).documentTab,
+                text: 'Documents',
+              );
+            })
           ],
         ),
       ),
-      body: TabBarView(controller: _tabController, children: [
-        TripDetails(widget.tripId),
+      body: TabBarView(controller: TabletUtils.instance.detailsController, children: [
+        TripDetails(widget.tripId, widget.tabIndex),
         EcheckPage(widget.tripId),
         TripDocuments(widget.tripId)
         // DocumentsPage(DocumentsArgs(DocumentType.tripDocuments, widget.tripId)),
@@ -85,7 +122,8 @@ class _LoadDetailsPageState extends ConsumerState<LoadDetailsPage> with TickerPr
 
 class TripDetails extends ConsumerWidget {
   final String tripId;
-  const TripDetails(this.tripId, {Key? key}) : super(key: key);
+  final int tabIndex;
+  const TripDetails(this.tripId, this.tabIndex, {Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -166,12 +204,12 @@ class TripDetails extends ConsumerWidget {
                               ),
                             ),
                           ],
-                          if (trip.driverPayable(authState.value!.currentUserTenant(trip.companyCode!).assetId!) !=
+                          if (trip.driverPayable(authState.value!.tryGetUserTenant(trip.companyCode!)?.assetId) !=
                                   null &&
                               authState.value!.shouldShowPayableAmount(trip.companyCode!)) ...[
                             Chip(
                               label: Text(
-                                'Driver Payable ${NumberFormat.simpleCurrency().format(trip.driverPayable(authState.value!.currentUserTenant(trip.companyCode!).assetId!))}',
+                                'Driver Payable ${NumberFormat.simpleCurrency().format(trip.driverPayable(authState.value!.tryGetUserTenant(trip.companyCode!)!.assetId!))}',
                                 style: Theme.of(context).textTheme.bodyMedium!,
                               ),
                             ),
@@ -201,9 +239,11 @@ class TripDetails extends ConsumerWidget {
                   Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      ...trip.stops!.map((stop) => StopCard(
+                      ...trip.stops!.mapList((stop, index, last) => StopCard(
+                            index: index,
                             stop: stop,
                             tripId: trip.id!,
+                            tabIndex: tabIndex,
                             canCheckInOutStopId: trip.canCheckInOutStopId,
                           ))
                     ],

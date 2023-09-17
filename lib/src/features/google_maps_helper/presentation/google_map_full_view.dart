@@ -1,5 +1,3 @@
-import 'package:go_router/go_router.dart';
-
 import 'full_map_stop_card.dart';
 import 'map_controller.dart';
 import '../../../utils/tablet_utils.dart';

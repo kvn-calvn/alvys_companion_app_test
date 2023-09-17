@@ -23,16 +23,6 @@ extension ListExt<T, K> on Iterable<T>? {
     return this!.map((e) => e).toList();
   }
 
-  bool get isNullOrEmpty {
-    if (this == null) return true;
-    return this!.isEmpty;
-  }
-
-  bool get isNotNullOrEmpty {
-    if (this == null) return false;
-    return this!.isNotEmpty;
-  }
-
   bool containsElement(T? element) {
     if (this == null) return false;
     if (element == null) return false;

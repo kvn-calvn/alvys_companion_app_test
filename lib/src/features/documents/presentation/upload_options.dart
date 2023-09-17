@@ -1,14 +1,15 @@
 import 'dart:io';
 
-import '../../../../custom_icons/alvys3_icons.dart';
-import 'upload_documents_controller.dart';
-import '../../../utils/exceptions.dart';
-import '../../../utils/magic_strings.dart';
-import '../../../utils/permission_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
+
+import '../../../../custom_icons/alvys3_icons.dart';
+import '../../../utils/exceptions.dart';
+import '../../../utils/magic_strings.dart';
+import '../../../utils/permission_helper.dart';
+import 'upload_documents_controller.dart';
 
 class UploadOptions extends ConsumerWidget {
   final DisplayDocumentType documentType;

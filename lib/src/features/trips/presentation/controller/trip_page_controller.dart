@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import '../../../tutorial/tutorial_controller.dart';
+import '../../../../utils/dummy_data.dart';
+import 'package:go_router/go_router.dart';
 import '../../domain/app_trip/echeck.dart';
 
 import '../../domain/app_trip/stop.dart';
@@ -15,7 +18,6 @@ import '../../domain/app_trip/trip_list_state.dart';
 import '../../data/repositories/trip_repository.dart';
 import '../../../../utils/magic_strings.dart';
 import '../../../../utils/platform_channel.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
@@ -29,14 +31,56 @@ part 'trip_page_controller.g.dart';
 class TripController extends _$TripController implements IAppErrorHandler {
   late TripRepository tripRepo;
   late AuthProviderNotifier auth;
+  late TutorialController tutorial;
+  String? tripId;
+  var storage = const FlutterSecureStorage();
   @override
   FutureOr<TripListState> build() async {
     tripRepo = ref.read(tripRepoProvider);
     auth = ref.read(authProvider.notifier);
-    state = AsyncValue.data(TripListState());
-    await getTrips();
+    tutorial = ref.read(tutorialProvider);
+    if (!tutorial.firstInstall.currentState) {
+      state = AsyncValue.data(TripListState());
+      await getTrips();
+    } else {
+      state = AsyncValue.data(TripListState(trips: [testTrip]));
+    }
 
     return state.value!;
+  }
+
+  Future<void> showTripListPreview(BuildContext context, int startIndex, int endIndex, [void Function()? onEnd]) async {
+    if (state.isLoading) return;
+    state = AsyncValue.data(TripListState(trips: [testTrip]));
+    tutorial.showTutorialSection(context, startIndex, endIndex, () async {
+      refreshTrips(true);
+      onEnd?.call();
+    });
+  }
+
+  Future<void> showTripDetailsTutorialPreview(
+      BuildContext context, int startIndex, int endIndex, String currentTripId) async {
+    if (state.isLoading) return;
+    tripId = currentTripId;
+    await showTripListPreview(context, startIndex, endIndex, () {
+      context.goNamed(
+        RouteName.tripDetails.name,
+        pathParameters: {ParamType.tripId.name: tripId!},
+        queryParameters: {ParamType.tabIndex.name: (startIndex - 1).toString()},
+      );
+    });
+    if (context.mounted) {
+      context.goNamed(
+        RouteName.tripDetails.name,
+        pathParameters: {ParamType.tripId.name: testTrip.id!},
+        queryParameters: {ParamType.tabIndex.name: (startIndex - 1).toString()},
+      );
+    }
+  }
+
+  void handleAfterTutorial(BuildContext context) {
+    context.goNamed(RouteName.trips.name);
+    refreshTrips(true);
   }
 
   Future<void> startLocationTracking() async {
@@ -81,6 +125,11 @@ class TripController extends _$TripController implements IAppErrorHandler {
     final result = await tripRepo.getTrips<TripController>();
     state = AsyncValue.data(state.value!.copyWith(trips: result));
     await startLocationTracking();
+  }
+
+  Future<void> endTutorial() async {
+    await storage.write(key: StorageKey.firstInstall.name, value: 'false');
+    await getTrips();
   }
 
   AppTrip? getTrip(String tripID) => state.value!.getTrip(tripID);

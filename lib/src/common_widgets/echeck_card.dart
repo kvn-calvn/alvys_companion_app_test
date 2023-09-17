@@ -1,3 +1,6 @@
+import '../features/tutorial/tutorial_controller.dart';
+import '../utils/dummy_data.dart';
+
 import '../features/authentication/presentation/auth_provider_controller.dart';
 
 import '../features/echeck/presentation/controller/echeck_page_controller.dart';
@@ -14,10 +17,15 @@ import 'package:google_fonts/google_fonts.dart';
 class EcheckCard extends ConsumerWidget {
   final ECheck eCheck;
   final String tripId, companyCode;
-
-  final Function(String echeckNumber) cancelECheck;
+  final int index;
+  final void Function(String echeckNumber) cancelECheck;
   const EcheckCard(
-      {required this.companyCode, Key? key, required this.eCheck, required this.cancelECheck, required this.tripId})
+      {required this.companyCode,
+      required this.index,
+      Key? key,
+      required this.eCheck,
+      required this.cancelECheck,
+      required this.tripId})
       : super(key: key);
 
   void showEcheckMenu(BuildContext context, bool canCancelEcheck, String? checkNumber) {
@@ -72,6 +80,7 @@ class EcheckCard extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 12),
       child: Material(
+        key: index == 0 && tripId == testTrip.id! ? ref.read(tutorialProvider).echeckCard : null,
         elevation: 2.5,
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(10),
