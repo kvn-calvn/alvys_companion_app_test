@@ -26,8 +26,7 @@ import '../domain/models/auth_state/auth_state.dart';
 import '../domain/models/driver_user/driver_user.dart';
 import '../domain/models/driver_user/user_tenant.dart';
 
-class AuthProviderNotifier extends AsyncNotifier<AuthState>
-    implements IAppErrorHandler {
+class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppErrorHandler {
   final DriverUser? driver;
   String? status;
   late AuthRepository<AuthProviderNotifier> authRepo;
@@ -36,14 +35,12 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState>
   @override
   FutureOr<AuthState> build() {
     authRepo = ref.read(authRepoProvider);
-    state = AsyncValue.data(AuthState(
-        driver: driver, driverStatus: status, driverLoggedIn: driver != null));
+    state = AsyncValue.data(AuthState(driver: driver, driverStatus: status, driverLoggedIn: driver != null));
     return state.value!;
   }
 
   void setUserTenantCompanyCode(String? companyCode) {
-    state = AsyncValue.data(
-        state.value!.copyWith(userTenantCompanyCode: companyCode));
+    state = AsyncValue.data(state.value!.copyWith(userTenantCompanyCode: companyCode));
   }
 
   void setPhone(String? p) {
@@ -51,60 +48,46 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState>
   }
 
   void setVerificationCode(String v) {
-    state =
-        AsyncValue.data(state.value!.copyWith(verificationCode: v.numbersOnly));
+    state = AsyncValue.data(state.value!.copyWith(verificationCode: v.numbersOnly));
   }
 
   void setDriverUserData(DriverUser? data) {
-    state = AsyncValue.data(
-        state.value!.copyWith(driver: data, driverLoggedIn: driver != null));
+    state = AsyncValue.data(state.value!.copyWith(driver: data, driverLoggedIn: driver != null));
   }
 
   void logOutDriver() {
-    state = AsyncValue.data(state.value!
-        .copyWith(phone: '', verificationCode: '', driverLoggedIn: false));
+    state = AsyncValue.data(state.value!.copyWith(phone: '', verificationCode: '', driverLoggedIn: false));
   }
 
   DriverUser? get stateUser => state.value!.driver;
 
   Future<void> verifyDriver(BuildContext context, bool mounted) async {
     state = const AsyncValue.loading();
-    var driverRes = await authRepo.verifyDriverCode(
-        state.value!.phone, state.value!.verificationCode);
-    var driverTenant = driverRes.userTenants
-        .firstWhereOrNull((element) => element.companyOwnedAsset!);
-    await storage.write(
-        key: StorageKey.driverData.name,
-        value: driverRes.toJson().toJsonEncodedString);
+    var driverRes = await authRepo.verifyDriverCode(state.value!.phone, state.value!.verificationCode);
+    var driverTenant = driverRes.userTenants.firstWhereOrNull((element) => element.companyOwnedAsset!);
+    await storage.write(key: StorageKey.driverData.name, value: driverRes.toJson().toJsonEncodedString);
     await storage.write(
       key: StorageKey.driverToken.name,
-      value: base64
-          .encode(utf8.encode("${driverRes.userName}:${driverRes.appToken}")),
+      value: base64.encode(utf8.encode("${driverRes.userName}:${driverRes.appToken}")),
     );
     String? driverStatus;
     if (driverTenant != null) {
-      var driverAsset = await authRepo.getDriverAsset(
-          driverTenant.companyCode!, driverTenant.assetId!);
+      var driverAsset = await authRepo.getDriverAsset(driverTenant.companyCode!, driverTenant.assetId!);
       await storage.write(
-          key: StorageKey.driverStatus.name,
-          value: DriverStatus.initStatus(driverAsset.status).titleCase);
+          key: StorageKey.driverStatus.name, value: DriverStatus.initStatus(driverAsset.status).titleCase);
       driverStatus = driverAsset.status;
     }
-    state = AsyncValue.data(state.value!
-        .copyWith(driver: driverRes, driverStatus: driverStatus?.titleCase));
+    state = AsyncValue.data(state.value!.copyWith(driver: driverRes, driverStatus: driverStatus?.titleCase));
     await FirebaseAnalytics.instance.setUserId(id: driverRes.phone);
-    await FirebaseAnalytics.instance
-        .setUserProperty(name: 'driverId', value: driverRes.phone);
-    await FirebaseCrashlytics.instance
-        .setUserIdentifier(driverRes.phone.toString());
+    await FirebaseAnalytics.instance.setUserProperty(name: 'driverId', value: driverRes.phone);
+    await FirebaseCrashlytics.instance.setUserIdentifier(driverRes.phone.toString());
 
     var locationStatus = await Permission.location.status;
     var notificationStatus = await Permission.notification.status;
 
     if (locationStatus.isPermanentlyDenied || locationStatus.isDenied) {
       if (mounted) context.goNamed(RouteName.locationPermission.name);
-    } else if (notificationStatus.isDenied ||
-        notificationStatus.isPermanentlyDenied) {
+    } else if (notificationStatus.isDenied || notificationStatus.isPermanentlyDenied) {
       if (mounted) context.goNamed(RouteName.notificationPermission.name);
     } else {
       debugPrint("GO_STRAIGHT_HOME");
@@ -160,23 +143,19 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState>
   }
 
   Future<void> updateUserProfile<K>(UpdateUserDTO dto) async {
-    var res =
-        await authRepo.updateDriverUser<K>(getCompanyOwned.companyCode!, dto);
+    var res = await authRepo.updateDriverUser<K>(getCompanyOwned.companyCode!, dto);
     updateUser(res);
   }
 
-  Future<void> updateDriverStatus(String? status) async {
-    if (status != null) {
-      this.status = state.value!.driverStatus;
-      state = AsyncValue.data(state.value!.copyWith(driverStatus: status));
+  Future<void> updateDriverStatus(String? s) async {
+    if (s != null) {
+      status = state.value!.driverStatus;
+      state = AsyncValue.data(state.value!.copyWith(driverStatus: s));
       var location = await Helpers.getUserPosition(() {});
       var dto = UpdateDriverStatusDTO(
-          status: status.toUpperCase(),
-          id: '',
-          latitude: location.latitude,
-          longitude: location.longitude);
+          status: s.toUpperCase(), id: '', latitude: location.latitude, longitude: location.longitude);
       await authRepo.updateDriverStatus(getCompanyOwned.companyCode!, dto);
-      await storage.write(key: StorageKey.driverStatus.name, value: status);
+      await storage.write(key: StorageKey.driverStatus.name, value: s);
     }
   }
 
@@ -187,8 +166,7 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState>
           phone: user.phone,
           userTenants: user.userTenants
               .map((e) => state.value!.driver!.userTenants
-                  .firstWhereOrNull(
-                      (element) => element.companyCode == e.companyCode)
+                  .firstWhereOrNull((element) => element.companyCode == e.companyCode)
                   ?.copyWith(permissions: e.permissions))
               .removeNulls
               .toList());
@@ -202,26 +180,28 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState>
       .toList();
 
   UserTenant? getCurrentUserTenant(String companyCode) =>
-      state.value!.driver!.userTenants
-          .firstWhereOrNull((element) => element.companyCode == companyCode);
+      state.value!.driver!.userTenants.firstWhereOrNull((element) => element.companyCode == companyCode);
   UserTenant get getCompanyOwned =>
-      state.value!.driver!.userTenants
-          .firstWhereOrNull((element) => element.companyOwnedAsset!) ??
+      state.value!.driver!.userTenants.firstWhereOrNull((element) => element.companyOwnedAsset!) ??
       state.value!.driver!.userTenants.first;
 
   Future<void> refreshDriverUser() async {
-    var res = await authRepo.getDriverUser(
-        getCompanyOwned.companyCode!, stateUser!.id!);
+    var res = await authRepo.getDriverUser(getCompanyOwned.companyCode!, stateUser!.id!);
+    var driverTenant = res.userTenants.firstWhereOrNull((element) => element.companyOwnedAsset!);
     updateUser(res);
+    if (driverTenant != null) {
+      var driverAsset = await authRepo.getDriverAsset(driverTenant.companyCode!, driverTenant.assetId!);
+      await storage.write(
+          key: StorageKey.driverStatus.name, value: DriverStatus.initStatus(driverAsset.status).titleCase);
+      state =
+          AsyncValue.data(state.value!.copyWith(driverStatus: DriverStatus.initStatus(driverAsset.status).titleCase));
+    }
   }
 
   @override
   FutureOr<void> onError() {
-    state = AsyncValue.data(status == null
-        ? state.value!
-        : state.value!.copyWith(driverStatus: status));
+    state = AsyncValue.data(status == null ? state.value! : state.value!.copyWith(driverStatus: status));
   }
 }
 
-var authProvider = AsyncNotifierProvider<AuthProviderNotifier, AuthState>(
-    AuthProviderNotifier.new);
+var authProvider = AsyncNotifierProvider<AuthProviderNotifier, AuthState>(AuthProviderNotifier.new);

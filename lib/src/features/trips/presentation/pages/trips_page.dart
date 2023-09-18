@@ -24,8 +24,7 @@ class LoadListPage extends ConsumerStatefulWidget {
   ConsumerState<LoadListPage> createState() => _LoadListPageState();
 }
 
-class _LoadListPageState extends ConsumerState<LoadListPage>
-    with TickerProviderStateMixin {
+class _LoadListPageState extends ConsumerState<LoadListPage> with TickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -34,37 +33,31 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
     _tabController = TabController(length: 3, vsync: this);
 
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      ref.read(tutorialProvider).startTutorial(
-          context,
-          () async => ref
-              .read(tripControllerProvider.notifier)
-              .handleAfterTutorial(context));
+      ref
+          .read(tutorialProvider)
+          .startTutorial(context, () async => ref.read(tripControllerProvider.notifier).handleAfterTutorial(context));
       //checkLocationPermission(context);
     });
   }
 
   Future<void> checkLocationPermission(BuildContext context) async {
-    if (await Permission.location.isPermanentlyDenied ||
-        await Permission.location.isDenied) {
+    if (await Permission.location.isPermanentlyDenied || await Permission.location.isDenied) {
       if (mounted) {
         await showDialog(
           context: context,
           builder: (BuildContext context) {
             return AppDialog(
               title: "Alvys wants to use your location.",
-              description:
-                  "Alvys uses your location data to track the movement of loads you have been assigned.",
+              description: "Alvys uses your location data to track the movement of loads you have been assigned.",
               actions: [
                 AppDialogAction(
                     label: 'Allow',
                     action: () {
-                      AppSettings.openAppSettings(
-                              type: AppSettingsType.location)
+                      AppSettings.openAppSettings(type: AppSettingsType.location)
                           .then((value) => GoRouter.of(context).pop());
                     },
                     primary: true),
-                AppDialogAction(
-                    label: 'Not Now', action: GoRouter.of(context).pop),
+                AppDialogAction(label: 'Not Now', action: GoRouter.of(context).pop),
               ],
             );
           },
@@ -87,9 +80,7 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
           IconButton(
             constraints: const BoxConstraints(),
             onPressed: () async {
-              await ref
-                  .read(tripControllerProvider.notifier)
-                  .showTripListPreview(context, 0, 0);
+              await ref.read(tripControllerProvider.notifier).showTripListPreview(context, 0, 0);
             },
             icon: const Icon(Icons.info),
           ),
@@ -97,11 +88,8 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
             constraints: const BoxConstraints(),
             key: ref.read(tutorialProvider).refresh,
             onPressed: () async {
-              await ref
-                  .read(tripControllerProvider.notifier)
-                  .refreshTrips(true);
-              await FirebaseAnalytics.instance
-                  .logEvent(name: "refresh_button_tapped");
+              await ref.read(tripControllerProvider.notifier).refreshTrips(true);
+              await FirebaseAnalytics.instance.logEvent(name: "refresh_button_tapped");
             },
             icon: const Icon(Icons.refresh),
           )
@@ -173,9 +161,7 @@ class TripList extends ConsumerWidget {
               child: tripsState.value!.activeTrips.isNotEmpty
                   ? ListView(
                       padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-                      children: tripsState.value!.activeTrips
-                          .map((trip) => TripCard(trip: trip))
-                          .toList(),
+                      children: tripsState.value!.activeTrips.map((trip) => TripCard(trip: trip)).toList(),
                     )
                   : const EmptyView(
                       title: "No Trips",

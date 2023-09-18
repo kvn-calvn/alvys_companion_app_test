@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:alvys3/src/utils/permission_helper.dart';
+
 import '../../../tutorial/tutorial_controller.dart';
 import '../../../../utils/dummy_data.dart';
 import 'package:go_router/go_router.dart';
@@ -36,6 +38,7 @@ class TripController extends _$TripController implements IAppErrorHandler {
   var storage = const FlutterSecureStorage();
   @override
   FutureOr<TripListState> build() async {
+    print('built ${StackTrace.current}');
     tripRepo = ref.read(tripRepoProvider);
     auth = ref.read(authProvider.notifier);
     tutorial = ref.read(tutorialProvider);
@@ -84,24 +87,13 @@ class TripController extends _$TripController implements IAppErrorHandler {
   }
 
   Future<void> startLocationTracking() async {
-    var storage = const FlutterSecureStorage();
     var status = await storage.read(key: StorageKey.driverStatus.name);
-    if (state.value!.activeTrips.isNotEmpty && (status == DriverStatus.online || status == null)) {
+    if (state.value!.activeTrips.isNotEmpty &&
+        (status?.toLowerCase() == DriverStatus.online.toLowerCase() || status == null)) {
       var trackingTrip = state.value!.activeTrips.firstWhereOrNull((e) => e.status == TripStatus.inTransit) ??
           state.value!.activeTrips.first;
-      var userState = ref.read(authProvider);
-
-      var authToken = await storage.read(key: StorageKey.driverToken.name);
       if (await Permission.location.isGranted) {
-        PlatformChannel.startLocationTracking(
-          userState.value!.driver!.name!,
-          trackingTrip.driver1Id!,
-          trackingTrip.tripNumber!,
-          trackingTrip.id!,
-          authToken!,
-          ApiRoutes.locationTracking,
-          trackingTrip.companyCode!,
-        );
+        startTracking(trackingTrip);
       }
     } else {
       PlatformChannel.stopLocationTracking();
@@ -116,7 +108,7 @@ class TripController extends _$TripController implements IAppErrorHandler {
       } else {
         PlatformChannel.stopLocationTracking();
       }
-      auth.updateDriverStatus(status);
+      await auth.updateDriverStatus(status);
     }
   }
 
@@ -130,6 +122,23 @@ class TripController extends _$TripController implements IAppErrorHandler {
   Future<void> endTutorial() async {
     await storage.write(key: StorageKey.firstInstall.name, value: 'false');
     await getTrips();
+  }
+
+  Future<void> startTracking(AppTrip trip) async {
+    var authToken = await storage.read(key: StorageKey.driverToken.name);
+    var userState = ref.read(authProvider);
+    var res = await PermissionHelper.getPermission(Permission.location);
+    if (res) {
+      PlatformChannel.startLocationTracking(
+        userState.value!.driver!.name!,
+        trip.driver1Id!,
+        trip.tripNumber!,
+        trip.id!,
+        authToken!,
+        ApiRoutes.locationTracking,
+        trip.companyCode!,
+      );
+    }
   }
 
   AppTrip? getTrip(String tripID) => state.value!.getTrip(tripID);
@@ -188,6 +197,7 @@ class TripController extends _$TripController implements IAppErrorHandler {
     var dto = UpdateStopTimeRecord(latitude: location.latitude, longitude: location.longitude, timeIn: DateTime.now());
     var newStop = await tripRepo.updateStopTimeRecord(trip.companyCode!, tripId, stopId, dto);
     updateStop(tripId, newStop);
+    startTracking(trip);
     state = AsyncValue.data(state.value!.copyWith(loadingStopId: null, checkIn: true));
   }
 
@@ -201,6 +211,7 @@ class TripController extends _$TripController implements IAppErrorHandler {
     var dto = UpdateStopTimeRecord(latitude: location.latitude, longitude: location.longitude, timeOut: DateTime.now());
     var stop = await tripRepo.updateStopTimeRecord(trip.companyCode!, tripId, stopId, dto);
     updateStop(tripId, stop);
+    startTracking(trip);
     state = AsyncValue.data(state.value!.copyWith(loadingStopId: null, checkIn: false));
   }
 

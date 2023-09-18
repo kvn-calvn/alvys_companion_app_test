@@ -14,7 +14,6 @@ class DriverStatusDropdown extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var authState = ref.watch(authProvider);
     var status = authState.value!.driverStatus;
-    var tripController = ref.read(tripControllerProvider.notifier);
     return DropdownButtonHideUnderline(
       key: ref.read(tutorialProvider).sleepDropdown,
       child: DropdownButton(
@@ -97,7 +96,7 @@ class DriverStatusDropdown extends ConsumerWidget {
         //     ),
         //   )
         // ],
-        onChanged: (String? value) => tripController.updateDriverStatus(value),
+        onChanged: (String? value) => ref.read(tripControllerProvider.notifier).updateDriverStatus(value),
       ),
     );
   }

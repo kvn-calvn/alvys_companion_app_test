@@ -11,7 +11,6 @@ class Helpers {
       return Future.error(
           AlvysException("Go to settings and enable location services", 'Location services are disabled.', onError));
     }
-
     var permission = await Geolocator.checkPermission();
     if (permission == LocationPermission.denied) {
       permission = await Geolocator.requestPermission();
@@ -20,12 +19,11 @@ class Helpers {
             "Location permissions are denied. Go to settings and enable location services", onError));
       }
     }
-
     if (permission == LocationPermission.deniedForever) {
       return Future.error(
           PermissionException('Location permissions are permanently denied, we cannot request permissions.', onError));
     }
-    return await Geolocator.getCurrentPosition(forceAndroidLocationManager: true);
+    return await Geolocator.getCurrentPosition();
   }
 
   static Future<void> setCompanyCode(String companyCode) async {

@@ -30,14 +30,14 @@ class _EcheckPageState extends ConsumerState<EcheckPage> {
     super.initState();
   }
 
+  EcheckPageController get notifier => ref.read(echeckPageControllerProvider.notifier);
   @override
   Widget build(BuildContext context) {
     var authState = ref.watch(authProvider);
-    var notifier = ref.read(echeckPageControllerProvider.notifier);
     var state = ref.watch(tripControllerProvider);
     if (state.isLoading) return const EchecksShimmer();
 
-    var trip = ref.watch(tripControllerProvider).value!.tryGetTrip(widget.tripId);
+    var trip = state.value!.tryGetTrip(widget.tripId);
     if (trip == null) return const EmptyView(title: 'Trip Not found', description: 'Return to the previous page');
     return Stack(
       children: [

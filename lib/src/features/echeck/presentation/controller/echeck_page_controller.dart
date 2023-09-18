@@ -23,6 +23,7 @@ class EcheckPageController extends AutoDisposeAsyncNotifier<ECheckState> impleme
 
   @override
   FutureOr<ECheckState> build() {
+    print('built');
     tripController = ref.read(tripControllerProvider.notifier);
     repo = ref.read(eCheckRepoProvider);
     auth = ref.read(authProvider.notifier);
