@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
 import 'dart:ui';
 
 import 'package:flexible_polyline/flexible_polyline.dart';
@@ -21,14 +20,19 @@ class GoogleMapsRepo {
   static String get googleMapsKey => FlavorConfig.instance!.gMapsKey;
   static String get baseUrl => 'maps.googleapis.com';
   static Future<GooglePlacesResults> searchAddresses(String text) async {
-    var url = Uri.https(baseUrl, '/maps/api/place/autocomplete/json', {'input': text, 'key': googleMapsKey});
+    var url = Uri.https(baseUrl, '/maps/api/place/autocomplete/json',
+        {'input': text, 'key': googleMapsKey});
     var res = await get(url);
-    if (res.statusCode != 200) return GooglePlacesResults(predictions: [], status: 'ERROR');
+    if (res.statusCode != 200) {
+      return GooglePlacesResults(predictions: [], status: 'ERROR');
+    }
     return GooglePlacesResults.fromJson(res.body.toDecodedJson);
   }
 
-  static Future<GooglePlacesDetailsResult> getPlaceDetails(String placeId) async {
-    var url = Uri.https(baseUrl, '/maps/api/place/details/json', {'place_id': placeId, 'key': googleMapsKey});
+  static Future<GooglePlacesDetailsResult> getPlaceDetails(
+      String placeId) async {
+    var url = Uri.https(baseUrl, '/maps/api/place/details/json',
+        {'place_id': placeId, 'key': googleMapsKey});
     var res = await get(url);
     if (res.statusCode != 200) {
       return GooglePlacesDetailsResult(
@@ -39,7 +43,8 @@ class GoogleMapsRepo {
     return GooglePlacesDetailsResult.fromJson(res.body.toDecodedJson);
   }
 
-  Future<Map<PolylineId, Polyline>> getPolyLines(List<LatLng> coordinates, [String overview = 'simplified']) async {
+  Future<Map<PolylineId, Polyline>> getPolyLines(List<LatLng> coordinates,
+      [String overview = 'simplified']) async {
     var hasResults = true;
     var res = <PolylineId, Polyline>{};
     for (int i = 0; i < coordinates.length - 1; i++) {
@@ -50,7 +55,8 @@ class GoogleMapsRepo {
 
       if (response.statusCode == 200) {
         Map<String, dynamic> parsedJson = jsonDecode(response.body);
-        String routesPolyline = parsedJson["routes"][0]['sections'][0]['polyline'];
+        String routesPolyline =
+            parsedJson["routes"][0]['sections'][0]['polyline'];
 
         final coorValues = FlexiblePolyline.decode(routesPolyline);
         List<LatLng> routesPoints = [];
@@ -89,14 +95,22 @@ class GoogleMapsRepo {
         if (latLng.longitude < y0!) y0 = latLng.longitude;
       }
     }
-    return LatLngBounds(northeast: LatLng(x1!, y1!), southwest: LatLng(x0!, y0!));
+    return LatLngBounds(
+        northeast: LatLng(x1!, y1!), southwest: LatLng(x0!, y0!));
   }
 
-  Future<Uint8List> getMapMarkerBytesFromAsset(String path, [int width = 24]) async {
-    var w = (WidgetsBinding.instance.platformDispatcher.implicitView!.devicePixelRatio * width).toInt();
+  Future<Uint8List> getMapMarkerBytesFromAsset(String path,
+      [int width = 24]) async {
+    var w = (WidgetsBinding
+                .instance.platformDispatcher.implicitView!.devicePixelRatio *
+            width)
+        .toInt();
     ByteData data = await rootBundle.load(path);
-    var codec = await instantiateImageCodec(data.buffer.asUint8List(), targetWidth: w);
+    var codec =
+        await instantiateImageCodec(data.buffer.asUint8List(), targetWidth: w);
     FrameInfo fi = await codec.getNextFrame();
-    return (await fi.image.toByteData(format: ImageByteFormat.png))!.buffer.asUint8List();
+    return (await fi.image.toByteData(format: ImageByteFormat.png))!
+        .buffer
+        .asUint8List();
   }
 }

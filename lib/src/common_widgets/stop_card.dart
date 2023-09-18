@@ -56,99 +56,91 @@ class StopCard extends ConsumerWidget {
                 ParamType.tabIndex.name: tabIndex.toString(),
               });
             },
-            child: Padding(
-              padding: const EdgeInsetsDirectional.fromSTEB(15, 5, 15, 5),
+            child: Container(
+              padding: const EdgeInsetsDirectional.fromSTEB(15, 5, 5, 5),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 0, 8),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding:
-                              const EdgeInsetsDirectional.fromSTEB(0, 6, 8, 0),
-                          child: Container(
-                            decoration: BoxDecoration(
-                                color: stop.stopType == 'Pickup'
-                                    ? ColorManager.pickupColor
-                                    : ColorManager.deliveryColor,
-                                borderRadius: BorderRadius.circular(10)),
-                            width: 8,
-                            height: 77,
-                          ),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      //Color strip
+                      Padding(
+                        padding:
+                            const EdgeInsetsDirectional.fromSTEB(0, 6, 8, 0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                              color: stop.stopType == 'Pickup'
+                                  ? ColorManager.pickupColor
+                                  : ColorManager.deliveryColor,
+                              borderRadius: BorderRadius.circular(10)),
+                          width: 8,
+                          height: 77,
                         ),
-                        ConstrainedBox(
-                          constraints: BoxConstraints(
-                              maxWidth: constraints.maxWidth * 0.8),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Column(
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                      ),
+                      //Stop name and adress
+                      ConstrainedBox(
+                        constraints: BoxConstraints(
+                            maxWidth: constraints.maxWidth * 0.8),
+                        child: //Row(
+                            //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            //crossAxisAlignment: CrossAxisAlignment.end,
+                            //children: [
+                            Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              stop.companyName!,
+                              style: Theme.of(context).textTheme.bodyLarge,
+                            ),
+                            SelectableText.rich(
+                              TextSpan(
+                                text: stop.address?.street ?? "",
+                                style: Theme.of(context).textTheme.bodyMedium,
                                 children: [
-                                  Text(
-                                    stop.companyName!,
-                                    style:
-                                        Theme.of(context).textTheme.bodyLarge,
-                                  ),
-                                  SelectableText.rich(
+                                  if (stop.address?.apartmentNumber
+                                          .isNotNullOrEmpty ??
+                                      false)
                                     TextSpan(
-                                      text: stop.address?.street ?? "",
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodyMedium,
-                                      children: [
-                                        if (stop.address?.apartmentNumber
-                                                .isNotNullOrEmpty ??
-                                            false)
-                                          TextSpan(
-                                            text:
-                                                '\n${stop.address?.apartmentNumber ?? ''}',
-                                          ),
-                                        TextSpan(
-                                          text:
-                                              '\n${stop.address?.city ?? ''} ${stop.address?.state ?? ''} ${stop.address?.zip ?? ''}',
-                                        )
-                                      ],
+                                      text:
+                                          '\n${stop.address?.apartmentNumber ?? ''}',
                                     ),
-                                  ),
-                                  // Text(
-                                  //   stop.address?.street ?? "",
-                                  //   style: Theme.of(context).textTheme.bodyMedium,
-                                  // ),
-                                  // Text(
-
-                                  //   style: Theme.of(context).textTheme.bodyMedium,
-                                  // ),
-                                  Text(
-                                      DateFormat("MMM dd, yyyy @ hh:mm")
-                                          .formatNullDate(stop.stopDate),
-                                      style: Theme.of(context)
-                                          .textTheme
-                                          .bodySmall),
+                                  TextSpan(
+                                    text:
+                                        '\n${stop.address?.city ?? ''}, ${stop.address?.state ?? ''} ${stop.address?.zip ?? ''}',
+                                  )
                                 ],
                               ),
-                              IconButton(
-                                onPressed: () {
-                                  Clipboard.setData(
-                                      ClipboardData(text: stop.stopAddress));
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                        content: Text('Address Coppied')),
-                                  );
-                                },
-                                icon: const Icon(Icons.copy),
-                              )
-                            ],
-                          ),
+                            ),
+                            Text(
+                                DateFormat("MMM dd, yyyy @ hh:mm")
+                                    .formatNullDate(stop.stopDate),
+                                style: Theme.of(context).textTheme.bodySmall),
+                          ],
                         ),
-                      ],
-                    ),
+                        //],
+                        //),
+                      ),
+                      const Spacer(),
+                      //Copy button
+                      Opacity(
+                        opacity: 0.5,
+                        child: IconButton(
+                          onPressed: () {
+                            Clipboard.setData(
+                                ClipboardData(text: stop.stopAddress));
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(content: Text('Address Coppied')),
+                            );
+                          },
+                          icon: const Icon(Icons.copy),
+                        ),
+                      )
+                    ],
                   ),
+
+                  //Button row
+                  const SizedBox(height: 6),
                   Row(
                     // buttonPadding: const EdgeInsetsDirectional.only(end: 12),
                     // alignment: MainAxisAlignment.start,
@@ -198,7 +190,6 @@ class StopCard extends ConsumerWidget {
                       const SizedBox(width: 5),
                     ],
                   ),
-                  const SizedBox(height: 4),
                 ],
               ),
             ),
