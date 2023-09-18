@@ -30,11 +30,19 @@ class MapNotifier extends AutoDisposeFamilyAsyncNotifier<MapState, String> {
     var trip = trips.value!.tryGetTrip(arg);
     if (trip != null) {
       state = const AsyncLoading();
+      var deliveryData = await repo.getMapMarkerBytesFromAsset('asset/delivery-1.png'),
+          pickupData = await repo.getMapMarkerBytesFromAsset('asset/pickup-1.png');
+      BitmapDescriptor delivery = BitmapDescriptor.fromBytes(deliveryData),
+          pickup = BitmapDescriptor.fromBytes(pickupData);
       var markers = trip.stopLocations
-          .map((e) => Marker(markerId: MarkerId('${e.latitude}${e.longitude}_'), consumeTapEvents: true, position: e))
+          .map((e) => Marker(
+              markerId: MarkerId('${e.value.latitude}${e.value.longitude}_'),
+              icon: e.key.toLowerCase() == 'pickup' ? pickup : delivery,
+              consumeTapEvents: true,
+              position: e.value))
           .toSet();
       state = AsyncData(state.value!.copyWith(markers: markers));
-      var polylines = await repo.getPolyLines(trip.stopLocations);
+      var polylines = await repo.getPolyLines(trip.stopLocations.map((e) => e.value).toList());
       state = AsyncData(MapState(markers: markers, polyLines: polylines.values.toSet()));
       GoogleMapController miniController = await this.miniController.future;
       miniController.animateCamera(

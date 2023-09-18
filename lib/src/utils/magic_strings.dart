@@ -106,3 +106,9 @@ class TripStatus {
   static const String paid = "Paid";
   static const String inReview = "In Review";
 }
+
+class ContractorType {
+  static const String ownerOperator = "Owner Operator";
+  static const String companyDriver = "Company Driver";
+  static const String contractor = "Contractor";
+}

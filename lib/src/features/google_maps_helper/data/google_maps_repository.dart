@@ -1,7 +1,10 @@
 import 'dart:convert';
+import 'dart:typed_data';
+import 'dart:ui';
 
 import 'package:flexible_polyline/flexible_polyline.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -87,5 +90,13 @@ class GoogleMapsRepo {
       }
     }
     return LatLngBounds(northeast: LatLng(x1!, y1!), southwest: LatLng(x0!, y0!));
+  }
+
+  Future<Uint8List> getMapMarkerBytesFromAsset(String path, [int width = 24]) async {
+    var w = (WidgetsBinding.instance.platformDispatcher.implicitView!.devicePixelRatio * width).toInt();
+    ByteData data = await rootBundle.load(path);
+    var codec = await instantiateImageCodec(data.buffer.asUint8List(), targetWidth: w);
+    FrameInfo fi = await codec.getNextFrame();
+    return (await fi.image.toByteData(format: ImageByteFormat.png))!.buffer.asUint8List();
   }
 }

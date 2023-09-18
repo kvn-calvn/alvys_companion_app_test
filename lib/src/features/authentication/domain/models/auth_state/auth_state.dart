@@ -1,3 +1,4 @@
+import 'package:alvys3/src/utils/tablet_utils.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 
 import '../../../../../utils/magic_strings.dart';

@@ -90,10 +90,11 @@ class AppTrip with _$AppTrip {
         .toList();
   }
 
-  List<LatLng> get stopLocations =>
+  List<MapEntry<String, LatLng>> get stopLocations =>
       stops
-          ?.map((e) => LatLng(double.tryParse(e.latitude ?? '0') ?? 0, double.tryParse(e.longitude ?? '0') ?? 0))
-          .where((element) => element.latitude != 0 && element.longitude != 0)
+          ?.map((e) => MapEntry(e.stopType ?? '',
+              LatLng(double.tryParse(e.latitude ?? '0') ?? 0, double.tryParse(e.longitude ?? '0') ?? 0)))
+          .where((element) => element.value.latitude != 0 && element.value.longitude != 0)
           .toList() ??
       [];
 }

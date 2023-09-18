@@ -66,18 +66,20 @@ class ProfileList extends ConsumerWidget {
               context.goNamed(RouteName.personalDocumentsList.name);
             },
           ),
-          LargeNavButton(
-            title: "Paystubs",
-            onPressed: () {
-              context.goNamed(RouteName.paystubs.name);
-            },
-          ),
-          LargeNavButton(
-            title: "Trip Report",
-            onPressed: () {
-              context.goNamed(RouteName.tripReportDocumentList.name);
-            },
-          ),
+          if (userState.value!.driver!.isCompanyDriver)
+            LargeNavButton(
+              title: "Paystubs",
+              onPressed: () {
+                context.goNamed(RouteName.paystubs.name);
+              },
+            ),
+          if (userState.value!.driver!.isCompanyDriver)
+            LargeNavButton(
+              title: "Trip Report",
+              onPressed: () {
+                context.goNamed(RouteName.tripReportDocumentList.name);
+              },
+            ),
         ],
       ),
     );

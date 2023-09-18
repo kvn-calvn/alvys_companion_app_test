@@ -1,3 +1,4 @@
+import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -13,6 +14,7 @@ class DriverUser with _$DriverUser {
     String? id,
     @JsonKey(name: "UserName") String? userName,
     @JsonKey(name: "Name") String? name,
+    @JsonKey(name: "ContractorType") String? contractorType,
     @JsonKey(name: "Email") String? email,
     @JsonKey(name: "DriversLicenceExpirationDate") DateTime? driversLicenceExpirationDate,
     @JsonKey(name: "DriversLicenceState") String? driversLicenceState,
@@ -33,4 +35,8 @@ class DriverUser with _$DriverUser {
 
   String get companyCodes => userTenants.map((e) => e.companyCode).removeNulls.join(',');
   String get companyCodesWithSpace => userTenants.map((e) => e.companyCode).removeNulls.join(', ');
+
+  bool hasContractorType(String contractorType) =>
+      userTenants.any((element) => element.contractorType == contractorType);
+  bool get isCompanyDriver => hasContractorType(ContractorType.companyDriver);
 }
