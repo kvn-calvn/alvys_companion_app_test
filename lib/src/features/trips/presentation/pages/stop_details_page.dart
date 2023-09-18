@@ -57,15 +57,20 @@ class StopDetails extends ConsumerWidget {
     if (stopDetailsState.isLoading) return const StopDetailsShimmer();
     var currentStop = stopDetailsState.value!.tryGetStop(tripId, stopId);
     var trip = stopDetailsState.value!.tryGetTrip(tripId);
-    if (trip == null) return const EmptyView(title: 'Trip Not found', description: 'Return to the previous page.');
+    if (trip == null)
+      return const EmptyView(
+          title: 'Trip Not found', description: 'Return to the previous page.');
     return RefreshIndicator(
       onRefresh: () async {
-        await ref.read(tripControllerProvider.notifier).refreshCurrentTrip(tripId);
+        await ref
+            .read(tripControllerProvider.notifier)
+            .refreshCurrentTrip(tripId);
       },
       child: currentStop == null
           ? const EmptyView(
               title: 'Stop Unavailable',
-              description: 'Stop details not found. Try refreshing this page or the trip list page')
+              description:
+                  'Stop details not found. Try refreshing this page or the trip list page')
           : ListView(
               children: [
                 Column(
@@ -116,7 +121,8 @@ class StopDetails extends ConsumerWidget {
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         Text(
-                          intl.DateFormat.MEd().formatNullDate(currentStop.actualStopdate),
+                          intl.DateFormat.MEd()
+                              .formatNullDate(currentStop.actualStopdate),
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
@@ -135,7 +141,8 @@ class StopDetails extends ConsumerWidget {
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         Text(
-                          intl.DateFormat.MEd().formatNullDate(currentStop.timeRecord?.driver?.timeIn),
+                          intl.DateFormat.MEd().add_jms().formatNullDate(
+                              currentStop.timeRecord?.driver?.timeIn),
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
@@ -148,7 +155,8 @@ class StopDetails extends ConsumerWidget {
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         Text(
-                          intl.DateFormat.MEd().formatNullDate(currentStop.timeRecord?.driver?.timeOut),
+                          intl.DateFormat.MEd().add_jm().formatNullDate(
+                              currentStop.timeRecord?.driver?.timeOut),
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
@@ -161,7 +169,8 @@ class StopDetails extends ConsumerWidget {
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 const SizedBox(height: 5),
-                ItemsWidget(commodities: currentStop.comodities ?? <MComodity>[]),
+                ItemsWidget(
+                    commodities: currentStop.comodities ?? <MComodity>[]),
                 const SizedBox(height: 20),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -171,7 +180,9 @@ class StopDetails extends ConsumerWidget {
                       style: Theme.of(context).textTheme.bodyLarge,
                     ),
                     HtmlWidget(
-                      currentStop.genInstructions.isNullOrEmpty ? '-' : currentStop.genInstructions!,
+                      currentStop.genInstructions.isNullOrEmpty
+                          ? '-'
+                          : currentStop.genInstructions!,
                     ),
                     /*Text(
                       currentStop.genInstructions.isNullOrEmpty
@@ -203,7 +214,8 @@ class StopDetails extends ConsumerWidget {
                       'References',
                       style: Theme.of(context).textTheme.bodyLarge,
                     ),
-                    ReferencesWidget(references: currentStop.references ?? <Reference>[])
+                    ReferencesWidget(
+                        references: currentStop.references ?? <Reference>[])
                   ],
                 ),
               ],
@@ -294,7 +306,8 @@ class ItemsWidget extends StatelessWidget {
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                             Text(
-                              '${item.numPieces}',
+                              intl.NumberFormat.decimalPattern()
+                                  .format(item.numPieces),
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           ],
