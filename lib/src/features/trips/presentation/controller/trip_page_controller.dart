@@ -38,7 +38,6 @@ class TripController extends _$TripController implements IAppErrorHandler {
   var storage = const FlutterSecureStorage();
   @override
   FutureOr<TripListState> build() async {
-    print('built ${StackTrace.current}');
     tripRepo = ref.read(tripRepoProvider);
     auth = ref.read(authProvider.notifier);
     tutorial = ref.read(tutorialProvider);

@@ -30,6 +30,11 @@ class Stop with _$Stop {
       @JsonKey(name: 'Address') Address? address}) = _Stop;
 
   factory Stop.fromJson(Map<String, dynamic> json) => _$StopFromJson(json);
+  const Stop._();
+  bool canCheckIn(String? checkInStopId) => checkInStopId == stopId && timeRecord?.driver?.timeIn == null;
+
+  bool canCheckOut(String? checkOutStopId) =>
+      checkOutStopId == stopId && timeRecord?.driver?.timeIn != null && timeRecord?.driver?.timeOut == null;
 }
 
 @freezed
