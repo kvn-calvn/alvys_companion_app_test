@@ -93,6 +93,10 @@ class StopCard extends ConsumerWidget {
                                       text: stop.address?.street ?? "",
                                       style: Theme.of(context).textTheme.bodyMedium,
                                       children: [
+                                        if (stop.address?.apartmentNumber.isNotNullOrEmpty ?? false)
+                                          TextSpan(
+                                            text: '\n${stop.address?.apartmentNumber ?? ''}',
+                                          ),
                                         TextSpan(
                                           text:
                                               '\n${stop.address?.city ?? ''} ${stop.address?.state ?? ''} ${stop.address?.zip ?? ''}',

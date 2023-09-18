@@ -1,3 +1,4 @@
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'address.freezed.dart';
@@ -20,6 +21,6 @@ class Address with _$Address {
   factory Address.fromJson(Map<String, dynamic> json) => _$AddressFromJson(json);
   Address._();
 
-  String get formattedAddress => '''$street
+  String get formattedAddress => '''$street${apartmentNumber.isNotNullOrEmpty ? '\n$apartmentNumber' : ''}
 $city, $state $zip''';
 }
