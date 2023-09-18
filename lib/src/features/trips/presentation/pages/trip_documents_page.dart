@@ -25,9 +25,10 @@ class TripDocuments extends ConsumerWidget {
     var trip = state.value!.tryGetTrip(tripId);
     if (state.isLoading) return const DocumentsShimmer();
 
-    if (trip == null)
+    if (trip == null) {
       return const EmptyView(
           title: 'Trip Not found', description: 'Return to the previous page');
+    }
     var attachments = trip.getAttachments(
         authState.value!.shouldShowCustomerRateConfirmations(trip.companyCode!),
         authState.value!.shouldShowCarrierConfirmations(trip.companyCode!));

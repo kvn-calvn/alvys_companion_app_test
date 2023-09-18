@@ -1,3 +1,5 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
+
 import '../../../authentication/presentation/driver_status_dropdown.dart';
 import '../../../tutorial/tutorial_controller.dart';
 
@@ -98,6 +100,8 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
               await ref
                   .read(tripControllerProvider.notifier)
                   .refreshTrips(true);
+              await FirebaseAnalytics.instance
+                  .logEvent(name: "refresh_button_tapped");
             },
             icon: const Icon(Icons.refresh),
           )
