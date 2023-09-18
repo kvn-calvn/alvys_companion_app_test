@@ -15,7 +15,7 @@ final editProfileProvider =
 
 class EditProfileNotifier extends AutoDisposeAsyncNotifier<UpdateUserProfileState> implements IAppErrorHandler {
   late AuthProviderNotifier auth;
-  late TextEditingController street, city, addressState, zip;
+  late TextEditingController street, city, addressState, zip, apartmentNumber;
   @override
   FutureOr<UpdateUserProfileState> build() {
     auth = ref.read(authProvider.notifier);
@@ -27,6 +27,7 @@ class EditProfileNotifier extends AutoDisposeAsyncNotifier<UpdateUserProfileStat
         street: user.address?.street ?? '',
         city: user.address?.city ?? '',
         zip: user.address?.zip ?? '',
+        apartmentNumber: user.address?.apartmentNumber ?? '',
         state: user.address?.state ?? '',
         phone: user.phone ?? '',
         email: user.email ?? '',
@@ -36,6 +37,7 @@ class EditProfileNotifier extends AutoDisposeAsyncNotifier<UpdateUserProfileStat
     street = TextEditingController(text: data.street);
     city = TextEditingController(text: data.city);
     addressState = TextEditingController(text: data.state);
+    apartmentNumber = TextEditingController(text: data.apartmentNumber);
     zip = TextEditingController(text: data.zip);
     return UpdateUserProfileState(dto: data);
   }
@@ -46,6 +48,7 @@ class EditProfileNotifier extends AutoDisposeAsyncNotifier<UpdateUserProfileStat
     street = TextEditingController(text: result.street);
     city = TextEditingController(text: result.city);
     addressState = TextEditingController(text: result.state);
+    apartmentNumber = TextEditingController(text: result.apartmentNumber);
     zip = TextEditingController(text: result.zip);
     state = AsyncData(state.value!.copyWith(
         dto: state.value!.dto.copyWith(
@@ -83,6 +86,7 @@ class EditProfileNotifier extends AutoDisposeAsyncNotifier<UpdateUserProfileStat
     if (context.mounted) context.pop();
   }
 
+  void setAutoCompleteEnabled(bool? val) => state = AsyncData(state.value!.copyWith(autocompleteEnabled: val ?? true));
   @override
   FutureOr<void> onError() {
     state = AsyncData(state.value!);

@@ -85,8 +85,8 @@ class TripController extends _$TripController implements IAppErrorHandler {
     refreshTrips(true);
   }
 
-  Future<void> startLocationTracking() async {
-    var status = await storage.read(key: StorageKey.driverStatus.name);
+  Future<void> startLocationTracking([String? newStatus]) async {
+    var status = newStatus ?? await storage.read(key: StorageKey.driverStatus.name);
     if (state.value!.activeTrips.isNotEmpty &&
         (status?.toLowerCase() == DriverStatus.online.toLowerCase() || status == null)) {
       var trackingTrip = state.value!.activeTrips.firstWhereOrNull((e) => e.status == TripStatus.inTransit) ??
@@ -102,8 +102,8 @@ class TripController extends _$TripController implements IAppErrorHandler {
 
   Future<void> updateDriverStatus(String? status) async {
     if (status != null) {
-      if (status == DriverStatus.online) {
-        startLocationTracking();
+      if (status.toLowerCase() == DriverStatus.online.toLowerCase()) {
+        startLocationTracking(status);
       } else {
         PlatformChannel.stopLocationTracking();
       }

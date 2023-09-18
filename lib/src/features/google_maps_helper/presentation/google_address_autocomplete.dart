@@ -5,8 +5,9 @@ import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 
 class GoogleAddressAutocomplete extends StatefulWidget {
+  final bool enabled;
   final Future<void> Function(Future<GooglePlacesDetailsResult> res) onResult;
-  const GoogleAddressAutocomplete({super.key, required this.onResult});
+  const GoogleAddressAutocomplete({super.key, required this.onResult, required this.enabled});
 
   @override
   State<GoogleAddressAutocomplete> createState() => _GoogleAddressAutocompleteState();
@@ -20,6 +21,7 @@ class _GoogleAddressAutocompleteState extends State<GoogleAddressAutocomplete> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        if (!widget.enabled) return;
         FocusScope.of(context).unfocus();
         //var position = inputKey.getKeyPosition(context);
         Navigator.of(context, rootNavigator: true).push(_GoogleAddressDropdownPopupRoute(
@@ -119,6 +121,8 @@ class _GoogleAddressDropdownContentState<T> extends State<GoogleAddressDropdownC
         color: Theme.of(context).scaffoldBackgroundColor,
         child: TextField(
           autofocus: true,
+          decoration: const InputDecoration(
+              hintText: 'Auto-complete Address', isDense: true, contentPadding: EdgeInsets.all(12)),
           style: Theme.of(context).textTheme.bodyMedium,
           onChanged: (value) {
             if (_debounce?.isActive ?? false) {

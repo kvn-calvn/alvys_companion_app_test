@@ -9,6 +9,7 @@ class UpdateUserDTO with _$UpdateUserDTO {
     @JsonKey(name: 'UserId') required String userId,
     @JsonKey(name: 'Name') required String name,
     @JsonKey(name: 'Street') required String street,
+    @JsonKey(name: 'ApartmentNumber') required String apartmentNumber,
     @JsonKey(name: 'City') required String city,
     @JsonKey(name: 'Zip') required String zip,
     @JsonKey(name: 'State') required String state,

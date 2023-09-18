@@ -42,6 +42,8 @@ class GooglePlacesResult with _$GooglePlacesResult {
   String get street =>
       '${(addressComponents.firstWhereOrNull((element) => element.types.isInIgnoreCase('street_number'))?.shortName ?? '')} ${(addressComponents.firstWhereOrNull((element) => element.types.isInIgnoreCase('route'))?.shortName ?? '')}'
           .trim();
+  String get apartmentNumber =>
+      addressComponents.firstWhereOrNull((element) => element.types.isInIgnoreCase('premise'))?.shortName ?? '';
 }
 
 @freezed

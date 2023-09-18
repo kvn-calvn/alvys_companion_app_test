@@ -6,6 +6,8 @@ part 'update_user_profile_state.freezed.dart';
 
 @freezed
 class UpdateUserProfileState with _$UpdateUserProfileState {
-  factory UpdateUserProfileState({required UpdateUserDTO dto, @Default(false) bool addressLoading}) =
-      _UpdateUserProfileState;
+  factory UpdateUserProfileState(
+      {required UpdateUserDTO dto,
+      @Default(true) bool autocompleteEnabled,
+      @Default(false) bool addressLoading}) = _UpdateUserProfileState;
 }

@@ -16,7 +16,7 @@ class EditProfile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var editState = ref.watch(editProfileProvider);
-    var editNotifier = ref.read(editProfileProvider.notifier);
+    EditProfileNotifier editNotifier() => ref.read(editProfileProvider.notifier);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit Profile'),
@@ -39,34 +39,50 @@ class EditProfile extends ConsumerWidget {
                           children: [
                             Column(
                               mainAxisSize: MainAxisSize.min,
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
                               children: [
                                 Text(
                                   'Address',
                                   style: Theme.of(context).textTheme.labelLarge,
                                 ),
-                                GoogleAddressAutocomplete(onResult: editNotifier.updateAddress),
+                                GoogleAddressAutocomplete(
+                                    onResult: editNotifier().updateAddress,
+                                    enabled: editState.value!.autocompleteEnabled),
+                                Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Text('Auto-complete Enabled', style: Theme.of(context).textTheme.bodySmall),
+                                    Checkbox.adaptive(
+                                        visualDensity: VisualDensity.compact,
+                                        value: editState.value!.autocompleteEnabled,
+                                        onChanged: editNotifier().setAutoCompleteEnabled),
+                                  ],
+                                ),
                                 EditProfileDetailCard(
-                                  title: 'Street',
-                                  controller: editNotifier.street,
+                                  title: 'Address Line 1',
+                                  controller: editNotifier().street,
+                                ),
+                                EditProfileDetailCard(
+                                  title: 'Address Line 2',
+                                  controller: editNotifier().apartmentNumber,
                                 ),
                                 EditProfileDetailCard(
                                   title: 'City',
-                                  controller: editNotifier.city,
+                                  controller: editNotifier().city,
                                 ),
                                 Row(
                                   children: [
                                     Flexible(
                                       child: EditProfileDetailCard(
                                         title: 'State',
-                                        controller: editNotifier.addressState,
+                                        controller: editNotifier().addressState,
                                       ),
                                     ),
                                     const SizedBox(width: 6),
                                     Flexible(
                                       child: EditProfileDetailCard(
                                         title: 'Zip',
-                                        controller: editNotifier.zip,
+                                        controller: editNotifier().zip,
                                       ),
                                     ),
                                   ],
@@ -94,7 +110,7 @@ class EditProfile extends ConsumerWidget {
                         EditProfileDetailCard(
                           title: 'License #',
                           initString: editState.value!.dto.licenseNum,
-                          onChanged: editNotifier.setLicenseNumber,
+                          onChanged: editNotifier().setLicenseNumber,
                         ),
                         const EditExpirationDate(),
                         Text(
@@ -111,13 +127,13 @@ class EditProfile extends ConsumerWidget {
                           coverDisplayText: false,
                           border: BorderSide(color: Colors.grey.withOpacity(0.6), width: 1),
                           includeTrailing: false,
-                          onItemTap: editNotifier.setLicenseIssueState,
+                          onItemTap: editNotifier().setLicenseIssueState,
                           dropDownTitle: (item) => item,
                         ),
                         const SizedBox(height: 20),
                         ElevatedButton(
                             onPressed: () async {
-                              await editNotifier.updateProfile(context);
+                              await editNotifier().updateProfile(context);
                             },
                             child: const Padding(
                               padding: EdgeInsets.all(8.0),
@@ -141,19 +157,18 @@ class EditProfile extends ConsumerWidget {
   }
 }
 
-class EditProfileDetailCard extends StatelessWidget {
+class EditProfileDetailCard extends ConsumerWidget {
   final String title;
   final TextEditingController? controller;
   final void Function(String data)? onChanged;
   final String? initString;
-  final bool editable;
-  const EditProfileDetailCard(
-      {super.key, required this.title, this.controller, this.initString, this.editable = true, this.onChanged})
+
+  const EditProfileDetailCard({super.key, required this.title, this.controller, this.initString, this.onChanged})
       : assert((controller != null && (initString == null && onChanged == null)) ||
             (controller == null && (initString != null && onChanged != null)));
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -163,7 +178,7 @@ class EditProfileDetailCard extends StatelessWidget {
         ),
         TextFormField(
           controller: controller,
-          enabled: editable,
+          enabled: !ref.watch(editProfileProvider).value!.autocompleteEnabled,
           initialValue: initString,
           onChanged: onChanged,
           style: Theme.of(context).textTheme.bodyMedium,
