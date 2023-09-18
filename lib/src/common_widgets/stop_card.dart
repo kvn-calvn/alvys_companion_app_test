@@ -1,4 +1,3 @@
-import 'package:alvys3/src/common_widgets/popup_dropdown.dart';
 import 'package:flutter/services.dart';
 
 import '../features/tutorial/tutorial_controller.dart';
@@ -41,7 +40,9 @@ class StopCard extends ConsumerWidget {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Material(
-          key: tripId == testTrip.id! && index == 0 ? ref.read(tutorialProvider).stopCard : null,
+          key: tripId == testTrip.id! && index == 0
+              ? ref.read(tutorialProvider).stopCard
+              : null,
           elevation: 0,
           color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(10),
@@ -66,18 +67,21 @@ class StopCard extends ConsumerWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Padding(
-                          padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 8, 0),
+                          padding:
+                              const EdgeInsetsDirectional.fromSTEB(0, 6, 8, 0),
                           child: Container(
                             decoration: BoxDecoration(
-                                color:
-                                    stop.stopType == 'Pickup' ? ColorManager.pickupColor : ColorManager.deliveryColor,
+                                color: stop.stopType == 'Pickup'
+                                    ? ColorManager.pickupColor
+                                    : ColorManager.deliveryColor,
                                 borderRadius: BorderRadius.circular(10)),
                             width: 8,
                             height: 77,
                           ),
                         ),
                         ConstrainedBox(
-                          constraints: BoxConstraints(maxWidth: constraints.maxWidth * 0.8),
+                          constraints: BoxConstraints(
+                              maxWidth: constraints.maxWidth * 0.8),
                           child: Row(
                             children: [
                               Column(
@@ -86,16 +90,22 @@ class StopCard extends ConsumerWidget {
                                 children: [
                                   Text(
                                     stop.companyName!,
-                                    style: Theme.of(context).textTheme.bodyLarge,
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge,
                                   ),
                                   SelectableText.rich(
                                     TextSpan(
                                       text: stop.address?.street ?? "",
-                                      style: Theme.of(context).textTheme.bodyMedium,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium,
                                       children: [
-                                        if (stop.address?.apartmentNumber.isNotNullOrEmpty ?? false)
+                                        if (stop.address?.apartmentNumber
+                                                .isNotNullOrEmpty ??
+                                            false)
                                           TextSpan(
-                                            text: '\n${stop.address?.apartmentNumber ?? ''}',
+                                            text:
+                                                '\n${stop.address?.apartmentNumber ?? ''}',
                                           ),
                                         TextSpan(
                                           text:
@@ -112,15 +122,21 @@ class StopCard extends ConsumerWidget {
 
                                   //   style: Theme.of(context).textTheme.bodyMedium,
                                   // ),
-                                  Text(DateFormat("MMM dd, yyyy @ hh:mm").formatNullDate(stop.stopDate),
-                                      style: Theme.of(context).textTheme.bodySmall),
+                                  Text(
+                                      DateFormat("MMM dd, yyyy @ hh:mm")
+                                          .formatNullDate(stop.stopDate),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall),
                                 ],
                               ),
                               IconButton(
                                 onPressed: () {
-                                  Clipboard.setData(ClipboardData(text: stop.stopAddress));
+                                  Clipboard.setData(
+                                      ClipboardData(text: stop.stopAddress));
                                   ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(content: Text('Address Coppied')),
+                                    const SnackBar(
+                                        content: Text('Address Coppied')),
                                   );
                                 },
                                 icon: const Icon(Icons.copy),
@@ -135,34 +151,45 @@ class StopCard extends ConsumerWidget {
                     // buttonPadding: const EdgeInsetsDirectional.only(end: 12),
                     // alignment: MainAxisAlignment.start,
                     children: [
-                      tripState.value!.checkIn && tripState.value!.loadingStopId == stop.stopId!
+                      tripState.value!.checkIn &&
+                              tripState.value!.loadingStopId == stop.stopId!
                           ? const ButtonLoading()
                           : ButtonStyle2(
-                              onPressAction:
-                                  canCheckInOutStopId == stop.stopId && stop.timeRecord?.driver?.timeIn == null
-                                      ? () async => await tripNotifier.checkIn(tripId, stop.stopId!)
-                                      : null,
-                              title: stop.timeRecord?.driver?.timeIn == null ? "Check In" : "Checked In",
+                              onPressAction: canCheckInOutStopId ==
+                                          stop.stopId &&
+                                      stop.timeRecord?.driver?.timeIn == null
+                                  ? () async => await tripNotifier.checkIn(
+                                      tripId, stop.stopId!)
+                                  : null,
+                              title: stop.timeRecord?.driver?.timeIn == null
+                                  ? "Check In"
+                                  : "Checked In",
                               isLoading: false,
                             ),
                       const SizedBox(width: 5),
-                      !tripState.value!.checkIn && tripState.value!.loadingStopId == stop.stopId!
+                      !tripState.value!.checkIn &&
+                              tripState.value!.loadingStopId == stop.stopId!
                           ? const ButtonLoading()
                           : ButtonStyle2(
-                              onPressAction: canCheckInOutStopId == stop.stopId &&
+                              onPressAction: canCheckInOutStopId ==
+                                          stop.stopId &&
                                       stop.timeRecord?.driver?.timeIn != null &&
                                       stop.timeRecord?.driver?.timeOut == null
-                                  ? () async => await tripNotifier.checkOut(tripId, stop.stopId!)
+                                  ? () async => await tripNotifier.checkOut(
+                                      tripId, stop.stopId!)
                                   : null,
-                              title: stop.timeRecord?.driver?.timeOut == null ? "Check Out" : 'Checked Out',
+                              title: stop.timeRecord?.driver?.timeOut == null
+                                  ? "Check Out"
+                                  : 'Checked Out',
                               isLoading: false,
                             ),
                       const SizedBox(width: 5),
                       ButtonStyle2(
-                        onPressAction:
-                            authState.value!.shouldShowEcheckButton(tripState.value!.getTrip(tripId).companyCode!)
-                                ? () => showGenerateEcheckDialog(context, tripId, stop.stopId)
-                                : null,
+                        onPressAction: authState.value!.shouldShowEcheckButton(
+                                tripState.value!.getTrip(tripId).companyCode!)
+                            ? () => showGenerateEcheckDialog(
+                                context, tripId, stop.stopId)
+                            : null,
                         title: "E-Check",
                         isLoading: false,
                       ),
@@ -188,6 +215,9 @@ class ButtonLoading extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialButton(
         onPressed: null,
-        child: SizedBox(width: height, height: height, child: const CircularProgressIndicator.adaptive()));
+        child: SizedBox(
+            width: height,
+            height: height,
+            child: const CircularProgressIndicator.adaptive()));
   }
 }
