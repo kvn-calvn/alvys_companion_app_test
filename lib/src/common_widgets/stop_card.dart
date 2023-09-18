@@ -83,6 +83,8 @@ class StopCard extends ConsumerWidget {
                           constraints: BoxConstraints(
                               maxWidth: constraints.maxWidth * 0.8),
                           child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Column(
                                 mainAxisSize: MainAxisSize.min,
