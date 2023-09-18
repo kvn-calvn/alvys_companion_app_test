@@ -1,3 +1,6 @@
+import 'package:alvys3/src/common_widgets/popup_dropdown.dart';
+import 'package:flutter/services.dart';
+
 import '../features/tutorial/tutorial_controller.dart';
 import '../utils/dummy_data.dart';
 
@@ -75,24 +78,37 @@ class StopCard extends ConsumerWidget {
                         ),
                         ConstrainedBox(
                           constraints: BoxConstraints(maxWidth: constraints.maxWidth * 0.8),
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          child: Row(
                             children: [
-                              Text(
-                                stop.companyName!,
-                                style: Theme.of(context).textTheme.bodyLarge,
+                              Column(
+                                mainAxisSize: MainAxisSize.min,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    stop.companyName!,
+                                    style: Theme.of(context).textTheme.bodyLarge,
+                                  ),
+                                  Text(
+                                    stop.address?.street ?? "",
+                                    style: Theme.of(context).textTheme.bodyMedium,
+                                  ),
+                                  Text(
+                                    '${stop.address?.city ?? ''} ${stop.address?.state ?? ''} ${stop.address?.zip ?? ''}',
+                                    style: Theme.of(context).textTheme.bodyMedium,
+                                  ),
+                                  Text(DateFormat("MMM dd, yyyy @ hh:mm").formatNullDate(stop.stopDate),
+                                      style: Theme.of(context).textTheme.bodySmall),
+                                ],
                               ),
-                              Text(
-                                stop.address?.street ?? "",
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              ),
-                              Text(
-                                '${stop.address?.city ?? ''} ${stop.address?.state ?? ''} ${stop.address?.zip ?? ''}',
-                                style: Theme.of(context).textTheme.bodyMedium,
-                              ),
-                              Text(DateFormat("MMM dd, yyyy @ hh:mm").formatNullDate(stop.stopDate),
-                                  style: Theme.of(context).textTheme.bodySmall),
+                              IconButton(
+                                onPressed: () {
+                                  Clipboard.setData(ClipboardData(text: stop.stopAddress));
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(content: Text('Address Coppied')),
+                                  );
+                                },
+                                icon: const Icon(Icons.copy),
+                              )
                             ],
                           ),
                         ),
