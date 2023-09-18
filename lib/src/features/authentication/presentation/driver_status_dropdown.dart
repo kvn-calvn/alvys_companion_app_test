@@ -48,54 +48,6 @@ class DriverStatusDropdown extends ConsumerWidget {
                   ),
                 ))
             .toList(),
-        //   [
-        //   DropdownMenuItem(
-        //     value: "Online",
-        //     onTap: () {},
-        //     child: Row(
-        //       children: [
-        //         Lottie.asset('assets/lottie/green_pulse.json', width: 30, height: 30),
-        //         /*Icon(
-        //                     Icons.brightness_1,
-        //                     color: Colors.green.shade600,
-        //                   ),*/
-        //         const SizedBox(
-        //           width: 0,
-        //         ),
-        //         Text(
-        //           "Online",
-        //           style: Theme.of(context).textTheme.titleMedium,
-        //         ),
-        //       ],
-        //     ),
-        //   ),
-        //   DropdownMenuItem(
-        //     value: "Offline",
-        //     onTap: () {
-        //       //Stop location tracking when offline.
-        //       PlatformChannel.stopLocationTracking();
-        //     },
-        //     child: Row(
-        //       children: [
-        //         const SizedBox(
-        //           width: 8,
-        //         ),
-        //         Icon(
-        //           Icons.brightness_1,
-        //           size: 14,
-        //           color: Colors.grey.shade600,
-        //         ),
-        //         const SizedBox(
-        //           width: 8,
-        //         ),
-        //         Text(
-        //           "Offline",
-        //           style: Theme.of(context).textTheme.titleMedium,
-        //         ),
-        //       ],
-        //     ),
-        //   )
-        // ],
         onChanged: (String? value) => ref.read(tripControllerProvider.notifier).updateDriverStatus(value),
       ),
     );

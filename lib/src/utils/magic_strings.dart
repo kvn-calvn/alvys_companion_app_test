@@ -1,3 +1,5 @@
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
+
 enum RouteName {
   /// phone routes
   about,
@@ -46,7 +48,7 @@ class DriverStatus {
       offline = 'Offline';
   static const List<String> driverStatuses = [online, offline];
   static String initStatus(String? status) {
-    if (driverStatuses.contains(status)) {
+    if (driverStatuses.isInIgnoreCase(status ?? "")) {
       return status!;
     } else {
       return offline;
