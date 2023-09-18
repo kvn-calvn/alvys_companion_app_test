@@ -9,6 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
 
+import '../../../../utils/tablet_utils.dart';
+
 class RequestLocation extends StatelessWidget {
   const RequestLocation({Key? key}) : super(key: key);
 
@@ -28,87 +30,91 @@ class RequestLocation extends StatelessWidget {
         body: Center(
           child: Padding(
             padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Icon(
-                  Alvys3Icons.trackIcon,
-                  size: MediaQuery.of(context).size.height * 0.15,
-                  color: ColorManager.primary(Theme.of(context).brightness),
-                ),
-                const SizedBox(
-                  height: 30,
-                ),
-                Text(
-                  Platform.isAndroid
-                      ? 'Alvys driver companion collects your location data to enable real time driver location tracking even when the app is closed or not in use.'
-                      : 'Alvys uses your location data to track the movement of loads you have been assigned.',
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodyMedium,
-                ),
-                const SizedBox(
-                  height: 30,
-                ),
-                ButtonStyle1(
-                  title: "Continue",
-                  isLoading: false,
-                  isDisable: false,
-                  onPressAction: () async {
-                    var requestLocationResult = await Permission.location.request();
-                    await Permission.locationAlways.request();
+            child: Container(
+              constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.longestSide * (TabletUtils.instance.isTablet ? 0.5 : 1)),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Alvys3Icons.trackIcon,
+                    size: MediaQuery.of(context).size.height * 0.15,
+                    color: ColorManager.primary(Theme.of(context).brightness),
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  Text(
+                    Platform.isAndroid
+                        ? 'Alvys driver companion collects your location data to enable real time driver location tracking even when the app is closed or not in use.'
+                        : 'Alvys uses your location data to track the movement of loads you have been assigned.',
+                    textAlign: TextAlign.center,
+                    style: Theme.of(context).textTheme.bodyMedium,
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  ),
+                  ButtonStyle1(
+                    title: "Continue",
+                    isLoading: false,
+                    isDisable: false,
+                    onPressAction: () async {
+                      var requestLocationResult = await Permission.location.request();
+                      await Permission.locationAlways.request();
 
-                    var notificationPermStatus = await Permission.notification.status;
+                      var notificationPermStatus = await Permission.notification.status;
 
-                    if (requestLocationResult.isPermanentlyDenied) {
-                      debugPrint('Location request was denied');
-                      //AppSettings.openLocationSettings();
-                    }
+                      if (requestLocationResult.isPermanentlyDenied) {
+                        debugPrint('Location request was denied');
+                        //AppSettings.openLocationSettings();
+                      }
 
-                    debugPrint("Notification status: $notificationPermStatus");
+                      debugPrint("Notification status: $notificationPermStatus");
 
-                    if (notificationPermStatus.isDenied) {
-                      if (!mounted) return;
-                      context.goNamed(RouteName.notificationPermission.name);
-                    }
-
-                    if (notificationPermStatus.isGranted) {
-                      if (!mounted) return;
-                      PlatformChannel.getNotification(
-                          "DR", FlavorConfig.instance!.hubName, FlavorConfig.instance!.connectionString);
-                      context.goNamed(RouteName.trips.name);
-                    }
-
-                    /*
-                    if (requestLocationResult.isGranted) {
-                      if (notificationPermStatus.isDenied ||
-                          notificationPermStatus.isPermanentlyDenied) {
+                      if (notificationPermStatus.isDenied) {
                         if (!mounted) return;
                         context.goNamed(RouteName.notificationPermission.name);
                       }
-                    }*/
 
-                    //context.goNamed(RouteName.notificationPermission.name);
-                  },
-                ),
-                const SizedBox(
-                  height: 10,
-                ),
-                TextButton(
-                  onPressed: () async {
-                    var notificationPermStatus = await Permission.notification.status;
-                    if (notificationPermStatus.isGranted || notificationPermStatus.isDenied) {
-                      if (!mounted) return;
-                      context.goNamed(RouteName.trips.name);
-                    } else {
-                      if (!mounted) return;
-                      context.goNamed(RouteName.notificationPermission.name);
-                    }
-                  },
-                  child: const Text(
-                    'Not now',
+                      if (notificationPermStatus.isGranted) {
+                        if (!mounted) return;
+                        PlatformChannel.getNotification(
+                            "DR", FlavorConfig.instance!.hubName, FlavorConfig.instance!.connectionString);
+                        context.goNamed(RouteName.trips.name);
+                      }
+
+                      /*
+                      if (requestLocationResult.isGranted) {
+                        if (notificationPermStatus.isDenied ||
+                            notificationPermStatus.isPermanentlyDenied) {
+                          if (!mounted) return;
+                          context.goNamed(RouteName.notificationPermission.name);
+                        }
+                      }*/
+
+                      //context.goNamed(RouteName.notificationPermission.name);
+                    },
                   ),
-                ),
-              ],
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      var notificationPermStatus = await Permission.notification.status;
+                      if (notificationPermStatus.isGranted || notificationPermStatus.isDenied) {
+                        if (!mounted) return;
+                        context.goNamed(RouteName.trips.name);
+                      } else {
+                        if (!mounted) return;
+                        context.goNamed(RouteName.notificationPermission.name);
+                      }
+                    },
+                    child: const Text(
+                      'Not now',
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
         ));
