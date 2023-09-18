@@ -95,7 +95,7 @@ class StopCard extends ConsumerWidget {
                                       children: [
                                         TextSpan(
                                           text:
-                                              '${stop.address?.city ?? ''} ${stop.address?.state ?? ''} ${stop.address?.zip ?? ''}',
+                                              '\n${stop.address?.city ?? ''} ${stop.address?.state ?? ''} ${stop.address?.zip ?? ''}',
                                         )
                                       ],
                                     ),
