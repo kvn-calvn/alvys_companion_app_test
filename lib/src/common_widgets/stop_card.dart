@@ -88,14 +88,26 @@ class StopCard extends ConsumerWidget {
                                     stop.companyName!,
                                     style: Theme.of(context).textTheme.bodyLarge,
                                   ),
-                                  Text(
-                                    stop.address?.street ?? "",
-                                    style: Theme.of(context).textTheme.bodyMedium,
+                                  SelectableText.rich(
+                                    TextSpan(
+                                      text: stop.address?.street ?? "",
+                                      style: Theme.of(context).textTheme.bodyMedium,
+                                      children: [
+                                        TextSpan(
+                                          text:
+                                              '${stop.address?.city ?? ''} ${stop.address?.state ?? ''} ${stop.address?.zip ?? ''}',
+                                        )
+                                      ],
+                                    ),
                                   ),
-                                  Text(
-                                    '${stop.address?.city ?? ''} ${stop.address?.state ?? ''} ${stop.address?.zip ?? ''}',
-                                    style: Theme.of(context).textTheme.bodyMedium,
-                                  ),
+                                  // Text(
+                                  //   stop.address?.street ?? "",
+                                  //   style: Theme.of(context).textTheme.bodyMedium,
+                                  // ),
+                                  // Text(
+
+                                  //   style: Theme.of(context).textTheme.bodyMedium,
+                                  // ),
                                   Text(DateFormat("MMM dd, yyyy @ hh:mm").formatNullDate(stop.stopDate),
                                       style: Theme.of(context).textTheme.bodySmall),
                                 ],
