@@ -11,6 +11,7 @@ class ECheck with _$ECheck {
     @JsonKey(name: 'ExpressCheckNumber') String? expressCheckNumber,
     @JsonKey(name: 'ECheckId') String? eCheckId,
     @JsonKey(name: 'Reason') String? reason,
+    @JsonKey(name: 'UserId') String? userId,
     @Default(false) @JsonKey(name: 'IsCanceled') bool isCanceled,
   }) = _ECheck;
   factory ECheck.fromJson(Map<String, dynamic> json) => _$ECheckFromJson(json);

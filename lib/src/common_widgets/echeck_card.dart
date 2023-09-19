@@ -89,7 +89,7 @@ class EcheckCard extends ConsumerWidget {
             ? const Center(child: CircularProgressIndicator())
             : InkWell(
                 onLongPress: () {
-                  showEcheckMenu(context, authState.value!.shouldShowCancelEcheckButton(companyCode),
+                  showEcheckMenu(context, authState.value!.shouldShowCancelEcheckButton(companyCode, eCheck.userId),
                       state.value!.loadingEcheckNumber);
                 },
                 child: Padding(
@@ -141,7 +141,9 @@ class EcheckCard extends ConsumerWidget {
                         constraints: const BoxConstraints(),
                         splashRadius: 24,
                         onPressed: () {
-                          showEcheckMenu(context, authState.value!.shouldShowCancelEcheckButton(companyCode),
+                          showEcheckMenu(
+                              context,
+                              authState.value!.shouldShowCancelEcheckButton(companyCode, eCheck.userId),
                               state.value!.loadingEcheckNumber);
                         },
                         icon: const Icon(Icons.more_vert),
