@@ -74,11 +74,11 @@ class AppTrip with _$AppTrip {
   List<AppDocument> getAttachments(bool canViewCustomerConfirmation, bool canViewCarrierConfirmation) {
     return attachments
         .map((e) {
-          if (DocumentTypes.customerConfirmationDocTypes.isInIgnoreCase(e.documentType)) {
+          if (DocumentTypes.customerConfirmationDocTypes.containsInoreCase(e.documentType)) {
             if (canViewCustomerConfirmation) {
               return e;
             }
-          } else if (DocumentTypes.carrierRateConfirmation.toLowerCase() == e.documentType.toLowerCase()) {
+          } else if (DocumentTypes.carrierRateConfirmation.equalsIgnoreCase(e.documentType)) {
             if (canViewCarrierConfirmation) {
               return e;
             }
