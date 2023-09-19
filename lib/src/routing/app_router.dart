@@ -108,7 +108,7 @@ Provider<GoRouter> routerProvider = Provider(
                     path: ':tripId',
                     builder: (context, state) {
                       return LoadDetailsPage(state.pathParameters[ParamType.tripId.name]!,
-                          int.parse(state.uri.queryParameters[ParamType.tabIndex.name]!));
+                          int.parse(state.uri.queryParameters[ParamType.tabIndex.name] ?? '0'));
                     },
                     routes: <GoRoute>[
                       GoRoute(
@@ -365,7 +365,7 @@ Provider<GoRouter> tabletRouteProvider = Provider((ref) {
                         path: ':tripId',
                         builder: (context, state) {
                           return LoadDetailsPage(state.pathParameters[ParamType.tripId.name]!,
-                              int.parse(state.uri.queryParameters[ParamType.tabIndex.name]!));
+                              int.parse(state.uri.queryParameters[ParamType.tabIndex.name] ?? '0'));
                         },
                         routes: <GoRoute>[
                           GoRoute(
