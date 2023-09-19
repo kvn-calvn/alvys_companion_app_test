@@ -21,7 +21,6 @@ class MapNotifier extends AutoDisposeFamilyAsyncNotifier<MapState, String> {
     repo = ref.read(googleMapsRepo);
     trips = ref.watch(tripControllerProvider);
     state = AsyncData(MapState());
-
     await getPolyLinesAndMarkers();
     return state.value!;
   }
@@ -53,12 +52,13 @@ class MapNotifier extends AutoDisposeFamilyAsyncNotifier<MapState, String> {
 
   void onMapCreated(GoogleMapController controller, [bool fullMap = false]) {
     if (fullMap) {
+      this.controller = Completer();
       this.controller.complete(controller);
       setMapStyle();
       controller.animateCamera(
           CameraUpdate.newCameraPosition(CameraPosition(target: state.value!.markers.first.position, zoom: 15)));
     } else {
-      miniController.complete(controller);
+      if (!miniController.isCompleted) miniController.complete(controller);
     }
   }
 
