@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:firebase_analytics/firebase_analytics.dart';
+
 import '../../../../utils/permission_helper.dart';
 
 import '../../../tutorial/tutorial_controller.dart';
@@ -187,6 +189,11 @@ class TripController extends _$TripController implements IAppErrorHandler {
     var distance = Geolocator.distanceBetween(
         location.latitude, location.longitude, double.parse(stop.latitude!), double.parse(stop.longitude!));
     if (distance > 10) {
+      await FirebaseAnalytics.instance
+          .logEvent(name: "distance_too_far", parameters: {
+        "location": '${location.latitude}, ${location.longitude}',
+        "distance": '$distance meters'
+      });
       throw AlvysException('''You are too far from the stop location to check in.
       Move closer and try again.''', 'Too Far', () {
         state = AsyncValue.data(state.value!.copyWith(loadingStopId: null));
@@ -197,6 +204,10 @@ class TripController extends _$TripController implements IAppErrorHandler {
     updateStop(tripId, newStop);
     startTracking(trip);
     state = AsyncValue.data(state.value!.copyWith(loadingStopId: null, checkIn: true));
+    await FirebaseAnalytics.instance.logEvent(name: "checked_in", parameters: {
+      "location": '${location.latitude}, ${location.longitude}',
+      "stop": stop.companyName
+    });
   }
 
   Future<void> checkOut(String tripId, String stopId) async {
@@ -211,6 +222,7 @@ class TripController extends _$TripController implements IAppErrorHandler {
     updateStop(tripId, stop);
     startTracking(trip);
     state = AsyncValue.data(state.value!.copyWith(loadingStopId: null, checkIn: false));
+    
   }
 
   void updateStop(String tripId, Stop stop) async {
@@ -222,6 +234,7 @@ class TripController extends _$TripController implements IAppErrorHandler {
     stops[stopIndex] = stop;
     trips[index] = trip.copyWith(stops: stops);
     state = AsyncValue.data(state.value!.copyWith(trips: trips));
+    
   }
 
   void addEcheck(String tripId, ECheck echeck) {
