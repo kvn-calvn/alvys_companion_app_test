@@ -1,5 +1,6 @@
-import '../utils/tablet_utils.dart';
 import 'package:flutter/material.dart';
+
+import '../utils/tablet_utils.dart';
 
 Future<T?> showCustomBottomSheet<T>(BuildContext context, Widget child, {Widget? title}) => showModalBottomSheet(
     useRootNavigator: true,

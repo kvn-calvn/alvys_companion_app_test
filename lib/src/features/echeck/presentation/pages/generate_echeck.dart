@@ -1,4 +1,4 @@
-import 'package:alvys3/src/common_widgets/shimmers/generate_echeck_shimmer.dart';
+import '../../../../common_widgets/shimmers/generate_echeck_shimmer.dart';
 
 import '../../../../common_widgets/echeck_stop_card.dart';
 import '../../../../common_widgets/unfocus_widget.dart';

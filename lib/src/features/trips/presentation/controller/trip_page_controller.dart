@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:alvys3/src/utils/permission_helper.dart';
+import '../../../../utils/permission_helper.dart';
 
 import '../../../tutorial/tutorial_controller.dart';
 import '../../../../utils/dummy_data.dart';
