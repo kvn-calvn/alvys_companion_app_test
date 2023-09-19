@@ -33,23 +33,11 @@ enum RouteName {
 
 enum TripFilterType { processing, delivered }
 
-enum DisplayDocumentType {
-  tripDocuments,
-  personalDocuments,
-  paystubs,
-  tripReport
-}
+enum DisplayDocumentType { tripDocuments, personalDocuments, paystubs, tripReport }
 
 enum Environment { dev, qa, sandbox }
 
-enum StorageKey {
-  driverData,
-  themeMode,
-  driverToken,
-  companyCode,
-  driverStatus,
-  firstInstall
-}
+enum StorageKey { driverData, themeMode, driverToken, companyCode, driverStatus, firstInstall }
 
 class DriverStatus {
   static const String sleeping = 'Sleeping',
@@ -60,8 +48,9 @@ class DriverStatus {
       offline = 'Offline';
   static const List<String> driverStatuses = [online, offline];
   static String initStatus(String? status) {
-    if (driverStatuses.containsInoreCase(status ?? "")) {
-      return status!;
+    if (status == null) return online;
+    if (driverStatuses.containsInoreCase(status)) {
+      return status;
     } else {
       return offline;
     }
@@ -84,13 +73,7 @@ enum UploadType { camera, gallery }
 
 enum ParamType { tripId, stopId, tabIndex }
 
-enum EcheckReason {
-  advance,
-  trailerWash,
-  extraLaborDelivery,
-  lumper,
-  palletFee
-}
+enum EcheckReason { advance, trailerWash, extraLaborDelivery, lumper, palletFee }
 
 class DocumentTypes {
   static const String medical = 'Medical',
