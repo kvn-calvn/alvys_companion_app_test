@@ -14,8 +14,10 @@ import 'upload_documents_controller.dart';
 class UploadOptions extends ConsumerWidget {
   final DisplayDocumentType documentType;
   final String? tripId;
+  final int? tabIndex;
   final bool mounted;
-  const UploadOptions({required this.tripId, required this.documentType, required this.mounted, super.key});
+  const UploadOptions(
+      {this.tabIndex, required this.tripId, required this.documentType, required this.mounted, super.key});
   String get route {
     switch (documentType) {
       case DisplayDocumentType.tripDocuments:
@@ -46,11 +48,10 @@ class UploadOptions extends ConsumerWidget {
               }
               if (mounted) {
                 Navigator.of(context, rootNavigator: true).pop();
-                context.goNamed(
-                  route,
-                  extra: UploadType.camera,
-                  pathParameters: tripId != null ? {ParamType.tripId.name: tripId!} : {},
-                );
+                context.goNamed(route,
+                    extra: UploadType.camera,
+                    pathParameters: tripId != null ? {ParamType.tripId.name: tripId!} : {},
+                    queryParameters: tabIndex != null ? {ParamType.tabIndex.name: tabIndex.toString()} : {});
               }
             },
           ),
