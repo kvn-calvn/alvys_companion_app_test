@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 import '../features/documents/domain/app_document/app_document.dart';
 import '../features/trips/domain/app_trip/app_trip.dart';
 import '../features/trips/domain/app_trip/echeck.dart';
@@ -7,7 +9,6 @@ import '../features/trips/domain/app_trip/stop.dart';
 import '../features/trips/domain/app_trip/time_record.dart';
 import '../models/address/address.dart';
 import 'magic_strings.dart';
-import 'package:intl/intl.dart';
 
 final AppTrip testTrip = AppTrip(
   id: 'testtripid45',

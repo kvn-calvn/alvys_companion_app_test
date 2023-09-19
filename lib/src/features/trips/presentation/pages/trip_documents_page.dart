@@ -1,4 +1,4 @@
-import 'package:alvys3/src/utils/tablet_utils.dart';
+import '../../../../utils/tablet_utils.dart';
 
 import '../../../../utils/dummy_data.dart';
 import '../../../authentication/presentation/auth_provider_controller.dart';

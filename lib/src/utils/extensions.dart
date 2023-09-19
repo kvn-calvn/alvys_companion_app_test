@@ -52,9 +52,7 @@ extension StringExt on String? {
   bool isInStatus(Iterable<String> test) {
     bool inStatus = false;
     for (var element in test) {
-      if (element.toLowerCase() == this?.toLowerCase()) {
-        inStatus = true;
-      }
+      if (element.toLowerCase() == this?.toLowerCase()) return true;
     }
     return inStatus;
   }
