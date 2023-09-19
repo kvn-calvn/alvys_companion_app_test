@@ -1,3 +1,5 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
+
 import '../../../../utils/extensions.dart';
 import '../../../../utils/tablet_utils.dart';
 
@@ -75,6 +77,8 @@ class _LoadDetailsPageState extends ConsumerState<LoadDetailsPage>
                       TabletUtils.instance.detailsController.index + 1,
                       TabletUtils.instance.detailsController.index + 1,
                       previousTripId);
+              await FirebaseAnalytics.instance
+                  .logEvent(name: "trip_details_tour_button_tapped");
               // context.goNamed(RouteName.tripDetails.name, pathParameters: {ParamType.tripId.name: testTrip.id!});
               // ref.read(tripControllerProvider.notifier).prepareTutorialPreview(context,
               //     TabletUtils.instance.detailsController.index + 1, TabletUtils.instance.detailsController.index + 1);

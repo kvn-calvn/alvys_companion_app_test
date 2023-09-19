@@ -1,3 +1,5 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
+
 import '../../tutorial/tutorial_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -70,17 +72,19 @@ class SettingsList extends ConsumerWidget {
         ),
         LargeNavButton(
           title: "Watch Tutorial",
-          onPressed: () {
+          onPressed: () async {
             ref.read(firstInstallProvider.notifier).setState(true);
             context.goNamed(RouteName.trips.name);
             ref.read(tabletViewProvider.notifier).setState(0);
+            await FirebaseAnalytics.instance.logEvent(name: "watch_tutorial");
           },
         ),
         LargeNavButton(
           title: "Sign Out",
-          onPressed: () {
+          onPressed: () async {
             PlatformChannel.stopLocationTracking();
             ref.read(authProvider.notifier).signOut(context);
+            await FirebaseAnalytics.instance.logEvent(name: "signed_out");
           },
         ),
       ],

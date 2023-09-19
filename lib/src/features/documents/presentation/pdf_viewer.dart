@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:firebase_analytics/firebase_analytics.dart';
+
 import '../domain/app_document/app_document.dart';
 import '../../../utils/app_theme.dart';
 import 'package:dio/dio.dart';
@@ -75,6 +77,7 @@ class _PDFViewerState extends State<PDFViewer> {
             onPressed: () async {
               if (progress < 1) return;
               await Share.shareXFiles([XFile(path)]);
+              await FirebaseAnalytics.instance.logEvent(name: "share_document");
             },
           ),
         ],
@@ -92,7 +95,9 @@ class _PDFViewerState extends State<PDFViewer> {
                       strokeWidth: 16,
                     ),
                   ),
-                  progress > 0 ? Text('${(progress * 100).ceil()}') : const SizedBox.shrink(),
+                  progress > 0
+                      ? Text('${(progress * 100).ceil()}')
+                      : const SizedBox.shrink(),
                 ],
               )
             : errorMessage.isNotEmpty
