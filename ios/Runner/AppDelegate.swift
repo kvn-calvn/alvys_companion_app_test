@@ -124,7 +124,7 @@ import GoogleMaps
         
         //Do something when notification is tapped whether app is active or not
         if (notificationResponseCompletionHandler != nil) {
-            guard let url = notification.userInfo["LINK"] as? String else {return}
+            guard let url = notification.userInfo["link"] as? String else {return}
             openDeepLinkURL(url: url)
         }
     
