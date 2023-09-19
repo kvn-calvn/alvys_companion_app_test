@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
+
 import '../../../utils/map_styles.dart';
 import '../../../utils/theme_handler.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +39,7 @@ class MapNotifier extends AutoDisposeFamilyAsyncNotifier<MapState, String> {
       var markers = trip.stopLocations
           .map((e) => Marker(
               markerId: MarkerId('${e.value.latitude}${e.value.longitude}_'),
-              icon: e.key.toLowerCase() == 'pickup' ? pickup : delivery,
+              icon: e.key.equalsIgnoreCase('pickup') ? pickup : delivery,
               consumeTapEvents: true,
               position: e.value))
           .toSet();
