@@ -69,6 +69,7 @@ class GoogleMapsRepo {
         res[id] = polyline;
         hasResults = true;
       } else {
+        print(response.body);
         hasResults = false;
         break;
       }

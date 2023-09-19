@@ -27,11 +27,12 @@ class MapNotifier extends AutoDisposeFamilyAsyncNotifier<MapState, String> {
   }
 
   Future<void> getPolyLinesAndMarkers() async {
+    setMiniMapStyle();
     var trip = trips.value!.tryGetTrip(arg);
     if (trip != null) {
       state = const AsyncLoading();
-      var deliveryData = await repo.getMapMarkerBytesFromAsset('asset/delivery-1.png'),
-          pickupData = await repo.getMapMarkerBytesFromAsset('asset/pickup-1.png');
+      var deliveryData = await repo.getMapMarkerBytesFromAsset('assets/delivery-1.png'),
+          pickupData = await repo.getMapMarkerBytesFromAsset('assets/pickup-1.png');
       BitmapDescriptor delivery = BitmapDescriptor.fromBytes(deliveryData),
           pickup = BitmapDescriptor.fromBytes(pickupData);
       var markers = trip.stopLocations
@@ -42,11 +43,11 @@ class MapNotifier extends AutoDisposeFamilyAsyncNotifier<MapState, String> {
               position: e.value))
           .toSet();
       state = AsyncData(state.value!.copyWith(markers: markers));
-      var polylines = await repo.getPolyLines(trip.stopLocations.map((e) => e.value).toList());
-      state = AsyncData(MapState(markers: markers, polyLines: polylines.values.toSet()));
       GoogleMapController miniController = await this.miniController.future;
       miniController.animateCamera(
           CameraUpdate.newLatLngBounds(repo.boundsFromLatLngList(markers.map((e) => e.position).toList()), 72));
+      var polylines = await repo.getPolyLines(trip.stopLocations.map((e) => e.value).toList());
+      state = AsyncData(MapState(markers: markers, polyLines: polylines.values.toSet()));
     }
   }
 
@@ -58,7 +59,6 @@ class MapNotifier extends AutoDisposeFamilyAsyncNotifier<MapState, String> {
           CameraUpdate.newCameraPosition(CameraPosition(target: state.value!.markers.first.position, zoom: 15)));
     } else {
       miniController.complete(controller);
-      setMiniMapStyle();
     }
   }
 

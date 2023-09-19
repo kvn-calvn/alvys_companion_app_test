@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 import '../../../../utils/magic_strings.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -90,11 +92,10 @@ class AppTrip with _$AppTrip {
         .toList();
   }
 
-  List<MapEntry<String, LatLng>> get stopLocations =>
-      stops
-          ?.map((e) => MapEntry(e.stopType ?? '',
-              LatLng(double.tryParse(e.latitude ?? '0') ?? 0, double.tryParse(e.longitude ?? '0') ?? 0)))
-          .where((element) => element.value.latitude != 0 && element.value.longitude != 0)
-          .toList() ??
-      [];
+  List<MapEntry<String, LatLng>> get stopLocations {
+    var s = stops?.map((e) => MapEntry(
+        e.stopType ?? '', LatLng(double.tryParse(e.latitude ?? '0') ?? 0, double.tryParse(e.longitude ?? '0') ?? 0)));
+    print("stops" + s.toString());
+    return s?.where((element) => element.value.latitude != 0 && element.value.longitude != 0).toList() ?? [];
+  }
 }
