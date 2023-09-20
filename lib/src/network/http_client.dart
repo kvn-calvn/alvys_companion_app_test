@@ -174,8 +174,8 @@ class AlvysHttpClient {
       Platform.isAndroid ? Permission.mediaLibrary : Permission.photos,
       Permission.camera
     ];
-    telemetryClient.context.properties['permissionStatus'] = Map.fromEntries(await permissions
-        .mapAsync((element) async => MapEntry(element.toString().replaceAll('Permission.', ''), await element.status)));
+    telemetryClient.context.properties['permissionStatus'] = Map.fromEntries(await permissions.mapAsync(
+        (element) async => MapEntry(element.toString().replaceAll('Permission.', ''), (await element.status).name)));
   }
 
   Future<void> setTelemetryContext({DriverUser? user, String? companyCode, Map<String, dynamic>? extraData}) async {
