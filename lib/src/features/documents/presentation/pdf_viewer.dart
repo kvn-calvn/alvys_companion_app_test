@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:alvys3/src/network/http_client.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../domain/app_document/app_document.dart';
 import '../../../utils/app_theme.dart';
@@ -72,14 +74,27 @@ class _PDFViewerState extends State<PDFViewer> {
           },
         ),
         actions: <Widget>[
-          IconButton(
-            icon: const Icon(Icons.share),
-            onPressed: () async {
-              if (progress < 1) return;
-              await Share.shareXFiles([XFile(path)]);
-              await FirebaseAnalytics.instance.logEvent(name: "share_document");
+          Consumer(
+            builder: (context, ref, child) {
+              return IconButton(
+                icon: const Icon(Icons.share),
+                onPressed: () async {
+                  if (progress < 1) return;
+                  await Share.shareXFiles([XFile(path)]);
+                  ref.read(httpClientProvider).telemetryClient.trackEvent(
+                      name: "share_document",
+                      additionalProperties: {
+                        "document_type": widget.arguments.documentType
+                      });
+                  await FirebaseAnalytics.instance.logEvent(
+                      name: "share_document",
+                      parameters: {
+                        "document_type": widget.arguments.documentType
+                      });
+                },
+              );
             },
-          ),
+          )
         ],
       ),
       body: Center(

@@ -1,3 +1,4 @@
+import 'package:alvys3/src/network/http_client.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
 import '../../../../utils/extensions.dart';
@@ -77,6 +78,10 @@ class _LoadDetailsPageState extends ConsumerState<LoadDetailsPage>
                       TabletUtils.instance.detailsController.index + 1,
                       TabletUtils.instance.detailsController.index + 1,
                       previousTripId);
+              ref
+                  .read(httpClientProvider)
+                  .telemetryClient
+                  .trackEvent(name: "trip_details_tour_button_tapped");
               await FirebaseAnalytics.instance
                   .logEvent(name: "trip_details_tour_button_tapped");
               // context.goNamed(RouteName.tripDetails.name, pathParameters: {ParamType.tripId.name: testTrip.id!});

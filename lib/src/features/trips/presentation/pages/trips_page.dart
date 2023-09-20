@@ -1,3 +1,4 @@
+import 'package:alvys3/src/network/http_client.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
 import '../../../authentication/presentation/driver_status_dropdown.dart';
@@ -93,6 +94,10 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
               await ref
                   .read(tripControllerProvider.notifier)
                   .showTripListPreview(context, 0, 0);
+              ref
+                  .read(httpClientProvider)
+                  .telemetryClient
+                  .trackEvent(name: "trip_list_tour_button_tapped");
               await FirebaseAnalytics.instance
                   .logEvent(name: "trip_list_tour_button_tapped");
             },
@@ -106,6 +111,10 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
               await ref
                   .read(tripControllerProvider.notifier)
                   .refreshTrips(true);
+              ref
+                  .read(httpClientProvider)
+                  .telemetryClient
+                  .trackEvent(name: "refresh_button_tapped");
               await FirebaseAnalytics.instance
                   .logEvent(name: "refresh_button_tapped");
             },

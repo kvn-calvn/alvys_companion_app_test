@@ -1,3 +1,4 @@
+import 'package:alvys3/src/network/http_client.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/services.dart';
 
@@ -133,6 +134,14 @@ class StopCard extends ConsumerWidget {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(content: Text('Address Coppied')),
                             );
+                            ref
+                                .read(httpClientProvider)
+                                .telemetryClient
+                                .trackEvent(
+                                    name: "copied_stop_address",
+                                    additionalProperties: {
+                                  "address": stop.stopAddress
+                                });
                             await FirebaseAnalytics.instance.logEvent(
                                 name: "copied_stop_address",
                                 parameters: {"address": stop.stopAddress});

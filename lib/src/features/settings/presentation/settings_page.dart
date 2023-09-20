@@ -1,3 +1,4 @@
+import 'package:alvys3/src/network/http_client.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
 import '../../tutorial/tutorial_controller.dart';
@@ -76,6 +77,10 @@ class SettingsList extends ConsumerWidget {
             ref.read(firstInstallProvider.notifier).setState(true);
             context.goNamed(RouteName.trips.name);
             ref.read(tabletViewProvider.notifier).setState(0);
+            ref
+                .read(httpClientProvider)
+                .telemetryClient
+                .trackEvent(name: "watch_tutorial");
             await FirebaseAnalytics.instance.logEvent(name: "watch_tutorial");
           },
         ),
@@ -84,6 +89,10 @@ class SettingsList extends ConsumerWidget {
           onPressed: () async {
             PlatformChannel.stopLocationTracking();
             ref.read(authProvider.notifier).signOut(context);
+            ref
+                .read(httpClientProvider)
+                .telemetryClient
+                .trackEvent(name: "signed_out");
             await FirebaseAnalytics.instance.logEvent(name: "signed_out");
           },
         ),
