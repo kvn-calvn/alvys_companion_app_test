@@ -1,3 +1,5 @@
+import 'package:alvys3/src/network/http_client.dart';
+
 import '../../../../common_widgets/empty_view.dart';
 import '../../../../common_widgets/trip_card.dart';
 import '../controller/trip_page_controller.dart';

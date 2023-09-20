@@ -49,6 +49,7 @@ class GlobalErrorHandler {
 
   void _handleError(Object error, Function handleDefault) {
     Function? onError;
+    List<ExceptionAction> optionalOptions = [];
     String message = '';
     String title = '';
     bool hasError = true;
@@ -71,6 +72,7 @@ class GlobalErrorHandler {
         message = e.message;
         title = 'Permission Error';
         onError = e.onError;
+        optionalOptions = e.optionalActions;
         break;
       case AlvysException:
         var e = error as AlvysException;
@@ -86,6 +88,7 @@ class GlobalErrorHandler {
       showErrorDialog(
         context: navKey.currentState!.context,
         afterError: () => onError?.call(),
+        optionalActions: optionalOptions,
         message: message,
         title: title,
       );
@@ -112,6 +115,7 @@ class GlobalErrorHandler {
   void showErrorDialog(
           {required BuildContext context,
           required void Function() afterError,
+          required List<ExceptionAction> optionalActions,
           required String message,
           required String title}) =>
       showDialog(
@@ -125,7 +129,8 @@ class GlobalErrorHandler {
               label: 'OK',
               action: () => Navigator.pop(context),
               primary: true,
-            )
+            ),
+            ...optionalActions.map((e) => AppDialogAction(label: e.title, action: e.action))
           ],
         ),
       ).then((value) => afterError());

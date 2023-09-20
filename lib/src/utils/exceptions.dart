@@ -58,7 +58,15 @@ class AlvysEntityNotFoundException implements ControllerException {
 class PermissionException implements Exception {
   final String message;
   final Function onError;
-  PermissionException(this.message, this.onError);
+  final List<ExceptionAction> optionalActions;
+  PermissionException(this.message, this.onError, [this.optionalActions = const []]);
+}
+
+class ExceptionAction {
+  final String title;
+  final void Function() action;
+
+  ExceptionAction({required this.title, required this.action});
 }
 
 class AlvysException implements Exception {

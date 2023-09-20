@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -44,7 +45,10 @@ class UploadOptions extends ConsumerWidget {
               if (!hasPermission) {
                 throw PermissionException("Please enable camera permission", () {
                   Navigator.of(context, rootNavigator: false).pop();
-                });
+                }, [
+                  ExceptionAction(
+                      title: 'Open Settings', action: () => AppSettings.openAppSettings(type: AppSettingsType.settings))
+                ]);
               }
               if (mounted) {
                 Navigator.of(context, rootNavigator: true).pop();
@@ -64,7 +68,10 @@ class UploadOptions extends ConsumerWidget {
               if (!hasPermission) {
                 throw PermissionException("Please enable gallery permission", () {
                   Navigator.of(context, rootNavigator: false).pop();
-                });
+                }, [
+                  ExceptionAction(
+                      title: 'Open Settings', action: () => AppSettings.openAppSettings(type: AppSettingsType.settings))
+                ]);
               }
               if (mounted) {
                 Navigator.of(context, rootNavigator: true).pop();

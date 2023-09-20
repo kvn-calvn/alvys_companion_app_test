@@ -3,11 +3,13 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:azure_application_insights/azure_application_insights.dart';
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
 import 'package:package_info_plus/package_info_plus.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:uuid/uuid.dart';
 import 'package:uuid/uuid_util.dart';
 
@@ -39,6 +41,14 @@ class AlvysHttpClient {
       telemetryClient: telemetryClient,
       inner: client,
     );
+  }
+
+  Future<void> trackEvent(
+      {required String name,
+      Map<String, Object> additionalProperties = const <String, Object>{},
+      DateTime? timestamp}) async {
+    await addPermissionDetails();
+    return telemetryClient.trackEvent(name: name, additionalProperties: additionalProperties, timestamp: timestamp);
   }
 
   Future<Map<String, String>> get getBaseHeaders async {
@@ -127,6 +137,7 @@ class AlvysHttpClient {
       if (companyCode != null) {
         telemetryClient.context.properties['tenantId'] = companyCode;
       }
+      await addPermissionDetails();
       telemetryClient.context.operation.id = const Uuid().v4(options: {'rng': UuidUtil.cryptoRNG});
       var res = await op();
       return _handleResponse<T>(res);
@@ -152,6 +163,19 @@ class AlvysHttpClient {
       default:
         return Future.value(response);
     }
+  }
+
+  Future<void> addPermissionDetails() async {
+    var permissions = [
+      Permission.location,
+      Permission.locationAlways,
+      Permission.locationWhenInUse,
+      Permission.notification,
+      Platform.isAndroid ? Permission.mediaLibrary : Permission.photos,
+      Permission.camera
+    ];
+    telemetryClient.context.properties['permissionStatus'] = Map.fromEntries(await permissions
+        .mapAsync((element) async => MapEntry(element.toString().replaceAll('Permission.', ''), await element.status)));
   }
 
   Future<void> setTelemetryContext({DriverUser? user, String? companyCode, Map<String, dynamic>? extraData}) async {
