@@ -81,7 +81,7 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
           padding: EdgeInsets.only(left: 16.0),
           child: DriverStatusDropdown(),
         ),
-        leadingWidth: 110,
+        leadingWidth: 120,
         title: Text(
           'Trips',
           style: AlvysTheme.appbarTextStyle(context, false),
