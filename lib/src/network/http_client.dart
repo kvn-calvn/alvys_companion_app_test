@@ -93,7 +93,7 @@ class AlvysHttpClient {
     var request = CustomMultipartRequest("POST", url, onProgress: onProgress);
     request.files.addAll(files);
     if (headers != null) request.headers.addAll(headers);
-    request.headers.addAll(await getBaseHeaders);
+    request.headers.addAll(getBaseHeaders);
     await sendData<T>(request);
   }
 
@@ -104,32 +104,32 @@ class AlvysHttpClient {
   }) async {
     var request = CustomMultipartRequest("GET", url, onProgress: onProgress);
     if (headers != null) request.headers.addAll(headers);
-    request.headers.addAll(await getBaseHeaders);
+    request.headers.addAll(getBaseHeaders);
     await sendData<T>(request);
   }
 
   Future<Response> getData<T>(Uri uri, {Map<String, String>? headers}) {
-    return _executeRequest<T>(() async => telemetryHttpClient.get(uri, headers: await getHeaders(headers)));
+    return _executeRequest<T>(() async => telemetryHttpClient.get(uri, headers: getHeaders(headers)));
   }
 
   Future<Response> postData<T>(Uri uri, {Map<String, String>? headers, Object? body, Encoding? encoding}) {
     return _executeRequest<T>(
-        () async => telemetryHttpClient.post(uri, headers: await getHeaders(headers), body: body, encoding: encoding));
+        () async => telemetryHttpClient.post(uri, headers: getHeaders(headers), body: body, encoding: encoding));
   }
 
   Future<Response> putData<T>(Uri uri, {Map<String, String>? headers, Object? body, Encoding? encoding}) {
     return _executeRequest<T>(
-        () async => telemetryHttpClient.put(uri, headers: await getHeaders(headers), body: body, encoding: encoding));
+        () async => telemetryHttpClient.put(uri, headers: getHeaders(headers), body: body, encoding: encoding));
   }
 
   Future<Response> deleteData<T>(Uri uri, {Map<String, String>? headers, Object? body, Encoding? encoding}) {
     return _executeRequest<T>(() async =>
-        telemetryHttpClient.delete(uri, headers: await getHeaders(headers), body: body, encoding: encoding));
+        telemetryHttpClient.delete(uri, headers: getHeaders(headers), body: body, encoding: encoding));
   }
 
   Future<Response> patchData<T>(Uri uri, {Map<String, String>? headers, Object? body, Encoding? encoding}) {
     return _executeRequest<T>(
-        () async => telemetryHttpClient.patch(uri, headers: await getHeaders(headers), body: body, encoding: encoding));
+        () async => telemetryHttpClient.patch(uri, headers: getHeaders(headers), body: body, encoding: encoding));
   }
 
   Future<Response> _executeRequest<T>(Future<Response> Function() op) async {
