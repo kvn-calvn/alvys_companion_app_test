@@ -8,7 +8,7 @@ final remoteconfigProvider = FutureProvider<FirebaseRemoteConfig>((ref) async {
   try {
     await remoteConfig.setConfigSettings(RemoteConfigSettings(
       fetchTimeout: const Duration(minutes: 1),
-      minimumFetchInterval: const Duration(minutes: 5),
+      minimumFetchInterval: const Duration(hours: 12),
     ));
     await remoteConfig.setDefaults({
       "show_refresh_btn ": true,

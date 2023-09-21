@@ -60,6 +60,7 @@ dependencies:
   firebase_core: ^2.15.1
   firebase_analytics: ^10.4.5
   firebase_crashlytics: ^3.3.5
+  firebase_remote_config: ^4.2.6
   flexible_polyline:
     git:
       url: https://github.com/heremaps/flexible-polyline.git
