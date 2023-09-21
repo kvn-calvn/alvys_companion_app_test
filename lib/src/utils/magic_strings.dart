@@ -37,7 +37,7 @@ enum DisplayDocumentType { tripDocuments, personalDocuments, paystubs, tripRepor
 
 enum Environment { dev, qa, sandbox }
 
-enum StorageKey { driverData, themeMode, driverToken, companyCode, driverStatus, firstInstall }
+enum SharedPreferencesKey { driverData, themeMode, driverToken, companyCode, driverStatus, firstInstall }
 
 class DriverStatus {
   static const String sleeping = 'Sleeping',
@@ -49,7 +49,7 @@ class DriverStatus {
   static const List<String> driverStatuses = [online, offline];
   static String initStatus(String? status) {
     if (status == null) return online;
-    if (driverStatuses.containsInoreCase(status)) {
+    if (driverStatuses.containsIgnoreCase(status)) {
       return status;
     } else {
       return offline;

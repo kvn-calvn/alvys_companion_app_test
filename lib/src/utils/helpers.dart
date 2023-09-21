@@ -1,6 +1,6 @@
 import 'package:app_settings/app_settings.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'exceptions.dart';
 import 'magic_strings.dart';
@@ -37,7 +37,7 @@ class Helpers {
   }
 
   static Future<void> setCompanyCode(String companyCode) async {
-    var storage = const FlutterSecureStorage();
-    await storage.write(key: StorageKey.companyCode.name, value: companyCode);
+    var pref = await SharedPreferences.getInstance();
+    await pref.setString(SharedPreferencesKey.companyCode.name, companyCode);
   }
 }

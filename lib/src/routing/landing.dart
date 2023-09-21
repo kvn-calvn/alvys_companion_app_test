@@ -1,8 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:go_router/go_router.dart';
-
-import '../utils/magic_strings.dart';
 
 class Landing extends StatefulWidget {
   const Landing({Key? key}) : super(key: key);
@@ -15,22 +11,22 @@ class Landing extends StatefulWidget {
 class _LandingState extends State<Landing> {
   @override
   void initState() {
-    _getLoginData();
+    //  _getLoginData();
     super.initState();
   }
 
-  Future<void> _getLoginData() async {
-    const storage = FlutterSecureStorage();
+  // Future<void> _getLoginData() async {
+  //   const storage = FlutterSecureStorage();
 
-    var token = await storage.read(key: 'appToken');
-    if (token == null) {
-      if (!mounted) return;
-      context.goNamed(RouteName.signIn.name);
-    } else {
-      if (!mounted) return;
-      context.goNamed(RouteName.trips.name);
-    }
-  }
+  //   var token = await storage.read(key: 'appToken');
+  //   if (token == null) {
+  //     if (!mounted) return;
+  //     context.goNamed(RouteName.signIn.name);
+  //   } else {
+  //     if (!mounted) return;
+  //     context.goNamed(RouteName.trips.name);
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {

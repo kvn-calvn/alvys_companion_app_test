@@ -1,8 +1,11 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:pinput/pinput.dart';
 
 import '../../../common_widgets/buttons.dart';
@@ -17,14 +20,13 @@ class PhoneNumberVerificationPage extends ConsumerStatefulWidget {
 
   @override
   // ignore: library_private_types_in_public_api
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _PhoneNumberVerificationPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _PhoneNumberVerificationPageState();
 }
 
-class _PhoneNumberVerificationPageState
-    extends ConsumerState<PhoneNumberVerificationPage> {
+class _PhoneNumberVerificationPageState extends ConsumerState<PhoneNumberVerificationPage> {
   final pinController = TextEditingController();
   final focusNode = FocusNode();
+  bool canResend = false;
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
@@ -58,10 +60,7 @@ class _PhoneNumberVerificationPageState
           color: Theme.of(context).inputDecorationTheme.fillColor,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: (Theme.of(context).brightness.isLight
-                    ? Colors.black
-                    : Colors.white)
-                .withOpacity(0.5),
+            color: (Theme.of(context).brightness.isLight ? Colors.black : Colors.white).withOpacity(0.5),
           ),
         ),
       );
@@ -88,8 +87,7 @@ class _PhoneNumberVerificationPageState
           child: Center(
             child: Container(
               constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.longestSide *
-                      (TabletUtils.instance.isTablet ? 0.5 : 1)),
+                  maxWidth: MediaQuery.of(context).size.longestSide * (TabletUtils.instance.isTablet ? 0.5 : 1)),
               padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
               child: Form(
                 key: formKey,
@@ -101,9 +99,7 @@ class _PhoneNumberVerificationPageState
                     const SizedBox(
                       height: 25,
                     ),
-                    Text('Verification',
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.headlineLarge),
+                    Text('Verification', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headlineLarge),
                     const SizedBox(
                       height: 20,
                     ),
@@ -111,14 +107,8 @@ class _PhoneNumberVerificationPageState
                       'Enter the code sent to the number',
                       textAlign: TextAlign.center,
                     ),
-                    Text(
-                        ref
-                            .watch(authProvider)
-                            .value!
-                            .phone
-                            .toPhoneNumberString,
-                        textAlign: TextAlign.center,
-                        style: Theme.of(context).textTheme.titleMedium),
+                    Text(ref.watch(authProvider).value!.phone.toPhoneNumberString,
+                        textAlign: TextAlign.center, style: Theme.of(context).textTheme.titleMedium),
                     const SizedBox(
                       height: 40,
                     ),
@@ -126,16 +116,12 @@ class _PhoneNumberVerificationPageState
                       length: length,
                       controller: pinController,
                       focusNode: focusNode,
-                      onChanged:
-                          ref.watch(authProvider.notifier).setVerificationCode,
+                      onChanged: ref.watch(authProvider.notifier).setVerificationCode,
                       defaultPinTheme: defaultPinTheme(context),
                       cursor: Padding(
                         padding: const EdgeInsets.symmetric(vertical: 12.0),
                         child: Container(
-                          decoration: BoxDecoration(
-                              color: Theme.of(context)
-                                  .textSelectionTheme
-                                  .cursorColor),
+                          decoration: BoxDecoration(color: Theme.of(context).textSelectionTheme.cursorColor),
                           height: double.infinity,
                           width: 2,
                         ),
@@ -144,19 +130,14 @@ class _PhoneNumberVerificationPageState
                         FilteringTextInputFormatter.allow(RegExp('[0-9]')),
                       ],
                       onCompleted: (pin) async {
-                        await ref
-                            .read(authProvider.notifier)
-                            .verifyDriver(context, mounted);
+                        await ref.read(authProvider.notifier).verifyDriver(context, mounted);
                       },
                       focusedPinTheme: defaultPinTheme(context).copyWith(
-                        decoration:
-                            defaultPinTheme(context).decoration!.copyWith(
-                                  border: Border.all(
-                                    color: ColorManager.primary(
-                                            Theme.of(context).brightness)
-                                        .withOpacity(0.8),
-                                  ),
-                                ),
+                        decoration: defaultPinTheme(context).decoration!.copyWith(
+                              border: Border.all(
+                                color: ColorManager.primary(Theme.of(context).brightness).withOpacity(0.8),
+                              ),
+                            ),
                       ),
                       errorPinTheme: defaultPinTheme(context).copyWith(
                         decoration: BoxDecoration(
@@ -175,26 +156,33 @@ class _PhoneNumberVerificationPageState
                       )
                     else ...[
                       ButtonStyle1(
-                          isDisable: ref
-                                  .watch(authProvider)
-                                  .value!
-                                  .verificationCode
-                                  .length !=
-                              6,
+                          isDisable: ref.watch(authProvider).value!.verificationCode.length != 6,
                           onPressAction: () async {
-                            await ref
-                                .read(authProvider.notifier)
-                                .verifyDriver(context, mounted);
+                            await ref.read(authProvider.notifier).verifyDriver(context, mounted);
                           },
                           title: "Verify",
                           isLoading: false),
                       SizedBox(
                         width: double.infinity,
                         child: TextButton(
-                          onPressed: ref.read(authProvider.notifier).resendCode,
-                          child: const Text(
-                            'Resend Code',
-                            style: TextStyle(color: Colors.blue),
+                          onPressed: canResend
+                              ? () {
+                                  setState(() => canResend = false);
+                                  ref.read(authProvider.notifier).resendCode();
+                                }
+                              : null,
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text(
+                                'Resend Code',
+                              ),
+                              ResendTimer(
+                                  canResend: canResend,
+                                  resendCodeUpdater: (b) {
+                                    setState(() => canResend = true);
+                                  })
+                            ],
                           ),
                         ),
                       ),
@@ -207,5 +195,50 @@ class _PhoneNumberVerificationPageState
         ),
       ),
     );
+  }
+}
+
+class ResendTimer extends StatefulWidget {
+  final bool canResend;
+  final void Function(bool canResendCode) resendCodeUpdater;
+  const ResendTimer({super.key, required this.resendCodeUpdater, required this.canResend});
+
+  @override
+  State<ResendTimer> createState() => _ResendTimerState();
+}
+
+class _ResendTimerState extends State<ResendTimer> {
+  Duration timerDuration = const Duration(seconds: 30);
+  late Timer resendTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    resendTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (widget.canResend) return;
+      if (timerDuration.inSeconds <= 1) {
+        timerDuration = const Duration(seconds: 30);
+        widget.resendCodeUpdater(true);
+        return;
+      }
+      setState(() => timerDuration = Duration(seconds: timerDuration.inSeconds - 1));
+    });
+  }
+
+  @override
+  void dispose() {
+    resendTimer.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return !widget.canResend
+        ? Padding(
+            padding: const EdgeInsets.only(left: 8.0),
+            child: Text(
+                '${timerDuration.inMinutes.remainder(60)}:${(NumberFormat('00').format(timerDuration.inSeconds.remainder(60)))}'),
+          )
+        : const SizedBox.shrink();
   }
 }

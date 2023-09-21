@@ -1,8 +1,9 @@
+import 'package:alvys3/src/utils/provider_args_saver.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import '../../utils/dummy_data.dart';
 import '../../utils/magic_strings.dart';
 import '../../utils/tablet_utils.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
 import 'tutorial.dart';
 import 'tutorial_widgets.dart';
 import '../../routing/app_router.dart';
@@ -42,7 +43,6 @@ class TutorialElementGroup {
 }
 
 class TutorialController {
-  var storage = const FlutterSecureStorage();
   final LabeledGlobalKey refresh = LabeledGlobalKey('refresh'),
       tripCard = LabeledGlobalKey('tripCard'),
       sleepDropdown = LabeledGlobalKey('sleepDropdown'),
@@ -196,15 +196,16 @@ class TutorialController {
 
   final GlobalKey<NavigatorState> navKey;
   final GoRouter navigator;
+  final SharedPreferences pref;
   final FirstInstallNotifier firstInstall;
   int index = 0;
   OverlayEntry? entry;
   void Function()? onEnd;
-  TutorialController({required this.firstInstall, required this.navigator, required this.navKey});
+  TutorialController({required this.firstInstall, required this.navigator, required this.navKey, required this.pref});
   Future<void> endTutorial() async {
     index = 0;
     firstInstall.setState(false);
-    await storage.write(key: StorageKey.firstInstall.name, value: 'false');
+    await pref.setBool(SharedPreferencesKey.firstInstall.name, false);
     onEnd?.call();
   }
 
@@ -271,6 +272,7 @@ final tutorialProvider = Provider<TutorialController>((ref) {
     navKey: ref.read(globalErrorHandlerProvider).navKey,
     navigator: ref.read(getRouter),
     firstInstall: ref.read(firstInstallProvider.notifier),
+    pref: ref.read(sharedPreferencesProvider)!,
   );
 });
 

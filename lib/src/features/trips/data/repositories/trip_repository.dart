@@ -35,6 +35,7 @@ class AppTripRepository implements TripRepository {
   Future<Stop> updateStopTimeRecord<T>(
       String companyCode, String tripId, String stopId, UpdateStopTimeRecord record) async {
     await Helpers.setCompanyCode(companyCode);
+    print(record.toJson().toJsonEncodedString);
     var res = await httpClient.putData<T>(
       Uri.parse(ApiRoutes.timeStopRecord(tripId, stopId)),
       body: record.toJson().toJsonEncodedString,
