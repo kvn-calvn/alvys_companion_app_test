@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:convert';
 
+import 'package:alvys3/src/utils/provider_args_saver.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../utils/helpers.dart';
 import '../domain/models/update_driver_status_dto/update_driver_status_dto.dart';
@@ -12,7 +14,6 @@ import '../domain/models/user_details/user_details.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -30,11 +31,12 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppError
   final DriverUser? driver;
   String? status;
   late AuthRepository<AuthProviderNotifier> authRepo;
-  var storage = const FlutterSecureStorage();
+  late SharedPreferences pref;
   AuthProviderNotifier({this.driver, this.status});
   @override
   FutureOr<AuthState> build() {
     authRepo = ref.read(authRepoProvider);
+    pref = ref.read(sharedPreferencesProvider)!;
     state = AsyncValue.data(AuthState(driver: driver, driverStatus: status, driverLoggedIn: driver != null));
     return state.value!;
   }
@@ -65,16 +67,16 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppError
     state = const AsyncValue.loading();
     var driverRes = await authRepo.verifyDriverCode(state.value!.phone, state.value!.verificationCode);
     var driverTenant = driverRes.userTenants.firstWhereOrNull((element) => element.companyOwnedAsset!);
-    await storage.write(key: StorageKey.driverData.name, value: driverRes.toJson().toJsonEncodedString);
-    await storage.write(
-      key: StorageKey.driverToken.name,
-      value: base64.encode(utf8.encode("${driverRes.userName}:${driverRes.appToken}")),
+    await pref.setString(SharedPreferencesKey.driverData.name, driverRes.toJson().toJsonEncodedString);
+    await pref.setString(
+      SharedPreferencesKey.driverToken.name,
+      base64.encode(utf8.encode("${driverRes.userName}:${driverRes.appToken}")),
     );
     String? driverStatus;
     if (driverTenant != null) {
       var driverAsset = await authRepo.getDriverAsset(driverTenant.companyCode!, driverTenant.assetId!);
-      await storage.write(
-          key: StorageKey.driverStatus.name, value: DriverStatus.initStatus(driverAsset.status).titleCase);
+      await pref.setString(
+          SharedPreferencesKey.driverStatus.name, DriverStatus.initStatus(driverAsset.status).titleCase);
       driverStatus = driverAsset.status;
     }
     state = AsyncValue.data(state.value!.copyWith(driver: driverRes, driverStatus: driverStatus?.titleCase));
@@ -120,12 +122,11 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppError
 
   Future<void> signOut(BuildContext context) async {
     GoRouter.of(context).goNamed(RouteName.signIn.name);
-    var storage = const FlutterSecureStorage();
     PlatformChannel.stopLocationTracking();
     await ref.read(websocketProvider).stopWebsocketConnection();
     resetFields();
-    await storage.delete(key: StorageKey.driverData.name);
-    await storage.delete(key: StorageKey.driverToken.name);
+    await pref.remove(SharedPreferencesKey.driverData.name);
+    await pref.remove(SharedPreferencesKey.driverToken.name);
     state = AsyncValue.data(state.value!.copyWith(driver: null));
   }
 
@@ -155,7 +156,7 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppError
       var dto = UpdateDriverStatusDTO(
           status: s.toUpperCase(), id: '', latitude: location.latitude, longitude: location.longitude);
       await authRepo.updateDriverStatus(getCompanyOwned.companyCode!, dto);
-      await storage.write(key: StorageKey.driverStatus.name, value: s);
+      await pref.setString(SharedPreferencesKey.driverStatus.name, s);
     }
   }
 
@@ -191,8 +192,8 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppError
     updateUser(res);
     if (driverTenant != null) {
       var driverAsset = await authRepo.getDriverAsset(driverTenant.companyCode!, driverTenant.assetId!);
-      await storage.write(
-          key: StorageKey.driverStatus.name, value: DriverStatus.initStatus(driverAsset.status).titleCase);
+      await pref.setString(
+          SharedPreferencesKey.driverStatus.name, DriverStatus.initStatus(driverAsset.status).titleCase);
       state =
           AsyncValue.data(state.value!.copyWith(driverStatus: DriverStatus.initStatus(driverAsset.status).titleCase));
     }

@@ -2,6 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:alvys3/src/utils/provider_args_saver.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
 import 'src/features/tutorial/tutorial_controller.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -9,7 +12,6 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_genius_scan/flutter_genius_scan.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:stack_trace/stack_trace.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
@@ -39,17 +41,18 @@ Future<void> mainCommon() async {
       options: DefaultFirebaseOptions.currentPlatform,
     );
 
-    var storage = const FlutterSecureStorage();
-    String? driverData = await storage.read(key: StorageKey.driverData.name);
-    ThemeMode? appThemeMode = ThemeMode.values.byNameOrNull(await storage.read(key: StorageKey.themeMode.name));
+    var pref = await SharedPreferences.getInstance();
+    String? driverData = pref.getString(SharedPreferencesKey.driverData.name);
+    ThemeMode? appThemeMode = ThemeMode.values.byNameOrNull(pref.getString(SharedPreferencesKey.themeMode.name));
     var isTablet = await PlatformChannel.isTablet();
-    var firstInstall = await storage.read(key: StorageKey.firstInstall.name);
+    var firstInstall = pref.getBool(SharedPreferencesKey.firstInstall.name);
     TabletUtils.instance.isTablet = isTablet;
     DriverUser? driverUser;
-    var status = await storage.read(key: StorageKey.driverStatus.name);
+    var status = pref.getString(SharedPreferencesKey.driverStatus.name);
     container = ProviderContainer(
       overrides: [
-        firstInstallProvider.overrideWith(() => FirstInstallNotifier(firstInstall == null || firstInstall == 'true')),
+        sharedPreferencesProvider.overrideWithValue(pref),
+        firstInstallProvider.overrideWith(() => FirstInstallNotifier(firstInstall ?? false)),
         authProvider.overrideWith(
             () => AuthProviderNotifier(driver: driverUser, status: status?.titleCase ?? DriverStatus.online)),
         themeHandlerProvider.overrideWith(() => ThemeHandlerNotifier(appThemeMode)),

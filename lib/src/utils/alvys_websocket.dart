@@ -1,9 +1,9 @@
 import 'dart:convert';
 
+import 'package:alvys3/src/utils/provider_args_saver.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:signalr_netcore/ihub_protocol.dart';
 import 'package:signalr_netcore/signalr_client.dart';
 
@@ -47,8 +47,8 @@ class AlvysWebsocket {
   }
 
   Future<String> getToken() async {
-    var storage = const FlutterSecureStorage();
-    var res = await storage.read(key: StorageKey.driverToken.name);
+    var pref = ref.read(sharedPreferencesProvider)!;
+    var res = pref.getString(SharedPreferencesKey.driverToken.name);
     return res ?? '';
   }
 

@@ -2,14 +2,15 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:alvys3/src/utils/provider_args_saver.dart';
 import 'package:azure_application_insights/azure_application_insights.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:http/http.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:uuid/uuid.dart';
 import 'package:uuid/uuid_util.dart';
 
@@ -19,13 +20,13 @@ import '../utils/exceptions.dart';
 import '../utils/magic_strings.dart';
 import 'custom_multipart_request.dart';
 
-final httpClientProvider = Provider<AlvysHttpClient>((ref) => AlvysHttpClient());
+final httpClientProvider = Provider<AlvysHttpClient>((ref) => AlvysHttpClient(ref.read(sharedPreferencesProvider)!));
 
 class AlvysHttpClient {
   late TelemetryClient telemetryClient;
   late TelemetryHttpClient telemetryHttpClient;
-  FlutterSecureStorage storage = const FlutterSecureStorage();
-  AlvysHttpClient() {
+  final SharedPreferences pref;
+  AlvysHttpClient(this.pref) {
     final client = Client();
     final processor = TransmissionProcessor(
       instrumentationKey: FlavorConfig.instance!.azureTelemetryKey,
@@ -51,9 +52,9 @@ class AlvysHttpClient {
     return telemetryClient.trackEvent(name: name, additionalProperties: additionalProperties, timestamp: timestamp);
   }
 
-  Future<Map<String, String>> get getBaseHeaders async {
-    var token = await storage.read(key: StorageKey.driverToken.name);
-    var companyCode = await storage.read(key: StorageKey.companyCode.name);
+  Map<String, String> get getBaseHeaders {
+    var token = pref.getString(SharedPreferencesKey.driverToken.name);
+    var companyCode = pref.getString(SharedPreferencesKey.companyCode.name);
     return token == null
         ? {HttpHeaders.contentTypeHeader: ContentType.json.value}
         : {
@@ -63,8 +64,8 @@ class AlvysHttpClient {
           };
   }
 
-  Future<Map<String, String>> getHeaders(Map<String, String>? headers) async {
-    var newHeaders = await getBaseHeaders;
+  Map<String, String> getHeaders(Map<String, String>? headers) {
+    var newHeaders = getBaseHeaders;
     if (headers != null) {
       newHeaders.addAll(headers);
     }
@@ -133,7 +134,7 @@ class AlvysHttpClient {
 
   Future<Response> _executeRequest<T>(Future<Response> Function() op) async {
     try {
-      var companyCode = await storage.read(key: StorageKey.companyCode.name);
+      var companyCode = pref.getString(SharedPreferencesKey.companyCode.name);
       if (companyCode != null) {
         telemetryClient.context.properties['tenantId'] = companyCode;
       }
@@ -175,7 +176,8 @@ class AlvysHttpClient {
       Permission.camera
     ];
     telemetryClient.context.properties['permissionStatus'] = Map.fromEntries(await permissions.mapAsync(
-        (element) async => MapEntry(element.toString().replaceAll('Permission.', ''), (await element.status).name)));
+            (element) async => MapEntry(element.toString().replaceAll('Permission.', ''), (await element.status).name)))
+        .toJsonEncodedString;
   }
 
   Future<void> setTelemetryContext({DriverUser? user, String? companyCode, Map<String, dynamic>? extraData}) async {
