@@ -30,7 +30,7 @@ class _EcheckPageState extends ConsumerState<EcheckPage> {
     super.initState();
   }
 
-  EcheckPageController get notifier => ref.read(echeckPageControllerProvider.notifier);
+  EcheckPageController get notifier => ref.read(echeckPageControllerProvider.call(null).notifier);
   @override
   Widget build(BuildContext context) {
     var authState = ref.watch(authProvider);

@@ -2,6 +2,7 @@ import '../features/documents/presentation/upload_documents_controller.dart';
 
 class ProviderArgsSaver {
   UploadDocumentArgs? uploadArgs;
+  String? echeckArgs;
   ProviderArgsSaver._privateConstructor();
 
   static final ProviderArgsSaver _instance = ProviderArgsSaver._privateConstructor();

@@ -75,7 +75,7 @@ class EcheckCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var state = ref.watch(echeckPageControllerProvider);
+    var state = ref.watch(echeckPageControllerProvider.call(null));
     var authState = ref.watch(authProvider);
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 12),

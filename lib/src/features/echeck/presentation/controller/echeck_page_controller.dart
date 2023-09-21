@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:alvys3/src/utils/provider_args_saver.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -11,7 +12,7 @@ import '../../data/echeck_repository.dart';
 import '../../domain/echeck_state/echeck_state.dart';
 import '../../domain/generate_echeck/generate_echeck_request.dart';
 
-class EcheckPageController extends AutoDisposeAsyncNotifier<ECheckState> implements IAppErrorHandler {
+class EcheckPageController extends AutoDisposeFamilyAsyncNotifier<ECheckState, String?> implements IAppErrorHandler {
   late TripController tripController;
   late EcheckRepository repo;
   late AuthProviderNotifier auth;
@@ -22,11 +23,12 @@ class EcheckPageController extends AutoDisposeAsyncNotifier<ECheckState> impleme
   // ];
 
   @override
-  FutureOr<ECheckState> build() {
+  FutureOr<ECheckState> build(String? arg) {
     tripController = ref.read(tripControllerProvider.notifier);
     repo = ref.read(eCheckRepoProvider);
     auth = ref.read(authProvider.notifier);
-    return ECheckState();
+    ProviderArgsSaver.instance.echeckArgs = arg;
+    return ECheckState(stopId: arg);
   }
 
   List<DropdownMenuItem<String>> get reasonsDropdown => state.value!.reasons
@@ -105,4 +107,4 @@ class EcheckPageController extends AutoDisposeAsyncNotifier<ECheckState> impleme
 }
 
 final echeckPageControllerProvider =
-    AutoDisposeAsyncNotifierProvider<EcheckPageController, ECheckState>(EcheckPageController.new);
+    AutoDisposeAsyncNotifierProviderFamily<EcheckPageController, ECheckState, String?>(EcheckPageController.new);

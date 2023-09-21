@@ -36,10 +36,10 @@ class _GenerateEcheckState extends ConsumerState<GenerateEcheck> {
   var amountMaskFormatter = MaskTextInputFormatter(
       mask: '\$##########', filter: {"#": RegExp(r'[0-9\.]')}, type: MaskAutoCompletionType.eager);
   final TextEditingController amount = TextEditingController(), notes = TextEditingController();
+  EcheckPageController get notifier => ref.read(echeckPageControllerProvider.call(widget.stopId).notifier);
   @override
   Widget build(BuildContext context) {
-    var notifier = ref.read(echeckPageControllerProvider.notifier);
-    var state = ref.watch(echeckPageControllerProvider);
+    var state = ref.watch(echeckPageControllerProvider.call(widget.stopId));
     return Dialog(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       // contentPadding: EdgeInsets.zero,

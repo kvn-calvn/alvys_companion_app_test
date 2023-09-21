@@ -110,7 +110,7 @@ class GlobalErrorHandler {
       case TripController:
         ref.read(tripControllerProvider.notifier).onError();
       case EcheckPageController:
-        ref.read(echeckPageControllerProvider.notifier).onError();
+        ref.read(echeckPageControllerProvider.call(ProviderArgsSaver.instance.echeckArgs).notifier).onError();
     }
   }
 
