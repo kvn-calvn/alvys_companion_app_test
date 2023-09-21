@@ -74,7 +74,7 @@ class AppTrip with _$AppTrip {
   List<AppDocument> getAttachments(bool canViewCustomerConfirmation, bool canViewCarrierConfirmation) {
     return attachments
         .map((e) {
-          if (DocumentTypes.customerConfirmationDocTypes.containsInoreCase(e.documentType)) {
+          if (DocumentTypes.customerConfirmationDocTypes.containsIgnoreCase(e.documentType)) {
             if (canViewCustomerConfirmation) {
               return e;
             }

@@ -11,7 +11,7 @@ import '../controller/trip_page_controller.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart' as intl;
+import 'package:intl/intl.dart';
 import '../../../../utils/app_theme.dart';
 import '../../domain/app_trip/m_comodity.dart';
 
@@ -120,7 +120,7 @@ class StopDetails extends ConsumerWidget {
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         Text(
-                          currentStop.phone ?? "",
+                          currentStop.phone ?? "-",
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
@@ -133,7 +133,7 @@ class StopDetails extends ConsumerWidget {
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         Text(
-                          intl.DateFormat.yMMMd().addPattern('@').add_Hm().formatNullDate(currentStop.actualStopdate),
+                          DateFormat.yMMMd().addPattern('@').add_Hm().formatNullDate(currentStop.actualStopdate),
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
@@ -152,7 +152,7 @@ class StopDetails extends ConsumerWidget {
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         Text(
-                          intl.DateFormat.yMMMd()
+                          DateFormat.yMMMd()
                               .addPattern('@')
                               .add_Hm()
                               .formatNullDate(currentStop.timeRecord?.driver?.timeIn),
@@ -168,7 +168,7 @@ class StopDetails extends ConsumerWidget {
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         Text(
-                          intl.DateFormat.yMMMd()
+                          DateFormat.yMMMd()
                               .addPattern('@')
                               .add_Hm()
                               .formatNullDate(currentStop.timeRecord?.driver?.timeOut),
@@ -317,7 +317,7 @@ class ItemsWidget extends StatelessWidget {
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                             Text(
-                              intl.NumberFormat.decimalPattern().format(item.numPieces),
+                              NumberFormat.decimalPattern().format(item.numPieces),
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           ],
@@ -330,7 +330,7 @@ class ItemsWidget extends StatelessWidget {
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                             Text(
-                              '${intl.NumberFormat.decimalPattern().format(item.weight)} ${item.weightType}',
+                              '${NumberFormat.decimalPattern().format(item.weight)} ${item.weightType}',
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           ],

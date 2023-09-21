@@ -26,24 +26,24 @@ class GooglePlacesResult with _$GooglePlacesResult {
   GooglePlacesResult._();
 
   String get zip =>
-      addressComponents.firstWhereOrNull((element) => element.types.containsInoreCase('postal_code'))?.shortName ?? '';
+      addressComponents.firstWhereOrNull((element) => element.types.containsIgnoreCase('postal_code'))?.shortName ?? '';
 
   String get country =>
-      addressComponents.firstWhereOrNull((element) => element.types.containsInoreCase('country'))?.shortName ?? '';
+      addressComponents.firstWhereOrNull((element) => element.types.containsIgnoreCase('country'))?.shortName ?? '';
 
   String get state =>
       addressComponents
-          .firstWhereOrNull((element) => element.types.containsInoreCase('administrative_area_level_1'))
+          .firstWhereOrNull((element) => element.types.containsIgnoreCase('administrative_area_level_1'))
           ?.shortName ??
       '';
 
   String get city =>
-      addressComponents.firstWhereOrNull((element) => element.types.containsInoreCase('locality'))?.shortName ?? '';
+      addressComponents.firstWhereOrNull((element) => element.types.containsIgnoreCase('locality'))?.shortName ?? '';
   String get street =>
-      '${(addressComponents.firstWhereOrNull((element) => element.types.containsInoreCase('street_number'))?.shortName ?? '')} ${(addressComponents.firstWhereOrNull((element) => element.types.containsInoreCase('route'))?.shortName ?? '')}'
+      '${(addressComponents.firstWhereOrNull((element) => element.types.containsIgnoreCase('street_number'))?.shortName ?? '')} ${(addressComponents.firstWhereOrNull((element) => element.types.containsIgnoreCase('route'))?.shortName ?? '')}'
           .trim();
   String get apartmentNumber =>
-      addressComponents.firstWhereOrNull((element) => element.types.containsInoreCase('premise'))?.shortName ?? '';
+      addressComponents.firstWhereOrNull((element) => element.types.containsIgnoreCase('premise'))?.shortName ?? '';
 }
 
 @freezed

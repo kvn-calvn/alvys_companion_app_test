@@ -91,6 +91,7 @@ class TripController extends _$TripController implements IAppErrorHandler {
   }
 
   Future<void> startLocationTracking([String? newStatus]) async {
+    print(state);
     var status = newStatus ?? pref.getString(SharedPreferencesKey.driverStatus.name);
     if (state.value!.activeTrips.isNotEmpty && (status.equalsIgnoreCase(DriverStatus.online) || status == null)) {
       var trackingTrip = state.value!.activeTrips.firstWhereOrNull((e) => e.status == TripStatus.inTransit) ??

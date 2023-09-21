@@ -245,10 +245,10 @@ packages:
     dependency: "direct main"
     description:
       name: coder_matthews_extensions
-      sha256: "7b9f9a56b9188d48811ae4b6ce17d995b1b3a221038d9bb35da1f6c2693a8fd8"
+      sha256: "2ea316749cbac6c7343b407fdac0934280ace70a59c85abaf33508a3c38ba193"
       url: "https://pub.dev"
     source: hosted
-    version: "1.2.2"
+    version: "1.2.3"
   collection:
     dependency: transitive
     description:
