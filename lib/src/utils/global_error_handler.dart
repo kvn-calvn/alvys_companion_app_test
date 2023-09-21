@@ -32,6 +32,7 @@ class GlobalErrorHandler {
               .trackTrace(severity: Severity.error, message: 'mobile_app_client_error', additionalProperties: {
             "Error": details!.exception.toString(),
             "StackTrace": details.stack.toString(),
+            "ErrorType": "Flutter error",
           });
           FlutterError.presentError(details);
         } else {
@@ -39,6 +40,7 @@ class GlobalErrorHandler {
               .trackTrace(severity: Severity.error, message: 'mobile_app_client_error', additionalProperties: {
             "Error": error.toString(),
             "StackTrace": trace.toString(),
+            "ErrorType": "Regular",
           });
           debugPrint("$error");
           debugPrintStack(stackTrace: trace);
