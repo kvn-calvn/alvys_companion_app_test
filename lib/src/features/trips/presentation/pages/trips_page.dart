@@ -1,3 +1,4 @@
+import 'package:alvys3/src/network/firebase_remote_config.dart';
 import 'package:alvys3/src/network/http_client.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
@@ -76,6 +77,11 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
 
   @override
   Widget build(BuildContext context) {
+    final showTutBtn =
+        ref.read(remoteconfigProvider).value?.getBool("show_tutorial_btn") ??
+            false;
+
+    debugPrint("Called");
     return Scaffold(
       appBar: AppBar(
         leading: const Padding(
@@ -103,35 +109,25 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
             },
             icon: const Icon(Icons.info),
           ),
-          IconButton(
-            padding: const EdgeInsets.only(right: 18.0, left: 5.0),
-            constraints: const BoxConstraints(),
-            key: ref.read(tutorialProvider).refresh,
-            onPressed: () async {
-              await ref
-                  .read(tripControllerProvider.notifier)
-                  .refreshTrips(true);
-              ref
-                  .read(httpClientProvider)
-                  .telemetryClient
-                  .trackEvent(name: "refresh_button_tapped");
-              await FirebaseAnalytics.instance
-                  .logEvent(name: "refresh_button_tapped");
-            },
-            icon: const Icon(Icons.refresh),
-          )
-          // Padding(
-          //   padding: const EdgeInsets.only(right: 16.0),
-          //   child: Container(
-          //       //
-          //       padding: const EdgeInsets.symmetric(horizontal: 5),
-          //       /* decoration: BoxDecoration(
-          //       color: Colors.green.shade50,
-          //       border: Border.all(color: Colors.transparent),
-          //       borderRadius: BorderRadius.circular(10),
-          //     ),*/
-          //       child: const DriverStatusDropdown()),
-          // ),
+          if (showTutBtn) ...[
+            IconButton(
+              padding: const EdgeInsets.only(right: 18.0, left: 5.0),
+              constraints: const BoxConstraints(),
+              key: ref.read(tutorialProvider).refresh,
+              onPressed: () async {
+                await ref
+                    .read(tripControllerProvider.notifier)
+                    .refreshTrips(true);
+                ref
+                    .read(httpClientProvider)
+                    .telemetryClient
+                    .trackEvent(name: "refresh_button_tapped");
+                await FirebaseAnalytics.instance
+                    .logEvent(name: "refresh_button_tapped");
+              },
+              icon: const Icon(Icons.refresh),
+            )
+          ]
         ],
         centerTitle: true,
         bottom: TabBar(

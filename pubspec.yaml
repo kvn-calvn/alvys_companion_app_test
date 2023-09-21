@@ -65,6 +65,7 @@ dependencies:
     git:
       url: https://github.com/heremaps/flexible-polyline.git
       path: dart
+  firebase_remote_config: ^4.2.6
 dev_dependencies:
   flutter_test:
     sdk: flutter
