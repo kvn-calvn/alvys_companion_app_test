@@ -32,15 +32,17 @@ class AppTrip with _$AppTrip {
     @JsonKey(name: 'Rate') double? rate,
     @JsonKey(name: 'TripValue') double? tripValue,
     @JsonKey(name: 'LoadRate') double? loadRate,
-    @JsonKey(name: 'PayableDriverAmounts') List<PayableDriverAmount>? payableDriverAmounts,
+    @JsonKey(name: 'PayableDriverAmounts')
+    @Default(<PayableDriverAmount>[])
+    List<PayableDriverAmount> payableDriverAmounts,
     @JsonKey(name: 'IsOOP') bool? isOop,
     @JsonKey(name: 'GeneralInstructions') String? generalInstructions,
     @JsonKey(name: 'TotalMiles') double? totalMiles,
     @JsonKey(name: 'TotalWeight') double? totalWeight,
     @JsonKey(name: 'Temperature') double? temperature,
-    @JsonKey(name: 'Drivers') List<String?>? drivers,
-    @JsonKey(name: 'Stops') List<Stop>? stops,
-    @JsonKey(name: 'Echecks') List<ECheck>? eChecks,
+    @JsonKey(name: 'Drivers') @Default(<String?>[]) List<String?> drivers,
+    @JsonKey(name: 'Stops') @Default(<Stop>[]) List<Stop> stops,
+    @JsonKey(name: 'Echecks') @Default(<ECheck>[]) List<ECheck> eChecks,
     @Default(0) @JsonKey(name: 'StopCount') int stopCount,
     @JsonKey(name: 'PickupDate') DateTime? pickupDate,
     @JsonKey(name: 'DeliveryDate') DateTime? deliveryDate,
@@ -66,7 +68,7 @@ class AppTrip with _$AppTrip {
   AppTrip._();
 
   String? get canCheckInOutStopId => stops
-      ?.firstWhereOrNull(
+      .firstWhereOrNull(
           (element) => element.timeRecord?.driver?.timeIn == null || element.timeRecord?.driver?.timeOut == null)
       ?.stopId;
   String? driverPayable(String? driverId) =>
@@ -90,11 +92,9 @@ class AppTrip with _$AppTrip {
         .toList();
   }
 
-  List<MapEntry<String, LatLng>> get stopLocations =>
-      stops
-          ?.map((e) => MapEntry(e.stopType ?? '',
-              LatLng(double.tryParse(e.latitude ?? '0') ?? 0, double.tryParse(e.longitude ?? '0') ?? 0)))
-          .where((element) => element.value.latitude != 0 && element.value.longitude != 0)
-          .toList() ??
-      [];
+  List<MapEntry<String, LatLng>> get stopLocations => stops
+      .map((e) => MapEntry(
+          e.stopType ?? '', LatLng(double.tryParse(e.latitude ?? '0') ?? 0, double.tryParse(e.longitude ?? '0') ?? 0)))
+      .where((element) => element.value.latitude != 0 && element.value.longitude != 0)
+      .toList();
 }

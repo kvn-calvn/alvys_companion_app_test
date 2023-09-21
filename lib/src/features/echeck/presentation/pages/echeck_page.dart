@@ -73,10 +73,10 @@ class _EcheckPageState extends ConsumerState<EcheckPage> {
                 ? const EmptyView(title: 'No E-Checks', description: 'Generated E-Checks will appear here.')
                 : ListView.builder(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    itemCount: trip.eChecks!.length,
+                    itemCount: trip.eChecks.length,
                     itemBuilder: (context, index) => EcheckCard(
                       index: index,
-                      eCheck: trip.eChecks![index],
+                      eCheck: trip.eChecks[index],
                       companyCode: trip.companyCode!,
                       cancelECheck: (echeckNumber) async => await notifier.cancelEcheck(widget.tripId, echeckNumber),
                       tripId: widget.tripId,

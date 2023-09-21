@@ -256,7 +256,7 @@ class TripDetails extends ConsumerWidget {
                       Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          ...trip.stops!.mapList((stop, index, last) => StopCard(
+                          ...trip.stops.mapList((stop, index, last) => StopCard(
                                 index: index,
                                 stop: stop,
                                 tripId: trip.id!,

@@ -29,8 +29,7 @@ class TripListState with _$TripListState {
   AppTrip getTrip(String tripId) =>
       trips.firstWhere((element) => element.id! == tripId, orElse: () => AppTrip(id: '-', tripNumber: '...'));
   AppTrip? tryGetTrip(String tripId) => trips.firstWhereOrNull((e) => e.id! == tripId);
-  Stop getStop(String tripId, String stopId) =>
-      getTrip(tripId).stops!.firstWhere((element) => element.stopId == stopId);
+  Stop getStop(String tripId, String stopId) => getTrip(tripId).stops.firstWhere((element) => element.stopId == stopId);
   Stop? tryGetStop(String tripId, String stopId) =>
-      tryGetTrip(tripId)?.stops?.firstWhereOrNull((element) => element.stopId == stopId);
+      tryGetTrip(tripId)?.stops.firstWhereOrNull((element) => element.stopId == stopId);
 }

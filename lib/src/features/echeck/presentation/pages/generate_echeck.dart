@@ -95,8 +95,7 @@ class _GenerateEcheckState extends ConsumerState<GenerateEcheck> {
                               ),
                               if (state.value!.showStopDropdown) ...[
                                 const Text("Select a Stop"),
-                                for (Stop stop
-                                    in ref.watch(tripControllerProvider).value!.getTrip(widget.tripId).stops!)
+                                for (Stop stop in ref.watch(tripControllerProvider).value!.getTrip(widget.tripId).stops)
                                   ECheckStopCard(
                                     stop: stop,
                                     onTap: notifier.setStopId,

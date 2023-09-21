@@ -164,7 +164,7 @@ class TripController extends _$TripController implements IAppErrorHandler {
         state = AsyncValue.data(state.value!.copyWith(trips: trips));
       } else {
         var user = auth.driver;
-        if (trip.drivers!.removeNulls.contains(user?.phone)) {
+        if (trip.drivers.removeNulls.contains(user?.phone)) {
           trips.add(trip);
           state = AsyncValue.data(state.value!.copyWith(trips: trips));
         }
@@ -185,7 +185,7 @@ class TripController extends _$TripController implements IAppErrorHandler {
     state = AsyncValue.data(state.value!.copyWith(loadingStopId: stopId, checkIn: true));
     var trip = state.value!.tryGetTrip(tripId);
     if (trip == null) return;
-    var stop = trip.stops!.firstWhereOrNull((element) => element.stopId == stopId);
+    var stop = trip.stops.firstWhereOrNull((element) => element.stopId == stopId);
     if (stop == null) return;
     var location = await Helpers.getUserPosition(() {
       state = AsyncValue.data(state.value!.copyWith(loadingStopId: null));
@@ -244,8 +244,8 @@ class TripController extends _$TripController implements IAppErrorHandler {
     var trip = state.value!.getTrip(tripId);
     int index = state.value!.trips.indexWhere((element) => element.id == trip.id!);
     var trips = List<AppTrip>.from(state.value!.trips);
-    int stopIndex = trip.stops!.indexWhere((element) => element.stopId == stop.stopId!);
-    var stops = List<Stop>.from(trip.stops!);
+    int stopIndex = trip.stops.indexWhere((element) => element.stopId == stop.stopId!);
+    var stops = List<Stop>.from(trip.stops);
     stops[stopIndex] = stop;
     trips[index] = trip.copyWith(stops: stops);
     state = AsyncValue.data(state.value!.copyWith(trips: trips));
@@ -254,16 +254,16 @@ class TripController extends _$TripController implements IAppErrorHandler {
   void addEcheck(String tripId, ECheck echeck) {
     var trip = getTrip(tripId);
     if (trip == null) return;
-    trip = trip.copyWith(eChecks: [...trip.eChecks ?? [], echeck]);
+    trip = trip.copyWith(eChecks: [...trip.eChecks, echeck]);
     updateTrip(trip);
   }
 
   void updateEcheck(String tripId, ECheck echeck) {
     var trip = getTrip(tripId);
     if (trip == null) return;
-    var currentECheckIndex = trip.eChecks?.indexWhere((element) => element.eCheckId == echeck.eCheckId);
-    if (currentECheckIndex == null || currentECheckIndex < 0) return;
-    trip.eChecks![currentECheckIndex] = echeck;
+    var currentECheckIndex = trip.eChecks.indexWhere((element) => element.eCheckId == echeck.eCheckId);
+    if (currentECheckIndex < 0) return;
+    trip.eChecks[currentECheckIndex] = echeck;
     updateTrip(trip);
   }
 
