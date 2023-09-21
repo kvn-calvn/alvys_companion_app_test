@@ -42,9 +42,10 @@ class _EcheckPageState extends ConsumerState<EcheckPage> {
     if (state.isLoading) return const EchecksShimmer();
 
     var trip = state.value!.tryGetTrip(widget.tripId);
-    if (trip == null)
+    if (trip == null) {
       return const EmptyView(
           title: 'Trip Not found', description: 'Return to the previous page');
+    }
     return Stack(
       children: [
         if (trip.id == testTrip.id!)
