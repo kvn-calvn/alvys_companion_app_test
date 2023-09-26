@@ -1,4 +1,6 @@
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:intl/intl.dart';
 import '../../../../models/address/address.dart';
 import 'm_comodity.dart';
 import 'reference.dart';
@@ -35,6 +37,9 @@ class Stop with _$Stop {
 
   bool canCheckOut(String? checkOutStopId) =>
       checkOutStopId == stopId && timeRecord?.driver?.timeIn != null && timeRecord?.driver?.timeOut == null;
+  String get formattedStopDate => stopDate == null
+      ? '-'
+      : "${DateFormat('MMM dd, yyyy').format(stopDate!)}${appointment.isNullOrEmpty ? '' : ' @ $appointment'}";
 }
 
 @freezed

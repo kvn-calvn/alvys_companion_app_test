@@ -65,7 +65,7 @@ class MainActivity : FlutterActivity() {
                         val heightDp = metrics.bounds.height() /
                                 resources.displayMetrics.density
                         var larger = if(widthDp > heightDp) widthDp else heightDp
-                       result.success(larger > 900f)
+                       result.success(larger > 700f)
                     }
                     else -> result.notImplemented()
                 }
