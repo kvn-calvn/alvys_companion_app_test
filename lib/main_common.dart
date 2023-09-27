@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:alvys3/src/utils/provider_args_saver.dart';
+import 'package:flutter/services.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'src/features/tutorial/tutorial_controller.dart';
@@ -58,6 +59,14 @@ Future<void> mainCommon() async {
         themeHandlerProvider.overrideWith(() => ThemeHandlerNotifier(appThemeMode)),
       ],
     );
+    if (Platform.isAndroid && !isTablet) {
+      if (isTablet) {
+        await SystemChrome.setPreferredOrientations(
+            [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
+      } else {
+        await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+      }
+    }
     FlutterError.onError = (details) {
       container.read(globalErrorHandlerProvider).handle(details, true);
       FirebaseCrashlytics.instance.recordFlutterFatalError(details);

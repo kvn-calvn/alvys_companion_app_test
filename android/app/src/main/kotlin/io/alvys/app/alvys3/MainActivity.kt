@@ -4,6 +4,8 @@ import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.content.ServiceConnection
+import android.content.res.Configuration
+import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.util.Log
@@ -58,14 +60,15 @@ class MainActivity : FlutterActivity() {
                         }
                     }
                     "isTablet" ->{
-                        val metrics = WindowMetricsCalculator.getOrCreate()
-                            .computeCurrentWindowMetrics(this)
-                        val widthDp = metrics.bounds.width() /
-                                resources.displayMetrics.density
-                        val heightDp = metrics.bounds.height() /
-                                resources.displayMetrics.density
-                        var larger = if(widthDp > heightDp) widthDp else heightDp
-                       result.success(larger > 700f)
+                        result.success( (context.resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE)
+//                        val metrics = WindowMetricsCalculator.getOrCreate()
+//                            .computeCurrentWindowMetrics(this)
+//                        val widthDp = metrics.bounds.width() /
+//                                resources.displayMetrics.density
+//                        val heightDp = metrics.bounds.height() /
+//                                resources.displayMetrics.density
+//                        var larger = if(widthDp > heightDp) widthDp else heightDp
+//                       result.success(larger > 700f)
                     }
                     else -> result.notImplemented()
                 }

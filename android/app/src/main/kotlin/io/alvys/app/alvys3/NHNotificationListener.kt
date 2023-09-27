@@ -25,6 +25,7 @@ class NHNotificationListener : NotificationListener {
             showNotification(context, message)
         }
 
+
         Log.d("NH_NOTIFICATION", "Title: ${message.title}")
         Log.d("NH_NOTIFICATION", "Body: ${message.body}")
     }

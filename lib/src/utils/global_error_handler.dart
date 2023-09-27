@@ -15,14 +15,24 @@ import '../features/authentication/presentation/auth_provider_controller.dart';
 import '../features/documents/presentation/upload_documents_controller.dart';
 
 final globalErrorHandlerProvider = Provider<GlobalErrorHandler>((ref) {
-  return GlobalErrorHandler(ref: ref, telemetry: ref.read(httpClientProvider));
+  return GlobalErrorHandler(
+      providers: () => {
+            AuthProviderNotifier: () => ref.read(authProvider.notifier),
+            UploadDocumentsController: () =>
+                ref.read(uploadDocumentsController.call(ProviderArgsSaver.instance.uploadArgs!).notifier),
+            EditProfileNotifier: () => ref.read(editProfileProvider.notifier),
+            TripController: () => ref.read(tripControllerProvider.notifier),
+            EcheckPageController: () =>
+                ref.read(echeckPageControllerProvider.call(ProviderArgsSaver.instance.echeckArgs).notifier)
+          },
+      telemetry: ref.read(httpClientProvider));
 });
 
 class GlobalErrorHandler {
-  final ProviderRef<GlobalErrorHandler> ref;
   final AlvysHttpClient telemetry;
   LabeledGlobalKey<NavigatorState> navKey = LabeledGlobalKey<NavigatorState>("MainNavKey");
-  GlobalErrorHandler({required this.ref, required this.telemetry});
+  Map<Type, IAppErrorHandler Function()> Function() providers;
+  GlobalErrorHandler({required this.providers, required this.telemetry});
   void handle(FlutterErrorDetails? details, bool flutterError, [Object? error, StackTrace? trace]) {
     _handleError(
       flutterError ? details!.exception : error!,
@@ -98,20 +108,24 @@ class GlobalErrorHandler {
   }
 
   void executeOnError(Type t) {
-    switch (t) {
-      case AuthProviderNotifier:
-        ref.read(authProvider.notifier).onError();
-        break;
-      case UploadDocumentsController:
-        ref.read(uploadDocumentsController.call(ProviderArgsSaver.instance.uploadArgs!).notifier).onError();
-        break;
-      case EditProfileNotifier:
-        ref.read(editProfileProvider.notifier).onError();
-      case TripController:
-        ref.read(tripControllerProvider.notifier).onError();
-      case EcheckPageController:
-        ref.read(echeckPageControllerProvider.call(ProviderArgsSaver.instance.echeckArgs).notifier).onError();
+    var providerData = providers();
+    if (providerData.containsKey(t)) {
+      providerData[t]!().onError();
     }
+    // switch (t) {
+    //   case AuthProviderNotifier:
+    //     ref.read(authProvider.notifier).onError();
+    //     break;
+    //   case UploadDocumentsController:
+    //     ref.read(uploadDocumentsController.call(ProviderArgsSaver.instance.uploadArgs!).notifier).onError();
+    //     break;
+    //   case EditProfileNotifier:
+    //     ref.read(editProfileProvider.notifier).onError();
+    //   case TripController:
+    //     ref.read(tripControllerProvider.notifier).onError();
+    //   case EcheckPageController:
+    //     ref.read(echeckPageControllerProvider.call(ProviderArgsSaver.instance.echeckArgs).notifier).onError();
+    // }
   }
 
   void showErrorDialog(
