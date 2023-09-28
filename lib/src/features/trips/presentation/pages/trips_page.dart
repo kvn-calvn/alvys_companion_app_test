@@ -1,5 +1,6 @@
 import 'package:alvys3/src/network/firebase_remote_config.dart';
 import 'package:alvys3/src/network/http_client.dart';
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
 import '../../../authentication/presentation/driver_status_dropdown.dart';
@@ -78,8 +79,7 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
   @override
   Widget build(BuildContext context) {
     final showTutBtn =
-        ref.read(remoteconfigProvider).value?.getBool("show_tutorial_btn") ??
-            false;
+        ref.read(remoteconfigProvider).value?.getBool("show_tutorial_btn");
 
     debugPrint("Called");
     return Scaffold(
@@ -88,7 +88,7 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
           padding: EdgeInsets.only(left: 16.0),
           child: DriverStatusDropdown(),
         ),
-        leadingWidth: 120,
+        leadingWidth: 150,
         title: Text(
           'Trips',
           style: AlvysTheme.appbarTextStyle(context, false),
@@ -109,7 +109,7 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
             },
             icon: const Icon(Icons.info),
           ),
-          if (showTutBtn) ...[
+          if (showTutBtn.isNotNull && showTutBtn == true) ...[
             IconButton(
               padding: const EdgeInsets.only(right: 18.0, left: 5.0),
               constraints: const BoxConstraints(),
