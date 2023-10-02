@@ -18,13 +18,13 @@ class TripListState with _$TripListState {
   const TripListState._();
   List<AppTrip> get deliveredTrips {
     var res = trips.where((element) => element.status == TripStatus.delivered).toList();
-    res.sort((a, b) => (a.deliveryDate).isAfterNull(b.deliveryDate) ? 1 : -1);
+    res.sort((a, b) => sortDates(a.deliveryDate, b.deliveryDate));
     return res;
   }
 
   List<AppTrip> get activeTrips {
     var res = trips.where((element) => element.isTripActive!).toList();
-    res.sort((a, b) => a.deliveryDate.isAfterNull(b.deliveryDate) ? 1 : -1);
+    res.sort((a, b) => sortDates(a.deliveryDate, b.deliveryDate));
     return res;
   }
 
@@ -38,8 +38,12 @@ class TripListState with _$TripListState {
               TripStatus.queued,
             ]))
         .toList();
-    res.sort((a, b) => (a.deliveryDate).isAfterNull(b.deliveryDate) ? 1 : -1);
+    res.sort((a, b) => sortDates(a.deliveryDate, b.deliveryDate));
     return res;
+  }
+
+  int sortDates(DateTime? a, DateTime? b) {
+    return a.isAfterNull(b) ? 1 : -1;
   }
 
   AppTrip getTrip(String tripId) =>
