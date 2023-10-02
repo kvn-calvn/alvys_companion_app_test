@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:alvys3/src/network/network_info.dart';
 import 'package:alvys3/src/utils/provider_args_saver.dart';
 import 'package:azure_application_insights/azure_application_insights.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
@@ -20,13 +21,16 @@ import '../utils/exceptions.dart';
 import '../utils/magic_strings.dart';
 import 'custom_multipart_request.dart';
 
-final httpClientProvider = Provider<AlvysHttpClient>((ref) => AlvysHttpClient(ref.read(sharedPreferencesProvider)!));
+final httpClientProvider = Provider<AlvysHttpClient>((ref) {
+  return AlvysHttpClient(ref.read(sharedPreferencesProvider)!, ref.watch(internetConnectionCheckerProvider.notifier));
+});
 
 class AlvysHttpClient {
   late TelemetryClient telemetryClient;
   late TelemetryHttpClient telemetryHttpClient;
   final SharedPreferences pref;
-  AlvysHttpClient(this.pref) {
+  final NetworkNotifier networkInfo;
+  AlvysHttpClient(this.pref, this.networkInfo) {
     final client = Client();
     final processor = TransmissionProcessor(
       instrumentationKey: FlavorConfig.instance!.azureTelemetryKey,
@@ -123,8 +127,8 @@ class AlvysHttpClient {
   }
 
   Future<Response> deleteData<T>(Uri uri, {Map<String, String>? headers, Object? body, Encoding? encoding}) {
-    return _executeRequest<T>(() async =>
-        telemetryHttpClient.delete(uri, headers: getHeaders(headers), body: body, encoding: encoding));
+    return _executeRequest<T>(
+        () async => telemetryHttpClient.delete(uri, headers: getHeaders(headers), body: body, encoding: encoding));
   }
 
   Future<Response> patchData<T>(Uri uri, {Map<String, String>? headers, Object? body, Encoding? encoding}) {
@@ -133,6 +137,7 @@ class AlvysHttpClient {
   }
 
   Future<Response> _executeRequest<T>(Future<Response> Function() op) async {
+    if (!networkInfo.hasInternet) return Future.error(AlvysSocketException(T));
     try {
       var companyCode = pref.getString(SharedPreferencesKey.companyCode.name);
       if (companyCode != null) {

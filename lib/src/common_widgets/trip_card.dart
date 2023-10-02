@@ -4,7 +4,6 @@ import '../utils/dummy_data.dart';
 import '../features/authentication/presentation/auth_provider_controller.dart';
 
 import '../utils/magic_strings.dart';
-import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';

@@ -106,15 +106,11 @@ extension DateTimeExtn on DateTime? {
     if (this == null) return true;
     return DateTime.now().isAfter(this!);
   }
-}
 
-extension EnumListExt<T extends Enum> on Iterable<T> {
-  T? byNameOrNull(String? name) {
-    if (name == null) return null;
-    for (var value in this) {
-      if (value.name == name) return value;
-    }
-    return null;
+  bool isAfterNull(DateTime? other) {
+    if (other == null) return true;
+    if (this == null) return false;
+    return this!.isAfter(other);
   }
 }
 

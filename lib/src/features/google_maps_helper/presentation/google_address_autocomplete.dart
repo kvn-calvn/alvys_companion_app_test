@@ -174,10 +174,10 @@ class _GoogleAddressDropdownContentState<T> extends State<GoogleAddressDropdownC
     return Stack(
       children: [
         Positioned(
-          top: pos!.position.top > pos.position.bottom ? null : pos.position.top,
-          bottom: pos.position.bottom >= pos.position.top ? null : pos.position.bottom,
-          left: pos.position.left,
-          right: pos.position.right,
+          top: pos!.relativeRect.top > pos.relativeRect.bottom ? null : pos.relativeRect.top,
+          bottom: pos.relativeRect.bottom >= pos.relativeRect.top ? null : pos.relativeRect.bottom,
+          left: pos.relativeRect.left,
+          right: pos.relativeRect.right,
           child: AnimatedBuilder(
             animation: widget.animation,
             builder: (context, child) => Material(
@@ -193,8 +193,9 @@ class _GoogleAddressDropdownContentState<T> extends State<GoogleAddressDropdownC
                       constraints: BoxConstraints(maxHeight: MediaQuery.of(context).size.height * 0.3),
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
-                        children:
-                            pos.position.top > pos.position.bottom ? columnChildren.reversed.toList() : columnChildren,
+                        children: pos.relativeRect.top > pos.relativeRect.bottom
+                            ? columnChildren.reversed.toList()
+                            : columnChildren,
                       ),
                     ),
                   ),

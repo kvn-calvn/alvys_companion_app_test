@@ -2,8 +2,10 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:alvys3/src/network/network_info.dart';
 import 'package:alvys3/src/utils/provider_args_saver.dart';
 import 'package:flutter/services.dart';
+import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'src/features/tutorial/tutorial_controller.dart';
@@ -22,7 +24,6 @@ import 'flavor_config.dart';
 //import 'env/env.dart';
 import 'src/features/authentication/domain/models/driver_user/driver_user.dart';
 import 'src/features/authentication/presentation/auth_provider_controller.dart';
-import 'src/utils/extensions.dart';
 import 'src/utils/global_error_handler.dart';
 import 'src/utils/magic_strings.dart';
 import 'src/utils/platform_channel.dart';
@@ -49,9 +50,11 @@ Future<void> mainCommon() async {
     var firstInstall = pref.getBool(SharedPreferencesKey.firstInstall.name);
     TabletUtils.instance.isTablet = isTablet;
     DriverUser? driverUser;
+    var hasInternet = await InternetConnectionChecker().hasConnection;
     var status = pref.getString(SharedPreferencesKey.driverStatus.name);
     container = ProviderContainer(
       overrides: [
+        internetConnectionCheckerProvider.overrideWith(() => NetworkNotifier(hasInternet)),
         sharedPreferencesProvider.overrideWithValue(pref),
         firstInstallProvider.overrideWith(() => FirstInstallNotifier(firstInstall ?? false)),
         authProvider.overrideWith(

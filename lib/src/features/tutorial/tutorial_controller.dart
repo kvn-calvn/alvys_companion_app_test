@@ -226,9 +226,9 @@ class TutorialController {
                     var position = e.globalKey.getKeyPosition(context)!;
                     // if (position == null) return null;
                     return TutorialData(
-                      position: position.widgetBox,
+                      position: position.renderBox,
                       shape: e.shape,
-                      content: e.content(position.position, position.widgetBox),
+                      content: e.content(position.relativeRect, position.renderBox),
                       inflate: e.inflate,
                     );
                   })

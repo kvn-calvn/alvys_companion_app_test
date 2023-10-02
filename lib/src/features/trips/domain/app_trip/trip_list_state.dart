@@ -1,3 +1,5 @@
+import 'package:alvys3/src/utils/extensions.dart';
+
 import '../../../../utils/magic_strings.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 
@@ -14,17 +16,31 @@ class TripListState with _$TripListState {
     @Default(true) bool checkIn,
   }) = _TripListState;
   const TripListState._();
-  List<AppTrip> get deliveredTrips => trips.where((element) => element.status == TripStatus.delivered).toList();
-  List<AppTrip> get activeTrips => trips.where((element) => element.isTripActive!).toList();
-  List<AppTrip> get processingTrips => trips
-      .where((element) => element.status!.inIgnoreCase([
-            TripStatus.tonu,
-            TripStatus.released,
-            TripStatus.invoiced,
-            TripStatus.completed,
-            TripStatus.queued,
-          ]))
-      .toList();
+  List<AppTrip> get deliveredTrips {
+    var res = trips.where((element) => element.status == TripStatus.delivered).toList();
+    res.sort((a, b) => (a.deliveryDate).isAfterNull(b.deliveryDate) ? 1 : -1);
+    return res;
+  }
+
+  List<AppTrip> get activeTrips {
+    var res = trips.where((element) => element.isTripActive!).toList();
+    res.sort((a, b) => a.deliveryDate.isAfterNull(b.deliveryDate) ? 1 : -1);
+    return res;
+  }
+
+  List<AppTrip> get processingTrips {
+    var res = trips
+        .where((element) => element.status!.inIgnoreCase([
+              TripStatus.tonu,
+              TripStatus.released,
+              TripStatus.invoiced,
+              TripStatus.completed,
+              TripStatus.queued,
+            ]))
+        .toList();
+    res.sort((a, b) => (a.deliveryDate).isAfterNull(b.deliveryDate) ? 1 : -1);
+    return res;
+  }
 
   AppTrip getTrip(String tripId) =>
       trips.firstWhere((element) => element.id! == tripId, orElse: () => AppTrip(id: '-', tripNumber: '...'));

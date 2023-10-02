@@ -1,3 +1,4 @@
+import 'package:alvys3/src/network/network_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -11,6 +12,7 @@ class App extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = isTablet ? ref.read(tabletRouteProvider) : ref.read(routerProvider);
+    ref.watch(internetConnectionCheckerProvider);
     return MaterialApp.router(
       //useInheritedMediaQuery: true,
       themeMode: ref.watch(themeHandlerProvider),
