@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:alvys3/src/network/http_client.dart';
+import '../../../network/http_client.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -82,15 +82,9 @@ class _PDFViewerState extends State<PDFViewer> {
                   if (progress < 1) return;
                   await Share.shareXFiles([XFile(path)]);
                   ref.read(httpClientProvider).telemetryClient.trackEvent(
-                      name: "share_document",
-                      additionalProperties: {
-                        "document_type": widget.arguments.documentType
-                      });
-                  await FirebaseAnalytics.instance.logEvent(
-                      name: "share_document",
-                      parameters: {
-                        "document_type": widget.arguments.documentType
-                      });
+                      name: "share_document", additionalProperties: {"document_type": widget.arguments.documentType});
+                  await FirebaseAnalytics.instance
+                      .logEvent(name: "share_document", parameters: {"document_type": widget.arguments.documentType});
                 },
               );
             },
@@ -110,9 +104,7 @@ class _PDFViewerState extends State<PDFViewer> {
                       strokeWidth: 16,
                     ),
                   ),
-                  progress > 0
-                      ? Text('${(progress * 100).ceil()}')
-                      : const SizedBox.shrink(),
+                  progress > 0 ? Text('${(progress * 100).ceil()}') : const SizedBox.shrink(),
                 ],
               )
             : errorMessage.isNotEmpty

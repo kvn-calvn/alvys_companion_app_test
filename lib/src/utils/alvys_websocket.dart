@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:alvys3/src/utils/provider_args_saver.dart';
+import 'provider_args_saver.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

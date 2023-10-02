@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:alvys3/src/network/network_info.dart';
-import 'package:alvys3/src/utils/provider_args_saver.dart';
+import 'src/network/network_info.dart';
+import 'src/utils/provider_args_saver.dart';
 import 'package:flutter/services.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
 import 'package:shared_preferences/shared_preferences.dart';

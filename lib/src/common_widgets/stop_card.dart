@@ -1,4 +1,4 @@
-import 'package:alvys3/src/network/http_client.dart';
+import '../network/http_client.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/services.dart';
 

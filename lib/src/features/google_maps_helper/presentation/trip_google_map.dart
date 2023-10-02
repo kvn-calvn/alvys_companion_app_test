@@ -1,4 +1,4 @@
-import 'package:alvys3/src/network/http_client.dart';
+import '../../../network/http_client.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
 import 'google_map_full_view.dart';
@@ -15,8 +15,7 @@ class TripGoogleMap extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _TripGoogleMapState();
 }
 
-class _TripGoogleMapState extends ConsumerState<TripGoogleMap>
-    with WidgetsBindingObserver {
+class _TripGoogleMapState extends ConsumerState<TripGoogleMap> with WidgetsBindingObserver {
   @override
   void initState() {
     super.initState();
@@ -51,19 +50,14 @@ class _TripGoogleMapState extends ConsumerState<TripGoogleMap>
           onTap: (argument) async {
             if (!mapState.isLoading) {
               Navigator.of(context, rootNavigator: true).push(
-                MaterialPageRoute(
-                    builder: (context) => FullScreenMap(widget.tripId)),
+                MaterialPageRoute(builder: (context) => FullScreenMap(widget.tripId)),
               );
 
-              ref
-                  .read(httpClientProvider)
-                  .telemetryClient
-                  .trackEvent(name: "open_map");
+              ref.read(httpClientProvider).telemetryClient.trackEvent(name: "open_map");
               await FirebaseAnalytics.instance.logEvent(name: "open_map");
             }
           },
-          onMapCreated: (controller) =>
-              mapNotifier.onMapCreated(controller, false),
+          onMapCreated: (controller) => mapNotifier.onMapCreated(controller, false),
           initialCameraPosition: const CameraPosition(
             tilt: 20,
             target: LatLng(37.6, -95.665),

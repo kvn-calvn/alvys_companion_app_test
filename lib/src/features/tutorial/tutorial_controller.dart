@@ -1,4 +1,4 @@
-import 'package:alvys3/src/utils/provider_args_saver.dart';
+import '../../utils/provider_args_saver.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../utils/dummy_data.dart';

@@ -2,8 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:alvys3/src/network/network_info.dart';
-import 'package:alvys3/src/utils/provider_args_saver.dart';
+import 'network_info.dart';
+import '../utils/provider_args_saver.dart';
 import 'package:azure_application_insights/azure_application_insights.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:device_info_plus/device_info_plus.dart';

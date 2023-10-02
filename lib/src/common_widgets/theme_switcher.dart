@@ -1,4 +1,4 @@
-import 'package:alvys3/src/network/http_client.dart';
+import '../network/http_client.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,11 +25,11 @@ class _ThemeSwitcherState extends ConsumerState<ThemeSwitcher> {
           onChanged: (value) async {
             ref.watch(themeHandlerProvider.notifier).setThemeMode(value!);
             Navigator.of(context, rootNavigator: true).pop();
-            ref.read(httpClientProvider).telemetryClient.trackEvent(
-                name: "app_theme_changed",
-                additionalProperties: {"theme": value.name});
-            await FirebaseAnalytics.instance.logEvent(
-                name: "app_theme_changed", parameters: {"theme": value.name});
+            ref
+                .read(httpClientProvider)
+                .telemetryClient
+                .trackEvent(name: "app_theme_changed", additionalProperties: {"theme": value.name});
+            await FirebaseAnalytics.instance.logEvent(name: "app_theme_changed", parameters: {"theme": value.name});
           },
         )
     ]);
