@@ -10,9 +10,12 @@ class Helpers {
     var serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       return Future.error(PermissionException(
-          "Location permissions are disabled. Go to settings and enable location services", onError, [
+          "Location permissions are disabled. Go to settings and enable location services",
+          onError, [
         ExceptionAction(
-            title: 'Open Settings', action: () => AppSettings.openAppSettings(type: AppSettingsType.settings))
+            title: 'Open Settings',
+            action: () =>
+                AppSettings.openAppSettings(type: AppSettingsType.settings))
       ]));
     }
     var permission = await Geolocator.checkPermission();
@@ -20,17 +23,23 @@ class Helpers {
       permission = await Geolocator.requestPermission();
       if (permission == LocationPermission.denied) {
         return Future.error(PermissionException(
-            "Location permissions are denied. Go to settings and enable location services", onError, [
+            'Location services have been denied, open location settings to allow "Alvys" access to your location.',
+            onError, [
           ExceptionAction(
-              title: 'Open Settings', action: () => AppSettings.openAppSettings(type: AppSettingsType.settings))
+              title: 'Open Settings',
+              action: () =>
+                  AppSettings.openAppSettings(type: AppSettingsType.settings))
         ]));
       }
     }
     if (permission == LocationPermission.deniedForever) {
       return Future.error(PermissionException(
-          'Location permissions are permanently denied, we cannot request permissions.', onError, [
+          'Location services have been disabled, open location settings to allow "Alvys" access to your location.',
+          onError, [
         ExceptionAction(
-            title: 'Open Settings', action: () => AppSettings.openAppSettings(type: AppSettingsType.settings))
+            title: 'Open Settings',
+            action: () =>
+                AppSettings.openAppSettings(type: AppSettingsType.settings))
       ]));
     }
     return await Geolocator.getCurrentPosition();
