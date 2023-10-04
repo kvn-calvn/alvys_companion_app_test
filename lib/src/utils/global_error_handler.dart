@@ -64,6 +64,7 @@ class GlobalErrorHandler {
     List<ExceptionAction> optionalOptions = [];
     String message = '';
     String title = '';
+    String? dismissButtonText;
     bool hasError = true;
     switch (error.runtimeType) {
       case AlvysClientException:
@@ -78,6 +79,7 @@ class GlobalErrorHandler {
         onError = () => executeOnError(e.source);
         message = e.message;
         title = e.title;
+        dismissButtonText = "Not now";
         break;
       case PermissionException:
         var e = error as PermissionException;
@@ -98,12 +100,12 @@ class GlobalErrorHandler {
     }
     if (hasError) {
       showErrorDialog(
-        context: navKey.currentState!.context,
-        afterError: () => onError?.call(),
-        optionalActions: optionalOptions,
-        message: message,
-        title: title,
-      );
+          context: navKey.currentState!.context,
+          afterError: () => onError?.call(),
+          optionalActions: optionalOptions,
+          message: message,
+          title: title,
+          dismissButtonText: dismissButtonText);
     }
   }
 
@@ -133,6 +135,7 @@ class GlobalErrorHandler {
           required void Function() afterError,
           required List<ExceptionAction> optionalActions,
           required String message,
+          String? dismissButtonText,
           required String title}) =>
       showDialog(
         context: context,
@@ -142,7 +145,7 @@ class GlobalErrorHandler {
           description: message,
           actions: [
             AppDialogAction(
-              label: 'OK',
+              label: dismissButtonText ?? 'Ok',
               action: () => Navigator.pop(context),
               primary: true,
             ),
