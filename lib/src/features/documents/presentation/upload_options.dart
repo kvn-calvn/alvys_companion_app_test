@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:app_settings/app_settings.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -64,7 +65,7 @@ class UploadOptions extends ConsumerWidget {
             title: const Text('Gallery'),
             onTap: () async {
               var hasPermission = await PermissionHelper.getPermission(
-                  Platform.isAndroid ? Permission.mediaLibrary : Permission.photos);
+                  Platform.isAndroid ? await PermissionHelper.androidGalleryPermission() : Permission.photos);
               if (!hasPermission) {
                 throw PermissionException("Please enable gallery permission", () {
                   Navigator.of(context, rootNavigator: false).pop();
