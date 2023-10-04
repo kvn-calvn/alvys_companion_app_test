@@ -81,7 +81,7 @@ class EditProfileNotifier extends AutoDisposeAsyncNotifier<UpdateUserProfileStat
       zip: zip.text,
     )));
     state = const AsyncLoading();
-    await auth.updateUserProfile<EditProfileNotifier>(state.value!.dto);
+    await auth.updateUserProfile<EditProfileNotifier>(state.value!.dto.updateFromUser(auth.stateUser));
     state = AsyncData(state.value!);
     if (context.mounted) context.pop();
   }
