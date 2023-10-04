@@ -146,7 +146,7 @@ class GlobalErrorHandler {
               action: () => Navigator.pop(context),
               primary: true,
             ),
-            ...optionalActions.map((e) => AppDialogAction(label: e.title, action: e.action))
+            ...optionalActions.map((e) => AppDialogAction(label: e.title, action: e.action, primary: true))
           ],
         ),
       ).then((value) => afterError());

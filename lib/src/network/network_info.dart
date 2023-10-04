@@ -46,8 +46,10 @@ class NetworkNotifier extends Notifier<bool> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (!state) {
         if (!_hasInsert) {
-          errorHandler.navKey.currentState!.overlay?.insert(noInternetOverlay);
-          _hasInsert = true;
+          if (errorHandler.navKey.currentState?.overlay != null) {
+            errorHandler.navKey.currentState?.overlay!.insert(noInternetOverlay);
+            _hasInsert = true;
+          }
         }
       } else {
         if (_hasInsert) {
