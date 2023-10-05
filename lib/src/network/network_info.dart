@@ -10,25 +10,32 @@ class NetworkNotifier extends Notifier<bool> {
   bool _hasInsert = false;
   late GlobalErrorHandler errorHandler;
   OverlayEntry noInternetOverlay = OverlayEntry(
-      builder: (context) => Stack(
-            children: [
-              Positioned(
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  child: Container(
-                    color: Colors.red,
-                    alignment: Alignment.center,
-                    child: Material(
-                        color: Colors.transparent,
-                        child: SafeArea(
-                            child: Text(
-                          'No internet',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white),
-                        ))),
-                  ))
-            ],
-          ));
+    builder: (context) => Stack(
+      children: [
+        Positioned(
+          top: 0,
+          left: 0,
+          right: 0,
+          child: Container(
+            color: Colors.red,
+            alignment: Alignment.center,
+            child: Material(
+              color: Colors.transparent,
+              child: SafeArea(
+                child: Text(
+                  'No internet',
+                  style: Theme.of(context)
+                      .textTheme
+                      .bodyMedium
+                      ?.copyWith(color: Colors.white),
+                ),
+              ),
+            ),
+          ),
+        )
+      ],
+    ),
+  );
   NetworkNotifier([this.initConnection]);
   @override
   bool build() {
@@ -50,10 +57,10 @@ class NetworkNotifier extends Notifier<bool> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (!state) {
         if (!_hasInsert) {
-          if (errorHandler.navKey.currentState?.overlay != null) {
-            errorHandler.navKey.currentState?.overlay!.insert(noInternetOverlay);
-            _hasInsert = true;
-          }
+          //if (errorHandler.navKey.currentState?.overlay != null) {
+          errorHandler.navKey.currentState?.overlay!.insert(noInternetOverlay);
+          _hasInsert = true;
+          //}
         }
       } else {
         if (_hasInsert) {
@@ -74,5 +81,6 @@ class NetworkNotifier extends Notifier<bool> {
 //   @override
 //   Future<bool> get isConnected => _internetConnectionChecker.hasConnection;
 // }
-final internetConnectionCheckerProvider = NotifierProvider<NetworkNotifier, bool>(NetworkNotifier.new);
+final internetConnectionCheckerProvider =
+    NotifierProvider<NetworkNotifier, bool>(NetworkNotifier.new);
 // final internetConnectionCheckerProvider = Provider<InternetConnectionChecker>((ref) => InternetConnectionChecker());
