@@ -95,6 +95,7 @@ class GlobalErrorHandler {
         title = 'Permission Error';
         onError = e.onError;
         optionalOptions = e.optionalActions;
+        dismissButtonText = "Not now";
         break;
       case AlvysException:
         var e = error as AlvysException;
@@ -152,10 +153,14 @@ class GlobalErrorHandler {
           title: title,
           description: message,
           actions: [
+            ...optionalActions.map(
+              (e) => AppDialogAction(
+                  label: e.title, action: e.action, primary: true),
+            ),
             AppDialogAction(
               label: dismissButtonText ?? 'Ok',
               action: () => Navigator.pop(context),
-              primary: true,
+              primary: false,
             ),
           ],
         ),

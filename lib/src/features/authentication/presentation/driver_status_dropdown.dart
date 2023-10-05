@@ -18,7 +18,6 @@ class DriverStatusDropdown extends ConsumerWidget {
       key: ref.read(tutorialProvider).sleepDropdown,
       child: DropdownButton(
         value: status ?? DriverStatus.online,
-        isDense: true,
         elevation: 1,
         iconSize: 0.0,
         borderRadius: BorderRadius.circular(10),
@@ -28,7 +27,8 @@ class DriverStatusDropdown extends ConsumerWidget {
                   child: Row(
                     children: [
                       e == DriverStatus.online
-                          ? Lottie.asset('assets/lottie/green_pulse.json', width: 30, height: 30)
+                          ? Lottie.asset('assets/lottie/green_pulse.json',
+                              width: 30, height: 30)
                           : const Padding(
                               padding: EdgeInsets.all(8.0),
                               child: Icon(
@@ -48,7 +48,8 @@ class DriverStatusDropdown extends ConsumerWidget {
                   ),
                 ))
             .toList(),
-        onChanged: (String? value) => ref.read(tripControllerProvider.notifier).updateDriverStatus(value),
+        onChanged: (String? value) =>
+            ref.read(tripControllerProvider.notifier).updateDriverStatus(value),
       ),
     );
   }
