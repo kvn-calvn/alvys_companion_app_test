@@ -42,7 +42,7 @@ class AppTrip with _$AppTrip {
     @JsonKey(name: 'Temperature') double? temperature,
     @JsonKey(name: 'Drivers') @Default(<String?>[]) List<String?> drivers,
     @JsonKey(name: 'Stops') @Default(<Stop>[]) List<Stop> stops,
-    @JsonKey(name: 'Echecks') @Default(<ECheck>[]) List<ECheck> eChecks,
+    @JsonKey(name: 'EChecks') @Default(<ECheck>[]) List<ECheck> eChecks,
     @Default(0) @JsonKey(name: 'StopCount') int stopCount,
     @JsonKey(name: 'PickupDate') DateTime? pickupDate,
     @JsonKey(name: 'DeliveryDate') DateTime? deliveryDate,
