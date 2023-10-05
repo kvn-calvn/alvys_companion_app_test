@@ -28,8 +28,8 @@ class EcheckCard extends ConsumerWidget {
       required this.tripId})
       : super(key: key);
 
-  void showEcheckMenu(BuildContext context, bool canCancelEcheck, String? checkNumber) {
-    if (checkNumber == null) return;
+  void showEcheckMenu(BuildContext context, bool canCancelEcheck, String? checkNumber, ECheck check) {
+    if (checkNumber != null) return;
     showCustomPopup<EcheckOption>(
       context: context,
       onSelected: (value) {
@@ -65,9 +65,9 @@ class EcheckCard extends ConsumerWidget {
         }
       },
       items: (context) => EcheckOption.values
-          .map<AlvysPopupItem<EcheckOption>?>((e) => !canCancelEcheck && e == EcheckOption.cancel
-              ? null
-              : AlvysPopupItem(value: e, child: Text(e.name.titleCase)))
+          .map<AlvysPopupItem<EcheckOption>?>((e) => canCancelEcheck && (e != EcheckOption.cancel || !check.isCanceled)
+              ? AlvysPopupItem(value: e, child: Text(e.name.titleCase))
+              : null)
           .removeNulls
           .toList(),
     );
@@ -90,7 +90,7 @@ class EcheckCard extends ConsumerWidget {
             : InkWell(
                 onLongPress: () {
                   showEcheckMenu(context, authState.value!.shouldShowCancelEcheckButton(companyCode, eCheck.userId),
-                      state.value!.loadingEcheckNumber);
+                      state.value!.loadingEcheckNumber, eCheck);
                 },
                 child: Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
@@ -144,7 +144,8 @@ class EcheckCard extends ConsumerWidget {
                           showEcheckMenu(
                               context,
                               authState.value!.shouldShowCancelEcheckButton(companyCode, eCheck.userId),
-                              state.value!.loadingEcheckNumber);
+                              state.value!.loadingEcheckNumber,
+                              eCheck);
                         },
                         icon: const Icon(Icons.more_vert),
                       )
