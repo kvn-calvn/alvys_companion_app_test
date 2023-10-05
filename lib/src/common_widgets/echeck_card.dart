@@ -109,7 +109,7 @@ class EcheckCard extends ConsumerWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  eCheck.expressCheckNumber!,
+                                  eCheck.expressCheckNumber!.trim(),
                                   style: GoogleFonts.oxygenMono(
                                     fontWeight: FontWeight.w800,
                                     textStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
@@ -129,11 +129,7 @@ class EcheckCard extends ConsumerWidget {
                           Text('\$${eCheck.amount?.toStringAsFixed(2)}', style: Theme.of(context).textTheme.bodyLarge),
                           Padding(
                             padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [Text(eCheck.reason!, style: Theme.of(context).textTheme.bodySmall)],
-                            ),
+                            child: Text(eCheck.reason!.trim(), style: Theme.of(context).textTheme.bodySmall),
                           ),
                         ],
                       ),
