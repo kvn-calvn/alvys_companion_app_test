@@ -67,8 +67,8 @@ class EcheckPageController extends AutoDisposeFamilyAsyncNotifier<ECheckState, S
   Future<void> generateEcheck(GlobalKey<FormState> formKey, BuildContext context, String tripId) async {
     if (formKey.currentState?.validate() ?? false) {
       state = const AsyncLoading();
-      var firstName = auth.driver!.name!.split('').first;
-      var lastName = auth.driver!.name!.split('').elementAtOrNull(1) ?? '';
+      var firstName = auth.driver!.name!.split(' ').first;
+      var lastName = auth.driver!.name!.split(' ').elementAtOrNull(1) ?? '';
       var trip = tripController.getTrip(tripId)!;
       var req = GenerateECheckRequest(
           tripId: trip.id!,

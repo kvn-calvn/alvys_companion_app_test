@@ -58,7 +58,7 @@ Future<void> mainCommon() async {
         sharedPreferencesProvider.overrideWithValue(pref),
         firstInstallProvider.overrideWith(() => FirstInstallNotifier(firstInstall ?? false)),
         authProvider.overrideWith(
-            () => AuthProviderNotifier(driver: driverUser, status: status?.titleCase ?? DriverStatus.online)),
+            () => AuthProviderNotifier(initDriver: driverUser, status: status?.titleCase ?? DriverStatus.online)),
         themeHandlerProvider.overrideWith(() => ThemeHandlerNotifier(appThemeMode)),
       ],
     );
