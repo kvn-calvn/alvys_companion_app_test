@@ -13,8 +13,8 @@ class ColorManager {
   static Color success = const Color(0XFF00AF54);
   static Color failure = const Color(0XFFE03616);
   static Color lightBackground = const Color(0XFFF1F4F8);
-  static Color pickupColor = const Color(0XFF2991C2);
-  static Color deliveryColor = const Color(0XFFF08080);
+  static Color pickupColor = const Color(0XFFF08080);
+  static Color deliveryColor = const Color(0XFF2991C2);
   static Color cancelColor = const Color(0XFFE03616);
   static Color white = Colors.white;
   static Color shimmerCardHighlight = const Color(0xffF9F9FB);
