@@ -28,7 +28,8 @@ class EcheckCard extends ConsumerWidget {
       required this.tripId})
       : super(key: key);
 
-  void showEcheckMenu(BuildContext context, bool canCancelEcheck, String? checkNumber) {
+  void showEcheckMenu(
+      BuildContext context, bool canCancelEcheck, String? checkNumber) {
     if (checkNumber == null) return;
     showCustomPopup<EcheckOption>(
       context: context,
@@ -43,7 +44,8 @@ class EcheckCard extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Padding(
-                    padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12),
+                    padding:
+                        EdgeInsets.symmetric(vertical: 8.0, horizontal: 12),
                     child: Text('E-Check number copied'),
                   ),
                   SizedBox(
@@ -65,9 +67,10 @@ class EcheckCard extends ConsumerWidget {
         }
       },
       items: (context) => EcheckOption.values
-          .map<AlvysPopupItem<EcheckOption>?>((e) => !canCancelEcheck && e == EcheckOption.cancel
-              ? null
-              : AlvysPopupItem(value: e, child: Text(e.name.titleCase)))
+          .map<AlvysPopupItem<EcheckOption>?>((e) =>
+              !canCancelEcheck && e == EcheckOption.cancel
+                  ? null
+                  : AlvysPopupItem(value: e, child: Text(e.name.titleCase)))
           .removeNulls
           .toList(),
     );
@@ -80,7 +83,9 @@ class EcheckCard extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 12),
       child: Material(
-        key: index == 0 && tripId == testTrip.id! ? ref.read(tutorialProvider).echeckCard : null,
+        key: index == 0 && tripId == testTrip.id!
+            ? ref.read(tutorialProvider).echeckCard
+            : null,
         elevation: 2.5,
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(10),
@@ -89,7 +94,10 @@ class EcheckCard extends ConsumerWidget {
             ? const Center(child: CircularProgressIndicator())
             : InkWell(
                 onLongPress: () {
-                  showEcheckMenu(context, authState.value!.shouldShowCancelEcheckButton(companyCode, eCheck.userId),
+                  showEcheckMenu(
+                      context,
+                      authState.value!.shouldShowCancelEcheckButton(
+                          companyCode, eCheck.userId),
                       state.value!.loadingEcheckNumber);
                 },
                 child: Padding(
@@ -103,19 +111,24 @@ class EcheckCard extends ConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Padding(
-                            padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 4),
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                0, 0, 0, 4),
                             child: Row(
                               mainAxisSize: MainAxisSize.max,
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  eCheck.expressCheckNumber!,
+                                  eCheck.expressCheckNumber!.trim(),
                                   style: GoogleFonts.oxygenMono(
                                     fontWeight: FontWeight.w800,
-                                    textStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
+                                    textStyle: Theme.of(context)
+                                        .textTheme
+                                        .titleMedium!
+                                        .copyWith(
                                           letterSpacing: 2,
-                                          decoration:
-                                              eCheck.isCanceled ? TextDecoration.lineThrough : TextDecoration.none,
+                                          decoration: eCheck.isCanceled
+                                              ? TextDecoration.lineThrough
+                                              : TextDecoration.none,
                                           decorationThickness: 2,
                                         ),
                                   ),
@@ -126,14 +139,13 @@ class EcheckCard extends ConsumerWidget {
                           const Text(
                             'Funds Available',
                           ),
-                          Text('\$${eCheck.amount?.toStringAsFixed(2)}', style: Theme.of(context).textTheme.bodyLarge),
+                          Text('\$${eCheck.amount?.toStringAsFixed(2)}',
+                              style: Theme.of(context).textTheme.bodyLarge),
                           Padding(
-                            padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [Text(eCheck.reason!, style: Theme.of(context).textTheme.bodySmall)],
-                            ),
+                            padding: const EdgeInsetsDirectional.fromSTEB(
+                                0, 4, 0, 0),
+                            child: Text(eCheck.reason!.trim(),
+                                style: Theme.of(context).textTheme.bodySmall),
                           ),
                         ],
                       ),
@@ -143,7 +155,8 @@ class EcheckCard extends ConsumerWidget {
                         onPressed: () {
                           showEcheckMenu(
                               context,
-                              authState.value!.shouldShowCancelEcheckButton(companyCode, eCheck.userId),
+                              authState.value!.shouldShowCancelEcheckButton(
+                                  companyCode, eCheck.userId),
                               state.value!.loadingEcheckNumber);
                         },
                         icon: const Icon(Icons.more_vert),
