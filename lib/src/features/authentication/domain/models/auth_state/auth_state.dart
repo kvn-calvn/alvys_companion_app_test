@@ -28,9 +28,10 @@ class AuthState with _$AuthState {
   bool shouldShowEcheckButton(String companyCode) =>
       (tryGetUserTenant(companyCode)?.permissions.contains(UserPermissions.generateEcheck) ?? false);
 
-  bool shouldShowCancelEcheckButton(String companyCode, String? echeckUserId) =>
-      (tryGetUserTenant(companyCode)?.permissions.contains(UserPermissions.cancelEcheck) ?? false) &&
-      driver?.id == (echeckUserId ?? "");
+  bool shouldShowCancelEcheckButton(String companyCode, String? echeckUserId) {
+    return (tryGetUserTenant(companyCode)?.permissions.contains(UserPermissions.cancelEcheck) ?? false) &&
+        driver?.id == (echeckUserId ?? "");
+  }
 
   bool shouldShowOOPRate(String companyCode) =>
       tryGetUserTenant(companyCode)?.permissions.contains(UserPermissions.viewOOPRate) ?? false;
