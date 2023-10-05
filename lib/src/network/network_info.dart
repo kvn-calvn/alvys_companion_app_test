@@ -33,12 +33,16 @@ class NetworkNotifier extends Notifier<bool> {
   @override
   bool build() {
     errorHandler = ref.read(globalErrorHandlerProvider);
-    state = initConnection ?? false;
+    state = initConnection ?? true;
     updateOverlay();
-    Timer.periodic(const Duration(seconds: 30), (timer) async {
-      state = await InternetConnectionChecker().hasConnection;
+    InternetConnectionChecker().onStatusChange.listen((event) {
+      state = event == InternetConnectionStatus.connected;
       updateOverlay();
     });
+    // Timer.periodic(const Duration(seconds: 30), (timer) async {
+    //   state = await InternetConnectionChecker().hasConnection;
+    //   updateOverlay();
+    // });
     return state;
   }
 
