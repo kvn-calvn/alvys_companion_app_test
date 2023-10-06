@@ -71,7 +71,7 @@ class _LoadListPageState extends ConsumerState<LoadListPage> with TickerProvider
 
   @override
   Widget build(BuildContext context) {
-    final showTutBtn = ref.read(remoteconfigProvider).value?.getBool("show_tutorial_btn");
+    final showTutBtn = ref.watch(remoteconfigProvider).value?.getBool("show_tutorial_btn");
     return Scaffold(
       appBar: AppBar(
         leading: const Padding(

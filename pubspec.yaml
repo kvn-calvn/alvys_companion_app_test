@@ -66,6 +66,7 @@ dependencies:
       url: https://github.com/heremaps/flexible-polyline.git
       path: dart
   shared_preferences: ^2.2.1
+  connectivity_plus: ^4.0.2
 dev_dependencies:
   flutter_test:
     sdk: flutter

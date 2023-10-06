@@ -104,6 +104,9 @@ class EcheckPageController extends AutoDisposeFamilyAsyncNotifier<ECheckState, S
   FutureOr<void> onError() {
     state = AsyncData(state.value!.copyWith(loadingEcheckNumber: null));
   }
+
+  @override
+  FutureOr<void> refreshPage(String page) {}
 }
 
 final echeckPageControllerProvider =

@@ -144,4 +144,7 @@ class EditProfileNotifier extends AutoDisposeAsyncNotifier<UpdateUserProfileStat
     'WV',
     'WY',
   ];
+
+  @override
+  FutureOr<void> refreshPage(String page) {}
 }

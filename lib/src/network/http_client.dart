@@ -137,7 +137,10 @@ class AlvysHttpClient {
   }
 
   Future<Response> _executeRequest<T>(Future<Response> Function() op) async {
-    if (!networkInfo.hasInternet) return Future.error(AlvysSocketException(T));
+    if (!networkInfo.hasInternet) {
+      networkInfo.setInternetState(false);
+      return Future.error(AlvysSocketException(T));
+    }
     try {
       var companyCode = pref.getString(SharedPreferencesKey.companyCode.name);
       if (companyCode != null) {

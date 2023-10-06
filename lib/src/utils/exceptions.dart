@@ -111,4 +111,5 @@ class ControllerException implements Exception {
 
 abstract class IAppErrorHandler {
   FutureOr<void> onError();
+  FutureOr<void> refreshPage(String page);
 }

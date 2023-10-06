@@ -269,4 +269,9 @@ class TripController extends _$TripController implements IAppErrorHandler {
   FutureOr<void> onError() {
     state = AsyncData(state.value!.copyWith(loadingStopId: null));
   }
+
+  @override
+  FutureOr<void> refreshPage() async {
+    await getTrips();
+  }
 }
