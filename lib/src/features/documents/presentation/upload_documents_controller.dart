@@ -174,6 +174,9 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
       Navigator.of(router.routerDelegate.navigatorKey.currentContext!, rootNavigator: true).pop();
     }
   }
+
+  @override
+  FutureOr<void> refreshPage(String page) {}
 }
 
 final uploadDocumentsController =

@@ -271,7 +271,7 @@ class TripController extends _$TripController implements IAppErrorHandler {
   }
 
   @override
-  FutureOr<void> refreshPage() async {
+  FutureOr<void> refreshPage(String page) async {
     await getTrips();
   }
 }
