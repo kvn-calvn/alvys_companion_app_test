@@ -27,8 +27,8 @@ class _AppState extends ConsumerState<App> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
       case AppLifecycleState.resumed:
-        ref.invalidate(updaterProvider);
-        ref.watch(updaterProvider);
+        var data = ref.read(updaterProvider);
+        data.whenData((value) => value.showUpdateDialog());
         break;
       case AppLifecycleState.hidden:
       case AppLifecycleState.paused:

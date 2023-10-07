@@ -13,10 +13,12 @@ final updaterProvider = FutureProvider<UpdaterController>((ref) async {
 });
 
 class UpdaterController {
+  bool showing = false;
   final GlobalErrorHandler errorHandler;
-  UpdaterController({required this.errorHandler}) {
+  void showUpdateDialog() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (Upgrader.sharedInstance.shouldDisplayUpgrade()) {
+      if (!Upgrader.sharedInstance.shouldDisplayUpgrade() && !showing) {
+        showing = true;
         showDialog(
             context: errorHandler.navKey.currentContext!,
             barrierDismissible: false,
@@ -34,10 +36,14 @@ class UpdaterController {
                           child: const Text('Update App'))
                     ],
                   ),
-                ));
+                )).then((value) => showing = false);
       }
 
       //  showDialog(context: errorHandler.navKey.currentState!.context, builder: (context) => UpgradeAlert());
     });
+  }
+
+  UpdaterController({required this.errorHandler}) {
+    showUpdateDialog();
   }
 }
