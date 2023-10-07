@@ -39,7 +39,7 @@ class NetworkNotifier extends Notifier<bool> {
       });
       Connectivity().onConnectivityChanged.listen((event) async {
         var oldState = state;
-        state = await InternetConnectionChecker().hasConnection;
+        state = event == ConnectivityResult.none ? false : await InternetConnectionChecker().hasConnection;
         updateOverlay(oldState);
       });
     });
@@ -103,7 +103,7 @@ class _NoInternetWidgetState extends ConsumerState<NoInternetWidget> with Single
         animation: _controller.view,
         builder: (context, child) {
           if (ref.watch(internetConnectionCheckerProvider)) {
-            _controller.reverse().then((value) => widget.removeBanner);
+            _controller.reverse().then((value) => widget.removeBanner.call());
           }
           return Stack(
             children: [
