@@ -17,7 +17,7 @@ class UpdaterController {
   final GlobalErrorHandler errorHandler;
   void showUpdateDialog() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      if (!Upgrader.sharedInstance.shouldDisplayUpgrade() && !showing) {
+      if (Upgrader.sharedInstance.shouldDisplayUpgrade() && !showing) {
         showing = true;
         showDialog(
             context: errorHandler.navKey.currentContext!,
