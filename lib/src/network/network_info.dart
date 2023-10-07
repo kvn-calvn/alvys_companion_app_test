@@ -31,14 +31,16 @@ class NetworkNotifier extends Notifier<bool> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       errorHandler = ref.read(globalErrorHandlerProvider);
-      updateOverlay();
+      updateOverlay(!state);
       internetConnectionStream.listen((event) {
+        var oldState = state;
         state = event;
-        updateOverlay();
+        updateOverlay(oldState);
       });
       Connectivity().onConnectivityChanged.listen((event) async {
+        var oldState = state;
         state = await InternetConnectionChecker().hasConnection;
-        updateOverlay();
+        updateOverlay(oldState);
       });
     });
   }
@@ -49,8 +51,9 @@ class NetworkNotifier extends Notifier<bool> {
         .asyncMap((event) => event);
   }
 
-  void updateOverlay() {
+  void updateOverlay(bool oldState) {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (state == oldState) return;
       if (!state) {
         if (!_hasInsert) {
           noInternetOverlay = OverlayEntry(builder: (context) => NoInternetWidget(noInternetOverlay.remove));
