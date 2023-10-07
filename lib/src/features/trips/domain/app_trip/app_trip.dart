@@ -1,13 +1,13 @@
-import '../../../../utils/magic_strings.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../../../../utils/magic_strings.dart';
 import '../../../documents/domain/app_document/app_document.dart';
-import 'payable_driver.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
-
 import 'echeck.dart';
+import 'payable_driver.dart';
 import 'stop.dart';
+
 part 'app_trip.freezed.dart';
 part 'app_trip.g.dart';
 

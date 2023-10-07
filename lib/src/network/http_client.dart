@@ -2,8 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'network_info.dart';
-import '../utils/provider_args_saver.dart';
 import 'package:azure_application_insights/azure_application_insights.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -19,7 +17,9 @@ import '../../flavor_config.dart';
 import '../features/authentication/domain/models/driver_user/driver_user.dart';
 import '../utils/exceptions.dart';
 import '../utils/magic_strings.dart';
+import '../utils/provider_args_saver.dart';
 import 'custom_multipart_request.dart';
+import 'network_info.dart';
 
 final httpClientProvider = Provider<AlvysHttpClient>((ref) {
   return AlvysHttpClient(ref.read(sharedPreferencesProvider)!, ref.watch(internetConnectionCheckerProvider.notifier));

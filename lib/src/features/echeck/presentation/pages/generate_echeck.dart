@@ -1,19 +1,18 @@
-import '../../../../common_widgets/shimmers/generate_echeck_shimmer.dart';
-
-import '../../../../common_widgets/echeck_stop_card.dart';
-import '../../../../common_widgets/unfocus_widget.dart';
-import '../../../../constants/color.dart';
-import '../../../../utils/tablet_utils.dart';
-import '../../../authentication/presentation/sign_in_page.dart';
-import '../controller/echeck_page_controller.dart';
-import '../../../trips/domain/app_trip/stop.dart';
-import '../../../trips/presentation/controller/trip_page_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
+import '../../../../common_widgets/echeck_stop_card.dart';
+import '../../../../common_widgets/shimmers/generate_echeck_shimmer.dart';
+import '../../../../common_widgets/unfocus_widget.dart';
+import '../../../../constants/color.dart';
 import '../../../../utils/app_theme.dart';
+import '../../../../utils/tablet_utils.dart';
+import '../../../authentication/presentation/sign_in_page.dart';
+import '../../../trips/domain/app_trip/stop.dart';
+import '../../../trips/presentation/controller/trip_page_controller.dart';
+import '../controller/echeck_page_controller.dart';
 
 Future<T?> showGenerateEcheckDialog<T>(BuildContext context, String tripId, String? stopId) => showGeneralDialog<T>(
     context: context,

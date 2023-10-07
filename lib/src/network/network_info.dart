@@ -1,12 +1,9 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:alvys3/src/features/trips/presentation/controller/trip_page_controller.dart';
-import 'package:alvys3/src/routing/app_router.dart';
-import 'package:alvys3/src/routing/custom_observer.dart';
-import 'package:alvys3/src/utils/exceptions.dart';
-import 'package:alvys3/src/utils/magic_strings.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
+import '../features/trips/presentation/controller/trip_page_controller.dart';
+import '../utils/exceptions.dart';
+import '../utils/magic_strings.dart';
 
 import '../utils/global_error_handler.dart';
 import 'package:flutter/material.dart';

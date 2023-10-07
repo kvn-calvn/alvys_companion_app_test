@@ -1,35 +1,33 @@
 import 'dart:async';
 
-import '../../../../network/http_client.dart';
-import '../../../../utils/provider_args_saver.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../../../utils/permission_helper.dart';
-
-import '../../../tutorial/tutorial_controller.dart';
-import '../../../../utils/dummy_data.dart';
-import 'package:go_router/go_router.dart';
-import '../../domain/app_trip/echeck.dart';
-
-import '../../domain/app_trip/stop.dart';
-import '../../domain/update_stop_time_record/update_stop_time_record.dart';
-import '../../../../utils/exceptions.dart';
-import '../../../../utils/helpers.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
-import 'package:geolocator/geolocator.dart';
-import '../../../../constants/api_routes.dart';
-import '../../../authentication/presentation/auth_provider_controller.dart';
-import '../../domain/app_trip/app_trip.dart';
-import '../../domain/app_trip/trip_list_state.dart';
-import '../../data/repositories/trip_repository.dart';
-import '../../../../utils/magic_strings.dart';
-import '../../../../utils/platform_channel.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../../constants/api_routes.dart';
+import '../../../../network/http_client.dart';
+import '../../../../utils/dummy_data.dart';
+import '../../../../utils/exceptions.dart';
 import '../../../../utils/extensions.dart';
+import '../../../../utils/helpers.dart';
+import '../../../../utils/magic_strings.dart';
+import '../../../../utils/permission_helper.dart';
+import '../../../../utils/platform_channel.dart';
+import '../../../../utils/provider_args_saver.dart';
+import '../../../authentication/presentation/auth_provider_controller.dart';
+import '../../../tutorial/tutorial_controller.dart';
+import '../../data/repositories/trip_repository.dart';
+import '../../domain/app_trip/app_trip.dart';
+import '../../domain/app_trip/echeck.dart';
+import '../../domain/app_trip/stop.dart';
+import '../../domain/app_trip/trip_list_state.dart';
+import '../../domain/update_stop_time_record/update_stop_time_record.dart';
 
 part 'trip_page_controller.g.dart';
 

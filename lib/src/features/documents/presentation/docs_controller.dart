@@ -1,10 +1,11 @@
 import 'dart:async';
-import '../../authentication/presentation/auth_provider_controller.dart';
-import '../domain/document_state/document_state.dart';
-import '../../../utils/magic_strings.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../utils/magic_strings.dart';
+import '../../authentication/presentation/auth_provider_controller.dart';
 import '../data/repositories/documents_repository.dart';
+import '../domain/document_state/document_state.dart';
 
 class DocumentsArgs {
   final DisplayDocumentType documentType;

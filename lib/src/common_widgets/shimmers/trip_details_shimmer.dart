@@ -1,6 +1,7 @@
-import 'shimmer_widget.dart';
 import 'package:fade_shimmer/fade_shimmer.dart';
 import 'package:flutter/material.dart';
+
+import 'shimmer_widget.dart';
 
 class TripDetailsShimmer extends StatelessWidget {
   const TripDetailsShimmer({super.key});

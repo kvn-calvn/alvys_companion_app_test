@@ -1,18 +1,17 @@
 import 'dart:convert';
 import 'dart:ui';
 
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flexible_polyline/flexible_polyline.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
-import '../domain/google_places_details_result.dart';
+import 'package:http/http.dart';
 
 import '../../../../flavor_config.dart';
+import '../domain/google_places_details_result.dart';
 import '../domain/google_places_result.dart';
-import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
-import 'package:http/http.dart';
 
 final googleMapsRepo = Provider<GoogleMapsRepo>((ref) => GoogleMapsRepo());
 

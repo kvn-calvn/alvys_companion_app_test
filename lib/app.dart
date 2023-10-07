@@ -1,4 +1,4 @@
-import 'package:alvys3/src/features/updater/updater_controller.dart';
+import 'src/features/updater/updater_controller.dart';
 
 import 'src/network/network_info.dart';
 import 'package:flutter/material.dart';
