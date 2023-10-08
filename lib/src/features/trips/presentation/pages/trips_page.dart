@@ -1,4 +1,5 @@
-import '../../../../network/firebase_remote_config.dart';
+import 'package:alvys3/src/network/firebase_remote_config_service.dart';
+
 import '../../../../network/http_client.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -78,10 +79,9 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
 
   @override
   Widget build(BuildContext context) {
-    final showTutBtn =
-        ref.read(remoteconfigProvider).value?.getBool("show_tutorial_btn");
-
-    debugPrint("Called");
+    var showTutBtn =
+        ref.watch(firebaseRemoteConfigServiceProvider).showTutorialBtn();
+    debugPrint("Show refresh button? $showTutBtn");
     return Scaffold(
       appBar: AppBar(
         leading: const Padding(
@@ -109,7 +109,7 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
             },
             icon: const Icon(Icons.info),
           ),
-          if (showTutBtn.isNotNull && showTutBtn == true) ...[
+          if (showTutBtn) ...[
             IconButton(
               padding: const EdgeInsets.only(right: 18.0, left: 5.0),
               constraints: const BoxConstraints(),

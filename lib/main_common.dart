@@ -2,6 +2,9 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:firebase_remote_config/firebase_remote_config.dart';
+
+import 'src/network/firebase_remote_config_service.dart';
 import 'src/network/network_info.dart';
 import 'src/utils/provider_args_saver.dart';
 import 'package:flutter/services.dart';
@@ -43,9 +46,15 @@ Future<void> mainCommon() async {
       options: DefaultFirebaseOptions.currentPlatform,
     );
 
+    final firebaseRemoteConfigService = FirebaseRemoteConfigService(
+      firebaseRemoteConfig: FirebaseRemoteConfig.instance,
+    );
+    await firebaseRemoteConfigService.init();
+
     var pref = await SharedPreferences.getInstance();
     String? driverData = pref.getString(SharedPreferencesKey.driverData.name);
-    ThemeMode? appThemeMode = ThemeMode.values.byNameOrNull(pref.getString(SharedPreferencesKey.themeMode.name));
+    ThemeMode? appThemeMode = ThemeMode.values
+        .byNameOrNull(pref.getString(SharedPreferencesKey.themeMode.name));
     var isTablet = await PlatformChannel.isTablet();
     var firstInstall = pref.getBool(SharedPreferencesKey.firstInstall.name);
     TabletUtils.instance.isTablet = isTablet;
@@ -54,20 +63,30 @@ Future<void> mainCommon() async {
     var status = pref.getString(SharedPreferencesKey.driverStatus.name);
     container = ProviderContainer(
       overrides: [
-        internetConnectionCheckerProvider.overrideWith(() => NetworkNotifier(hasInternet)),
+        internetConnectionCheckerProvider
+            .overrideWith(() => NetworkNotifier(hasInternet)),
+        firebaseRemoteConfigServiceProvider.overrideWith(
+          (_) => firebaseRemoteConfigService,
+        ),
         sharedPreferencesProvider.overrideWithValue(pref),
-        firstInstallProvider.overrideWith(() => FirstInstallNotifier(firstInstall ?? false)),
-        authProvider.overrideWith(
-            () => AuthProviderNotifier(driver: driverUser, status: status?.titleCase ?? DriverStatus.online)),
-        themeHandlerProvider.overrideWith(() => ThemeHandlerNotifier(appThemeMode)),
+        firstInstallProvider
+            .overrideWith(() => FirstInstallNotifier(firstInstall ?? false)),
+        authProvider.overrideWith(() => AuthProviderNotifier(
+            driver: driverUser,
+            status: status?.titleCase ?? DriverStatus.online)),
+        themeHandlerProvider
+            .overrideWith(() => ThemeHandlerNotifier(appThemeMode)),
       ],
     );
     if (Platform.isAndroid && !isTablet) {
       if (isTablet) {
-        await SystemChrome.setPreferredOrientations(
-            [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
+        await SystemChrome.setPreferredOrientations([
+          DeviceOrientation.landscapeLeft,
+          DeviceOrientation.landscapeRight
+        ]);
       } else {
-        await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+        await SystemChrome.setPreferredOrientations(
+            [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
       }
     }
     FlutterError.onError = (details) {
@@ -94,7 +113,9 @@ Future<void> mainCommon() async {
       child: App(isTablet),
     ));
   }, (error, stack) {
-    container.read(globalErrorHandlerProvider).handle(null, false, error, stack);
+    container
+        .read(globalErrorHandlerProvider)
+        .handle(null, false, error, stack);
   });
   //FlutterNativeSplash.remove();
 }
