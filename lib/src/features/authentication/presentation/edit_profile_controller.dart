@@ -19,7 +19,7 @@ class EditProfileNotifier extends AutoDisposeAsyncNotifier<UpdateUserProfileStat
   @override
   FutureOr<UpdateUserProfileState> build() {
     auth = ref.read(authProvider.notifier);
-    var user = auth.stateUser!;
+    var user = auth.driver!;
 
     var data = UpdateUserDTO(
         userId: user.id!,
@@ -81,7 +81,7 @@ class EditProfileNotifier extends AutoDisposeAsyncNotifier<UpdateUserProfileStat
       zip: zip.text,
     )));
     state = const AsyncLoading();
-    await auth.updateUserProfile<EditProfileNotifier>(state.value!.dto.updateFromUser(auth.stateUser));
+    await auth.updateUserProfile<EditProfileNotifier>(state.value!.dto.updateFromUser(auth.driver));
     state = AsyncData(state.value!);
     if (context.mounted) context.pop();
   }
@@ -144,4 +144,7 @@ class EditProfileNotifier extends AutoDisposeAsyncNotifier<UpdateUserProfileStat
     'WV',
     'WY',
   ];
+
+  @override
+  FutureOr<void> refreshPage(String page) {}
 }

@@ -1,11 +1,10 @@
-import 'tablet_utils.dart';
-
-import '../constants/color.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../constants/color.dart';
 import 'extensions.dart';
-import 'package:flutter/material.dart';
+import 'tablet_utils.dart';
 
 class AlvysTheme {
   static ThemeData mainTheme(Brightness brightness) {

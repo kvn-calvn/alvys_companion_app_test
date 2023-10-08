@@ -28,16 +28,16 @@ import '../domain/models/driver_user/driver_user.dart';
 import '../domain/models/driver_user/user_tenant.dart';
 
 class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppErrorHandler {
-  final DriverUser? driver;
+  final DriverUser? initDriver;
   String? status;
   late AuthRepository<AuthProviderNotifier> authRepo;
   late SharedPreferences pref;
-  AuthProviderNotifier({this.driver, this.status});
+  AuthProviderNotifier({this.initDriver, this.status});
   @override
   FutureOr<AuthState> build() {
     authRepo = ref.read(authRepoProvider);
     pref = ref.read(sharedPreferencesProvider)!;
-    state = AsyncValue.data(AuthState(driver: driver, driverStatus: status, driverLoggedIn: driver != null));
+    state = AsyncValue.data(AuthState(driver: initDriver, driverStatus: status, driverLoggedIn: initDriver != null));
     return state.value!;
   }
 
@@ -53,15 +53,11 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppError
     state = AsyncValue.data(state.value!.copyWith(verificationCode: v.numbersOnly));
   }
 
-  void setDriverUserData(DriverUser? data) {
-    state = AsyncValue.data(state.value!.copyWith(driver: data, driverLoggedIn: driver != null));
-  }
-
   void logOutDriver() {
     state = AsyncValue.data(state.value!.copyWith(phone: '', verificationCode: '', driverLoggedIn: false));
   }
 
-  DriverUser? get stateUser => state.value!.driver;
+  DriverUser? get driver => state.value!.driver;
 
   Future<void> verifyDriver(BuildContext context, bool mounted) async {
     state = const AsyncValue.loading();
@@ -187,7 +183,7 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppError
       state.value!.driver!.userTenants.first;
 
   Future<void> refreshDriverUser() async {
-    var res = await authRepo.getDriverUser(getCompanyOwned.companyCode!, stateUser!.id!);
+    var res = await authRepo.getDriverUser(getCompanyOwned.companyCode!, driver!.id!);
     var driverTenant = res.userTenants.firstWhereOrNull((element) => element.companyOwnedAsset!);
     updateUser(res);
     if (driverTenant != null) {
@@ -202,6 +198,11 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppError
   @override
   FutureOr<void> onError() {
     state = AsyncValue.data(status == null ? state.value! : state.value!.copyWith(driverStatus: status));
+  }
+
+  @override
+  FutureOr<void> refreshPage(String page) async {
+    await refreshDriverUser();
   }
 }
 

@@ -1,16 +1,14 @@
-import '../features/tutorial/tutorial_controller.dart';
-import '../utils/dummy_data.dart';
-
-import '../features/authentication/presentation/auth_provider_controller.dart';
-
-import '../utils/magic_strings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:intl/intl.dart' as intl;
 
+import '../features/authentication/presentation/auth_provider_controller.dart';
 import '../features/trips/domain/app_trip/app_trip.dart';
+import '../features/tutorial/tutorial_controller.dart';
+import '../utils/dummy_data.dart';
+import '../utils/magic_strings.dart';
 
 class TripCard extends ConsumerWidget {
   const TripCard({Key? key, required this.trip}) : super(key: key);

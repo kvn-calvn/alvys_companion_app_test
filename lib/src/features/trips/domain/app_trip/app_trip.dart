@@ -1,13 +1,13 @@
-import '../../../../utils/magic_strings.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../../../../utils/magic_strings.dart';
 import '../../../documents/domain/app_document/app_document.dart';
-import 'payable_driver.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
-
 import 'echeck.dart';
+import 'payable_driver.dart';
 import 'stop.dart';
+
 part 'app_trip.freezed.dart';
 part 'app_trip.g.dart';
 
@@ -42,7 +42,7 @@ class AppTrip with _$AppTrip {
     @JsonKey(name: 'Temperature') double? temperature,
     @JsonKey(name: 'Drivers') @Default(<String?>[]) List<String?> drivers,
     @JsonKey(name: 'Stops') @Default(<Stop>[]) List<Stop> stops,
-    @JsonKey(name: 'Echecks') @Default(<ECheck>[]) List<ECheck> eChecks,
+    @JsonKey(name: 'EChecks') @Default(<ECheck>[]) List<ECheck> eChecks,
     @Default(0) @JsonKey(name: 'StopCount') int stopCount,
     @JsonKey(name: 'PickupDate') DateTime? pickupDate,
     @JsonKey(name: 'DeliveryDate') DateTime? deliveryDate,

@@ -1,5 +1,4 @@
-import 'package:alvys3/src/features/authentication/domain/models/driver_user/driver_user.dart';
-import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
+import '../driver_user/driver_user.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'update_user_dto.freezed.dart';

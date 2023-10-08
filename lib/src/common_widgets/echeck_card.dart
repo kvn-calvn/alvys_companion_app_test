@@ -1,18 +1,16 @@
-import '../features/tutorial/tutorial_controller.dart';
-import '../utils/dummy_data.dart';
-
-import '../features/authentication/presentation/auth_provider_controller.dart';
-
-import '../features/echeck/presentation/controller/echeck_page_controller.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-
-import 'popup_dropdown.dart';
-import '../features/trips/domain/app_trip/echeck.dart';
-import '../utils/magic_strings.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+
+import '../features/authentication/presentation/auth_provider_controller.dart';
+import '../features/echeck/presentation/controller/echeck_page_controller.dart';
+import '../features/trips/domain/app_trip/echeck.dart';
+import '../features/tutorial/tutorial_controller.dart';
+import '../utils/dummy_data.dart';
+import '../utils/magic_strings.dart';
+import 'popup_dropdown.dart';
 
 class EcheckCard extends ConsumerWidget {
   final ECheck eCheck;
@@ -28,14 +26,14 @@ class EcheckCard extends ConsumerWidget {
       required this.tripId})
       : super(key: key);
 
-  void showEcheckMenu(BuildContext context, bool canCancelEcheck, String? checkNumber) {
-    if (checkNumber == null) return;
+  void showEcheckMenu(BuildContext context, bool canCancelEcheck, String? checkNumber, ECheck check) {
+    if (checkNumber != null) return;
     showCustomPopup<EcheckOption>(
       context: context,
       onSelected: (value) {
         switch (value) {
           case EcheckOption.copy:
-            Clipboard.setData(ClipboardData(text: eCheck.expressCheckNumber!));
+            Clipboard.setData(ClipboardData(text: eCheck.expressCheckNumber!.trim()));
             SnackBar snackBar = const SnackBar(
               padding: EdgeInsets.only(top: 10),
               content: Column(
@@ -65,9 +63,9 @@ class EcheckCard extends ConsumerWidget {
         }
       },
       items: (context) => EcheckOption.values
-          .map<AlvysPopupItem<EcheckOption>?>((e) => !canCancelEcheck && e == EcheckOption.cancel
-              ? null
-              : AlvysPopupItem(value: e, child: Text(e.name.titleCase)))
+          .map<AlvysPopupItem<EcheckOption>?>((e) => e == EcheckOption.copy || (canCancelEcheck && !check.isCanceled)
+              ? AlvysPopupItem(value: e, child: Text(e.name.titleCase))
+              : null)
           .removeNulls
           .toList(),
     );
@@ -78,10 +76,10 @@ class EcheckCard extends ConsumerWidget {
     var state = ref.watch(echeckPageControllerProvider.call(null));
     var authState = ref.watch(authProvider);
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(0, 12, 0, 12),
+      padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 0, 8),
       child: Material(
         key: index == 0 && tripId == testTrip.id! ? ref.read(tutorialProvider).echeckCard : null,
-        elevation: 2.5,
+        elevation: 0,
         color: Theme.of(context).cardColor,
         borderRadius: BorderRadius.circular(10),
         clipBehavior: Clip.antiAlias,
@@ -90,7 +88,7 @@ class EcheckCard extends ConsumerWidget {
             : InkWell(
                 onLongPress: () {
                   showEcheckMenu(context, authState.value!.shouldShowCancelEcheckButton(companyCode, eCheck.userId),
-                      state.value!.loadingEcheckNumber);
+                      state.value!.loadingEcheckNumber, eCheck);
                 },
                 child: Padding(
                   padding: const EdgeInsetsDirectional.fromSTEB(12, 12, 12, 12),
@@ -109,7 +107,7 @@ class EcheckCard extends ConsumerWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
                                 Text(
-                                  eCheck.expressCheckNumber!,
+                                  eCheck.expressCheckNumber!.trim(),
                                   style: GoogleFonts.oxygenMono(
                                     fontWeight: FontWeight.w800,
                                     textStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
@@ -129,11 +127,7 @@ class EcheckCard extends ConsumerWidget {
                           Text('\$${eCheck.amount?.toStringAsFixed(2)}', style: Theme.of(context).textTheme.bodyLarge),
                           Padding(
                             padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [Text(eCheck.reason!, style: Theme.of(context).textTheme.bodySmall)],
-                            ),
+                            child: Text(eCheck.reason!.trim(), style: Theme.of(context).textTheme.bodySmall),
                           ),
                         ],
                       ),
@@ -144,7 +138,8 @@ class EcheckCard extends ConsumerWidget {
                           showEcheckMenu(
                               context,
                               authState.value!.shouldShowCancelEcheckButton(companyCode, eCheck.userId),
-                              state.value!.loadingEcheckNumber);
+                              state.value!.loadingEcheckNumber,
+                              eCheck);
                         },
                         icon: const Icon(Icons.more_vert),
                       )

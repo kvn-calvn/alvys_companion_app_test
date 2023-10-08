@@ -1,20 +1,18 @@
-import '../network/http_client.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:flutter/services.dart';
-
-import '../features/tutorial/tutorial_controller.dart';
-import '../utils/dummy_data.dart';
-
-import '../features/authentication/presentation/auth_provider_controller.dart';
-import '../features/echeck/presentation/pages/generate_echeck.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../constants/color.dart';
+import '../features/authentication/presentation/auth_provider_controller.dart';
+import '../features/echeck/presentation/pages/generate_echeck.dart';
 import '../features/trips/domain/app_trip/stop.dart';
 import '../features/trips/presentation/controller/trip_page_controller.dart';
+import '../features/tutorial/tutorial_controller.dart';
+import '../network/http_client.dart';
+import '../utils/dummy_data.dart';
 import '../utils/magic_strings.dart';
 import 'buttons.dart';
 

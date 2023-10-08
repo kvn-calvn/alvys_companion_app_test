@@ -87,7 +87,8 @@ class GlobalErrorHandler {
         onError = () => executeOnError(e.source);
         message = e.message;
         title = e.title;
-        dismissButtonText = "Not now";
+
+        dismissButtonText = "Ok";
         break;
       case PermissionException:
         var e = error as PermissionException;
@@ -160,7 +161,7 @@ class GlobalErrorHandler {
             AppDialogAction(
               label: dismissButtonText ?? 'Ok',
               action: () => Navigator.pop(context),
-              primary: false,
+              primary: optionalActions.isEmpty,
             ),
           ],
         ),
