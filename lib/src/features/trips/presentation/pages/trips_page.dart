@@ -1,7 +1,6 @@
 import 'package:alvys3/src/network/firebase_remote_config_service.dart';
 
 import '../../../../network/http_client.dart';
-import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
 import '../../../authentication/presentation/driver_status_dropdown.dart';
@@ -81,7 +80,7 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
   Widget build(BuildContext context) {
     var showTutBtn =
         ref.watch(firebaseRemoteConfigServiceProvider).showTutorialBtn();
-    debugPrint("Show refresh button? $showTutBtn");
+    debugPrint("Show tut button? $showTutBtn");
     return Scaffold(
       appBar: AppBar(
         leading: const Padding(
