@@ -169,7 +169,7 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
   }
 
   @override
-  FutureOr<void> onError() {
+  FutureOr<void> onError(Exception ex) {
     if (router.routerDelegate.navigatorKey.currentContext?.mounted ?? false) {
       Navigator.of(router.routerDelegate.navigatorKey.currentContext!, rootNavigator: true).pop();
     }

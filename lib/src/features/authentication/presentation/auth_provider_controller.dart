@@ -196,7 +196,7 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppError
   }
 
   @override
-  FutureOr<void> onError() {
+  FutureOr<void> onError(Exception ex) {
     state = AsyncValue.data(status == null ? state.value! : state.value!.copyWith(driverStatus: status));
   }
 

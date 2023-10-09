@@ -77,15 +77,9 @@ class AlvysHttpClient {
   }
 
   Future<StreamedResponse> sendData<T>(BaseRequest request) async {
-    try {
-      var streamedRes = await telemetryHttpClient.send(request);
-      _handleResponse(await Response.fromStream(streamedRes));
-      return streamedRes;
-    } on SocketException {
-      return Future.error(AlvysSocketException(T));
-    } on TimeoutException {
-      return Future.error(AlvysTimeoutException(T));
-    }
+    var streamedRes = await _tryRequest<T, StreamedResponse>(() => telemetryHttpClient.send(request));
+    _handleResponse(await Response.fromStream(streamedRes));
+    return streamedRes;
   }
 
   Future<void> upload<T>(
@@ -137,24 +131,14 @@ class AlvysHttpClient {
   }
 
   Future<Response> _executeRequest<T>(Future<Response> Function() op) async {
-    if (!networkInfo.hasInternet) {
-      networkInfo.setInternetState(false);
-      return Future.error(AlvysSocketException(T));
+    var companyCode = pref.getString(SharedPreferencesKey.companyCode.name);
+    if (companyCode != null) {
+      telemetryClient.context.properties['tenantId'] = companyCode;
     }
-    try {
-      var companyCode = pref.getString(SharedPreferencesKey.companyCode.name);
-      if (companyCode != null) {
-        telemetryClient.context.properties['tenantId'] = companyCode;
-      }
-      await addPermissionDetails();
-      telemetryClient.context.operation.id = const Uuid().v4(options: {'rng': UuidUtil.cryptoRNG});
-      var res = await op();
-      return _handleResponse<T>(res);
-    } on SocketException {
-      return Future.error(AlvysSocketException(T));
-    } on TimeoutException {
-      return Future.error(AlvysTimeoutException(T));
-    }
+    await addPermissionDetails();
+    telemetryClient.context.operation.id = const Uuid().v4(options: {'rng': UuidUtil.cryptoRNG});
+    var res = await _tryRequest<T, Response>(op);
+    return _handleResponse<T>(res);
   }
 
   Future<Response> _handleResponse<T>(Response response) {
@@ -171,6 +155,20 @@ class AlvysHttpClient {
         return Future.error(ApiServerException(T));
       default:
         return Future.value(response);
+    }
+  }
+
+  Future<TResponse> _tryRequest<TSource, TResponse>(Future<TResponse> Function() op) async {
+    if (!networkInfo.hasInternet) {
+      networkInfo.setInternetState(false);
+      return Future.error(AlvysSocketException(TSource));
+    }
+    try {
+      return await op();
+    } on SocketException {
+      return Future.error(AlvysSocketException(TSource));
+    } on TimeoutException {
+      return Future.error(AlvysTimeoutException(TSource));
     }
   }
 

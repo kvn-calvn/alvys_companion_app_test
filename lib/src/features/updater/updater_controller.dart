@@ -1,3 +1,5 @@
+import 'package:alvys3/src/common_widgets/app_dialog.dart';
+
 import '../../utils/global_error_handler.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,17 +26,15 @@ class UpdaterController {
             barrierDismissible: false,
             builder: (context) => WillPopScope(
                   onWillPop: () => Future.value(false),
-                  child: AlertDialog.adaptive(
-                    title: const Text('Update Available'),
-                    content: Text(
-                        'Version ${Upgrader.sharedInstance.currentAppStoreVersion()} of the app is available.'),
+                  child: AppDialog(
+                    title: 'Update Available',
+                    description: 'Version ${Upgrader.sharedInstance.currentAppStoreVersion()} of the app is available.',
                     actions: [
-                      TextButton(
-                          onPressed: () {
-                            Upgrader.sharedInstance
-                                .onUserUpdated(context, true);
+                      AppDialogAction(
+                          action: () {
+                            Upgrader.sharedInstance.onUserUpdated(context, true);
                           },
-                          child: const Text('Update'))
+                          label: 'Update')
                     ],
                   ),
                 )).then((value) => showing = false);

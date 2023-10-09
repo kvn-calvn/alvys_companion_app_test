@@ -88,7 +88,7 @@ class EditProfileNotifier extends AutoDisposeAsyncNotifier<UpdateUserProfileStat
 
   void setAutoCompleteEnabled(bool? val) => state = AsyncData(state.value!.copyWith(autocompleteEnabled: val ?? true));
   @override
-  FutureOr<void> onError() {
+  FutureOr<void> onError(Exception ex) {
     state = AsyncData(state.value!);
   }
 

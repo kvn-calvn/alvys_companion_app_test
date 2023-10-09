@@ -27,7 +27,7 @@ class _AppState extends ConsumerState<App> with WidgetsBindingObserver {
   void didChangeAppLifecycleState(AppLifecycleState state) {
     switch (state) {
       case AppLifecycleState.resumed:
-        var data = ref.read(updaterProvider);
+        var data = ref.watch(updaterProvider);
         data.whenData((value) => value.showUpdateDialog());
         break;
       case AppLifecycleState.hidden:
@@ -45,10 +45,15 @@ class _AppState extends ConsumerState<App> with WidgetsBindingObserver {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final router = widget.isTablet ? ref.read(tabletRouteProvider) : ref.read(routerProvider);
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     ref.watch(internetConnectionCheckerProvider);
     ref.watch(updaterProvider);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final router = widget.isTablet ? ref.read(tabletRouteProvider) : ref.read(routerProvider);
     return MaterialApp.router(
       //useInheritedMediaQuery: true,
       themeMode: ref.watch(themeHandlerProvider),
