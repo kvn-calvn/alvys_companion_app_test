@@ -30,7 +30,7 @@ class DocumentList extends StatelessWidget {
               title: emptyMessage,
               description: 'Uploaded documents will appear here.')
           : ListView(
-              padding: const EdgeInsets.only(top: 200.0),
+              //padding: const EdgeInsets.only(top: 200.0),
               children: [
                 for (var doc in documents)
                   LargeNavButton(
