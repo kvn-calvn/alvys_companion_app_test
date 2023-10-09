@@ -1,3 +1,4 @@
+import '../../../network/firebase_remote_config_service.dart';
 import '../../../network/http_client.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
@@ -64,7 +65,14 @@ class SettingsList extends ConsumerWidget {
             showCustomBottomSheet(context, const ThemeSwitcher());
           },
         ),
-        const UrlNavButton(title: "Help", url: "https://alvys.com/help/"),
+        Consumer(
+          builder: (context, ref, child) {
+            var alvysHelp =
+                ref.watch(firebaseRemoteConfigServiceProvider).alvysHelpUrl();
+            return UrlNavButton(title: "Help", url: alvysHelp);
+          },
+        ),
+        //const UrlNavButton(title: "Help", url: "https://alvys.com/help/"),
         LargeNavButton(
           title: "About",
           onPressed: () {
@@ -77,7 +85,10 @@ class SettingsList extends ConsumerWidget {
             ref.read(firstInstallProvider.notifier).setState(true);
             context.goNamed(RouteName.trips.name);
             ref.read(tabletViewProvider.notifier).setState(0);
-            ref.read(httpClientProvider).telemetryClient.trackEvent(name: "watch_tutorial");
+            ref
+                .read(httpClientProvider)
+                .telemetryClient
+                .trackEvent(name: "watch_tutorial");
             await FirebaseAnalytics.instance.logEvent(name: "watch_tutorial");
           },
         ),
@@ -86,7 +97,10 @@ class SettingsList extends ConsumerWidget {
           onPressed: () async {
             PlatformChannel.stopLocationTracking();
             ref.read(authProvider.notifier).signOut(context);
-            ref.read(httpClientProvider).telemetryClient.trackEvent(name: "signed_out");
+            ref
+                .read(httpClientProvider)
+                .telemetryClient
+                .trackEvent(name: "signed_out");
             await FirebaseAnalytics.instance.logEvent(name: "signed_out");
           },
         ),
