@@ -93,40 +93,40 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
           style: AlvysTheme.appbarTextStyle(context, false),
         ),
         actions: [
-          IconButton(
-            constraints: const BoxConstraints(),
-            onPressed: () async {
-              await ref
-                  .read(tripControllerProvider.notifier)
-                  .showTripListPreview(context, 0, 0);
-              ref
-                  .read(httpClientProvider)
-                  .telemetryClient
-                  .trackEvent(name: "trip_list_tour_button_tapped");
-              await FirebaseAnalytics.instance
-                  .logEvent(name: "trip_list_tour_button_tapped");
-            },
-            icon: const Icon(Icons.info),
-          ),
           if (showTutBtn) ...[
             IconButton(
-              padding: const EdgeInsets.only(right: 18.0, left: 5.0),
               constraints: const BoxConstraints(),
-              key: ref.read(tutorialProvider).refresh,
               onPressed: () async {
                 await ref
                     .read(tripControllerProvider.notifier)
-                    .refreshTrips(true);
+                    .showTripListPreview(context, 0, 0);
                 ref
                     .read(httpClientProvider)
                     .telemetryClient
-                    .trackEvent(name: "refresh_button_tapped");
+                    .trackEvent(name: "trip_list_tour_button_tapped");
                 await FirebaseAnalytics.instance
-                    .logEvent(name: "refresh_button_tapped");
+                    .logEvent(name: "trip_list_tour_button_tapped");
               },
-              icon: const Icon(Icons.refresh),
-            )
-          ]
+              icon: const Icon(Icons.info),
+            ),
+          ],
+          IconButton(
+            padding: const EdgeInsets.only(right: 18.0, left: 5.0),
+            constraints: const BoxConstraints(),
+            key: ref.read(tutorialProvider).refresh,
+            onPressed: () async {
+              await ref
+                  .read(tripControllerProvider.notifier)
+                  .refreshTrips(true);
+              ref
+                  .read(httpClientProvider)
+                  .telemetryClient
+                  .trackEvent(name: "refresh_button_tapped");
+              await FirebaseAnalytics.instance
+                  .logEvent(name: "refresh_button_tapped");
+            },
+            icon: const Icon(Icons.refresh),
+          )
         ],
         centerTitle: true,
         bottom: TabBar(
