@@ -18,21 +18,23 @@ class UpdaterController {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (Upgrader.sharedInstance.shouldDisplayUpgrade() && !showing) {
         showing = true;
+
         showDialog(
             context: errorHandler.navKey.currentContext!,
             barrierDismissible: false,
             builder: (context) => WillPopScope(
                   onWillPop: () => Future.value(false),
                   child: AlertDialog.adaptive(
-                    title: const Text('New App Version'),
-                    content:
-                        Text('Version ${Upgrader.sharedInstance.currentAppStoreVersion()} of the app is available.'),
+                    title: const Text('Update Available'),
+                    content: Text(
+                        'Version ${Upgrader.sharedInstance.currentAppStoreVersion()} of the app is available.'),
                     actions: [
                       TextButton(
                           onPressed: () {
-                            Upgrader.sharedInstance.onUserUpdated(context, true);
+                            Upgrader.sharedInstance
+                                .onUserUpdated(context, true);
                           },
-                          child: const Text('Update App'))
+                          child: const Text('Update'))
                     ],
                   ),
                 )).then((value) => showing = false);
