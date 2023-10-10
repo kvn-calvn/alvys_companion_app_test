@@ -41,6 +41,9 @@ class UrlNavButton extends StatelessWidget {
                     const EdgeInsets.symmetric(vertical: 16, horizontal: 12),
                 child: Row(
                   children: [
+                    const SizedBox(
+                      width: 5,
+                    ),
                     Text(
                       title,
                       style: Theme.of(context)
