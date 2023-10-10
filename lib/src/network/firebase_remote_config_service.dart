@@ -31,9 +31,13 @@ class FirebaseRemoteConfigService {
         "alvys_help_url": "https://alvys.com/help/",
         "alvys_url": "https://alvys.com/",
         "alvys_terms_url": "https://alvys.com/terms/",
-        "alvys_privacy_url": "https://alvys.com/privacy/"
+        "alvys_privacy_url": "https://alvys.com/privacy/",
+        "show_company_code": false
       });
       await firebaseRemoteConfig.fetchAndActivate();
+      firebaseRemoteConfig.onConfigUpdated.listen((event) {
+        debugPrint("\n \n ${event.updatedKeys}");
+      });
     } catch (exception) {
       debugPrint("Error initializing Remote Config:$exception");
     }
@@ -46,4 +50,5 @@ class FirebaseRemoteConfigService {
   String alvysTermsUrl() => firebaseRemoteConfig.getString('alvys_terms_url');
   String alvysPrivacyUrl() =>
       firebaseRemoteConfig.getString('alvys_privacy_url');
+  bool showCompanyCode() => firebaseRemoteConfig.getBool('show_company_code');
 }
