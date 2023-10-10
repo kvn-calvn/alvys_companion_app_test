@@ -60,7 +60,7 @@ class SettingsList extends ConsumerWidget {
           height: 10,
         ),
         LargeNavButton(
-          title: "Change Theme",
+          title: "Theme",
           onPressed: () {
             showCustomBottomSheet(context, const ThemeSwitcher());
           },
@@ -80,7 +80,7 @@ class SettingsList extends ConsumerWidget {
           },
         ),
         LargeNavButton(
-          title: "Watch Tutorial",
+          title: "Tutorial",
           onPressed: () async {
             ref.read(firstInstallProvider.notifier).setState(true);
             context.goNamed(RouteName.trips.name);

@@ -2,7 +2,12 @@ import 'package:flutter/material.dart';
 
 class LargeNavButton extends StatelessWidget {
   const LargeNavButton(
-      {Key? key, required this.title, required this.onPressed, this.suffix, this.icon, this.padding = 16})
+      {Key? key,
+      required this.title,
+      required this.onPressed,
+      this.suffix,
+      this.icon,
+      this.padding = 16})
       : super(key: key);
 
   final String title;
@@ -28,6 +33,9 @@ class LargeNavButton extends StatelessWidget {
               child: Row(
                 children: [
                   if (icon != null) icon!,
+                  const SizedBox(
+                    width: 5,
+                  ),
                   Text(title, style: Theme.of(context).textTheme.bodyLarge),
                   const Spacer(),
                   const Icon(
