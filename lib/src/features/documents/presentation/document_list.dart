@@ -34,7 +34,7 @@ class DocumentList extends StatelessWidget {
               children: [
                 for (var doc in documents)
                   LargeNavButton(
-                    icon: const Icon(Icons.insert_drive_file),
+                    icon: const Icon(Icons.description_outlined),
                     title: doc.documentType,
                     onPressed: () {
                       switch (args.documentType) {
