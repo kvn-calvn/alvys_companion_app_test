@@ -22,14 +22,31 @@
 	<string>$(MARKETING_VERSION)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLName</key>
+			<string>alvys.com</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>alvysmobile</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+	<key>FlutterDeepLinkingEnabled</key>
+	<true/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NHAppDelegateForwarderEnabled</key>
 	<false/>
 	<key>NHUserNotificationCenterDelegateForwarderEnabled</key>
 	<false/>
+	<key>NSCameraUsageDescription</key>
+	<string>Enable camera access so you can take photos of documents and upload them.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
 	<string>Your location service is used to track the load you have been assigned to carry.</string>
 	<key>NSLocationAlwaysUsageDescription</key>
@@ -38,10 +55,13 @@
 	<string>Your location service is used to track the load you have been assigned to carry.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>Your location service is used to track the load you have been assigned to carry.</string>
-	<key>NSCameraUsageDescription</key>
-	<string>Enable camera access so you can take photos of documents and upload them.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Enables you to select a photo of a document from your gallery to upload.</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Not required</string>
+    <key>NSAppleMusicUsageDescription</key>
+    <string>Not required</string>
+    
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UIBackgroundModes</key>
@@ -66,23 +86,10 @@
 	<array>
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
+		<string>UIInterfaceOrientationPortrait</string>
+		<string>UIInterfaceOrientationPortraitUpsideDown</string>
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-    <key>FlutterDeepLinkingEnabled</key>
-    <true/>
-    <key>CFBundleURLTypes</key>
-    <array>
-        <dict>
-        <key>CFBundleTypeRole</key>
-        <string>Editor</string>
-        <key>CFBundleURLName</key>
-        <string>alvys.com</string>
-        <key>CFBundleURLSchemes</key>
-        <array>
-        <string>alvysmobile</string>
-        </array>
-        </dict>
-    </array>
 </dict>
 </plist>
