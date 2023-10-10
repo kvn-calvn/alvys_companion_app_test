@@ -79,7 +79,7 @@ class AboutPageBody extends StatelessWidget {
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
-                              const Text('Device Model: '),
+                              const Text('Device: '),
                               Text(snapshot.data!.utsname.machine),
                             ],
                           ),
@@ -105,7 +105,7 @@ class AboutPageBody extends StatelessWidget {
                           Row(
                             mainAxisSize: MainAxisSize.min,
                             children: <Widget>[
-                              const Text('Device Model: '),
+                              const Text('Device: '),
                               Text(
                                   '${snapshot.data!.manufacturer} ${snapshot.data!.model}'),
                             ],
