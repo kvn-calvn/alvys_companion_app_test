@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:alvys3/src/network/http_client.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -51,40 +52,41 @@ Future<void> mainCommon() async {
 
     var pref = await SharedPreferences.getInstance();
     String? driverData = pref.getString(SharedPreferencesKey.driverData.name);
-    ThemeMode? appThemeMode = ThemeMode.values
-        .byNameOrNull(pref.getString(SharedPreferencesKey.themeMode.name));
+    ThemeMode? appThemeMode = ThemeMode.values.byNameOrNull(pref.getString(SharedPreferencesKey.themeMode.name));
     var isTablet = await PlatformChannel.isTablet();
     var firstInstall = pref.getBool(SharedPreferencesKey.firstInstall.name);
     TabletUtils.instance.isTablet = isTablet;
     DriverUser? driverUser;
     var hasInternet = await InternetConnectionChecker().hasConnection;
     var status = pref.getString(SharedPreferencesKey.driverStatus.name);
+    if (driverData != null) {
+      try {
+        driverUser = DriverUser.fromJson(jsonDecode(driverData));
+      } catch (e) {
+        driverUser = null;
+      }
+    }
+
     container = ProviderContainer(
       overrides: [
-        internetConnectionCheckerProvider
-            .overrideWith(() => NetworkNotifier(hasInternet)),
+        internetConnectionCheckerProvider.overrideWith(() => NetworkNotifier(hasInternet)),
         firebaseRemoteConfigServiceProvider.overrideWith(
           (_) => firebaseRemoteConfigService,
         ),
         sharedPreferencesProvider.overrideWithValue(pref),
-        firstInstallProvider
-            .overrideWith(() => FirstInstallNotifier(firstInstall ?? false)),
-        authProvider.overrideWith(() => AuthProviderNotifier(
-            initDriver: driverUser,
-            status: status?.titleCase ?? DriverStatus.online)),
-        themeHandlerProvider
-            .overrideWith(() => ThemeHandlerNotifier(appThemeMode)),
+        firstInstallProvider.overrideWith(() => FirstInstallNotifier(firstInstall ?? false)),
+        authProvider.overrideWith(
+            () => AuthProviderNotifier(initDriver: driverUser, status: status?.titleCase ?? DriverStatus.online)),
+        themeHandlerProvider.overrideWith(() => ThemeHandlerNotifier(appThemeMode)),
       ],
     );
+    if (driverUser != null) await container.read(httpClientProvider).setTelemetryContext(user: driverUser);
     if (Platform.isAndroid && !isTablet) {
       if (isTablet) {
-        await SystemChrome.setPreferredOrientations([
-          DeviceOrientation.landscapeLeft,
-          DeviceOrientation.landscapeRight
-        ]);
-      } else {
         await SystemChrome.setPreferredOrientations(
-            [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+            [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
+      } else {
+        await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
       }
     }
     FlutterError.onError = (details) {
@@ -96,11 +98,6 @@ Future<void> mainCommon() async {
       if (stack is Chain) return stack.toTrace().vmTrace;
       return stack;
     };
-
-    if (driverData != null) {
-      driverUser = DriverUser.fromJson(jsonDecode(driverData));
-    }
-
     // Pass all uncaught asynchronous errors that aren't handled by the Flutter framework to Crashlytics
     PlatformDispatcher.instance.onError = (error, stack) {
       FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
@@ -111,9 +108,7 @@ Future<void> mainCommon() async {
       child: App(isTablet),
     ));
   }, (error, stack) {
-    container
-        .read(globalErrorHandlerProvider)
-        .handle(null, false, error, stack);
+    container.read(globalErrorHandlerProvider).handle(null, false, error, stack);
   });
   //FlutterNativeSplash.remove();
 }

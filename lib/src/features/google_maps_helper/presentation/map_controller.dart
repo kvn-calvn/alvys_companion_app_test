@@ -45,8 +45,9 @@ class MapNotifier extends AutoDisposeFamilyAsyncNotifier<MapState, String> {
           .toSet();
       state = AsyncData(state.value!.copyWith(markers: markers));
       GoogleMapController miniController = await this.miniController.future;
-      miniController.animateCamera(
-          CameraUpdate.newLatLngBounds(repo.boundsFromLatLngList(markers.map((e) => e.position).toList()), 72));
+      miniController.animateCamera(markers.length == 1
+          ? CameraUpdate.newCameraPosition(CameraPosition(target: markers.first.position))
+          : CameraUpdate.newLatLngBounds(repo.boundsFromLatLngList(markers.map((e) => e.position).toList()), 72));
       var polylines = await repo.getPolyLines(trip.stopLocations.map((e) => e.value).toList());
       state = AsyncData(MapState(markers: markers, polyLines: polylines.values.toSet()));
     }

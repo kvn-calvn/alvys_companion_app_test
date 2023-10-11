@@ -111,6 +111,7 @@ class StopDetails extends ConsumerWidget {
                 ),
                 Wrap(
                   alignment: WrapAlignment.spaceBetween,
+                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -141,45 +142,42 @@ class StopDetails extends ConsumerWidget {
                   ],
                 ),
                 const SizedBox(height: 10),
-                SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Checked In',
-                            style: Theme.of(context).textTheme.bodyLarge,
-                          ),
-                          Text(
-                            DateFormat.yMMMd()
-                                .addPattern('@')
-                                .add_Hm()
-                                .formatNullDate(currentStop.timeRecord?.driver?.timeIn),
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                        ],
-                      ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Text(
-                            'Checked Out',
-                            style: Theme.of(context).textTheme.bodyLarge,
-                          ),
-                          Text(
-                            DateFormat.yMMMd()
-                                .addPattern('@')
-                                .add_Hm()
-                                .formatNullDate(currentStop.timeRecord?.driver?.timeOut),
-                            style: Theme.of(context).textTheme.bodyMedium,
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
+                Wrap(
+                  alignment: WrapAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Checked In',
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                        Text(
+                          DateFormat.yMMMd()
+                              .addPattern('@')
+                              .add_Hm()
+                              .formatNullDate(currentStop.timeRecord?.driver?.timeIn),
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ],
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        Text(
+                          'Checked Out',
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                        Text(
+                          DateFormat.yMMMd()
+                              .addPattern('@')
+                              .add_Hm()
+                              .formatNullDate(currentStop.timeRecord?.driver?.timeOut),
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
                 const SizedBox(height: 20),
                 Text(

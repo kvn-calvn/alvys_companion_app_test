@@ -186,7 +186,7 @@ class AlvysHttpClient {
         .toJsonEncodedString;
   }
 
-  Future<void> setTelemetryContext({DriverUser? user, String? companyCode, Map<String, dynamic>? extraData}) async {
+  Future<void> setTelemetryContext({DriverUser? user, Map<String, dynamic>? extraData}) async {
     assert((user == null && extraData != null) || (user != null && extraData == null));
     Map<String, dynamic> driver = user == null
         ? extraData!
@@ -221,5 +221,6 @@ class AlvysHttpClient {
       ..user.accountId = user?.id
       ..properties['user'] = jsonEncode(driver)
       ..device.id = Platform.isAndroid ? androidInfo.id : iosInfo.identifierForVendor;
+    await addPermissionDetails();
   }
 }
