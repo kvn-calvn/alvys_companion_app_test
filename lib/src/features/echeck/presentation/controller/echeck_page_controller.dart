@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'package:firebase_analytics/firebase_analytics.dart';
+
+import '../../../../network/http_client.dart';
 import '../../../../utils/provider_args_saver.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -12,7 +15,9 @@ import '../../data/echeck_repository.dart';
 import '../../domain/echeck_state/echeck_state.dart';
 import '../../domain/generate_echeck/generate_echeck_request.dart';
 
-class EcheckPageController extends AutoDisposeFamilyAsyncNotifier<ECheckState, String?> implements IAppErrorHandler {
+class EcheckPageController
+    extends AutoDisposeFamilyAsyncNotifier<ECheckState, String?>
+    implements IAppErrorHandler {
   late TripController tripController;
   late EcheckRepository repo;
   late AuthProviderNotifier auth;
@@ -50,7 +55,8 @@ class EcheckPageController extends AutoDisposeFamilyAsyncNotifier<ECheckState, S
   }
 
   void setAmount(String? amount) {
-    state = AsyncValue.data(state.value!.copyWith(amount: double.tryParse(amount.currencyNumbersOnly) ?? 0));
+    state = AsyncValue.data(state.value!
+        .copyWith(amount: double.tryParse(amount.currencyNumbersOnly) ?? 0));
   }
 
   void setNote(String? note) {
@@ -64,7 +70,8 @@ class EcheckPageController extends AutoDisposeFamilyAsyncNotifier<ECheckState, S
     return null;
   }
 
-  Future<void> generateEcheck(GlobalKey<FormState> formKey, BuildContext context, String tripId) async {
+  Future<void> generateEcheck(
+      GlobalKey<FormState> formKey, BuildContext context, String tripId) async {
     if (formKey.currentState?.validate() ?? false) {
       state = const AsyncLoading();
       var firstName = auth.driver!.name!.split(' ').first;
@@ -79,7 +86,31 @@ class EcheckPageController extends AutoDisposeFamilyAsyncNotifier<ECheckState, S
           stopId: state.value!.showStopDropdown ? state.value!.stopId : null,
           driverId: trip.driver1Id!,
           amount: state.value!.amount);
-      var res = await repo.generateEcheck<EcheckPageController>(trip.companyCode!, req);
+      var res = await repo.generateEcheck<EcheckPageController>(
+          trip.companyCode!, req);
+      ref
+          .read(httpClientProvider)
+          .telemetryClient
+          .trackEvent(name: "generate_echeck", additionalProperties: {
+        "tripId": req.tripId,
+        "reason": req.reason,
+        "note": req.note,
+        "amount": req.amount,
+        "stopId": req.stopId!,
+        "first_name": req.firstName,
+        "last_name": req.lastName
+      });
+      await FirebaseAnalytics.instance
+          .logEvent(name: "generate_echeck", parameters: {
+        "tripId": req.tripId,
+        "reason": req.reason,
+        "note": req.note,
+        "amount": req.amount,
+        "stopId": req.stopId,
+        "first_name": req.firstName,
+        "last_name": req.lastName
+      });
+
       tripController.addEcheck(trip.id!, res);
       state = AsyncData(state.value!);
       if (context.mounted) {
@@ -109,5 +140,5 @@ class EcheckPageController extends AutoDisposeFamilyAsyncNotifier<ECheckState, S
   FutureOr<void> refreshPage(String page) {}
 }
 
-final echeckPageControllerProvider =
-    AutoDisposeAsyncNotifierProviderFamily<EcheckPageController, ECheckState, String?>(EcheckPageController.new);
+final echeckPageControllerProvider = AutoDisposeAsyncNotifierProviderFamily<
+    EcheckPageController, ECheckState, String?>(EcheckPageController.new);

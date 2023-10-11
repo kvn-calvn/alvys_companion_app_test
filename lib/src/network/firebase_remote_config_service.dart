@@ -21,8 +21,8 @@ class FirebaseRemoteConfigService {
       await firebaseRemoteConfig.ensureInitialized();
       await firebaseRemoteConfig.setConfigSettings(
         RemoteConfigSettings(
-          fetchTimeout: const Duration(seconds: 10),
-          minimumFetchInterval: Duration.zero,
+          fetchTimeout: const Duration(minutes: 1),
+          minimumFetchInterval: const Duration(hours: 12),
         ),
       );
       await firebaseRemoteConfig.setDefaults({
