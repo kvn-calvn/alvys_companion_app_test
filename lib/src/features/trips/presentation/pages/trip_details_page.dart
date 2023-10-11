@@ -25,19 +25,22 @@ import 'trip_documents_page.dart';
 class LoadDetailsPage extends ConsumerStatefulWidget {
   final String tripId;
   final int tabIndex;
-  const LoadDetailsPage(this.tripId, this.tabIndex, {Key? key}) : super(key: key);
+  const LoadDetailsPage(this.tripId, this.tabIndex, {Key? key})
+      : super(key: key);
 
   @override
   ConsumerState<LoadDetailsPage> createState() => _LoadDetailsPageState();
 }
 
-class _LoadDetailsPageState extends ConsumerState<LoadDetailsPage> with TickerProviderStateMixin {
+class _LoadDetailsPageState extends ConsumerState<LoadDetailsPage>
+    with TickerProviderStateMixin {
   // late TabController _tabController;
 
   @override
   void initState() {
     super.initState();
-    TabletUtils.instance.detailsController = TabController(initialIndex: widget.tabIndex, length: 3, vsync: this);
+    TabletUtils.instance.detailsController =
+        TabController(initialIndex: widget.tabIndex, length: 3, vsync: this);
   }
 
   @override
@@ -49,7 +52,8 @@ class _LoadDetailsPageState extends ConsumerState<LoadDetailsPage> with TickerPr
   @override
   Widget build(BuildContext context) {
     var trip = ref.watch(tripControllerProvider).value!.getTrip(widget.tripId);
-    var showTutBtn = ref.watch(firebaseRemoteConfigServiceProvider).showTutorialBtn();
+    var showTutBtn =
+        ref.watch(firebaseRemoteConfigServiceProvider).showTutorialBtn();
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -71,13 +75,19 @@ class _LoadDetailsPageState extends ConsumerState<LoadDetailsPage> with TickerPr
               constraints: const BoxConstraints(),
               onPressed: () async {
                 var previousTripId = widget.tripId;
-                await ref.read(tripControllerProvider.notifier).showTripDetailsTutorialPreview(
-                    context,
-                    TabletUtils.instance.detailsController.index + 1,
-                    TabletUtils.instance.detailsController.index + 1,
-                    previousTripId);
-                ref.read(httpClientProvider).telemetryClient.trackEvent(name: "trip_details_tour_button_tapped");
-                await FirebaseAnalytics.instance.logEvent(name: "trip_details_tour_button_tapped");
+                await ref
+                    .read(tripControllerProvider.notifier)
+                    .showTripDetailsTutorialPreview(
+                        context,
+                        TabletUtils.instance.detailsController.index + 1,
+                        TabletUtils.instance.detailsController.index + 1,
+                        previousTripId);
+                ref
+                    .read(httpClientProvider)
+                    .telemetryClient
+                    .trackEvent(name: "trip_details_tour_button_tapped");
+                await FirebaseAnalytics.instance
+                    .logEvent(name: "trip_details_tour_button_tapped");
                 // context.goNamed(RouteName.tripDetails.name, pathParameters: {ParamType.tripId.name: testTrip.id!});
                 // ref.read(tripControllerProvider.notifier).prepareTutorialPreview(context,
                 //     TabletUtils.instance.detailsController.index + 1, TabletUtils.instance.detailsController.index + 1);
@@ -94,9 +104,15 @@ class _LoadDetailsPageState extends ConsumerState<LoadDetailsPage> with TickerPr
             padding: const EdgeInsets.only(right: 18.0, left: 5.0),
             constraints: const BoxConstraints(),
             onPressed: () async {
-              await ref.read(tripControllerProvider.notifier).refreshCurrentTrip(widget.tripId);
-              ref.read(httpClientProvider).telemetryClient.trackEvent(name: "trip_refresh_button_tapped");
-              await FirebaseAnalytics.instance.logEvent(name: "trip_refresh_button_tapped");
+              await ref
+                  .read(tripControllerProvider.notifier)
+                  .refreshCurrentTrip(widget.tripId);
+              ref
+                  .read(httpClientProvider)
+                  .telemetryClient
+                  .trackEvent(name: "trip_refresh_button_tapped");
+              await FirebaseAnalytics.instance
+                  .logEvent(name: "trip_refresh_button_tapped");
             },
             icon: const Icon(Icons.refresh),
           )
@@ -129,12 +145,14 @@ class _LoadDetailsPageState extends ConsumerState<LoadDetailsPage> with TickerPr
           ],
         ),
       ),
-      body: TabBarView(controller: TabletUtils.instance.detailsController, children: [
-        TripDetails(widget.tripId, widget.tabIndex),
-        EcheckPage(widget.tripId),
-        TripDocuments(widget.tripId)
-        // DocumentsPage(DocumentsArgs(DocumentType.tripDocuments, widget.tripId)),
-      ]),
+      body: TabBarView(
+          controller: TabletUtils.instance.detailsController,
+          children: [
+            TripDetails(widget.tripId, widget.tabIndex),
+            EcheckPage(widget.tripId),
+            TripDocuments(widget.tripId)
+            // DocumentsPage(DocumentsArgs(DocumentType.tripDocuments, widget.tripId)),
+          ]),
     );
   }
 }
@@ -152,14 +170,17 @@ class TripDetails extends ConsumerWidget {
     // return TripDetailsShimmer();
     if (tripDetailsState.isLoading) return const TripDetailsShimmer();
     if (trip == null) {
-      return const EmptyView(title: 'Trip Not found', description: 'Return to the previous page');
+      return const EmptyView(
+          title: 'Trip Not found', description: 'Return to the previous page');
     }
 
     var equipment = "${trip.equipment} ${trip.equipmentLength}".trim();
 
     return RefreshIndicator(
       onRefresh: () async {
-        await ref.read(tripControllerProvider.notifier).refreshCurrentTrip(tripId);
+        await ref
+            .read(tripControllerProvider.notifier)
+            .refreshCurrentTrip(tripId);
       },
       child: ListView(
           scrollDirection: Axis.vertical,
@@ -180,7 +201,8 @@ class TripDetails extends ConsumerWidget {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Padding(
-                          padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 15, 0),
+                          padding: const EdgeInsetsDirectional.fromSTEB(
+                              0, 10, 15, 0),
                           child: Wrap(
                             spacing: 5,
                             runSpacing: 5,
@@ -189,15 +211,18 @@ class TripDetails extends ConsumerWidget {
                                 Chip(
                                   label: Text(
                                     equipment,
-                                    style: Theme.of(context).textTheme.bodyMedium!,
+                                    style:
+                                        Theme.of(context).textTheme.labelLarge!,
                                   ),
                                 ),
                               ],
-                              if (trip.totalWeight != null) ...[
+                              if (trip.totalWeight != null &&
+                                  trip.totalWeight != 0) ...[
                                 Chip(
                                   label: Text(
                                     '${NumberFormat.decimalPattern().format(trip.totalWeight)} lbs',
-                                    style: Theme.of(context).textTheme.bodyMedium!,
+                                    style:
+                                        Theme.of(context).textTheme.labelLarge!,
                                   ),
                                 ),
                               ],
@@ -205,7 +230,8 @@ class TripDetails extends ConsumerWidget {
                                 Chip(
                                   label: Text(
                                     '${trip.temperature!.toStringAsFixed(1)} °f',
-                                    style: Theme.of(context).textTheme.bodyMedium!,
+                                    style:
+                                        Theme.of(context).textTheme.labelLarge!,
                                   ),
                                 ),
                               ],
@@ -213,7 +239,8 @@ class TripDetails extends ConsumerWidget {
                                 Chip(
                                   label: Text(
                                     '${NumberFormat.decimalPattern().format(trip.totalMiles)} mi',
-                                    style: Theme.of(context).textTheme.bodyMedium!,
+                                    style:
+                                        Theme.of(context).textTheme.labelLarge!,
                                   ),
                                 ),
                               ],
@@ -221,17 +248,22 @@ class TripDetails extends ConsumerWidget {
                                 Chip(
                                   label: Text(
                                     'Trailer ${trip.trailerNum}',
-                                    style: Theme.of(context).textTheme.bodyMedium!,
+                                    style:
+                                        Theme.of(context).textTheme.labelLarge!,
                                   ),
                                 ),
                               ],
-                              if (trip.driverPayable(authState.value!.tryGetUserTenant(trip.companyCode!)?.assetId) !=
+                              if (trip.driverPayable(authState.value!
+                                          .tryGetUserTenant(trip.companyCode!)
+                                          ?.assetId) !=
                                       null &&
-                                  authState.value!.shouldShowPayableAmount(trip.companyCode!)) ...[
+                                  authState.value!.shouldShowPayableAmount(
+                                      trip.companyCode!)) ...[
                                 Chip(
                                   label: Text(
                                     'Driver Payable ${NumberFormat.simpleCurrency().format(trip.driverPayable(authState.value!.tryGetUserTenant(trip.companyCode!)!.assetId!))}',
-                                    style: Theme.of(context).textTheme.bodyMedium!,
+                                    style:
+                                        Theme.of(context).textTheme.labelLarge!,
                                   ),
                                 ),
                               ],
@@ -252,7 +284,8 @@ class TripDetails extends ConsumerWidget {
                               "No Stops",
                               style: Theme.of(context).textTheme.bodyLarge,
                             ),
-                            Text("There are no stops on this trip.", style: Theme.of(context).textTheme.bodyMedium)
+                            Text("There are no stops on this trip.",
+                                style: Theme.of(context).textTheme.bodyMedium)
                           ],
                         ),
                       ),
