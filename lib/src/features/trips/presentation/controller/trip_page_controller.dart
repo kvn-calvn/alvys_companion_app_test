@@ -40,6 +40,7 @@ class TripController extends _$TripController implements IAppErrorHandler {
   String? tripId;
   @override
   FutureOr<TripListState> build() async {
+    print('rebuilt');
     tripRepo = ref.read(tripRepoProvider);
     auth = ref.read(authProvider.notifier);
     tutorial = ref.read(tutorialProvider);

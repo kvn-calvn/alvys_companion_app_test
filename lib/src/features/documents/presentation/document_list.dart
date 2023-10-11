@@ -1,3 +1,6 @@
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
+import 'package:intl/intl.dart';
+
 import '../domain/app_document/app_document.dart';
 import 'docs_controller.dart';
 import 'package:flutter/material.dart';
@@ -26,30 +29,24 @@ class DocumentList extends StatelessWidget {
     return RefreshIndicator(
       onRefresh: refreshFunction,
       child: documents.isEmpty
-          ? EmptyView(
-              title: emptyMessage,
-              description: 'Uploaded documents will appear here.')
+          ? EmptyView(title: emptyMessage, description: 'Uploaded documents will appear here.')
           : ListView(
               //padding: const EdgeInsets.only(top: 200.0),
               children: [
                 for (var doc in documents)
                   LargeNavButton(
-                    icon: const Icon(Icons.description_outlined),
-                    title: doc.documentType,
+                    icon: const Icon(Icons.insert_drive_file),
+                    title: "${doc.documentType}\t${DateFormat("EEE, MMM d, yyyy").formatNullDate(doc.date, "")}",
                     onPressed: () {
                       switch (args.documentType) {
                         case DisplayDocumentType.tripDocuments:
                           context.pushNamed(RouteName.tripDocumentView.name,
-                              extra: doc,
-                              pathParameters: {
-                                ParamType.tripId.name: args.tripId!
-                              });
+                              extra: doc, pathParameters: {ParamType.tripId.name: args.tripId!});
                           break;
                         case DisplayDocumentType.personalDocuments:
                         case DisplayDocumentType.paystubs:
                         case DisplayDocumentType.tripReport:
-                          context.pushNamed(RouteName.documentView.name,
-                              extra: doc);
+                          context.pushNamed(RouteName.documentView.name, extra: doc);
                           break;
                       }
                     },
