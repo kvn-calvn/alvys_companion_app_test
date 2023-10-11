@@ -48,9 +48,8 @@ class DocumentList extends StatelessWidget {
               children: [
                 for (var doc in documents)
                   LargeNavButton(
-                    icon: const Icon(Icons.insert_drive_file),
-                    title:
-                        "${doc.documentType}\t${DateFormat("EEE, MMM d, yyyy").formatNullDate(doc.date, "")}",
+                    icon: const Icon(Icons.description_outlined),
+                    title: docTitle(args.documentType, doc),
                     onPressed: () {
                       switch (args.documentType) {
                         case DisplayDocumentType.tripDocuments:
