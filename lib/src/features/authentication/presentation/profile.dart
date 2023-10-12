@@ -55,7 +55,7 @@ class ProfileList extends ConsumerWidget {
           ),
           LargeNavButton(
             title: userState.value!.driver!.name!,
-            padding: 24,
+            //padding: 24,
             onPressed: () {
               context.goNamed(RouteName.userDetails.name);
             },
