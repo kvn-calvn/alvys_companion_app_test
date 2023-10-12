@@ -47,63 +47,68 @@ class _ECheckStopCardState extends State<ECheckStopCard> with TickerProviderStat
 
   @override
   Widget build(BuildContext context) {
-    return AnimatedBuilder(
-        animation: colorAnimation,
-        builder: (context, child) {
-          isSelected ? animationController.forward() : animationController.reverse();
-          return Padding(
-            padding: const EdgeInsets.symmetric(vertical: 8.0),
-            child: Material(
-              elevation: isSelected ? 1 : 0,
-              color: Theme.of(context).cardColor,
-              borderRadius: BorderRadius.circular(10),
-              clipBehavior: Clip.antiAlias,
-              child: InkWell(
-                onTap: () {
-                  widget.onTap(widget.stop.stopId!);
-                },
-                child: Ink(
-                  child: Container(
-                    decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        border: Border.all(color: colorAnimation.value!, width: 2.3)),
-                    child: Padding(
-                      padding: const EdgeInsetsDirectional.fromSTEB(10, 8, 0, 8),
-                      child: Row(
-                        children: [
-                          Padding(
-                            padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 8, 0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                  color: widget.stop.stopType == 'Pickup'
-                                      ? ColorManager.pickupColor
-                                      : ColorManager.deliveryColor,
-                                  borderRadius: BorderRadius.circular(10)),
-                              width: 8,
-                              height: 35,
-                            ),
-                          ),
-                          Column(
-                            mainAxisSize: MainAxisSize.max,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                widget.stop.companyName!,
-                                style: Theme.of(context).textTheme.bodyLarge,
+    return LayoutBuilder(builder: (context, constraints) {
+      return AnimatedBuilder(
+          animation: colorAnimation,
+          builder: (context, child) {
+            isSelected ? animationController.forward() : animationController.reverse();
+            return Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0),
+              child: Material(
+                elevation: isSelected ? 1 : 0,
+                color: Theme.of(context).cardColor,
+                borderRadius: BorderRadius.circular(10),
+                clipBehavior: Clip.antiAlias,
+                child: InkWell(
+                  onTap: () {
+                    widget.onTap(widget.stop.stopId!);
+                  },
+                  child: Ink(
+                    child: Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          border: Border.all(color: colorAnimation.value!, width: 2.3)),
+                      child: Padding(
+                        padding: const EdgeInsetsDirectional.fromSTEB(10, 8, 0, 8),
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 8, 0),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    color: widget.stop.stopType == 'Pickup'
+                                        ? ColorManager.pickupColor
+                                        : ColorManager.deliveryColor,
+                                    borderRadius: BorderRadius.circular(10)),
+                                width: 8,
+                                height: 35,
                               ),
-                              Text(
-                                  "${widget.stop.address?.city ?? ''}, ${widget.stop.address?.state ?? ''} ${widget.stop.address?.zip ?? ''}",
-                                  style: Theme.of(context).textTheme.bodyMedium),
-                            ],
-                          ),
-                        ],
+                            ),
+                            ConstrainedBox(
+                              constraints: BoxConstraints(maxWidth: constraints.maxWidth * 0.8),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    widget.stop.companyName!,
+                                    style: Theme.of(context).textTheme.bodyLarge,
+                                  ),
+                                  Text(
+                                      "${widget.stop.address?.city ?? ''}, ${widget.stop.address?.state ?? ''} ${widget.stop.address?.zip ?? ''}",
+                                      style: Theme.of(context).textTheme.bodyMedium),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-          );
-        });
+            );
+          });
+    });
   }
 }

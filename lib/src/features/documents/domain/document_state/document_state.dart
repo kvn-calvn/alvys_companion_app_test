@@ -19,6 +19,7 @@ class DocumentState with _$DocumentState {
   List<AppDocument> displayPaystubs(bool shouldDisplay) =>
       shouldDisplay ? documentList.where((element) => element.date.isNullOrAfterNow).toList() : [];
   List<AppDocument> documents(DisplayDocumentType type, [bool shouldDisplay = true]) =>
-      type == DisplayDocumentType.paystubs ? displayPaystubs(shouldDisplay) : documentList;
+      (type == DisplayDocumentType.paystubs ? displayPaystubs(shouldDisplay) : documentList)
+        ..sort((a, b) => a.date.isAfterNull(b.date) ? -1 : 1);
   factory DocumentState.fromJson(Map<String, dynamic> json) => _$DocumentStateFromJson(json);
 }
