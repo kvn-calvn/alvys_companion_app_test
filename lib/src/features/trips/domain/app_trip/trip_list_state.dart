@@ -17,13 +17,14 @@ class TripListState with _$TripListState {
   }) = _TripListState;
   const TripListState._();
   List<AppTrip> get deliveredTrips {
-    var res = trips.where((element) => element.status == TripStatus.delivered).toList();
+    var res = trips.where((element) => element.status.equalsIgnoreCase(TripStatus.delivered)).toList();
     res.sort((a, b) => sortDates(a.deliveryDate, b.deliveryDate));
     return res;
   }
 
   List<AppTrip> get activeTrips {
-    var res = trips.where((element) => element.isTripActive!).toList();
+    var res =
+        trips.where((element) => element.status!.inIgnoreCase([TripStatus.inTransit, TripStatus.dispatched])).toList();
     res.sort((a, b) => sortDates(a.deliveryDate, b.deliveryDate));
     return res;
   }

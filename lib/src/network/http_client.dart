@@ -222,5 +222,9 @@ class AlvysHttpClient {
       ..properties['user'] = jsonEncode(driver)
       ..device.id = Platform.isAndroid ? androidInfo.id : iosInfo.identifierForVendor;
     await addPermissionDetails();
+    if (user != null) {
+      telemetryClient.context.properties['tenantPermissions'] =
+          Map.fromEntries(user.userTenants.map((e) => MapEntry(e.companyCode!, e.permissions)));
+    }
   }
 }

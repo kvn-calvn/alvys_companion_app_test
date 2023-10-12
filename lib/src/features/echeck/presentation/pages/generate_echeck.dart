@@ -14,12 +14,13 @@ import '../../../trips/domain/app_trip/stop.dart';
 import '../../../trips/presentation/controller/trip_page_controller.dart';
 import '../controller/echeck_page_controller.dart';
 
-Future<T?> showGenerateEcheckDialog<T>(BuildContext context, String tripId, String? stopId) => showGeneralDialog<T>(
-    context: context,
-    useRootNavigator: true,
-    pageBuilder: (c, anim1, anim2) => SafeArea(
-          child: GenerateEcheck(tripId, stopId),
-        ));
+Future<bool?> showGenerateEcheckDialog(BuildContext context, String tripId, [String? stopId]) =>
+    showGeneralDialog<bool?>(
+        context: context,
+        useRootNavigator: true,
+        pageBuilder: (c, anim1, anim2) => SafeArea(
+              child: GenerateEcheck(tripId, stopId),
+            ));
 
 class GenerateEcheck extends ConsumerStatefulWidget {
   final String tripId;

@@ -56,6 +56,7 @@ class StopCard extends ConsumerWidget {
             child: Container(
               padding: const EdgeInsetsDirectional.fromSTEB(15, 5, 5, 5),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -131,43 +132,42 @@ class StopCard extends ConsumerWidget {
 
                   //Button row
                   const SizedBox(height: 6),
-                  SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
-                      // buttonPadding: const EdgeInsetsDirectional.only(end: 12),
-                      // alignment: MainAxisAlignment.start,
-                      children: [
-                        tripState.value!.checkIn && tripState.value!.loadingStopId == stop.stopId!
-                            ? const ButtonLoading()
-                            : ButtonStyle2(
-                                onPressAction: stop.canCheckIn(canCheckInOutStopId)
-                                    ? () async => await tripNotifier.checkIn(tripId, stop.stopId!)
-                                    : null,
-                                title: stop.timeRecord?.driver?.timeIn == null ? "Check In" : "Checked In",
-                                isLoading: false,
-                              ),
-                        const SizedBox(width: 5),
-                        !tripState.value!.checkIn && tripState.value!.loadingStopId == stop.stopId!
-                            ? const ButtonLoading()
-                            : ButtonStyle2(
-                                onPressAction: stop.canCheckOut(canCheckInOutStopId)
-                                    ? () async => await tripNotifier.checkOut(tripId, stop.stopId!)
-                                    : null,
-                                title: stop.timeRecord?.driver?.timeOut == null ? "Check Out" : 'Checked Out',
-                                isLoading: false,
-                              ),
-                        const SizedBox(width: 5),
-                        ButtonStyle2(
-                          onPressAction:
-                              authState.value!.shouldShowEcheckButton(tripState.value!.getTrip(tripId).companyCode!)
-                                  ? () => showGenerateEcheckDialog(context, tripId, stop.stopId)
+                  Wrap(
+                    runAlignment: WrapAlignment.spaceBetween,
+                    runSpacing: 5,
+                    spacing: 5,
+                    alignment: WrapAlignment.spaceBetween,
+                    children: [
+                      tripState.value!.checkIn && tripState.value!.loadingStopId == stop.stopId!
+                          ? const ButtonLoading()
+                          : ButtonStyle2(
+                              onPressAction: stop.canCheckIn(canCheckInOutStopId)
+                                  ? () async => await tripNotifier.checkIn(tripId, stop.stopId!)
                                   : null,
-                          title: "E-Check",
-                          isLoading: false,
-                        ),
-                        const SizedBox(width: 5),
-                      ],
-                    ),
+                              title: stop.timeRecord?.driver?.timeIn == null ? "Check In" : "Checked In",
+                              isLoading: false,
+                            ),
+                      // const SizedBox(width: 5),
+                      !tripState.value!.checkIn && tripState.value!.loadingStopId == stop.stopId!
+                          ? const ButtonLoading()
+                          : ButtonStyle2(
+                              onPressAction: stop.canCheckOut(canCheckInOutStopId)
+                                  ? () async => await tripNotifier.checkOut(tripId, stop.stopId!)
+                                  : null,
+                              title: stop.timeRecord?.driver?.timeOut == null ? "Check Out" : 'Checked Out',
+                              isLoading: false,
+                            ),
+                      // const SizedBox(width: 5),
+                      ButtonStyle2(
+                        onPressAction:
+                            authState.value!.shouldShowEcheckButton(tripState.value!.getTrip(tripId).companyCode!)
+                                ? () => showGenerateEcheckDialog(context, tripId, stop.stopId)
+                                : null,
+                        title: "E-Check",
+                        isLoading: false,
+                      ),
+                      // const SizedBox(width: 5),
+                    ],
                   ),
                 ],
               ),

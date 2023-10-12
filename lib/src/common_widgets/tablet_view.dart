@@ -7,6 +7,7 @@ import 'package:material_symbols_icons/symbols.dart';
 import '../../custom_icons/alvys3_icons.dart';
 import '../features/authentication/presentation/profile.dart';
 import '../features/trips/presentation/pages/trips_page.dart';
+import '../utils/alvys_websocket.dart';
 
 class TabletView extends ConsumerWidget {
   final StatefulNavigationShell navShell;
@@ -34,6 +35,15 @@ class TabletLeftNav extends ConsumerStatefulWidget {
 }
 
 class _TabletLeftNavState extends ConsumerState<TabletLeftNav> {
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      //  ref.read(tutorialProvider).startTutorial(context);
+      await ref.read(websocketProvider).restartConnection();
+    });
+  }
+
   var pages = <Widget>[const LoadListPage(), const ProfilePage(), const SettingsPage()];
   @override
   Widget build(BuildContext context) {

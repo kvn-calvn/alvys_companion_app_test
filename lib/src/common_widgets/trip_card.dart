@@ -40,12 +40,14 @@ class TripCard extends ConsumerWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
                   Padding(
                     padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 5, 8),
-                    child: Row(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    child: Wrap(
+                      runAlignment: WrapAlignment.spaceBetween,
+                      alignment: WrapAlignment.spaceBetween,
+                      runSpacing: 5,
                       children: [
                         Text(
                           'Trip# ${trip.tripNumber}',
@@ -78,13 +80,16 @@ class TripCard extends ConsumerWidget {
                                 constraints: BoxConstraints(
                                   maxWidth: constraints.maxWidth * 0.75,
                                 ),
-                                child: Text(
-                                    '${trip.stops.firstOrNull?.address?.street ?? "-"} \n${trip.stops.firstOrNull?.address?.city ?? "-"}, ${trip.stops.firstOrNull?.address?.state ?? "-"} ${trip.stops.firstOrNull?.address?.zip ?? "-"}'
-                                        .replaceAll(',', ', '),
+                                child: Text(trip.stops.firstOrNull?.tripCardAddress ?? "-",
                                     style: Theme.of(context).textTheme.bodyLarge),
                               ),
-                              Text(trip.stops.firstOrNull?.formattedStopDate ?? '',
-                                  style: Theme.of(context).textTheme.bodyMedium!),
+                              ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxWidth: constraints.maxWidth * 0.8,
+                                ),
+                                child: Text(trip.stops.firstOrNull?.formattedStopDate ?? '',
+                                    style: Theme.of(context).textTheme.bodyMedium!),
+                              )
                             ],
                           ),
                         ),
@@ -115,14 +120,18 @@ class TripCard extends ConsumerWidget {
                                       maxWidth: constraints.maxWidth * 0.75,
                                     ),
                                     child: Text(
-                                      '${trip.stops.lastOrNull?.address?.street ?? "-"} \n${trip.stops.lastOrNull?.address?.city ?? "-"}, ${trip.stops.lastOrNull?.address?.state ?? "-"} ${trip.stops.lastOrNull?.address?.zip ?? "-"}'
-                                          .replaceAll(',', ', '),
+                                      trip.stops.lastOrNull?.tripCardAddress ?? "-",
                                       maxLines: 2,
                                       style: Theme.of(context).textTheme.bodyLarge!,
                                     ),
                                   )),
-                              Text(trip.stops.lastOrNull?.formattedStopDate ?? '-',
-                                  style: Theme.of(context).textTheme.bodyMedium!),
+                              ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  maxWidth: constraints.maxWidth * 0.8,
+                                ),
+                                child: Text(trip.stops.lastOrNull?.formattedStopDate ?? '-',
+                                    style: Theme.of(context).textTheme.bodyMedium!),
+                              ),
                             ],
                           ),
                         ),
@@ -131,51 +140,47 @@ class TripCard extends ConsumerWidget {
                   ),
                   Padding(
                     padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 5, 8),
-                    child: SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          TripCardDetail(
-                            title: 'Deadhead',
-                            details: trip.emptyMiles == null
-                                ? '-'
-                                : '${intl.NumberFormat.decimalPattern().format(trip.emptyMiles)} mi',
+                    child: Wrap(
+                      runAlignment: WrapAlignment.spaceBetween,
+                      alignment: WrapAlignment.spaceBetween,
+                      children: [
+                        TripCardDetail(
+                          title: 'd/h',
+                          details: trip.emptyMiles == null
+                              ? '-'
+                              : '${intl.NumberFormat.decimalPattern().format(trip.emptyMiles)} mi',
+                        ),
+                        const SizedBox(
+                          height: 32,
+                          child: VerticalDivider(
+                            width: 10,
                           ),
-                          const SizedBox(
-                            height: 32,
-                            child: VerticalDivider(
-                              width: 10,
-                            ),
+                        ),
+                        TripCardDetail(
+                          title: 'trip',
+                          details: '${intl.NumberFormat.decimalPattern().format(trip.totalMiles)} mi',
+                        ),
+                        const SizedBox(
+                          height: 32,
+                          child: VerticalDivider(
+                            width: 10,
                           ),
-                          TripCardDetail(
-                            title: 'trip',
-                            details: '${intl.NumberFormat.decimalPattern().format(trip.totalMiles)} mi',
+                        ),
+                        TripCardDetail(
+                          title: 'stops',
+                          details: '${trip.stopCount}',
+                        ),
+                        const SizedBox(
+                          height: 32,
+                          child: VerticalDivider(
+                            width: 10,
                           ),
-                          const SizedBox(
-                            height: 32,
-                            child: VerticalDivider(
-                              width: 10,
-                            ),
-                          ),
-                          TripCardDetail(
-                            title: 'stops',
-                            details: '${trip.stopCount}',
-                          ),
-                          const SizedBox(
-                            height: 32,
-                            child: VerticalDivider(
-                              width: 10,
-                            ),
-                          ),
-                          TripCardDetail(
-                            title: 'weight',
-                            details: '${intl.NumberFormat.decimalPattern().format(trip.totalWeight ?? 0)} lbs',
-                          ),
-                        ],
-                      ),
+                        ),
+                        TripCardDetail(
+                          title: 'Wgt.',
+                          details: '${intl.NumberFormat.decimalPattern().format(trip.totalWeight ?? 0)} lbs',
+                        ),
+                      ],
                     ),
                   ),
                 ],
