@@ -1,9 +1,9 @@
 import 'dart:async';
 
+import 'package:alvys3/src/common_widgets/snack_bar.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -20,7 +20,9 @@ import '../../../../utils/magic_strings.dart';
 import '../../../../utils/permission_helper.dart';
 import '../../../../utils/platform_channel.dart';
 import '../../../../utils/provider_args_saver.dart';
+import '../../../../utils/tablet_utils.dart';
 import '../../../authentication/presentation/auth_provider_controller.dart';
+import '../../../echeck/presentation/pages/generate_echeck.dart';
 import '../../../tutorial/tutorial_controller.dart';
 import '../../data/repositories/trip_repository.dart';
 import '../../domain/app_trip/app_trip.dart';
@@ -40,7 +42,6 @@ class TripController extends _$TripController implements IAppErrorHandler {
   String? tripId;
   @override
   FutureOr<TripListState> build() async {
-    print('rebuilt');
     tripRepo = ref.read(tripRepoProvider);
     auth = ref.read(authProvider.notifier);
     tutorial = ref.read(tutorialProvider);
@@ -251,6 +252,9 @@ class TripController extends _$TripController implements IAppErrorHandler {
   void addEcheck(String tripId, ECheck echeck) {
     var trip = getTrip(tripId);
     if (trip == null) return;
+    var existingCheck =
+        trip.eChecks.firstWhereOrNull((element) => element.expressCheckNumber == echeck.expressCheckNumber);
+    if (existingCheck != null) return;
     trip = trip.copyWith(eChecks: [...trip.eChecks, echeck]);
     updateTrip(trip);
   }
@@ -260,8 +264,19 @@ class TripController extends _$TripController implements IAppErrorHandler {
     if (trip == null) return;
     var currentECheckIndex = trip.eChecks.indexWhere((element) => element.eCheckId == echeck.eCheckId);
     if (currentECheckIndex < 0) return;
-    trip.eChecks[currentECheckIndex] = echeck;
+    var updatedECheckList = List<ECheck>.from(trip.eChecks);
+    updatedECheckList[currentECheckIndex] = echeck;
+    trip = trip.copyWith(eChecks: updatedECheckList);
     updateTrip(trip);
+  }
+
+  Future<void> generateEcheckDialog(BuildContext context, String tripId, String stopId) async {
+    var res = await showGenerateEcheckDialog(context, tripId, stopId);
+    if (res == true) {
+      SnackBar snackBar = SnackBarWrapper.getSnackBar('E-Check generated successfully');
+      if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      TabletUtils.instance.detailsController.animateTo(1);
+    }
   }
 
   @override

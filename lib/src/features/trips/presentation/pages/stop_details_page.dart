@@ -285,7 +285,7 @@ class ItemsWidget extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
                       item.description ?? '',
@@ -294,8 +294,9 @@ class ItemsWidget extends StatelessWidget {
                     const SizedBox(
                       height: 10,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    Wrap(
+                      runAlignment: WrapAlignment.spaceBetween,
+                      alignment: WrapAlignment.spaceBetween,
                       children: [
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

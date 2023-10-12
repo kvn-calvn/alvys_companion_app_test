@@ -51,7 +51,7 @@ class EditProfile extends ConsumerWidget {
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                    Text('Auto-complete Enabled', style: Theme.of(context).textTheme.bodySmall),
+                                    Text('Auto-complete', style: Theme.of(context).textTheme.bodySmall),
                                     Checkbox.adaptive(
                                         visualDensity: VisualDensity.compact,
                                         value: editState.value!.autocompleteEnabled,

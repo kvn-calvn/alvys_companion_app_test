@@ -41,6 +41,10 @@ class Stop with _$Stop {
   String get formattedStopDate => stopDate == null
       ? '-'
       : DateFormat(appointment.isNullOrEmpty ? ' MMM d, yyyy' : 'MMM d, yyyy @ HH:mm').format(stopDate!);
+  String get tripCardAddress {
+    if (address == null) return "-";
+    return '${address!.street.isNotNullOrEmpty ? address!.street : "-"} \n${address!.city.isNotNullOrEmpty ? address!.city : "-"}, ${address!.state.isNotNullOrEmpty ? address!.state : "-"} ${address!.zip.isNotNullOrEmpty ? address!.zip : ""}';
+  }
 }
 
 @freezed

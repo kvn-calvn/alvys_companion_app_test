@@ -1,3 +1,5 @@
+import 'package:alvys3/src/common_widgets/shimmers/shimmer_widget.dart';
+import 'package:alvys3/src/common_widgets/snack_bar.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -34,31 +36,11 @@ class EcheckCard extends ConsumerWidget {
         switch (value) {
           case EcheckOption.copy:
             Clipboard.setData(ClipboardData(text: eCheck.expressCheckNumber!.trim()));
-            SnackBar snackBar = const SnackBar(
-              padding: EdgeInsets.only(top: 10),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 12),
-                    child: Text('E-Check number copied'),
-                  ),
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Divider(
-                    height: 0,
-                    thickness: 1.5,
-                  )
-                ],
-              ),
-              duration: Duration(milliseconds: 2000),
-            );
+            SnackBar snackBar = SnackBarWrapper.getSnackBar('E-Check number copied');
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
             break;
           case EcheckOption.cancel:
-            cancelECheck(eCheck.eCheckId!);
+            cancelECheck(eCheck.expressCheckNumber!);
             break;
         }
       },
@@ -75,17 +57,20 @@ class EcheckCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var state = ref.watch(echeckPageControllerProvider.call(null));
     var authState = ref.watch(authProvider);
-    return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 0, 8),
-      child: Material(
-        key: index == 0 && tripId == testTrip.id! ? ref.read(tutorialProvider).echeckCard : null,
-        elevation: 0,
-        color: Theme.of(context).cardColor,
-        borderRadius: BorderRadius.circular(10),
-        clipBehavior: Clip.antiAlias,
-        child: state.value!.loadingEcheckNumber == eCheck.expressCheckNumber
-            ? const Center(child: CircularProgressIndicator())
-            : InkWell(
+
+    return LayoutBuilder(builder: (context, constraints) {
+      return Padding(
+        padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 0, 8),
+        child: Material(
+          key: index == 0 && tripId == testTrip.id! ? ref.read(tutorialProvider).echeckCard : null,
+          elevation: 0,
+          color: Theme.of(context).cardColor,
+          borderRadius: BorderRadius.circular(10),
+          clipBehavior: Clip.antiAlias,
+          child: Stack(
+            alignment: Alignment.center,
+            children: [
+              InkWell(
                 onLongPress: () {
                   showEcheckMenu(context, authState.value!.shouldShowCancelEcheckButton(companyCode, eCheck.userId),
                       state.value!.loadingEcheckNumber, eCheck);
@@ -95,41 +80,48 @@ class EcheckCard extends ConsumerWidget {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Padding(
-                            padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 4),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.max,
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  eCheck.expressCheckNumber!.trim(),
-                                  style: GoogleFonts.oxygenMono(
-                                    fontWeight: FontWeight.w800,
-                                    textStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
-                                          letterSpacing: 2,
-                                          decoration:
-                                              eCheck.isCanceled ? TextDecoration.lineThrough : TextDecoration.none,
-                                          decorationThickness: 2,
-                                        ),
-                                  ),
-                                )
-                              ],
+                      ConstrainedBox(
+                        constraints: BoxConstraints(maxWidth: constraints.maxWidth * 0.8),
+                        child: Column(
+                          mainAxisSize: MainAxisSize.max,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 4),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                children: [
+                                  ConstrainedBox(
+                                    constraints: BoxConstraints(maxWidth: constraints.maxWidth * 0.8),
+                                    child: Text(
+                                      eCheck.expressCheckNumber!.trim(),
+                                      style: GoogleFonts.oxygenMono(
+                                        fontWeight: FontWeight.w800,
+                                        textStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
+                                              letterSpacing: 2,
+                                              decoration:
+                                                  eCheck.isCanceled ? TextDecoration.lineThrough : TextDecoration.none,
+                                              decorationThickness: 2,
+                                            ),
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
                             ),
-                          ),
-                          const Text(
-                            'Funds Available',
-                          ),
-                          Text('\$${eCheck.amount?.toStringAsFixed(2)}', style: Theme.of(context).textTheme.bodyLarge),
-                          Padding(
-                            padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
-                            child: Text(eCheck.reason!.trim(), style: Theme.of(context).textTheme.bodySmall),
-                          ),
-                        ],
+                            const Text(
+                              'Funds Available',
+                            ),
+                            Text('\$${eCheck.amount?.toStringAsFixed(2)}',
+                                style: Theme.of(context).textTheme.bodyLarge),
+                            Padding(
+                              padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
+                              child: Text(eCheck.reason!.trim(), style: Theme.of(context).textTheme.bodySmall),
+                            ),
+                          ],
+                        ),
                       ),
                       IconButton(
                         constraints: const BoxConstraints(),
@@ -147,7 +139,20 @@ class EcheckCard extends ConsumerWidget {
                   ),
                 ),
               ),
-      ),
-    );
+              if (state.value!.loadingEcheckNumber == eCheck.expressCheckNumber) ...[
+                Positioned.fill(
+                    child: AlvysSingleChildShimmer(
+                        child: DecoratedBox(
+                  decoration: BoxDecoration(color: Theme.of(context).cardColor.withOpacity(0.7)),
+                ))),
+                const Positioned.fill(
+                  child: Center(child: Text('Canceling...')),
+                ),
+              ]
+            ],
+          ),
+        ),
+      );
+    });
   }
 }

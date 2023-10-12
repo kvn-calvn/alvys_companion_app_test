@@ -229,9 +229,9 @@ class TripDetails extends ConsumerWidget {
                               if (trip.temperature != null) ...[
                                 Chip(
                                   label: Text(
-                                    '${trip.temperature!.toStringAsFixed(1)} °f',
+                                    '${trip.temperature!.toStringAsFixed(1)} °f ${(trip.continuous ?? false) ? '(cont.)' : ''}',
                                     style:
-                                        Theme.of(context).textTheme.labelLarge!,
+                                        Theme.of(context).textTheme.bodyMedium!,
                                   ),
                                 ),
                               ],

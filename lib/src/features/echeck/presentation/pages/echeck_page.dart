@@ -33,8 +33,7 @@ class _EcheckPageState extends ConsumerState<EcheckPage> {
     FirebaseAnalytics.instance.setCurrentScreen(screenName: "echecks_page");
   }
 
-  EcheckPageController get notifier =>
-      ref.read(echeckPageControllerProvider.call(null).notifier);
+  EcheckPageController get notifier => ref.read(echeckPageControllerProvider.call(null).notifier);
   @override
   Widget build(BuildContext context) {
     var authState = ref.watch(authProvider);
@@ -43,8 +42,7 @@ class _EcheckPageState extends ConsumerState<EcheckPage> {
 
     var trip = state.value!.tryGetTrip(widget.tripId);
     if (trip == null) {
-      return const EmptyView(
-          title: 'Trip Not found', description: 'Return to the previous page');
+      return const EmptyView(title: 'Trip Not found', description: 'Return to the previous page');
     }
     return Stack(
       children: [
@@ -63,28 +61,21 @@ class _EcheckPageState extends ConsumerState<EcheckPage> {
           ),
         Scaffold(
           floatingActionButtonAnimator: AlvysFloatingActionButtonAnimator(),
-          floatingActionButton: authState.value!
-                      .shouldShowEcheckButton(trip.companyCode!) ||
-                  trip.id == testTrip.id!
+          floatingActionButton: authState.value!.shouldShowEcheckButton(trip.companyCode!) || trip.id == testTrip.id!
               ? FloatingActionButton(
                   onPressed: () {
-                    showGenerateEcheckDialog(context, widget.tripId, null);
+                    showGenerateEcheckDialog(context, widget.tripId);
                   },
-                  backgroundColor:
-                      ColorManager.primary(Theme.of(context).brightness),
+                  backgroundColor: ColorManager.primary(Theme.of(context).brightness),
                   child: const Icon(Icons.attach_money, color: Colors.white),
                 )
               : null,
           body: RefreshIndicator(
             onRefresh: () async {
-              await ref
-                  .read(tripControllerProvider.notifier)
-                  .refreshCurrentTrip(widget.tripId);
+              await ref.read(tripControllerProvider.notifier).refreshCurrentTrip(widget.tripId);
             },
             child: trip.eChecks.isNullOrEmpty
-                ? const EmptyView(
-                    title: 'No E-Checks',
-                    description: 'Generated E-Checks will appear here.')
+                ? const EmptyView(title: 'No E-Checks', description: 'Generated E-Checks will appear here.')
                 : ListView.builder(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
                     itemCount: trip.eChecks.length,
@@ -92,8 +83,7 @@ class _EcheckPageState extends ConsumerState<EcheckPage> {
                       index: index,
                       eCheck: trip.eChecks[index],
                       companyCode: trip.companyCode!,
-                      cancelECheck: (echeckNumber) async => await notifier
-                          .cancelEcheck(widget.tripId, echeckNumber),
+                      cancelECheck: (echeckNumber) async => await notifier.cancelEcheck(widget.tripId, echeckNumber),
                       tripId: widget.tripId,
                     ),
                   ),
