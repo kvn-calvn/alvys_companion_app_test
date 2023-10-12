@@ -50,6 +50,10 @@ class DocumentList extends StatelessWidget {
                   LargeNavButton(
                     icon: const Icon(Icons.description_outlined),
                     title: docTitle(args.documentType, doc),
+                    subtitle: args.documentType ==
+                            DisplayDocumentType.personalDocuments
+                        ? DateFormat('MMM d, yyyy').formatNullDate(doc.date, "")
+                        : null,
                     onPressed: () {
                       switch (args.documentType) {
                         case DisplayDocumentType.tripDocuments:

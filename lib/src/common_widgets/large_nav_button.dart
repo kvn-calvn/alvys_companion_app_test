@@ -1,11 +1,19 @@
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 
 class LargeNavButton extends StatelessWidget {
   const LargeNavButton(
-      {Key? key, required this.title, required this.onPressed, this.suffix, this.icon, this.padding = 16})
+      {Key? key,
+      required this.title,
+      required this.onPressed,
+      this.subtitle,
+      this.suffix,
+      this.icon,
+      this.padding = 16})
       : super(key: key);
 
   final String title;
+  final String? subtitle;
   final Icon? icon;
   final double padding;
   final Widget? suffix;
@@ -25,7 +33,8 @@ class LargeNavButton extends StatelessWidget {
             child: InkWell(
               onTap: onPressed,
               child: Padding(
-                padding: EdgeInsets.symmetric(vertical: padding, horizontal: 12),
+                padding:
+                    EdgeInsets.symmetric(vertical: padding, horizontal: 12),
                 child: Row(
                   children: [
                     if (icon != null) icon!,
@@ -33,8 +42,20 @@ class LargeNavButton extends StatelessWidget {
                       width: 5,
                     ),
                     ConstrainedBox(
-                        constraints: BoxConstraints(maxWidth: constraints.maxWidth * 0.8),
-                        child: Text(title, style: Theme.of(context).textTheme.bodyLarge)),
+                      constraints:
+                          BoxConstraints(maxWidth: constraints.maxWidth * 0.8),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(title,
+                              style: Theme.of(context).textTheme.bodyLarge),
+                          if (subtitle.isNotNullOrEmpty) ...[
+                            Text(subtitle!,
+                                style: Theme.of(context).textTheme.bodyMedium)
+                          ]
+                        ],
+                      ),
+                    ),
                     const Spacer(),
                     const Icon(
                       Icons.arrow_forward_ios,

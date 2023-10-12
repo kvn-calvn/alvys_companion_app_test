@@ -231,7 +231,7 @@ class TripDetails extends ConsumerWidget {
                                   label: Text(
                                     '${trip.temperature!.toStringAsFixed(1)} °f ${(trip.continuous ?? false) ? '(cont.)' : ''}',
                                     style:
-                                        Theme.of(context).textTheme.bodyMedium!,
+                                        Theme.of(context).textTheme.bodyLarge!,
                                   ),
                                 ),
                               ],
