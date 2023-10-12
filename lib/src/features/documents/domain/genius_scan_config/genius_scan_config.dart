@@ -1,5 +1,6 @@
-import '../../../../utils/extensions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+import '../../../../utils/extensions.dart';
 
 part 'genius_scan_config.freezed.dart';
 part 'genius_scan_config.g.dart';

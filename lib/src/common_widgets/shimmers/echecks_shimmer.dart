@@ -1,5 +1,6 @@
-import 'shimmer_widget.dart';
 import 'package:flutter/material.dart';
+
+import 'shimmer_widget.dart';
 
 class EchecksShimmer extends StatelessWidget {
   const EchecksShimmer({super.key});

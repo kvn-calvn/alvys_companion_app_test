@@ -1,4 +1,4 @@
-import 'package:alvys3/src/common_widgets/app_dialog.dart';
+import '../../common_widgets/app_dialog.dart';
 
 import '../../utils/global_error_handler.dart';
 import 'package:flutter/material.dart';

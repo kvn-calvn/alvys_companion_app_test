@@ -1,4 +1,3 @@
-import '../features/settings/presentation/settings_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -6,6 +5,7 @@ import 'package:material_symbols_icons/symbols.dart';
 
 import '../../custom_icons/alvys3_icons.dart';
 import '../features/authentication/presentation/profile.dart';
+import '../features/settings/presentation/settings_page.dart';
 import '../features/trips/presentation/pages/trips_page.dart';
 import '../utils/alvys_websocket.dart';
 

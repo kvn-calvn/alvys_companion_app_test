@@ -6,8 +6,6 @@ import '../../../tutorial/tutorial_controller.dart';
 import '../../../../utils/dummy_data.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 
-import '../../../authentication/presentation/auth_provider_controller.dart';
-
 import '../controller/echeck_page_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -36,7 +34,6 @@ class _EcheckPageState extends ConsumerState<EcheckPage> {
   EcheckPageController get notifier => ref.read(echeckPageControllerProvider.call(null).notifier);
   @override
   Widget build(BuildContext context) {
-    var authState = ref.watch(authProvider);
     var state = ref.watch(tripControllerProvider);
     if (state.isLoading) return const EchecksShimmer();
 

@@ -1,4 +1,4 @@
-import 'package:alvys3/src/network/firebase_remote_config_service.dart';
+import '../../../../network/firebase_remote_config_service.dart';
 
 import '../../../../network/http_client.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';

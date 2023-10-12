@@ -1,15 +1,15 @@
 import 'dart:async';
 import 'dart:io';
 
-import '../features/trips/presentation/controller/trip_page_controller.dart';
-import '../utils/exceptions.dart';
-import '../utils/magic_strings.dart';
-
-import '../utils/global_error_handler.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
+
+import '../features/trips/presentation/controller/trip_page_controller.dart';
+import '../utils/exceptions.dart';
+import '../utils/global_error_handler.dart';
+import '../utils/magic_strings.dart';
 
 class NetworkNotifier extends Notifier<bool> {
   Map<String, IAppErrorHandler> get refreshControllers => {

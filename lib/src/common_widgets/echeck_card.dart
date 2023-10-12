@@ -1,5 +1,5 @@
-import 'package:alvys3/src/common_widgets/shimmers/shimmer_widget.dart';
-import 'package:alvys3/src/common_widgets/snack_bar.dart';
+import 'shimmers/shimmer_widget.dart';
+import 'snack_bar.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

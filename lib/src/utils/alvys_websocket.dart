@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:alvys3/src/features/authentication/domain/models/user_details/user_details.dart';
+import '../features/authentication/domain/models/user_details/user_details.dart';
 
 import 'provider_args_saver.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';

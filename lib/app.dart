@@ -1,9 +1,8 @@
-import 'src/features/updater/updater_controller.dart';
-
-import 'src/network/network_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'src/features/updater/updater_controller.dart';
+import 'src/network/network_info.dart';
 import 'src/routing/app_router.dart';
 import 'src/utils/app_theme.dart';
 import 'src/utils/theme_handler.dart';

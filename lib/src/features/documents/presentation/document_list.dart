@@ -40,9 +40,7 @@ class DocumentList extends StatelessWidget {
     return RefreshIndicator(
       onRefresh: refreshFunction,
       child: documents.isEmpty
-          ? EmptyView(
-              title: emptyMessage,
-              description: 'Uploaded documents will appear here.')
+          ? EmptyView(title: emptyMessage, description: 'Uploaded documents will appear here.')
           : ListView(
               //padding: const EdgeInsets.only(top: 200.0),
               children: [
@@ -50,24 +48,19 @@ class DocumentList extends StatelessWidget {
                   LargeNavButton(
                     icon: const Icon(Icons.description_outlined),
                     title: docTitle(args.documentType, doc),
-                    subtitle: args.documentType ==
-                            DisplayDocumentType.personalDocuments
-                        ? DateFormat('MMM d, yyyy').formatNullDate(doc.date, "")
+                    subtitle: args.documentType == DisplayDocumentType.personalDocuments
+                        ? DateFormat('MMM d, yyyy @ HH:mm').formatNullDate(doc.date, "")
                         : null,
                     onPressed: () {
                       switch (args.documentType) {
                         case DisplayDocumentType.tripDocuments:
                           context.pushNamed(RouteName.tripDocumentView.name,
-                              extra: doc,
-                              pathParameters: {
-                                ParamType.tripId.name: args.tripId!
-                              });
+                              extra: doc, pathParameters: {ParamType.tripId.name: args.tripId!});
                           break;
                         case DisplayDocumentType.personalDocuments:
                         case DisplayDocumentType.paystubs:
                         case DisplayDocumentType.tripReport:
-                          context.pushNamed(RouteName.documentView.name,
-                              extra: doc);
+                          context.pushNamed(RouteName.documentView.name, extra: doc);
                           break;
                       }
                     },

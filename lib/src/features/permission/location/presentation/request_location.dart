@@ -1,14 +1,15 @@
 import 'dart:io';
+
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import 'package:permission_handler/permission_handler.dart';
+
 import '../../../../../custom_icons/alvys3_icons.dart';
 import '../../../../../flavor_config.dart';
 import '../../../../common_widgets/buttons.dart';
 import '../../../../constants/color.dart';
 import '../../../../utils/magic_strings.dart';
 import '../../../../utils/platform_channel.dart';
-import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
-import 'package:permission_handler/permission_handler.dart';
-
 import '../../../../utils/tablet_utils.dart';
 
 class RequestLocation extends StatelessWidget {

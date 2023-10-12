@@ -1,5 +1,6 @@
-import '../driver_user/driver_user.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+
+import '../driver_user/driver_user.dart';
 
 part 'update_user_dto.freezed.dart';
 part 'update_user_dto.g.dart';

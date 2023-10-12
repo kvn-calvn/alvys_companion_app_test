@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../constants/color.dart';
-import '../features/authentication/presentation/auth_provider_controller.dart';
 import '../features/echeck/presentation/pages/generate_echeck.dart';
 import '../features/trips/domain/app_trip/stop.dart';
 import '../features/trips/presentation/controller/trip_page_controller.dart';
@@ -34,7 +33,6 @@ class StopCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var tripNotifier = ref.read(tripControllerProvider.notifier);
     var tripState = ref.read(tripControllerProvider);
-    var authState = ref.watch(authProvider);
     return LayoutBuilder(builder: (context, constraints) {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),

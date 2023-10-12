@@ -31,11 +31,9 @@ class TripDocuments extends ConsumerWidget {
     if (state.isLoading) return const DocumentsShimmer();
 
     if (trip == null) {
-      return const EmptyView(
-          title: 'Trip Not found', description: 'Return to the previous page');
+      return const EmptyView(title: 'Trip Not found', description: 'Return to the previous page');
     }
-    var attachments = trip.getAttachments(
-        authState.value!.shouldShowCustomerRateConfirmations(trip.companyCode!),
+    var attachments = trip.getAttachments(authState.value!.shouldShowCustomerRateConfirmations(trip.companyCode!),
         authState.value!.shouldShowCarrierConfirmations(trip.companyCode!));
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -57,9 +55,7 @@ class TripDocuments extends ConsumerWidget {
         child: RefreshIndicator(
           onRefresh: () => notifier.refreshCurrentTrip(tripId),
           child: attachments.isEmpty
-              ? const EmptyView(
-                  title: 'No Load Documents',
-                  description: 'Uploaded documents will appear here.')
+              ? const EmptyView(title: 'No Load Documents', description: 'Uploaded documents will appear here.')
               : ListView.builder(
                   itemCount: attachments.length,
                   padding: const EdgeInsets.only(top: 16.0),
@@ -67,15 +63,11 @@ class TripDocuments extends ConsumerWidget {
                     var doc = state.value!.getTrip(tripId).attachments[index];
                     return LargeNavButton(
                         title: doc.documentType,
-                        subtitle: DateFormat('MMM d, yyyy')
-                            .formatNullDate(doc.date, ""),
-                        key: index == 0 && tripId == testTrip.id!
-                            ? ref.read(tutorialProvider).documentCard
-                            : null,
+                        subtitle: DateFormat('MMM d, yyyy @ HH:mm').formatNullDate(doc.date, ""),
+                        key: index == 0 && tripId == testTrip.id! ? ref.read(tutorialProvider).documentCard : null,
                         onPressed: () {
                           context.pushNamed(RouteName.tripDocumentView.name,
-                              extra: doc,
-                              pathParameters: {ParamType.tripId.name: tripId});
+                              extra: doc, pathParameters: {ParamType.tripId.name: tripId});
                         });
                   },
                 ),
