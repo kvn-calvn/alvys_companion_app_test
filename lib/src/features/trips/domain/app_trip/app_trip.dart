@@ -1,3 +1,4 @@
+import 'package:alvys3/src/utils/extensions.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -89,7 +90,8 @@ class AppTrip with _$AppTrip {
           }
         })
         .removeNulls
-        .toList();
+        .toList()
+      ..sort((a, b) => a.date.isAfterNull(b.date) ? -1 : 1);
   }
 
   List<MapEntry<String, LatLng>> get stopLocations => stops

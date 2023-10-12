@@ -1,3 +1,4 @@
+import 'package:alvys3/src/utils/extensions.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:intl/intl.dart';
 
@@ -60,7 +61,7 @@ class TripDocuments extends ConsumerWidget {
                   itemCount: attachments.length,
                   padding: const EdgeInsets.only(top: 16.0),
                   itemBuilder: (context, index) {
-                    var doc = state.value!.getTrip(tripId).attachments[index];
+                    var doc = attachments[index];
                     return LargeNavButton(
                         title: doc.documentType,
                         subtitle: DateFormat('MMM d, yyyy @ HH:mm').formatNullDate(doc.date, ""),
