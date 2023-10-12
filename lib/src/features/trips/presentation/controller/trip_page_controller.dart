@@ -270,6 +270,14 @@ class TripController extends _$TripController implements IAppErrorHandler {
     updateTrip(trip);
   }
 
+  bool shouldShowEcheckButton(String? tripId) {
+    if (tripId == null) return false;
+    var currentTrip = state.value!.tryGetTrip(tripId);
+    if (currentTrip == null) return false;
+    return auth.state.value!.shouldShowEcheckButton(currentTrip.companyCode!) &&
+        !currentTrip.id.inIgnoreCase(state.value!.processingTrips.map((e) => e.id!));
+  }
+
   Future<void> generateEcheckDialog(BuildContext context, String tripId, String stopId) async {
     var res = await showGenerateEcheckDialog(context, tripId, stopId);
     if (res == true) {

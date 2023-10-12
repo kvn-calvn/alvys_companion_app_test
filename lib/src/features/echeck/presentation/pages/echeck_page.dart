@@ -61,15 +61,16 @@ class _EcheckPageState extends ConsumerState<EcheckPage> {
           ),
         Scaffold(
           floatingActionButtonAnimator: AlvysFloatingActionButtonAnimator(),
-          floatingActionButton: authState.value!.shouldShowEcheckButton(trip.companyCode!) || trip.id == testTrip.id!
-              ? FloatingActionButton(
-                  onPressed: () {
-                    showGenerateEcheckDialog(context, widget.tripId);
-                  },
-                  backgroundColor: ColorManager.primary(Theme.of(context).brightness),
-                  child: const Icon(Icons.attach_money, color: Colors.white),
-                )
-              : null,
+          floatingActionButton:
+              ref.watch(tripControllerProvider.notifier).shouldShowEcheckButton(trip.id) || trip.id == testTrip.id!
+                  ? FloatingActionButton(
+                      onPressed: () {
+                        showGenerateEcheckDialog(context, widget.tripId);
+                      },
+                      backgroundColor: ColorManager.primary(Theme.of(context).brightness),
+                      child: const Icon(Icons.attach_money, color: Colors.white),
+                    )
+                  : null,
           body: RefreshIndicator(
             onRefresh: () async {
               await ref.read(tripControllerProvider.notifier).refreshCurrentTrip(widget.tripId);
