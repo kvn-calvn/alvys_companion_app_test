@@ -121,6 +121,9 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
     if (context.mounted) {
       Navigator.of(context, rootNavigator: true).pop();
       Navigator.of(context).pop();
+      if (arg.documentType == DisplayDocumentType.tripDocuments) {
+        ref.read(tripControllerProvider.notifier).refreshCurrentTrip(arg.tripId!);
+      }
     }
   }
 

@@ -4,7 +4,7 @@ class UTCDateConverter implements JsonConverter<DateTime, String> {
   const UTCDateConverter();
   @override
   DateTime fromJson(String json) {
-    return DateTime.parse('${json}z');
+    return json.toLowerCase().contains('z') ? DateTime.parse(json) : DateTime.parse('${json}z');
   }
 
   @override

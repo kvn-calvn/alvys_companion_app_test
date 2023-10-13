@@ -63,7 +63,8 @@ class _DocumentsPageState extends ConsumerState<DocumentsPage> {
           child: docsState.isLoading
               ? const DocumentsShimmer()
               : DocumentList(
-                  documents: docsState.value!.documents(widget.args.documentType, authState.value!.canViewPaystubs),
+                  documents:
+                      docsState.value?.documents(widget.args.documentType, authState.value!.canViewPaystubs) ?? [],
                   refreshFunction: () async {
                     await ref.read(documentsProvider.call(widget.args).notifier).getDocuments();
                   },

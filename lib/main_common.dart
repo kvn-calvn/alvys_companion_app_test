@@ -63,6 +63,7 @@ Future<void> mainCommon() async {
       try {
         driverUser = DriverUser.fromJson(jsonDecode(driverData));
       } catch (e) {
+        pref.remove(SharedPreferencesKey.driverData.name);
         driverUser = null;
       }
     }
