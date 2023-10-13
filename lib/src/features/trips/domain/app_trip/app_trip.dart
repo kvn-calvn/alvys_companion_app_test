@@ -72,8 +72,10 @@ class AppTrip with _$AppTrip {
       .firstWhereOrNull(
           (element) => element.timeRecord?.driver?.timeIn == null || element.timeRecord?.driver?.timeOut == null)
       ?.stopId;
-  String? driverPayable(String? driverId) =>
-      payableDriverAmounts.firstWhereOrNull((element) => element.id == driverId)?.amount?.toStringAsFixed(2);
+  String? driverPayable(String? driverId) => payableDriverAmounts
+      .firstWhereOrNull((element) => element.id?.toLowerCase() == driverId?.toLowerCase())
+      ?.amount
+      ?.toStringAsFixed(2);
   List<AppDocument> getAttachments(bool canViewCustomerConfirmation, bool canViewCarrierConfirmation) {
     return attachments
         .map((e) {

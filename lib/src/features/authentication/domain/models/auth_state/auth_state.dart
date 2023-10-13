@@ -26,27 +26,29 @@ class AuthState with _$AuthState {
   factory AuthState.fromJson(Map<String, dynamic> json) => _$AuthStateFromJson(json);
 
   bool shouldShowEcheckButton(String companyCode) =>
-      (tryGetUserTenant(companyCode)?.permissions.contains(UserPermissions.generateEcheck) ?? false);
+      (tryGetUserTenant(companyCode)?.permissions.containsIgnoreCase(UserPermissions.generateEcheck) ?? false);
 
   bool shouldShowCancelEcheckButton(String companyCode, String? echeckUserId) {
-    return (tryGetUserTenant(companyCode)?.permissions.contains(UserPermissions.cancelEcheck) ?? false) &&
+    return (tryGetUserTenant(companyCode)?.permissions.containsIgnoreCase(UserPermissions.cancelEcheck) ?? false) &&
         driver?.id == (echeckUserId ?? "");
   }
 
   bool shouldShowOOPRate(String companyCode) =>
-      tryGetUserTenant(companyCode)?.permissions.contains(UserPermissions.viewOOPRate) ?? false;
+      tryGetUserTenant(companyCode)?.permissions.containsIgnoreCase(UserPermissions.viewOOPRate) ?? false;
 
   bool shouldShowPayableAmount(String companyCode) =>
-      tryGetUserTenant(companyCode)?.permissions.contains(UserPermissions.viewPayableAmount) ?? false;
+      tryGetUserTenant(companyCode)?.permissions.containsIgnoreCase(UserPermissions.viewPayableAmount) ?? false;
 
   bool shouldShowCarrierConfirmations(String companyCode) =>
-      tryGetUserTenant(companyCode)?.permissions.contains(UserPermissions.viewCarrierRateConfirmation) ?? false;
+      tryGetUserTenant(companyCode)?.permissions.containsIgnoreCase(UserPermissions.viewCarrierRateConfirmation) ??
+      false;
 
   bool shouldShowCustomerRateConfirmations(String companyCode) =>
-      tryGetUserTenant(companyCode)?.permissions.contains(UserPermissions.viewCustomerRateConfirmation) ?? false;
+      tryGetUserTenant(companyCode)?.permissions.containsIgnoreCase(UserPermissions.viewCustomerRateConfirmation) ??
+      false;
 
   bool get canViewPaystubs => driver!.userTenants
       .where((element) => element.companyOwnedAsset ?? false)
       .expand((element) => element.permissions)
-      .contains(UserPermissions.viewPaystubs);
+      .containsIgnoreCase(UserPermissions.viewPaystubs);
 }
