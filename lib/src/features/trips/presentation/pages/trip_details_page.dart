@@ -216,6 +216,24 @@ class TripDetails extends ConsumerWidget {
                                   ),
                                 ),
                               ],
+                              if (trip.temperature != null) ...[
+                                Chip(
+                                  label: Text(
+                                    '${trip.temperature!.toStringAsFixed(1)} °f ${(trip.continuous ?? false) ? '(cont.)' : ''}',
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge!,
+                                  ),
+                                ),
+                              ],
+                              if (trip.trailerNum.isNotNullOrEmpty) ...[
+                                Chip(
+                                  label: Text(
+                                    'Trailer ${trip.trailerNum}',
+                                    style:
+                                        Theme.of(context).textTheme.labelLarge!,
+                                  ),
+                                ),
+                              ],
                               if (trip.totalWeight != null &&
                                   trip.totalWeight != 0) ...[
                                 Chip(
@@ -226,28 +244,10 @@ class TripDetails extends ConsumerWidget {
                                   ),
                                 ),
                               ],
-                              if (trip.temperature != null) ...[
-                                Chip(
-                                  label: Text(
-                                    '${trip.temperature!.toStringAsFixed(1)} °f ${(trip.continuous ?? false) ? '(cont.)' : ''}',
-                                    style:
-                                        Theme.of(context).textTheme.bodyLarge!,
-                                  ),
-                                ),
-                              ],
                               if (trip.totalMiles != null) ...[
                                 Chip(
                                   label: Text(
                                     '${NumberFormat.decimalPattern().format(trip.totalMiles)} mi',
-                                    style:
-                                        Theme.of(context).textTheme.labelLarge!,
-                                  ),
-                                ),
-                              ],
-                              if (trip.trailerNum.isNotNullOrEmpty) ...[
-                                Chip(
-                                  label: Text(
-                                    'Trailer ${trip.trailerNum}',
                                     style:
                                         Theme.of(context).textTheme.labelLarge!,
                                   ),

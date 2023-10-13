@@ -64,26 +64,32 @@ class AppTrip with _$AppTrip {
     @JsonKey(name: 'Attachments') @Default([]) List<AppDocument> attachments,
   }) = _AppTrip;
 
-  factory AppTrip.fromJson(Map<String, dynamic> json) => _$AppTripFromJson(json);
+  factory AppTrip.fromJson(Map<String, dynamic> json) =>
+      _$AppTripFromJson(json);
 
   AppTrip._();
 
   String? get canCheckInOutStopId => stops
-      .firstWhereOrNull(
-          (element) => element.timeRecord?.driver?.timeIn == null || element.timeRecord?.driver?.timeOut == null)
+      .firstWhereOrNull((element) =>
+          element.timeRecord?.driver?.timeIn == null ||
+          element.timeRecord?.driver?.timeOut == null)
       ?.stopId;
-  String? driverPayable(String? driverId) => payableDriverAmounts
-      .firstWhereOrNull((element) => element.id?.toLowerCase() == driverId?.toLowerCase())
-      ?.amount
-      ?.toStringAsFixed(2);
-  List<AppDocument> getAttachments(bool canViewCustomerConfirmation, bool canViewCarrierConfirmation) {
+  double? driverPayable(String? driverId) => payableDriverAmounts
+      .firstWhereOrNull(
+          (element) => element.id?.toLowerCase() == driverId?.toLowerCase())
+      ?.amount;
+
+  List<AppDocument> getAttachments(
+      bool canViewCustomerConfirmation, bool canViewCarrierConfirmation) {
     return attachments
         .map((e) {
-          if (DocumentTypes.customerConfirmationDocTypes.containsIgnoreCase(e.documentType)) {
+          if (DocumentTypes.customerConfirmationDocTypes
+              .containsIgnoreCase(e.documentType)) {
             if (canViewCustomerConfirmation) {
               return e;
             }
-          } else if (DocumentTypes.carrierRateConfirmation.equalsIgnoreCase(e.documentType)) {
+          } else if (DocumentTypes.carrierRateConfirmation
+              .equalsIgnoreCase(e.documentType)) {
             if (canViewCarrierConfirmation) {
               return e;
             }
@@ -98,7 +104,10 @@ class AppTrip with _$AppTrip {
 
   List<MapEntry<String, LatLng>> get stopLocations => stops
       .map((e) => MapEntry(
-          e.stopType ?? '', LatLng(double.tryParse(e.latitude ?? '0') ?? 0, double.tryParse(e.longitude ?? '0') ?? 0)))
-      .where((element) => element.value.latitude != 0 && element.value.longitude != 0)
+          e.stopType ?? '',
+          LatLng(double.tryParse(e.latitude ?? '0') ?? 0,
+              double.tryParse(e.longitude ?? '0') ?? 0)))
+      .where((element) =>
+          element.value.latitude != 0 && element.value.longitude != 0)
       .toList();
 }
