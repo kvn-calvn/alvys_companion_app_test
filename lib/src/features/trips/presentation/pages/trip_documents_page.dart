@@ -63,7 +63,7 @@ class TripDocuments extends ConsumerWidget {
                     var doc = attachments[index];
                     return LargeNavButton(
                         title: doc.documentType,
-                        subtitle: DateFormat('MMM d, yyyy @ HH:mm').formatNullDate(doc.date, ""),
+                        subtitle: DateFormat('MMM d, yyyy @ HH:mm').formatNullDate(doc.date?.toLocal(), ""),
                         key: index == 0 && tripId == testTrip.id! ? ref.read(tutorialProvider).documentCard : null,
                         onPressed: () {
                           context.pushNamed(RouteName.tripDocumentView.name,

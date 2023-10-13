@@ -49,7 +49,7 @@ class DocumentList extends StatelessWidget {
                     icon: const Icon(Icons.description_outlined),
                     title: docTitle(args.documentType, doc),
                     subtitle: args.documentType == DisplayDocumentType.personalDocuments
-                        ? DateFormat('MMM d, yyyy @ HH:mm').formatNullDate(doc.date, "")
+                        ? DateFormat('MMM d, yyyy @ HH:mm').formatNullDate(doc.date?.toLocal(), "")
                         : null,
                     onPressed: () {
                       switch (args.documentType) {

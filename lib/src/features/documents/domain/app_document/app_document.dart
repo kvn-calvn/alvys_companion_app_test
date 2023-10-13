@@ -1,3 +1,5 @@
+import 'package:alvys3/src/utils/utc_date_converter.dart';
+
 import '../../../../../flavor_config.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
@@ -11,7 +13,7 @@ class AppDocument with _$AppDocument {
     @JsonKey(name: "DocumentPath") required String documentPath,
     @JsonKey(name: "CompanyName") required String companyName,
     @JsonKey(name: "DocumentType") required String documentType,
-    @JsonKey(name: "Date") DateTime? date,
+    @UTCDateConverter() @JsonKey(name: "Date") DateTime? date,
   }) = _AppDocument;
 
   factory AppDocument.fromJson(Map<String, dynamic> json) => _$AppDocumentFromJson(json);
