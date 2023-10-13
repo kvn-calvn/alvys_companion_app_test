@@ -51,7 +51,7 @@ class LargeNavButton extends StatelessWidget {
                               style: Theme.of(context).textTheme.bodyLarge),
                           if (subtitle.isNotNullOrEmpty) ...[
                             Text(subtitle!,
-                                style: Theme.of(context).textTheme.bodyMedium)
+                                style: Theme.of(context).textTheme.bodySmall)
                           ]
                         ],
                       ),
