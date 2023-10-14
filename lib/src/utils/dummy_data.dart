@@ -17,7 +17,12 @@ final AppTrip testTrip = AppTrip(
   dispatch: '',
   companyCode: 'TS500',
   attachments: [
-    AppDocument(companyCode: 'TS500', documentPath: '', companyName: 'Test company', documentType: 'Test document')
+    AppDocument(
+        companyCode: 'TS500',
+        documentPath: '',
+        companyName: 'Test company',
+        documentType: 'Test document',
+        date: DateTime.now().subtract(const Duration(hours: 15)))
   ],
   continuous: true,
   deliveryDate: DateTime.now().add(const Duration(days: 10)),
@@ -31,13 +36,13 @@ final AppTrip testTrip = AppTrip(
   drivers: ['DR342352543123'],
   eChecks: [
     ECheck(
-      amount: 10,
-      amountUsed: 5,
-      eCheckId: 'asda23244533232',
-      expressCheckNumber: '43567424522',
-      reason: 'Lumpar',
-      isCanceled: false,
-    )
+        amount: 10,
+        amountUsed: 5,
+        eCheckId: 'asda23244533232',
+        expressCheckNumber: '43567424522',
+        reason: 'Lumpar',
+        isCanceled: false,
+        dateGenerated: DateTime.now().subtract(const Duration(days: 2)))
   ],
   emptyMiles: 325,
   equipment: 'Lumber',
