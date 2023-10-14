@@ -10,14 +10,13 @@ import '../../../../network/file_upload_process_provider.dart';
 import '../../../../network/http_client.dart';
 import '../../../../utils/extensions.dart';
 import '../../../../utils/helpers.dart';
-import '../../../../utils/magic_strings.dart';
 import '../../../authentication/domain/models/driver_user/driver_user.dart';
 import '../../domain/app_document/app_document.dart';
 import '../../presentation/upload_documents_controller.dart';
 
 abstract class DocumentsRepository<T> {
   Future<List<AppDocument>> getPaystubs(String companyCode, DriverUser user, [int top = 10]);
-  Future<List<AppDocument>> getPersonalDocs(DriverUser user);
+  Future<List<AppDocument>> getPersonalDocs(String companyCode, DriverUser user);
   Future<List<AppDocument>> getTripReportDocs(String companyCode, DriverUser user);
   Future<void> uploadTripDocuments(String companyCode, UploadDocumentOptions docData, File document, String tripId);
   Future<void> uploadPersonalDocuments(UploadDocumentOptions docData, File document);
@@ -39,22 +38,20 @@ class AppDocumentRepository<T> implements DocumentsRepository<T> {
   }
 
   @override
-  Future<List<AppDocument>> getPersonalDocs(DriverUser user) async {
-    var driverId = user.userTenants.firstWhereOrNull((element) => element.companyOwnedAsset ?? false)?.assetId;
-    if (driverId == null) return [];
-    var dto = DriverDocumentsDTO(
-        acceptedTypes: [DocumentTypes.driverLicense, DocumentTypes.license, DocumentTypes.medical], driverId: driverId);
-    var res = await httpClient.getData<T>(ApiRoutes.documents(dto));
+  Future<List<AppDocument>> getPersonalDocs(String companyCode, DriverUser user) async {
+    await Helpers.setCompanyCode(companyCode);
+    var dto =
+        DriverDocumentsDTO(driverIds: user.userTenants.map((e) => e.assetId).removeNulls.toList(), userId: user.id!);
+    var res = await httpClient.getData<T>(ApiRoutes.personalDocuments(dto));
     return (res.body.toDecodedJson as List<dynamic>?).toListNotNull().map((x) => AppDocument.fromJson(x)).toList();
   }
 
   @override
   Future<List<AppDocument>> getTripReportDocs(String companyCode, DriverUser user) async {
     await Helpers.setCompanyCode(companyCode);
-    var driverId = user.userTenants.firstWhereOrNull((element) => element.companyOwnedAsset ?? false)?.assetId;
-    if (driverId == null) return [];
-    var dto = DriverDocumentsDTO(acceptedTypes: [DocumentTypes.tripReport], driverId: driverId);
-    var res = await httpClient.getData<T>(ApiRoutes.documents(dto));
+    var dto =
+        DriverDocumentsDTO(driverIds: user.userTenants.map((e) => e.assetId).removeNulls.toList(), userId: user.id!);
+    var res = await httpClient.getData<T>(ApiRoutes.tripReports(dto));
     return (res.body.toDecodedJson as List<dynamic>?).toListNotNull().map((x) => AppDocument.fromJson(x)).toList();
   }
 
@@ -70,7 +67,7 @@ class AppDocumentRepository<T> implements DocumentsRepository<T> {
   @override
   Future<void> uploadPersonalDocuments(UploadDocumentOptions docData, File document) async {
     var data = await MultipartFile.fromPath(docData.title, document.path);
-    await httpClient.upload(ApiRoutes.documents(), files: [data], onProgress: fileProgress.updateProgress);
+    await httpClient.upload(ApiRoutes.personalDocuments(), files: [data], onProgress: fileProgress.updateProgress);
   }
 
   @override

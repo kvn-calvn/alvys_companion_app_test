@@ -1,4 +1,4 @@
-import 'package:alvys3/src/utils/extensions.dart';
+import '../../../../utils/extensions.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -64,32 +64,25 @@ class AppTrip with _$AppTrip {
     @JsonKey(name: 'Attachments') @Default([]) List<AppDocument> attachments,
   }) = _AppTrip;
 
-  factory AppTrip.fromJson(Map<String, dynamic> json) =>
-      _$AppTripFromJson(json);
+  factory AppTrip.fromJson(Map<String, dynamic> json) => _$AppTripFromJson(json);
 
   AppTrip._();
 
   String? get canCheckInOutStopId => stops
-      .firstWhereOrNull((element) =>
-          element.timeRecord?.driver?.timeIn == null ||
-          element.timeRecord?.driver?.timeOut == null)
-      ?.stopId;
-  double? driverPayable(String? driverId) => payableDriverAmounts
       .firstWhereOrNull(
-          (element) => element.id?.toLowerCase() == driverId?.toLowerCase())
-      ?.amount;
+          (element) => element.timeRecord?.driver?.timeIn == null || element.timeRecord?.driver?.timeOut == null)
+      ?.stopId;
+  double? driverPayable(String? driverId) =>
+      payableDriverAmounts.firstWhereOrNull((element) => element.id?.toLowerCase() == driverId?.toLowerCase())?.amount;
 
-  List<AppDocument> getAttachments(
-      bool canViewCustomerConfirmation, bool canViewCarrierConfirmation) {
+  List<AppDocument> getAttachments(bool canViewCustomerConfirmation, bool canViewCarrierConfirmation) {
     return attachments
         .map((e) {
-          if (DocumentTypes.customerConfirmationDocTypes
-              .containsIgnoreCase(e.documentType)) {
+          if (DocumentTypes.customerConfirmationDocTypes.containsIgnoreCase(e.documentType)) {
             if (canViewCustomerConfirmation) {
               return e;
             }
-          } else if (DocumentTypes.carrierRateConfirmation
-              .equalsIgnoreCase(e.documentType)) {
+          } else if (DocumentTypes.carrierRateConfirmation.equalsIgnoreCase(e.documentType)) {
             if (canViewCarrierConfirmation) {
               return e;
             }
@@ -104,10 +97,9 @@ class AppTrip with _$AppTrip {
 
   List<MapEntry<String, LatLng>> get stopLocations => stops
       .map((e) => MapEntry(
-          e.stopType ?? '',
-          LatLng(double.tryParse(e.latitude ?? '0') ?? 0,
-              double.tryParse(e.longitude ?? '0') ?? 0)))
-      .where((element) =>
-          element.value.latitude != 0 && element.value.longitude != 0)
+          e.stopType ?? '', LatLng(double.tryParse(e.latitude ?? '0') ?? 0, double.tryParse(e.longitude ?? '0') ?? 0)))
+      .where((element) => element.value.latitude != 0 && element.value.longitude != 0)
       .toList();
+  List<ECheck> get sortedEchecks =>
+      List.from(eChecks)..sort((a, b) => b.dateGenerated?.compareTo(a.dateGenerated ?? DateTime.now()) ?? 0);
 }

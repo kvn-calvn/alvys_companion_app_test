@@ -1,4 +1,3 @@
-import 'custom_observer.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -31,6 +30,7 @@ import '../utils/extensions.dart';
 import '../utils/global_error_handler.dart';
 import '../utils/magic_strings.dart';
 import '../utils/tablet_utils.dart';
+import 'custom_observer.dart';
 import 'error_page.dart';
 import 'landing.dart';
 

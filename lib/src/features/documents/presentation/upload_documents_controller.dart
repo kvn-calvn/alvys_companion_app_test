@@ -163,7 +163,8 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
         ], trip?.companyCode);
 
       case DisplayDocumentType.personalDocuments:
-        return UploadDocumentOptions.getOptionsList(["License", "Medical"], userData.getCompanyOwned.companyCode!);
+        return UploadDocumentOptions.getOptionsList(
+            ["Driver License", "Medical"], userData.getCompanyOwned.companyCode!);
       case DisplayDocumentType.paystubs:
         return [];
       case DisplayDocumentType.tripReport:

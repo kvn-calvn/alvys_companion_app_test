@@ -1,10 +1,10 @@
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import '../../../../common_widgets/empty_view.dart';
 import '../../../../common_widgets/trip_card.dart';
-import '../controller/trip_page_controller.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter/material.dart';
-
 import '../../../../utils/magic_strings.dart';
+import '../controller/trip_page_controller.dart';
 
 class FilteredTripPage extends ConsumerWidget {
   const FilteredTripPage({Key? key, required this.filterType}) : super(key: key);

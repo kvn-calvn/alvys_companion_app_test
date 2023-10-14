@@ -1,3 +1,5 @@
+import 'package:intl/intl.dart';
+
 import 'shimmers/shimmer_widget.dart';
 import 'snack_bar.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
@@ -118,7 +120,20 @@ class EcheckCard extends ConsumerWidget {
                                 style: Theme.of(context).textTheme.bodyLarge),
                             Padding(
                               padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
-                              child: Text(eCheck.reason!.trim(), style: Theme.of(context).textTheme.bodySmall),
+                              child: Row(
+                                children: [
+                                  Text(eCheck.reason!.trim(), style: Theme.of(context).textTheme.bodySmall),
+                                  const Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: 6.0),
+                                    child: Icon(
+                                      Icons.circle,
+                                      size: 4,
+                                    ),
+                                  ),
+                                  Text(DateFormat('MMM dd @ HH:mm').formatNullDate(eCheck.dateGenerated?.toLocal()),
+                                      style: Theme.of(context).textTheme.bodySmall),
+                                ],
+                              ),
                             ),
                           ],
                         ),

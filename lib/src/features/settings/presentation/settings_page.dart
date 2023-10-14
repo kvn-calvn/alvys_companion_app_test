@@ -1,8 +1,4 @@
-import '../../../network/firebase_remote_config_service.dart';
-import '../../../network/http_client.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-
-import '../../tutorial/tutorial_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -12,10 +8,13 @@ import '../../../common_widgets/large_nav_button.dart';
 import '../../../common_widgets/tablet_view.dart';
 import '../../../common_widgets/theme_switcher.dart';
 import '../../../common_widgets/url_nav_button.dart';
+import '../../../network/firebase_remote_config_service.dart';
+import '../../../network/http_client.dart';
 import '../../../utils/app_theme.dart';
 import '../../../utils/magic_strings.dart';
 import '../../../utils/platform_channel.dart';
 import '../../authentication/presentation/auth_provider_controller.dart';
+import '../../tutorial/tutorial_controller.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -67,8 +66,7 @@ class SettingsList extends ConsumerWidget {
         ),
         Consumer(
           builder: (context, ref, child) {
-            var alvysHelp =
-                ref.watch(firebaseRemoteConfigServiceProvider).alvysHelpUrl();
+            var alvysHelp = ref.watch(firebaseRemoteConfigServiceProvider).alvysHelpUrl();
             return UrlNavButton(title: "Help", url: alvysHelp);
           },
         ),
@@ -85,10 +83,7 @@ class SettingsList extends ConsumerWidget {
             ref.read(firstInstallProvider.notifier).setState(true);
             context.goNamed(RouteName.trips.name);
             ref.read(tabletViewProvider.notifier).setState(0);
-            ref
-                .read(httpClientProvider)
-                .telemetryClient
-                .trackEvent(name: "watch_tutorial");
+            ref.read(httpClientProvider).telemetryClient.trackEvent(name: "watch_tutorial");
             await FirebaseAnalytics.instance.logEvent(name: "watch_tutorial");
           },
         ),
@@ -97,10 +92,7 @@ class SettingsList extends ConsumerWidget {
           onPressed: () async {
             PlatformChannel.stopLocationTracking();
             ref.read(authProvider.notifier).signOut(context);
-            ref
-                .read(httpClientProvider)
-                .telemetryClient
-                .trackEvent(name: "signed_out");
+            ref.read(httpClientProvider).telemetryClient.trackEvent(name: "signed_out");
             await FirebaseAnalytics.instance.logEvent(name: "signed_out");
           },
         ),

@@ -21,7 +21,9 @@ class ApiRoutes {
   static Uri cancelEcheck(String echeckNumber) => Uri.parse('$mobileBaseApi$echeckNumber/echeck');
   static Uri paystubs(DriverPaystubDTO dto) =>
       Uri.https(FlavorConfig.instance!.rawApiBase, '/api/mobile/driver/paystubs', dto.toJson());
-  static Uri documents([DriverDocumentsDTO? dto]) =>
+  static Uri tripReports([DriverDocumentsDTO? dto]) =>
+      Uri.https(FlavorConfig.instance!.rawApiBase, '/api/mobile/driver/trip_report', dto?.toJson());
+  static Uri personalDocuments([DriverDocumentsDTO? dto]) =>
       Uri.https(FlavorConfig.instance!.rawApiBase, '/api/mobile/driver/documents', dto?.toJson());
   static String tripDocument(String tripId) => '$mobileBaseApi$tripId/trip/documents';
   static Uri get driverInfo => Uri.parse('${mobileBaseApi}driver/info');

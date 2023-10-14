@@ -1,14 +1,13 @@
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
-import 'package:intl/intl.dart';
-
-import '../domain/app_document/app_document.dart';
-import 'docs_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 
 import '../../../common_widgets/empty_view.dart';
 import '../../../common_widgets/large_nav_button.dart';
 import '../../../utils/magic_strings.dart';
+import '../domain/app_document/app_document.dart';
+import 'docs_controller.dart';
 
 class DocumentList extends StatelessWidget {
   const DocumentList(

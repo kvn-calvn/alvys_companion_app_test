@@ -1,4 +1,4 @@
-import 'package:alvys3/src/utils/utc_date_converter.dart';
+import '../../../../utils/utc_date_converter.dart';
 
 import '../../../../../flavor_config.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -35,8 +35,8 @@ class DriverPaystubDTO with _$DriverPaystubDTO {
 @freezed
 class DriverDocumentsDTO with _$DriverDocumentsDTO {
   factory DriverDocumentsDTO({
-    @JsonKey(name: 'AcceptedTypes') required List<String> acceptedTypes,
-    @JsonKey(name: 'AssetId') required String driverId,
+    @JsonKey(name: 'DriverIds') required List<String> driverIds,
+    @JsonKey(name: 'UserId') required String userId,
   }) = _DriverDocumentsDTO;
 
   factory DriverDocumentsDTO.fromJson(Map<String, dynamic> json) => _$DriverDocumentsDTOFromJson(json);

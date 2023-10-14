@@ -1,6 +1,7 @@
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
+
 import '../../../../models/address/address.dart';
 import 'm_comodity.dart';
 import 'reference.dart';

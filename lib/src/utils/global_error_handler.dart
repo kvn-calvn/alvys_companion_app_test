@@ -101,13 +101,15 @@ class GlobalErrorHandler {
         handleDefault();
     }
     if (hasError) {
-      showErrorDialog(
-          context: navKey.currentState!.context,
-          afterError: () => onError?.call(),
-          optionalActions: optionalOptions,
-          message: message,
-          title: title,
-          dismissButtonText: dismissButtonText);
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        showErrorDialog(
+            context: navKey.currentState!.context,
+            afterError: () => onError?.call(),
+            optionalActions: optionalOptions,
+            message: message,
+            title: title,
+            dismissButtonText: dismissButtonText);
+      });
     }
   }
 

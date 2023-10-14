@@ -1,4 +1,3 @@
-import '../features/tutorial/tutorial_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -6,6 +5,7 @@ import 'package:material_symbols_icons/symbols.dart';
 
 import '../../custom_icons/alvys3_icons.dart';
 import '../features/documents/presentation/upload_documents_controller.dart';
+import '../features/tutorial/tutorial_controller.dart';
 import '../utils/alvys_websocket.dart';
 
 class MainBottomNav extends ConsumerStatefulWidget {

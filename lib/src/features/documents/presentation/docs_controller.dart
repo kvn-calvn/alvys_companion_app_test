@@ -39,7 +39,7 @@ class DocumentsNotifier extends AutoDisposeFamilyAsyncNotifier<DocumentState, Do
       case DisplayDocumentType.tripDocuments:
         break;
       case DisplayDocumentType.personalDocuments:
-        var res = await docRepo.getPersonalDocs(auth.driver!);
+        var res = await docRepo.getPersonalDocs(auth.tenantCompanyCodes.first, auth.driver!);
         state = AsyncData(state.hasValue ? state.value!.copyWith(documentList: res) : DocumentState(documentList: res));
         break;
       case DisplayDocumentType.paystubs:

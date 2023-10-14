@@ -1,8 +1,5 @@
 import 'dart:convert';
 
-import '../features/authentication/domain/models/user_details/user_details.dart';
-
-import 'provider_args_saver.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,10 +7,12 @@ import 'package:signalr_netcore/ihub_protocol.dart';
 import 'package:signalr_netcore/signalr_client.dart';
 
 import '../constants/api_routes.dart';
+import '../features/authentication/domain/models/user_details/user_details.dart';
 import '../features/authentication/presentation/auth_provider_controller.dart';
 import '../features/trips/domain/app_trip/app_trip.dart';
 import '../features/trips/presentation/controller/trip_page_controller.dart';
 import 'magic_strings.dart';
+import 'provider_args_saver.dart';
 
 final websocketProvider = Provider<AlvysWebsocket>((ref) => AlvysWebsocket(ref: ref));
 

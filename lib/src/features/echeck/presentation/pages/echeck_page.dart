@@ -72,14 +72,14 @@ class _EcheckPageState extends ConsumerState<EcheckPage> {
             onRefresh: () async {
               await ref.read(tripControllerProvider.notifier).refreshCurrentTrip(widget.tripId);
             },
-            child: trip.eChecks.isNullOrEmpty
+            child: trip.sortedEchecks.isNullOrEmpty
                 ? const EmptyView(title: 'No E-Checks', description: 'Generated E-Checks will appear here.')
                 : ListView.builder(
                     padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                    itemCount: trip.eChecks.length,
+                    itemCount: trip.sortedEchecks.length,
                     itemBuilder: (context, index) => EcheckCard(
                       index: index,
-                      eCheck: trip.eChecks[index],
+                      eCheck: trip.sortedEchecks[index],
                       companyCode: trip.companyCode!,
                       cancelECheck: (echeckNumber) async => await notifier.cancelEcheck(widget.tripId, echeckNumber),
                       tripId: widget.tripId,

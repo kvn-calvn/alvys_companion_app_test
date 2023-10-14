@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'src/network/http_client.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -24,6 +23,7 @@ import 'src/features/authentication/domain/models/driver_user/driver_user.dart';
 import 'src/features/authentication/presentation/auth_provider_controller.dart';
 import 'src/features/tutorial/tutorial_controller.dart';
 import 'src/network/firebase_remote_config_service.dart';
+import 'src/network/http_client.dart';
 import 'src/network/network_info.dart';
 import 'src/utils/global_error_handler.dart';
 import 'src/utils/magic_strings.dart';
