@@ -189,7 +189,8 @@ class TripController extends _$TripController implements IAppErrorHandler {
       state = AsyncValue.data(state.value!.copyWith(loadingStopId: null));
     });
     var distance = Geolocator.distanceBetween(
-        location.latitude, location.longitude, double.parse(stop.latitude!), double.parse(stop.longitude!));
+            location.latitude, location.longitude, double.parse(stop.latitude!), double.parse(stop.longitude!)) /
+        1609.34;
     if (distance > 10) {
       ref.read(httpClientProvider).telemetryClient.trackEvent(name: "distance_too_far", additionalProperties: {
         "location": '${location.latitude}, ${location.longitude}',
@@ -254,9 +255,12 @@ class TripController extends _$TripController implements IAppErrorHandler {
     if (trip == null) return;
     var existingCheck =
         trip.eChecks.firstWhereOrNull((element) => element.expressCheckNumber == echeck.expressCheckNumber);
-    if (existingCheck != null) return;
-    trip = trip.copyWith(eChecks: [...trip.eChecks, echeck]);
-    updateTrip(trip);
+    if (existingCheck != null) {
+      updateEcheck(tripId, echeck);
+    } else {
+      trip = trip.copyWith(eChecks: [...trip.eChecks, echeck]);
+      updateTrip(trip);
+    }
   }
 
   void updateEcheck(String tripId, ECheck echeck) {
@@ -280,10 +284,12 @@ class TripController extends _$TripController implements IAppErrorHandler {
 
   Future<void> generateEcheckDialog(BuildContext context, String tripId, String stopId) async {
     var res = await showGenerateEcheckDialog(context, tripId, stopId);
-    if (res == true) {
-      SnackBar snackBar = SnackBarWrapper.getSnackBar('E-Check generated successfully');
+    if (res != null) {
+      SnackBar snackBar = SnackBarWrapper.getSnackBar('E-Check $res generated successfully');
       if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      TabletUtils.instance.detailsController.animateTo(1);
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        TabletUtils.instance.detailsController.animateTo(1);
+      });
     }
   }
 

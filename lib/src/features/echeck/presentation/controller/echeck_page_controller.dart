@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:alvys3/src/common_widgets/snack_bar.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
 import '../../../../network/http_client.dart';
@@ -105,12 +106,13 @@ class EcheckPageController extends AutoDisposeFamilyAsyncNotifier<ECheckState, S
       tripController.addEcheck(trip.id!, res);
       state = AsyncData(state.value!);
       if (context.mounted) {
-        Navigator.of(context, rootNavigator: true).pop(true);
+        resetState();
+        Navigator.of(context, rootNavigator: true).pop(res.expressCheckNumber);
       }
     }
   }
 
-  Future<void> cancelEcheck(String tripId, String echeckNumber) async {
+  Future<void> cancelEcheck(BuildContext context, String tripId, String echeckNumber) async {
     state = AsyncData(state.value!.copyWith(loadingEcheckNumber: echeckNumber));
     var trip = tripController.getTrip(tripId);
 
@@ -121,11 +123,17 @@ class EcheckPageController extends AutoDisposeFamilyAsyncNotifier<ECheckState, S
     var res = await repo.cancelEcheck<EcheckPageController>(trip.companyCode!, echeckNumber);
     tripController.updateEcheck(tripId, res);
     state = AsyncData(state.value!.copyWith(loadingEcheckNumber: null));
+    var snackbar = SnackBarWrapper.getSnackBar('ECheck $echeckNumber has been canceled');
+    if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(snackbar);
   }
 
   @override
   FutureOr<void> onError(Exception ex) {
     state = AsyncData(state.value!.copyWith(loadingEcheckNumber: null));
+  }
+
+  void resetState() {
+    state = AsyncData(ECheckState(stopId: arg));
   }
 
   @override

@@ -39,7 +39,6 @@ class _TripGoogleMapState extends ConsumerState<TripGoogleMap> with WidgetsBindi
   @override
   Widget build(BuildContext context) {
     var mapState = ref.watch(mapProvider.call(widget.tripId));
-    var mapNotifier = ref.read(mapProvider.call(widget.tripId).notifier);
     return SizedBox(
       height: 200,
       child: ClipRRect(
@@ -57,7 +56,8 @@ class _TripGoogleMapState extends ConsumerState<TripGoogleMap> with WidgetsBindi
               await FirebaseAnalytics.instance.logEvent(name: "open_map");
             }
           },
-          onMapCreated: (controller) => mapNotifier.onMapCreated(controller, false),
+          onMapCreated: (controller) =>
+              ref.read(mapProvider.call(widget.tripId).notifier).onMapCreated(controller, false),
           initialCameraPosition: const CameraPosition(
             tilt: 20,
             target: LatLng(37.6, -95.665),

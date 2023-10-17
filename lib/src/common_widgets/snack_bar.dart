@@ -53,6 +53,6 @@ class SnackBarWrapper {
             )
           ],
         ),
-        duration: const Duration(milliseconds: 2000),
+        duration: const Duration(milliseconds: 4000),
       );
 }

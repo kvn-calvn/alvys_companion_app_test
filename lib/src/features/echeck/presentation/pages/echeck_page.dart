@@ -81,7 +81,8 @@ class _EcheckPageState extends ConsumerState<EcheckPage> {
                       index: index,
                       eCheck: trip.sortedEchecks[index],
                       companyCode: trip.companyCode!,
-                      cancelECheck: (echeckNumber) async => await notifier.cancelEcheck(widget.tripId, echeckNumber),
+                      cancelECheck: (echeckNumber) async =>
+                          await notifier.cancelEcheck(context, widget.tripId, echeckNumber),
                       tripId: widget.tripId,
                     ),
                   ),

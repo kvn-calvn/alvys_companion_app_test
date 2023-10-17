@@ -6,7 +6,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../constants/color.dart';
-import '../features/echeck/presentation/pages/generate_echeck.dart';
 import '../features/trips/domain/app_trip/stop.dart';
 import '../features/trips/presentation/controller/trip_page_controller.dart';
 import '../features/tutorial/tutorial_controller.dart';
@@ -158,7 +157,9 @@ class StopCard extends ConsumerWidget {
                       // const SizedBox(width: 5),
                       ButtonStyle2(
                         onPressAction: ref.watch(tripControllerProvider.notifier).shouldShowEcheckButton(tripId)
-                            ? () => showGenerateEcheckDialog(context, tripId, stop.stopId)
+                            ? () => ref
+                                .read(tripControllerProvider.notifier)
+                                .generateEcheckDialog(context, tripId, stop.stopId!)
                             : null,
                         title: "E-Check",
                         isLoading: false,

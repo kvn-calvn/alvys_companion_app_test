@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 import '../../../../common_widgets/echeck_stop_card.dart';
@@ -14,8 +13,8 @@ import '../../../trips/domain/app_trip/stop.dart';
 import '../../../trips/presentation/controller/trip_page_controller.dart';
 import '../controller/echeck_page_controller.dart';
 
-Future<bool?> showGenerateEcheckDialog(BuildContext context, String tripId, [String? stopId]) =>
-    showGeneralDialog<bool?>(
+Future<String?> showGenerateEcheckDialog(BuildContext context, String tripId, [String? stopId]) =>
+    showGeneralDialog<String?>(
         context: context,
         useRootNavigator: true,
         pageBuilder: (c, anim1, anim2) => SafeArea(
@@ -122,8 +121,9 @@ class _GenerateEcheckState extends ConsumerState<GenerateEcheck> {
                               ),
                               ButtonStyle1(
                                 isDisable: !state.value!.showGenerateButton,
-                                onPressAction: () async =>
-                                    await notifier.generateEcheck(formGlobalKey, context, widget.tripId),
+                                onPressAction: () async {
+                                  await notifier.generateEcheck(formGlobalKey, context, widget.tripId);
+                                },
                                 title: "Generate",
                               ),
                               const SizedBox(
@@ -134,7 +134,10 @@ class _GenerateEcheckState extends ConsumerState<GenerateEcheck> {
                                   minimumSize: const Size.fromHeight(50),
                                   textStyle: Theme.of(context).textTheme.titleMedium,
                                 ),
-                                onPressed: context.pop,
+                                onPressed: () {
+                                  notifier.resetState();
+                                  Navigator.of(context, rootNavigator: true).pop();
+                                },
                                 child: const Text('Cancel'),
                               ),
                               const SizedBox(

@@ -22,7 +22,7 @@ class MapNotifier extends AutoDisposeFamilyAsyncNotifier<MapState, String> {
   FutureOr<MapState> build(String arg) async {
     repo = ref.read(googleMapsRepo);
     trips = ref.watch(tripControllerProvider);
-    state = AsyncData(MapState());
+    state = const AsyncLoading();
     await getPolyLinesAndMarkers();
     return state.value!;
   }
@@ -43,11 +43,17 @@ class MapNotifier extends AutoDisposeFamilyAsyncNotifier<MapState, String> {
               consumeTapEvents: true,
               position: e.value))
           .toSet();
-      state = AsyncData(state.value!.copyWith(markers: markers));
+      state = AsyncData(MapState(markers: markers));
       GoogleMapController miniController = await this.miniController.future;
-      miniController.animateCamera(markers.length == 1
-          ? CameraUpdate.newCameraPosition(CameraPosition(target: markers.first.position))
-          : CameraUpdate.newLatLngBounds(repo.boundsFromLatLngList(markers.map((e) => e.position).toList()), 72));
+
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        try {
+          miniController.animateCamera(
+              CameraUpdate.newLatLngBounds(repo.boundsFromLatLngList(markers.map((e) => e.position).toList()), 72));
+        } catch (e) {
+          miniController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: markers.first.position)));
+        }
+      });
       var polylines = await repo.getPolyLines(trip.stopLocations.map((e) => e.value).toList());
       state = AsyncData(MapState(markers: markers, polyLines: polylines.values.toSet()));
     }
@@ -72,6 +78,19 @@ class MapNotifier extends AutoDisposeFamilyAsyncNotifier<MapState, String> {
       controller.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: pos.position, zoom: 15)));
     }
   }
+
+  // Future<void> updateMap() async {
+  //   GoogleMapController miniController = await this.miniController.future;
+  //   state.whenData((value) {
+  //     try {
+  //       miniController.animateCamera(
+  //           CameraUpdate.newLatLngBounds(repo.boundsFromLatLngList(value.markers.map((e) => e.position).toList()), 72));
+  //     } catch (e) {
+  //       miniController
+  //           .animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: value.markers.first.position)));
+  //     }
+  //   });
+  // }
 
   Future<void> setMiniMapStyle() async {
     var mode = ref.read(themeHandlerProvider);
