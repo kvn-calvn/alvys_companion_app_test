@@ -1,3 +1,5 @@
+import 'package:alvys3/src/utils/alvys_websocket.dart';
+
 import '../../../../network/firebase_remote_config_service.dart';
 import '../../../../network/http_client.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -95,6 +97,7 @@ class _LoadDetailsPageState extends ConsumerState<LoadDetailsPage> with TickerPr
             constraints: const BoxConstraints(),
             onPressed: () async {
               await ref.read(tripControllerProvider.notifier).refreshCurrentTrip(widget.tripId);
+              ref.read(websocketProvider).restartConnection();
               ref.read(httpClientProvider).telemetryClient.trackEvent(name: "trip_refresh_button_tapped");
               await FirebaseAnalytics.instance.logEvent(name: "trip_refresh_button_tapped");
             },
@@ -160,6 +163,7 @@ class TripDetails extends ConsumerWidget {
     return RefreshIndicator(
       onRefresh: () async {
         await ref.read(tripControllerProvider.notifier).refreshCurrentTrip(tripId);
+        ref.read(websocketProvider).restartConnection();
       },
       child: ListView(
           scrollDirection: Axis.vertical,

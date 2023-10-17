@@ -1,4 +1,3 @@
-import '../../../../utils/extensions.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -91,8 +90,8 @@ class AppTrip with _$AppTrip {
           }
         })
         .removeNulls
-        .toList()
-      ..sort((a, b) => a.date.isAfterNull(b.date) ? -1 : 1);
+        .orderBy((element) => element.date, OrderDirection.desc)
+        .toList();
   }
 
   List<MapEntry<String, LatLng>> get stopLocations => stops
@@ -100,6 +99,6 @@ class AppTrip with _$AppTrip {
           e.stopType ?? '', LatLng(double.tryParse(e.latitude ?? '0') ?? 0, double.tryParse(e.longitude ?? '0') ?? 0)))
       .where((element) => element.value.latitude != 0 && element.value.longitude != 0)
       .toList();
-  List<ECheck> get sortedEchecks =>
-      List.from(eChecks)..sort((a, b) => b.dateGenerated?.compareTo(a.dateGenerated ?? DateTime.now()) ?? 0);
+  List<ECheck> get sortedEchecks => eChecks.orderBy((element) => element.dateGenerated, OrderDirection.desc).toList();
+  //  List.from(eChecks) ..sort((a, b) => b.dateGenerated?.compareTo(a.dateGenerated ?? DateTime.now()) ?? 0);
 }

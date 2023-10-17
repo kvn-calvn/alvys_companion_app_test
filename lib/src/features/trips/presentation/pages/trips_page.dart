@@ -3,6 +3,7 @@ import '../../../../network/firebase_remote_config_service.dart';
 import '../../../../network/http_client.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
+import '../../../../utils/alvys_websocket.dart';
 import '../../../authentication/presentation/driver_status_dropdown.dart';
 import '../../../tutorial/tutorial_controller.dart';
 
@@ -102,6 +103,7 @@ class _LoadListPageState extends ConsumerState<LoadListPage> with TickerProvider
             key: ref.read(tutorialProvider).refresh,
             onPressed: () async {
               await ref.read(tripControllerProvider.notifier).refreshTrips(true);
+              ref.read(websocketProvider).restartConnection();
               ref.read(httpClientProvider).telemetryClient.trackEvent(name: "refresh_button_tapped");
               await FirebaseAnalytics.instance.logEvent(name: "refresh_button_tapped");
             },
@@ -159,6 +161,7 @@ class TripList extends ConsumerWidget {
             child: RefreshIndicator(
               onRefresh: () async {
                 await ref.read(tripControllerProvider.notifier).refreshTrips();
+                ref.read(websocketProvider).restartConnection();
               },
               child: tripsState.value!.activeTrips.isNotEmpty
                   ? ListView(

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../common_widgets/empty_view.dart';
 import '../../../../common_widgets/trip_card.dart';
+import '../../../../utils/alvys_websocket.dart';
 import '../../../../utils/magic_strings.dart';
 import '../controller/trip_page_controller.dart';
 
@@ -17,13 +18,11 @@ class FilteredTripPage extends ConsumerWidget {
         ? ref.watch(tripControllerProvider).value!.deliveredTrips
         : ref.watch(tripControllerProvider).value!.processingTrips;
     return Scaffold(
-      key: key,
-
-      //backgroundColor: const Color(0xFFF1F4F8),
       body: SafeArea(
           child: RefreshIndicator(
         onRefresh: () async {
           await ref.read(tripControllerProvider.notifier).refreshTrips();
+          ref.read(websocketProvider).restartConnection();
         },
         child: trips.isNotEmpty
             ? ListView(
