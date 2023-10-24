@@ -30,6 +30,7 @@ import '../../domain/app_trip/echeck.dart';
 import '../../domain/app_trip/stop.dart';
 import '../../domain/app_trip/trip_list_state.dart';
 import '../../domain/update_stop_time_record/update_stop_time_record.dart';
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 
 part 'trip_page_controller.g.dart';
 
@@ -53,10 +54,20 @@ class TripController extends _$TripController implements IAppErrorHandler {
       state = AsyncValue.data(TripListState(trips: [testTrip]));
     }
 
+    // If the system can show an authorization request dialog
+    if (await AppTrackingTransparency.trackingAuthorizationStatus ==
+        TrackingStatus.notDetermined) {
+      await Future.delayed(const Duration(milliseconds: 200));
+      // Request system's tracking authorization dialog
+      await AppTrackingTransparency.requestTrackingAuthorization();
+    }
+
     return state.value!;
   }
 
-  Future<void> showTripListPreview(BuildContext context, int startIndex, int endIndex, [void Function()? onEnd]) async {
+  Future<void> showTripListPreview(
+      BuildContext context, int startIndex, int endIndex,
+      [void Function()? onEnd]) async {
     if (state.isLoading) return;
     state = AsyncValue.data(TripListState(trips: [testTrip]));
     tutorial.showTutorialSection(context, startIndex, endIndex, () async {
@@ -65,8 +76,8 @@ class TripController extends _$TripController implements IAppErrorHandler {
     });
   }
 
-  Future<void> showTripDetailsTutorialPreview(
-      BuildContext context, int startIndex, int endIndex, String currentTripId) async {
+  Future<void> showTripDetailsTutorialPreview(BuildContext context,
+      int startIndex, int endIndex, String currentTripId) async {
     if (state.isLoading) return;
     tripId = currentTripId;
     await showTripListPreview(context, startIndex, endIndex, () {
@@ -91,9 +102,12 @@ class TripController extends _$TripController implements IAppErrorHandler {
   }
 
   Future<void> startLocationTracking([String? newStatus]) async {
-    var status = newStatus ?? pref.getString(SharedPreferencesKey.driverStatus.name);
-    if (state.value!.activeTrips.isNotEmpty && (status.equalsIgnoreCase(DriverStatus.online) || status == null)) {
-      var trackingTrip = state.value!.activeTrips.firstWhereOrNull((e) => e.status == TripStatus.inTransit) ??
+    var status =
+        newStatus ?? pref.getString(SharedPreferencesKey.driverStatus.name);
+    if (state.value!.activeTrips.isNotEmpty &&
+        (status.equalsIgnoreCase(DriverStatus.online) || status == null)) {
+      var trackingTrip = state.value!.activeTrips
+              .firstWhereOrNull((e) => e.status == TripStatus.inTransit) ??
           state.value!.activeTrips.first;
       if (await Permission.location.isGranted) {
         startTracking(trackingTrip);
@@ -155,7 +169,8 @@ class TripController extends _$TripController implements IAppErrorHandler {
 
   void updateTrip(AppTrip trip) {
     if (!state.isLoading && state.value.isNotNull) {
-      int index = state.value!.trips.indexWhere((element) => element.id == trip.id!);
+      int index =
+          state.value!.trips.indexWhere((element) => element.id == trip.id!);
       var trips = List<AppTrip>.from(state.value!.trips);
       if (index > -1) {
         trips[index] = trip;
@@ -172,78 +187,112 @@ class TripController extends _$TripController implements IAppErrorHandler {
 
   Future<void> refreshCurrentTrip(String tripId) async {
     var trip = state.value!.getTrip(tripId);
-    final result = await tripRepo.getTripDetails<TripController>(tripId, trip.companyCode!);
-    int index = state.value!.trips.indexWhere((element) => element.id == result.id!);
+    final result = await tripRepo.getTripDetails<TripController>(
+        tripId, trip.companyCode!);
+    int index =
+        state.value!.trips.indexWhere((element) => element.id == result.id!);
     var trips = List<AppTrip>.from(state.value!.trips);
     trips[index] = result;
     state = AsyncValue.data(state.value!.copyWith(trips: trips));
   }
 
   Future<void> checkIn(String tripId, String stopId) async {
-    state = AsyncValue.data(state.value!.copyWith(loadingStopId: stopId, checkIn: true));
+    state = AsyncValue.data(
+        state.value!.copyWith(loadingStopId: stopId, checkIn: true));
     var trip = state.value!.tryGetTrip(tripId);
     if (trip == null) return;
-    var stop = trip.stops.firstWhereOrNull((element) => element.stopId == stopId);
+    var stop =
+        trip.stops.firstWhereOrNull((element) => element.stopId == stopId);
     if (stop == null) return;
     var location = await Helpers.getUserPosition(() {
       state = AsyncValue.data(state.value!.copyWith(loadingStopId: null));
     });
     var distance = Geolocator.distanceBetween(
-            location.latitude, location.longitude, double.parse(stop.latitude!), double.parse(stop.longitude!)) /
+            location.latitude,
+            location.longitude,
+            double.parse(stop.latitude!),
+            double.parse(stop.longitude!)) /
         1609.34;
     if (distance > 10) {
-      ref.read(httpClientProvider).telemetryClient.trackEvent(name: "distance_too_far", additionalProperties: {
+      ref
+          .read(httpClientProvider)
+          .telemetryClient
+          .trackEvent(name: "distance_too_far", additionalProperties: {
         "location": '${location.latitude}, ${location.longitude}',
         "distance": '$distance meters'
       });
-      await FirebaseAnalytics.instance.logEvent(
-          name: "distance_too_far",
-          parameters: {"location": '${location.latitude}, ${location.longitude}', "distance": '$distance meters'});
-      throw AlvysException('''You are too far from the stop location to check in.
+      await FirebaseAnalytics.instance
+          .logEvent(name: "distance_too_far", parameters: {
+        "location": '${location.latitude}, ${location.longitude}',
+        "distance": '$distance meters'
+      });
+      throw AlvysException(
+          '''You are too far from the stop location to check in.
       Move closer and try again.''', 'Too Far', () {
         state = AsyncValue.data(state.value!.copyWith(loadingStopId: null));
       });
     }
-    var dto = UpdateStopTimeRecord(latitude: location.latitude, longitude: location.longitude, timeIn: DateTime.now());
-    var newStop = await tripRepo.updateStopTimeRecord(trip.companyCode!, tripId, stopId, dto);
+    var dto = UpdateStopTimeRecord(
+        latitude: location.latitude,
+        longitude: location.longitude,
+        timeIn: DateTime.now());
+    var newStop = await tripRepo.updateStopTimeRecord(
+        trip.companyCode!, tripId, stopId, dto);
     updateStop(tripId, newStop);
     startTracking(trip);
-    state = AsyncValue.data(state.value!.copyWith(loadingStopId: null, checkIn: true));
-    ref.read(httpClientProvider).telemetryClient.trackEvent(name: "checked_in", additionalProperties: {
+    state = AsyncValue.data(
+        state.value!.copyWith(loadingStopId: null, checkIn: true));
+    ref
+        .read(httpClientProvider)
+        .telemetryClient
+        .trackEvent(name: "checked_in", additionalProperties: {
       "location": '${location.latitude}, ${location.longitude}',
       "stop": stop.companyName ?? "-"
     });
-    await FirebaseAnalytics.instance.logEvent(
-        name: "checked_in",
-        parameters: {"location": '${location.latitude}, ${location.longitude}', "stop": stop.companyName});
+    await FirebaseAnalytics.instance.logEvent(name: "checked_in", parameters: {
+      "location": '${location.latitude}, ${location.longitude}',
+      "stop": stop.companyName
+    });
   }
 
   Future<void> checkOut(String tripId, String stopId) async {
-    state = AsyncValue.data(state.value!.copyWith(loadingStopId: stopId, checkIn: false));
+    state = AsyncValue.data(
+        state.value!.copyWith(loadingStopId: stopId, checkIn: false));
     var trip = state.value!.tryGetTrip(tripId);
     if (trip == null) return;
     var location = await Helpers.getUserPosition(() {
       state = AsyncValue.data(state.value!.copyWith(loadingStopId: null));
     });
-    var dto = UpdateStopTimeRecord(latitude: location.latitude, longitude: location.longitude, timeOut: DateTime.now());
-    var stop = await tripRepo.updateStopTimeRecord(trip.companyCode!, tripId, stopId, dto);
+    var dto = UpdateStopTimeRecord(
+        latitude: location.latitude,
+        longitude: location.longitude,
+        timeOut: DateTime.now());
+    var stop = await tripRepo.updateStopTimeRecord(
+        trip.companyCode!, tripId, stopId, dto);
     updateStop(tripId, stop);
     startTracking(trip);
-    state = AsyncValue.data(state.value!.copyWith(loadingStopId: null, checkIn: false));
-    ref.read(httpClientProvider).telemetryClient.trackEvent(name: "checked_out", additionalProperties: {
+    state = AsyncValue.data(
+        state.value!.copyWith(loadingStopId: null, checkIn: false));
+    ref
+        .read(httpClientProvider)
+        .telemetryClient
+        .trackEvent(name: "checked_out", additionalProperties: {
       "location": '${location.latitude}, ${location.longitude}',
       "stop": stop.companyName ?? "-"
     });
-    await FirebaseAnalytics.instance.logEvent(
-        name: "checked_out",
-        parameters: {"location": '${location.latitude}, ${location.longitude}', "stop": stop.companyName});
+    await FirebaseAnalytics.instance.logEvent(name: "checked_out", parameters: {
+      "location": '${location.latitude}, ${location.longitude}',
+      "stop": stop.companyName
+    });
   }
 
   void updateStop(String tripId, Stop stop) async {
     var trip = state.value!.getTrip(tripId);
-    int index = state.value!.trips.indexWhere((element) => element.id == trip.id!);
+    int index =
+        state.value!.trips.indexWhere((element) => element.id == trip.id!);
     var trips = List<AppTrip>.from(state.value!.trips);
-    int stopIndex = trip.stops.indexWhere((element) => element.stopId == stop.stopId!);
+    int stopIndex =
+        trip.stops.indexWhere((element) => element.stopId == stop.stopId!);
     var stops = List<Stop>.from(trip.stops);
     stops[stopIndex] = stop;
     trips[index] = trip.copyWith(stops: stops);
@@ -253,8 +302,8 @@ class TripController extends _$TripController implements IAppErrorHandler {
   void addEcheck(String tripId, ECheck echeck) {
     var trip = getTrip(tripId);
     if (trip == null) return;
-    var existingCheck =
-        trip.eChecks.firstWhereOrNull((element) => element.expressCheckNumber == echeck.expressCheckNumber);
+    var existingCheck = trip.eChecks.firstWhereOrNull(
+        (element) => element.expressCheckNumber == echeck.expressCheckNumber);
     if (existingCheck != null) {
       updateEcheck(tripId, echeck);
     } else {
@@ -266,7 +315,8 @@ class TripController extends _$TripController implements IAppErrorHandler {
   void updateEcheck(String tripId, ECheck echeck) {
     var trip = getTrip(tripId);
     if (trip == null) return;
-    var currentECheckIndex = trip.eChecks.indexWhere((element) => element.eCheckId == echeck.eCheckId);
+    var currentECheckIndex = trip.eChecks
+        .indexWhere((element) => element.eCheckId == echeck.eCheckId);
     if (currentECheckIndex < 0) return;
     var updatedECheckList = List<ECheck>.from(trip.eChecks);
     updatedECheckList[currentECheckIndex] = echeck;
@@ -279,13 +329,16 @@ class TripController extends _$TripController implements IAppErrorHandler {
     var currentTrip = state.value!.tryGetTrip(tripId);
     if (currentTrip == null) return false;
     return auth.state.value!.shouldShowEcheckButton(currentTrip.companyCode!) &&
-        !currentTrip.id.inIgnoreCase(state.value!.processingTrips.map((e) => e.id!));
+        !currentTrip.id
+            .inIgnoreCase(state.value!.processingTrips.map((e) => e.id!));
   }
 
-  Future<void> generateEcheckDialog(BuildContext context, String tripId, String stopId) async {
+  Future<void> generateEcheckDialog(
+      BuildContext context, String tripId, String stopId) async {
     var res = await showGenerateEcheckDialog(context, tripId, stopId);
     if (res != null) {
-      SnackBar snackBar = SnackBarWrapper.getSnackBar('E-Check $res generated successfully');
+      SnackBar snackBar =
+          SnackBarWrapper.getSnackBar('E-Check $res generated successfully');
       if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         TabletUtils.instance.detailsController.animateTo(1);

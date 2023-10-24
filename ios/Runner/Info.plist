@@ -63,6 +63,8 @@
 	<string>Not required</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSUserTrackingUsageDescription</key>
+    <string>This allows the Alvys app to provide you with the most relevant content.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
