@@ -5,7 +5,6 @@ import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
 import '../../../common_widgets/buttons.dart';
 import '../../../common_widgets/unfocus_widget.dart';
-import '../../../constants/color.dart';
 import '../../../utils/tablet_utils.dart';
 import 'auth_provider_controller.dart';
 
