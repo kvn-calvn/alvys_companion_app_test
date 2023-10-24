@@ -8,7 +8,7 @@ import 'src/utils/app_theme.dart';
 import 'src/utils/theme_handler.dart';
 
 class App extends ConsumerStatefulWidget {
-  const App(this.isTablet, {Key? key}) : super(key: key);
+  const App(this.isTablet, {super.key});
   final bool isTablet;
 
   @override

@@ -4,12 +4,11 @@ import '../constants/color.dart';
 
 class ButtonStyle1 extends StatelessWidget {
   const ButtonStyle1(
-      {Key? key,
+      {super.key,
       required this.onPressAction,
       required this.title,
       this.isLoading = false,
-      this.isDisable = false})
-      : super(key: key);
+      this.isDisable = false});
 
   final Function onPressAction;
   final bool isLoading;
@@ -42,11 +41,10 @@ class ButtonStyle1 extends StatelessWidget {
 
 class ButtonStyle2 extends StatelessWidget {
   const ButtonStyle2(
-      {Key? key,
+      {super.key,
       required this.onPressAction,
       required this.title,
-      required this.isLoading})
-      : super(key: key);
+      required this.isLoading});
 
   final Function()? onPressAction;
   final bool isLoading;

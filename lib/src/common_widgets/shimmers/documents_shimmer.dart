@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'shimmer_widget.dart';
 
 class DocumentsShimmer extends StatelessWidget {
-  const DocumentsShimmer({Key? key}) : super(key: key);
+  const DocumentsShimmer({super.key});
 
   @override
   Widget build(BuildContext context) {

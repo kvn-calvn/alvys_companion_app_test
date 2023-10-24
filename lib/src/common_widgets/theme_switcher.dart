@@ -7,7 +7,7 @@ import '../utils/extensions.dart';
 import '../utils/theme_handler.dart';
 
 class ThemeSwitcher extends ConsumerStatefulWidget {
-  const ThemeSwitcher({Key? key}) : super(key: key);
+  const ThemeSwitcher({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ThemeSwitcherState();

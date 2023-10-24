@@ -9,7 +9,7 @@ import '../../../utils/app_theme.dart';
 import 'auth_provider_controller.dart';
 
 class UserDetailsPage extends ConsumerWidget {
-  const UserDetailsPage({Key? key}) : super(key: key);
+  const UserDetailsPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

@@ -13,7 +13,7 @@ import '../../../../utils/platform_channel.dart';
 import '../../../../utils/tablet_utils.dart';
 
 class RequestLocation extends StatelessWidget {
-  const RequestLocation({Key? key}) : super(key: key);
+  const RequestLocation({super.key});
 
   @override
   Widget build(BuildContext context, [bool mounted = true]) {

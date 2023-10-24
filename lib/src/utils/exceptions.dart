@@ -76,7 +76,7 @@ class AlvysException implements Exception {
 }
 
 class AlvysDioError extends DioException {
-  AlvysDioError({required RequestOptions requestOptions}) : super(requestOptions: requestOptions);
+  AlvysDioError({required super.requestOptions});
 }
 
 class AlvysTimeoutException extends ControllerException {

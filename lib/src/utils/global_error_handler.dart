@@ -18,40 +18,48 @@ final globalErrorHandlerProvider = Provider<GlobalErrorHandler>((ref) {
   return GlobalErrorHandler(
       providers: () => {
             AuthProviderNotifier: () => ref.read(authProvider.notifier),
-            UploadDocumentsController: () =>
-                ref.read(uploadDocumentsController.call(ProviderArgsSaver.instance.uploadArgs!).notifier),
+            UploadDocumentsController: () => ref.read(uploadDocumentsController
+                .call(ProviderArgsSaver.instance.uploadArgs!)
+                .notifier),
             EditProfileNotifier: () => ref.read(editProfileProvider.notifier),
             TripController: () => ref.read(tripControllerProvider.notifier),
-            EcheckPageController: () =>
-                ref.read(echeckPageControllerProvider.call(ProviderArgsSaver.instance.echeckArgs).notifier)
+            EcheckPageController: () => ref.read(echeckPageControllerProvider
+                .call(ProviderArgsSaver.instance.echeckArgs)
+                .notifier)
           },
       telemetry: ref.read(httpClientProvider));
 });
 
 class GlobalErrorHandler {
   final AlvysHttpClient telemetry;
-  LabeledGlobalKey<NavigatorState> navKey = LabeledGlobalKey<NavigatorState>("MainNavKey");
+  LabeledGlobalKey<NavigatorState> navKey =
+      LabeledGlobalKey<NavigatorState>("MainNavKey");
   Map<Type, IAppErrorHandler Function()> Function() providers;
   GlobalErrorHandler({required this.providers, required this.telemetry});
-  void handle(FlutterErrorDetails? details, bool flutterError, [Object? error, StackTrace? trace]) {
+  void handle(FlutterErrorDetails? details, bool flutterError,
+      [Object? error, StackTrace? trace]) {
     _handleError(
       flutterError ? details!.exception : error!,
       () {
         if (flutterError) {
-          telemetry.telemetryClient
-              .trackTrace(severity: Severity.error, message: 'mobile_app_client_error', additionalProperties: {
-            "Error": details!.exception.toString(),
-            "StackTrace": details.stack.toString(),
-            "ErrorType": "Flutter error",
-          });
+          telemetry.telemetryClient.trackTrace(
+              severity: Severity.error,
+              message: 'mobile_app_client_error',
+              additionalProperties: {
+                "Error": details!.exception.toString(),
+                "StackTrace": details.stack.toString(),
+                "ErrorType": "Flutter error",
+              });
           FlutterError.presentError(details);
         } else {
-          telemetry.telemetryClient
-              .trackTrace(severity: Severity.error, message: 'mobile_app_client_error', additionalProperties: {
-            "Error": error.toString(),
-            "StackTrace": trace.toString(),
-            "ErrorType": "Regular",
-          });
+          telemetry.telemetryClient.trackTrace(
+              severity: Severity.error,
+              message: 'mobile_app_client_error',
+              additionalProperties: {
+                "Error": error.toString(),
+                "StackTrace": trace.toString(),
+                "ErrorType": "Regular",
+              });
           debugPrint("$error");
           debugPrintStack(stackTrace: trace);
         }
@@ -67,14 +75,14 @@ class GlobalErrorHandler {
     String? dismissButtonText;
     bool hasError = true;
     switch (error.runtimeType) {
-      case AlvysClientException:
-      case AlvysEntityNotFoundException:
-      case AlvysSocketException:
-      case AlvysTimeoutException:
-      case AlvysUnauthorizedException:
-      case ApiServerException:
-      case AlvysDependencyException:
-      case ControllerException:
+      case AlvysClientException _:
+      case AlvysEntityNotFoundException _:
+      case AlvysSocketException _:
+      case AlvysTimeoutException _:
+      case AlvysUnauthorizedException _:
+      case ApiServerException _:
+      case AlvysDependencyException _:
+      case ControllerException _:
         var e = error as ControllerException;
         onError = () => executeOnError(e.source, e);
         message = e.message;
@@ -82,7 +90,7 @@ class GlobalErrorHandler {
 
         dismissButtonText = "Ok";
         break;
-      case PermissionException:
+      case PermissionException _:
         var e = error as PermissionException;
         message = e.message;
         title = 'Permission Error';
@@ -90,7 +98,7 @@ class GlobalErrorHandler {
         optionalOptions = e.optionalActions;
         dismissButtonText = "Not now";
         break;
-      case AlvysException:
+      case AlvysException _:
         var e = error as AlvysException;
         message = e.message;
         title = e.title;
@@ -149,7 +157,8 @@ class GlobalErrorHandler {
           description: message,
           actions: [
             ...optionalActions.map(
-              (e) => AppDialogAction(label: e.title, action: e.action, primary: true),
+              (e) => AppDialogAction(
+                  label: e.title, action: e.action, primary: true),
             ),
             AppDialogAction(
               label: dismissButtonText ?? 'Ok',

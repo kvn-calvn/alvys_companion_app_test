@@ -18,7 +18,7 @@ import '../../domain/app_trip/m_comodity.dart';
 class StopDetailsPage extends ConsumerStatefulWidget {
   final String tripId;
   final String stopId;
-  const StopDetailsPage(this.tripId, this.stopId, {Key? key}) : super(key: key);
+  const StopDetailsPage(this.tripId, this.stopId, {super.key});
 
   @override
   ConsumerState<StopDetailsPage> createState() => _StopDetailsPageState();
@@ -63,8 +63,8 @@ class StopDetails extends ConsumerWidget {
   const StopDetails(
     this.tripId,
     this.stopId, {
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -238,9 +238,9 @@ class StopDetails extends ConsumerWidget {
 
 class ReferencesWidget extends StatelessWidget {
   const ReferencesWidget({
-    Key? key,
+    super.key,
     required this.references,
-  }) : super(key: key);
+  });
 
   final List<Reference> references;
 
@@ -261,9 +261,9 @@ class ReferencesWidget extends StatelessWidget {
 
 class ItemsWidget extends StatelessWidget {
   const ItemsWidget({
-    Key? key,
+    super.key,
     required this.commodities,
-  }) : super(key: key);
+  });
 
   final List<MComodity> commodities;
 

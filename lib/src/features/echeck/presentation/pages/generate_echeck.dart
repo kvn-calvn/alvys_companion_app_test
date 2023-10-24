@@ -25,7 +25,7 @@ Future<String?> showGenerateEcheckDialog(BuildContext context, String tripId,
 class GenerateEcheck extends ConsumerStatefulWidget {
   final String tripId;
   final String? stopId;
-  const GenerateEcheck(this.tripId, this.stopId, {Key? key}) : super(key: key);
+  const GenerateEcheck(this.tripId, this.stopId, {super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _GenerateEcheckState();

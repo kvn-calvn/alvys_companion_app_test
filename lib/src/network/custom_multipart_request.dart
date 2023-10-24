@@ -5,10 +5,10 @@ import 'package:http/http.dart';
 class CustomMultipartRequest extends MultipartRequest {
   /// Creates a new [CustomMultipartRequest].
   CustomMultipartRequest(
-    String method,
-    Uri url, {
+    super.method,
+    super.url, {
     this.onProgress,
-  }) : super(method, url);
+  });
 
   final void Function(int bytes, int totalBytes)? onProgress;
 

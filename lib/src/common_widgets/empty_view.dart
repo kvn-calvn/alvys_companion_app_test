@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
 
 class EmptyView extends StatelessWidget {
-  const EmptyView({Key? key, required this.title, required this.description})
-      : super(key: key);
+  const EmptyView({super.key, required this.title, required this.description});
 
   final String title;
   final String description;

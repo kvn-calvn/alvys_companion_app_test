@@ -22,7 +22,7 @@ import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class LoadListPage extends ConsumerStatefulWidget {
-  const LoadListPage({Key? key}) : super(key: key);
+  const LoadListPage({super.key});
 
   @override
   ConsumerState<LoadListPage> createState() => _LoadListPageState();
@@ -146,8 +146,8 @@ class _LoadListPageState extends ConsumerState<LoadListPage> with TickerProvider
 
 class TripList extends ConsumerWidget {
   const TripList({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

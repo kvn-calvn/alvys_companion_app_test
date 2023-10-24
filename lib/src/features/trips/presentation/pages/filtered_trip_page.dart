@@ -8,7 +8,7 @@ import '../../../../utils/magic_strings.dart';
 import '../controller/trip_page_controller.dart';
 
 class FilteredTripPage extends ConsumerWidget {
-  const FilteredTripPage({Key? key, required this.filterType}) : super(key: key);
+  const FilteredTripPage({super.key, required this.filterType});
 
   final TripFilterType filterType;
 
@@ -40,10 +40,10 @@ class FilteredTripPage extends ConsumerWidget {
 
 class TripList extends StatelessWidget {
   const TripList({
-    Key? key,
+    super.key,
     required this.trips,
     required this.title,
-  }) : super(key: key);
+  });
 
   final dynamic trips;
   final String title;

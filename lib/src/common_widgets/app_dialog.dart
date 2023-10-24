@@ -16,11 +16,10 @@ class AppDialogAction {
 
 class AppDialog extends StatelessWidget {
   const AppDialog(
-      {Key? key,
+      {super.key,
       required this.title,
       required this.description,
-      required this.actions})
-      : super(key: key);
+      required this.actions});
 
   final String title, description;
   final List<AppDialogAction> actions;

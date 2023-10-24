@@ -9,7 +9,7 @@ import '../../../utils/tablet_utils.dart';
 import 'auth_provider_controller.dart';
 
 class SignInPage extends ConsumerStatefulWidget {
-  const SignInPage({Key? key}) : super(key: key);
+  const SignInPage({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _SignInPageState();

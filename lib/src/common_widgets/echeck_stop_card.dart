@@ -6,13 +6,13 @@ import '../features/trips/domain/app_trip/stop.dart';
 
 class ECheckStopCard extends StatefulWidget {
   const ECheckStopCard({
-    Key? key,
+    super.key,
     required this.onTap,
     this.currentStopId,
     required this.selectedColor,
     this.selected = false,
     required this.stop,
-  }) : super(key: key);
+  });
 
   final String? currentStopId;
 

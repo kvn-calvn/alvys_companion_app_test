@@ -6,7 +6,7 @@ import '../../constants/color.dart';
 class AlvysShimmer extends StatelessWidget {
   final Widget repeatingChild;
   final int repeatAmount;
-  const AlvysShimmer({Key? key, required this.repeatingChild, required this.repeatAmount}) : super(key: key);
+  const AlvysShimmer({super.key, required this.repeatingChild, required this.repeatAmount});
 
   @override
   Widget build(BuildContext context) {
@@ -99,14 +99,14 @@ class Shimmer extends StatefulWidget {
   final bool enabled;
 
   const Shimmer({
-    Key? key,
+    super.key,
     required this.child,
     required this.gradient,
     this.direction = ShimmerDirection.ltr,
     this.period = const Duration(milliseconds: 1500),
     this.loop = 0,
     this.enabled = true,
-  }) : super(key: key);
+  });
 
   ///
   /// A convenient constructor provides an easy and convenient way to create a
@@ -114,7 +114,7 @@ class Shimmer extends StatefulWidget {
   /// `highlightColor`.
   ///
   Shimmer.fromColors({
-    Key? key,
+    super.key,
     required this.child,
     required Color baseColor,
     required Color highlightColor,
@@ -126,8 +126,7 @@ class Shimmer extends StatefulWidget {
             begin: Alignment.topLeft,
             end: Alignment.centerRight,
             colors: <Color>[baseColor, baseColor, highlightColor, baseColor, baseColor],
-            stops: const <double>[0.0, 0.35, 0.5, 0.65, 1.0]),
-        super(key: key);
+            stops: const <double>[0.0, 0.35, 0.5, 0.65, 1.0]);
 
   @override
   // ignore: library_private_types_in_public_api
@@ -208,11 +207,11 @@ class _Shimmer extends SingleChildRenderObjectWidget {
   final Gradient gradient;
 
   const _Shimmer({
-    Widget? child,
+    super.child,
     required this.percent,
     required this.direction,
     required this.gradient,
-  }) : super(child: child);
+  });
 
   @override
   _ShimmerFilter createRenderObject(BuildContext context) {

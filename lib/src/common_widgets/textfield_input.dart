@@ -5,15 +5,14 @@ import '../constants/color.dart';
 
 class TextfieldInput extends StatelessWidget {
   const TextfieldInput(
-      {Key? key,
+      {super.key,
       required this.hint,
       required this.textfieldController,
       this.isDisabled = false,
       this.isFocus = false,
       this.textAlignment = TextAlign.left,
       this.inputFormatters,
-      required this.keyboardType})
-      : super(key: key);
+      required this.keyboardType});
 
   final TextEditingController textfieldController;
   final String hint;

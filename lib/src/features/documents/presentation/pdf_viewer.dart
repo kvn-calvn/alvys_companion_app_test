@@ -17,7 +17,7 @@ import 'package:share_plus/share_plus.dart';
 class PDFViewer extends StatefulWidget {
   final AppDocument arguments;
 
-  const PDFViewer({Key? key, required this.arguments}) : super(key: key);
+  const PDFViewer({super.key, required this.arguments});
 
   @override
   State<PDFViewer> createState() => _PDFViewerState();

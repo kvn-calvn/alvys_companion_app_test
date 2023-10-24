@@ -25,7 +25,7 @@ showCustomPopup<T>(
 class AlvysPopupItem<T> extends StatelessWidget {
   final T value;
   final Widget child;
-  const AlvysPopupItem({Key? key, required this.value, required this.child}) : super(key: key);
+  const AlvysPopupItem({super.key, required this.value, required this.child});
 
   @override
   Widget build(BuildContext context) {

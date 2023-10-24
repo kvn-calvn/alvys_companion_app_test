@@ -11,13 +11,12 @@ import 'docs_controller.dart';
 
 class DocumentList extends StatelessWidget {
   const DocumentList(
-      {Key? key,
+      {super.key,
       required this.documents,
       required this.refreshFunction,
       required this.emptyMessage,
       this.extra,
-      required this.args})
-      : super(key: key);
+      required this.args});
   final List<AppDocument> documents;
   final DocumentsArgs args;
   final Future<void> Function() refreshFunction;

@@ -18,7 +18,7 @@ import 'generate_echeck.dart';
 
 class EcheckPage extends ConsumerStatefulWidget {
   final String tripId;
-  const EcheckPage(this.tripId, {Key? key}) : super(key: key);
+  const EcheckPage(this.tripId, {super.key});
 
   @override
   ConsumerState<EcheckPage> createState() => _EcheckPageState();

@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 
 class Avatar extends StatelessWidget {
   const Avatar({
-    Key? key,
+    super.key,
     required this.profileImageUrl,
-  }) : super(key: key);
+  });
 
   final String profileImageUrl;
 

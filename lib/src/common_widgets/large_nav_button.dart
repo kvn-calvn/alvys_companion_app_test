@@ -3,14 +3,13 @@ import 'package:flutter/material.dart';
 
 class LargeNavButton extends StatelessWidget {
   const LargeNavButton(
-      {Key? key,
+      {super.key,
       required this.title,
       required this.onPressed,
       this.subtitle,
       this.suffix,
       this.icon,
-      this.padding = 16})
-      : super(key: key);
+      this.padding = 16});
 
   final String title;
   final String? subtitle;

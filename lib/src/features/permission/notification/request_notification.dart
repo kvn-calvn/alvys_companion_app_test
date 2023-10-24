@@ -14,7 +14,7 @@ import '../../../utils/tablet_utils.dart';
 import '../../authentication/presentation/auth_provider_controller.dart';
 
 class RequestNotification extends ConsumerWidget {
-  const RequestNotification({Key? key}) : super(key: key);
+  const RequestNotification({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref, [bool mounted = true]) {

@@ -12,8 +12,8 @@ class MainBottomNav extends ConsumerStatefulWidget {
   const MainBottomNav({
     required this.navShell,
     required this.children,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   final StatefulNavigationShell navShell;
   final List<Widget> children;

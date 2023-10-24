@@ -11,7 +11,7 @@ import '../utils/dummy_data.dart';
 import '../utils/magic_strings.dart';
 
 class TripCard extends ConsumerWidget {
-  const TripCard({Key? key, required this.trip}) : super(key: key);
+  const TripCard({super.key, required this.trip});
 
   final AppTrip trip;
 
@@ -196,10 +196,10 @@ class TripCard extends ConsumerWidget {
 class TripCardDetail extends StatelessWidget {
   final String details, title;
   const TripCardDetail({
-    Key? key,
+    super.key,
     required this.title,
     required this.details,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

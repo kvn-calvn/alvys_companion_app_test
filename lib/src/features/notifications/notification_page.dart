@@ -28,8 +28,8 @@ class _NotificationPageState extends State<NotificationPage> {
 
 class NotificationList extends StatelessWidget {
   const NotificationList({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

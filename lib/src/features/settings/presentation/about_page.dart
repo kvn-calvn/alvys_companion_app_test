@@ -12,7 +12,7 @@ import 'package:package_info_plus/package_info_plus.dart';
 import '../../../network/firebase_remote_config_service.dart';
 
 class AboutPage extends StatelessWidget {
-  const AboutPage({Key? key}) : super(key: key);
+  const AboutPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -48,8 +48,8 @@ class AboutPage extends StatelessWidget {
 
 class AboutPageBody extends StatelessWidget {
   const AboutPageBody({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

@@ -16,7 +16,7 @@ import '../../../utils/tablet_utils.dart';
 import 'auth_provider_controller.dart';
 
 class PhoneNumberVerificationPage extends ConsumerStatefulWidget {
-  const PhoneNumberVerificationPage({Key? key}) : super(key: key);
+  const PhoneNumberVerificationPage({super.key});
 
   @override
   // ignore: library_private_types_in_public_api

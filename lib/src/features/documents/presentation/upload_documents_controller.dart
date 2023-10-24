@@ -76,7 +76,7 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
         router.pop();
       }
       state = state.copyWith(
-          pages: [...state.pages, ...results.scans.map<String>((e) => Scan.toPathString(e.enhancedUrl!)).toList()]);
+          pages: [...state.pages, ...results.scans.map<String>((e) => Scan.toPathString(e.enhancedUrl!))]);
       firstScan = false;
     } catch (e) {
       if (firstScan) {

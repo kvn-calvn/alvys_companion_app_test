@@ -17,7 +17,7 @@ import '../../authentication/presentation/auth_provider_controller.dart';
 import '../../tutorial/tutorial_controller.dart';
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({Key? key}) : super(key: key);
+  const SettingsPage({super.key});
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
@@ -47,8 +47,8 @@ class _SettingsPageState extends State<SettingsPage> {
 
 class SettingsList extends ConsumerWidget {
   const SettingsList({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

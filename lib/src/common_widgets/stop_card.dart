@@ -16,13 +16,13 @@ import 'buttons.dart';
 
 class StopCard extends ConsumerWidget {
   const StopCard({
-    Key? key,
+    super.key,
     required this.stop,
     required this.tripId,
     this.canCheckInOutStopId,
     required this.index,
     required this.tabIndex,
-  }) : super(key: key);
+  });
   final int index;
   final Stop stop;
   final String tripId;

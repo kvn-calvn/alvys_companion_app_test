@@ -14,7 +14,7 @@ import 'upload_options.dart';
 class DocumentsPage extends ConsumerStatefulWidget {
   final DocumentsArgs args;
 
-  const DocumentsPage(this.args, {Key? key}) : super(key: key);
+  const DocumentsPage(this.args, {super.key});
 
   @override
   ConsumerState<DocumentsPage> createState() => _DocumentsPageState();

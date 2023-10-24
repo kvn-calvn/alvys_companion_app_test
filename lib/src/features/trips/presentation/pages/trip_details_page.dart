@@ -27,7 +27,7 @@ import 'trip_documents_page.dart';
 class LoadDetailsPage extends ConsumerStatefulWidget {
   final String tripId;
   final int tabIndex;
-  const LoadDetailsPage(this.tripId, this.tabIndex, {Key? key}) : super(key: key);
+  const LoadDetailsPage(this.tripId, this.tabIndex, {super.key});
 
   @override
   ConsumerState<LoadDetailsPage> createState() => _LoadDetailsPageState();
@@ -145,7 +145,7 @@ class _LoadDetailsPageState extends ConsumerState<LoadDetailsPage> with TickerPr
 class TripDetails extends ConsumerWidget {
   final String tripId;
   final int tabIndex;
-  const TripDetails(this.tripId, this.tabIndex, {Key? key}) : super(key: key);
+  const TripDetails(this.tripId, this.tabIndex, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {

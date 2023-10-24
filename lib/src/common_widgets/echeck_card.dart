@@ -24,11 +24,10 @@ class EcheckCard extends ConsumerWidget {
   const EcheckCard(
       {required this.companyCode,
       required this.index,
-      Key? key,
+      super.key,
       required this.eCheck,
       required this.cancelECheck,
-      required this.tripId})
-      : super(key: key);
+      required this.tripId});
 
   void showEcheckMenu(BuildContext context, bool canCancelEcheck, String? checkNumber, ECheck check) {
     if (checkNumber != null) return;

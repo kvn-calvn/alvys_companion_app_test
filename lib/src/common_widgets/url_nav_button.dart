@@ -7,10 +7,10 @@ import '../network/http_client.dart';
 
 class UrlNavButton extends StatelessWidget {
   const UrlNavButton({
-    Key? key,
+    super.key,
     required this.title,
     required this.url,
-  }) : super(key: key);
+  });
 
   final String title;
   final String url;
