@@ -25,9 +25,12 @@ class ECheckStopCard extends StatefulWidget {
   State<ECheckStopCard> createState() => _ECheckStopCardState();
 }
 
-class _ECheckStopCardState extends State<ECheckStopCard> with TickerProviderStateMixin {
+class _ECheckStopCardState extends State<ECheckStopCard>
+    with TickerProviderStateMixin {
   Color selectedColor(BuildContext context) {
-    return isSelected ? ColorManager.primary(Theme.of(context).brightness) : Theme.of(context).cardColor;
+    return isSelected
+        ? ColorManager.primary(Theme.of(context).brightness)
+        : Theme.of(context).cardColor;
   }
 
   bool get isSelected {
@@ -40,9 +43,11 @@ class _ECheckStopCardState extends State<ECheckStopCard> with TickerProviderStat
   @override
   void initState() {
     super.initState();
-    animationController = AnimationController(vsync: this, duration: const Duration(milliseconds: 350));
-    colorAnimation =
-        ColorTween(begin: widget.selectedColor.withAlpha(0), end: widget.selectedColor).animate(animationController);
+    animationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 350));
+    colorAnimation = ColorTween(
+            begin: widget.selectedColor.withAlpha(0), end: widget.selectedColor)
+        .animate(animationController);
   }
 
   @override
@@ -51,7 +56,9 @@ class _ECheckStopCardState extends State<ECheckStopCard> with TickerProviderStat
       return AnimatedBuilder(
           animation: colorAnimation,
           builder: (context, child) {
-            isSelected ? animationController.forward() : animationController.reverse();
+            isSelected
+                ? animationController.forward()
+                : animationController.reverse();
             return Padding(
               padding: const EdgeInsets.symmetric(vertical: 8.0),
               child: Material(
@@ -67,13 +74,17 @@ class _ECheckStopCardState extends State<ECheckStopCard> with TickerProviderStat
                     child: Container(
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(10),
-                          border: Border.all(color: colorAnimation.value!, width: 2.3)),
+                          border: Border.all(
+                              color: colorAnimation.value!, width: 2.3)),
                       child: Padding(
-                        padding: const EdgeInsetsDirectional.fromSTEB(10, 8, 0, 8),
+                        padding:
+                            const EdgeInsetsDirectional.fromSTEB(10, 8, 0, 8),
                         child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 8, 0),
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  0, 5, 8, 0),
                               child: Container(
                                 decoration: BoxDecoration(
                                     color: widget.stop.stopType == 'Pickup'
@@ -85,18 +96,22 @@ class _ECheckStopCardState extends State<ECheckStopCard> with TickerProviderStat
                               ),
                             ),
                             ConstrainedBox(
-                              constraints: BoxConstraints(maxWidth: constraints.maxWidth * 0.8),
+                              constraints: BoxConstraints(
+                                  maxWidth: constraints.maxWidth * 0.8),
                               child: Column(
-                                mainAxisSize: MainAxisSize.max,
                                 crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisSize: MainAxisSize.min,
                                 children: [
                                   Text(
                                     widget.stop.companyName!,
-                                    style: Theme.of(context).textTheme.bodyLarge,
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge,
                                   ),
                                   Text(
                                       "${widget.stop.address?.city ?? ''}, ${widget.stop.address?.state ?? ''} ${widget.stop.address?.zip ?? ''}",
-                                      style: Theme.of(context).textTheme.bodyMedium),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyMedium),
                                 ],
                               ),
                             ),

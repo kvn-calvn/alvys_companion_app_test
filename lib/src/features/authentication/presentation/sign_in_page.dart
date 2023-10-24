@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
+import '../../../common_widgets/buttons.dart';
 import '../../../common_widgets/unfocus_widget.dart';
 import '../../../constants/color.dart';
 import '../../../utils/tablet_utils.dart';
@@ -36,7 +37,8 @@ class _SignInPageState extends ConsumerState<SignInPage> {
             child: Container(
               padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
               constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.longestSide * (TabletUtils.instance.isTablet ? 0.5 : 1)),
+                  maxWidth: MediaQuery.of(context).size.longestSide *
+                      (TabletUtils.instance.isTablet ? 0.5 : 1)),
               child: Column(
                 mainAxisSize: MainAxisSize.max,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -46,7 +48,8 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                     height: 25,
                   ),
                   Text('Enter your 10 digit phone number',
-                      textAlign: TextAlign.center, style: Theme.of(context).textTheme.headlineLarge),
+                      textAlign: TextAlign.center,
+                      style: Theme.of(context).textTheme.headlineLarge),
                   const SizedBox(
                     height: 20,
                   ),
@@ -67,7 +70,8 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                     },
                     textAlign: TextAlign.center,
                     autofocus: true,
-                    decoration: const InputDecoration(hintText: "(###) ###-####"),
+                    decoration:
+                        const InputDecoration(hintText: "(###) ###-####"),
                   ),
                   const SizedBox(
                     height: 16,
@@ -80,48 +84,18 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                       : ButtonStyle1(
                           title: "Next",
                           isLoading: false,
-                          isDisable: ref.watch(authProvider).value!.phone.length < 10,
+                          isDisable:
+                              ref.watch(authProvider).value!.phone.length < 10,
                           onPressAction: () async {
-                            await ref.read(authProvider.notifier).signInDriver(context, mounted);
+                            await ref
+                                .read(authProvider.notifier)
+                                .signInDriver(context, mounted);
                           }),
                 ],
               ),
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class ButtonStyle1 extends StatelessWidget {
-  const ButtonStyle1(
-      {Key? key, required this.onPressAction, required this.title, this.isLoading = false, this.isDisable = false})
-      : super(key: key);
-
-  final Function onPressAction;
-  final bool isLoading;
-  final bool isDisable;
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: isLoading || isDisable ? null : () => onPressAction(),
-      /*onPressed: () {
-                    Navigator.pushNamed(context, '/verifyphone');
-                  },*/
-      style: ElevatedButton.styleFrom(
-        elevation: 0,
-        minimumSize: const Size.fromHeight(50),
-        backgroundColor: ColorManager.primary(Theme.of(context).brightness),
-        textStyle: Theme.of(context).textTheme.titleMedium,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-      ),
-      child: Text(
-        isLoading ? "Loading.." : title,
       ),
     );
   }

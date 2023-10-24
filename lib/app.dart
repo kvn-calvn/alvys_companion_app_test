@@ -52,9 +52,12 @@ class _AppState extends ConsumerState<App> with WidgetsBindingObserver {
 
   @override
   Widget build(BuildContext context) {
-    final router = widget.isTablet ? ref.read(tabletRouteProvider) : ref.read(routerProvider);
+    final router = widget.isTablet
+        ? ref.read(tabletRouteProvider)
+        : ref.read(routerProvider);
     return MaterialApp.router(
       //useInheritedMediaQuery: true,
+      debugShowCheckedModeBanner: false,
       themeMode: ref.watch(themeHandlerProvider),
       theme: AlvysTheme.mainTheme(Brightness.light),
       darkTheme: AlvysTheme.mainTheme(Brightness.dark),
