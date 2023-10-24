@@ -13,5 +13,6 @@ class UploadDocumentsState with _$UploadDocumentsState {
     File? finalFile,
     @Default(0) int pageNumber,
     UploadDocumentOptions? documentType,
+    @Default(true) bool showHud,
   }) = _UploadDocumentsState;
 }

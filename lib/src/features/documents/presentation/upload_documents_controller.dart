@@ -127,6 +127,8 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
     }
   }
 
+  void setShowHud(bool show) => state = state.copyWith(showHud: show);
+
   Future<void> _doUpload(File pdfFile) async {
     switch (arg.documentType) {
       case DisplayDocumentType.tripDocuments:
