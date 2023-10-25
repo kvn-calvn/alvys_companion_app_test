@@ -1,8 +1,9 @@
-import '../../../../network/firebase_remote_config.dart';
+import '../../../../network/firebase_remote_config_service.dart';
+
 import '../../../../network/http_client.dart';
-import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
+import '../../../../utils/alvys_websocket.dart';
 import '../../../authentication/presentation/driver_status_dropdown.dart';
 import '../../../tutorial/tutorial_controller.dart';
 
@@ -21,7 +22,7 @@ import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class LoadListPage extends ConsumerStatefulWidget {
-  const LoadListPage({Key? key}) : super(key: key);
+  const LoadListPage({super.key});
 
   @override
   ConsumerState<LoadListPage> createState() => _LoadListPageState();
@@ -71,43 +72,42 @@ class _LoadListPageState extends ConsumerState<LoadListPage> with TickerProvider
 
   @override
   Widget build(BuildContext context) {
-    final showTutBtn = ref.read(remoteconfigProvider).value?.getBool("show_tutorial_btn");
-
-    debugPrint("Called");
+    var showTutBtn = ref.watch(firebaseRemoteConfigServiceProvider).showTutorialBtn();
     return Scaffold(
       appBar: AppBar(
         leading: const Padding(
-          padding: EdgeInsets.only(left: 16.0),
+          padding: EdgeInsets.only(left: 4.0),
           child: DriverStatusDropdown(),
         ),
-        leadingWidth: 150,
+        leadingWidth: 128,
         title: Text(
           'Trips',
           style: AlvysTheme.appbarTextStyle(context, false),
         ),
         actions: [
-          IconButton(
-            constraints: const BoxConstraints(),
-            onPressed: () async {
-              await ref.read(tripControllerProvider.notifier).showTripListPreview(context, 0, 0);
-              ref.read(httpClientProvider).telemetryClient.trackEvent(name: "trip_list_tour_button_tapped");
-              await FirebaseAnalytics.instance.logEvent(name: "trip_list_tour_button_tapped");
-            },
-            icon: const Icon(Icons.info),
-          ),
-          if (showTutBtn.isNotNull && showTutBtn == true) ...[
+          if (showTutBtn) ...[
             IconButton(
-              padding: const EdgeInsets.only(right: 18.0, left: 5.0),
               constraints: const BoxConstraints(),
-              key: ref.read(tutorialProvider).refresh,
               onPressed: () async {
-                await ref.read(tripControllerProvider.notifier).refreshTrips(true);
-                ref.read(httpClientProvider).telemetryClient.trackEvent(name: "refresh_button_tapped");
-                await FirebaseAnalytics.instance.logEvent(name: "refresh_button_tapped");
+                await ref.read(tripControllerProvider.notifier).showTripListPreview(context, 0, 0);
+                ref.read(httpClientProvider).telemetryClient.trackEvent(name: "trip_list_tour_button_tapped");
+                await FirebaseAnalytics.instance.logEvent(name: "trip_list_tour_button_tapped");
               },
-              icon: const Icon(Icons.refresh),
-            )
-          ]
+              icon: const Icon(Icons.info),
+            ),
+          ],
+          IconButton(
+            padding: const EdgeInsets.only(right: 18.0, left: 5.0),
+            constraints: const BoxConstraints(),
+            key: ref.read(tutorialProvider).refresh,
+            onPressed: () async {
+              await ref.read(tripControllerProvider.notifier).refreshTrips(true);
+              ref.read(websocketProvider).restartConnection();
+              ref.read(httpClientProvider).telemetryClient.trackEvent(name: "refresh_button_tapped");
+              await FirebaseAnalytics.instance.logEvent(name: "refresh_button_tapped");
+            },
+            icon: const Icon(Icons.refresh),
+          )
         ],
         centerTitle: true,
         bottom: TabBar(
@@ -145,8 +145,8 @@ class _LoadListPageState extends ConsumerState<LoadListPage> with TickerProvider
 
 class TripList extends ConsumerWidget {
   const TripList({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -160,6 +160,7 @@ class TripList extends ConsumerWidget {
             child: RefreshIndicator(
               onRefresh: () async {
                 await ref.read(tripControllerProvider.notifier).refreshTrips();
+                ref.read(websocketProvider).restartConnection();
               },
               child: tripsState.value!.activeTrips.isNotEmpty
                   ? ListView(

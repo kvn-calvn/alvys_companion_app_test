@@ -1,35 +1,36 @@
 import 'dart:async';
 
-import '../../../../network/http_client.dart';
-import '../../../../utils/provider_args_saver.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../../../utils/permission_helper.dart';
-
-import '../../../tutorial/tutorial_controller.dart';
-import '../../../../utils/dummy_data.dart';
-import 'package:go_router/go_router.dart';
-import '../../domain/app_trip/echeck.dart';
-
-import '../../domain/app_trip/stop.dart';
-import '../../domain/update_stop_time_record/update_stop_time_record.dart';
-import '../../../../utils/exceptions.dart';
-import '../../../../utils/helpers.dart';
+import '../../../../common_widgets/snack_bar.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
-import 'package:geolocator/geolocator.dart';
-import '../../../../constants/api_routes.dart';
-import '../../../authentication/presentation/auth_provider_controller.dart';
-import '../../domain/app_trip/app_trip.dart';
-import '../../domain/app_trip/trip_list_state.dart';
-import '../../data/repositories/trip_repository.dart';
-import '../../../../utils/magic_strings.dart';
-import '../../../../utils/platform_channel.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../../../constants/api_routes.dart';
+import '../../../../network/http_client.dart';
+import '../../../../utils/dummy_data.dart';
+import '../../../../utils/exceptions.dart';
 import '../../../../utils/extensions.dart';
+import '../../../../utils/helpers.dart';
+import '../../../../utils/magic_strings.dart';
+import '../../../../utils/permission_helper.dart';
+import '../../../../utils/platform_channel.dart';
+import '../../../../utils/provider_args_saver.dart';
+import '../../../../utils/tablet_utils.dart';
+import '../../../authentication/presentation/auth_provider_controller.dart';
+import '../../../echeck/presentation/pages/generate_echeck.dart';
+import '../../../tutorial/tutorial_controller.dart';
+import '../../data/repositories/trip_repository.dart';
+import '../../domain/app_trip/app_trip.dart';
+import '../../domain/app_trip/echeck.dart';
+import '../../domain/app_trip/stop.dart';
+import '../../domain/app_trip/trip_list_state.dart';
+import '../../domain/update_stop_time_record/update_stop_time_record.dart';
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 
 part 'trip_page_controller.g.dart';
 
@@ -51,6 +52,13 @@ class TripController extends _$TripController implements IAppErrorHandler {
       await getTrips();
     } else {
       state = AsyncValue.data(TripListState(trips: [testTrip]));
+    }
+
+    // If the system can show an authorization request dialog
+    if (await AppTrackingTransparency.trackingAuthorizationStatus == TrackingStatus.notDetermined) {
+      await Future.delayed(const Duration(milliseconds: 200));
+      // Request system's tracking authorization dialog
+      await AppTrackingTransparency.requestTrackingAuthorization();
     }
 
     return state.value!;
@@ -150,7 +158,7 @@ class TripController extends _$TripController implements IAppErrorHandler {
     final result = await tripRepo.getTrips<TripController>();
     await auth.refreshDriverUser();
     var dataToGet = result.toListNotNull();
-    state = AsyncValue.data(state.value!.copyWith(trips: dataToGet));
+    state = AsyncValue.data(state.value!.copyWith(trips: dataToGet, loadingStopId: null));
   }
 
   void updateTrip(AppTrip trip) {
@@ -176,7 +184,7 @@ class TripController extends _$TripController implements IAppErrorHandler {
     int index = state.value!.trips.indexWhere((element) => element.id == result.id!);
     var trips = List<AppTrip>.from(state.value!.trips);
     trips[index] = result;
-    state = AsyncValue.data(state.value!.copyWith(trips: trips));
+    state = AsyncValue.data(state.value!.copyWith(trips: trips, loadingStopId: null));
   }
 
   Future<void> checkIn(String tripId, String stopId) async {
@@ -189,7 +197,8 @@ class TripController extends _$TripController implements IAppErrorHandler {
       state = AsyncValue.data(state.value!.copyWith(loadingStopId: null));
     });
     var distance = Geolocator.distanceBetween(
-        location.latitude, location.longitude, double.parse(stop.latitude!), double.parse(stop.longitude!));
+            location.latitude, location.longitude, double.parse(stop.latitude!), double.parse(stop.longitude!)) /
+        1609.34;
     if (distance > 10) {
       ref.read(httpClientProvider).telemetryClient.trackEvent(name: "distance_too_far", additionalProperties: {
         "location": '${location.latitude}, ${location.longitude}',
@@ -252,8 +261,14 @@ class TripController extends _$TripController implements IAppErrorHandler {
   void addEcheck(String tripId, ECheck echeck) {
     var trip = getTrip(tripId);
     if (trip == null) return;
-    trip = trip.copyWith(eChecks: [...trip.eChecks, echeck]);
-    updateTrip(trip);
+    var existingCheck =
+        trip.eChecks.firstWhereOrNull((element) => element.expressCheckNumber == echeck.expressCheckNumber);
+    if (existingCheck != null) {
+      updateEcheck(tripId, echeck);
+    } else {
+      trip = trip.copyWith(eChecks: [...trip.eChecks, echeck]);
+      updateTrip(trip);
+    }
   }
 
   void updateEcheck(String tripId, ECheck echeck) {
@@ -261,12 +276,38 @@ class TripController extends _$TripController implements IAppErrorHandler {
     if (trip == null) return;
     var currentECheckIndex = trip.eChecks.indexWhere((element) => element.eCheckId == echeck.eCheckId);
     if (currentECheckIndex < 0) return;
-    trip.eChecks[currentECheckIndex] = echeck;
+    var updatedECheckList = List<ECheck>.from(trip.eChecks);
+    updatedECheckList[currentECheckIndex] = echeck;
+    trip = trip.copyWith(eChecks: updatedECheckList);
     updateTrip(trip);
   }
 
+  bool shouldShowEcheckButton(String? tripId) {
+    if (tripId == null) return false;
+    var currentTrip = state.value!.tryGetTrip(tripId);
+    if (currentTrip == null) return false;
+    return auth.state.value!.shouldShowEcheckButton(currentTrip.companyCode!) &&
+        !currentTrip.id.inIgnoreCase(state.value!.processingTrips.map((e) => e.id!));
+  }
+
+  Future<void> generateEcheckDialog(BuildContext context, String tripId, String stopId) async {
+    var res = await showGenerateEcheckDialog(context, tripId, stopId);
+    if (res != null) {
+      SnackBar snackBar = SnackBarWrapper.getSnackBar('E-Check $res generated successfully');
+      if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        TabletUtils.instance.detailsController.animateTo(1);
+      });
+    }
+  }
+
   @override
-  FutureOr<void> onError() {
+  FutureOr<void> onError(Exception ex) {
     state = AsyncData(state.value!.copyWith(loadingStopId: null));
+  }
+
+  @override
+  FutureOr<void> refreshPage(String page) async {
+    await getTrips();
   }
 }

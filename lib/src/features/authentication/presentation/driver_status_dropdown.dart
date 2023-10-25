@@ -18,7 +18,6 @@ class DriverStatusDropdown extends ConsumerWidget {
       key: ref.read(tutorialProvider).sleepDropdown,
       child: DropdownButton(
         value: status ?? DriverStatus.online,
-        isDense: true,
         elevation: 1,
         iconSize: 0.0,
         borderRadius: BorderRadius.circular(10),

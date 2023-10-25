@@ -1,7 +1,4 @@
-import '../../../network/http_client.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
-
-import '../../tutorial/tutorial_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -11,13 +8,16 @@ import '../../../common_widgets/large_nav_button.dart';
 import '../../../common_widgets/tablet_view.dart';
 import '../../../common_widgets/theme_switcher.dart';
 import '../../../common_widgets/url_nav_button.dart';
+import '../../../network/firebase_remote_config_service.dart';
+import '../../../network/http_client.dart';
 import '../../../utils/app_theme.dart';
 import '../../../utils/magic_strings.dart';
 import '../../../utils/platform_channel.dart';
 import '../../authentication/presentation/auth_provider_controller.dart';
+import '../../tutorial/tutorial_controller.dart';
 
 class SettingsPage extends StatefulWidget {
-  const SettingsPage({Key? key}) : super(key: key);
+  const SettingsPage({super.key});
 
   @override
   State<SettingsPage> createState() => _SettingsPageState();
@@ -47,8 +47,8 @@ class _SettingsPageState extends State<SettingsPage> {
 
 class SettingsList extends ConsumerWidget {
   const SettingsList({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -59,12 +59,18 @@ class SettingsList extends ConsumerWidget {
           height: 10,
         ),
         LargeNavButton(
-          title: "Change Theme",
+          title: "Theme",
           onPressed: () {
             showCustomBottomSheet(context, const ThemeSwitcher());
           },
         ),
-        const UrlNavButton(title: "Help", url: "https://alvys.com/help/"),
+        Consumer(
+          builder: (context, ref, child) {
+            var alvysHelp = ref.watch(firebaseRemoteConfigServiceProvider).alvysHelpUrl();
+            return UrlNavButton(title: "Help", url: alvysHelp);
+          },
+        ),
+        //const UrlNavButton(title: "Help", url: "https://alvys.com/help/"),
         LargeNavButton(
           title: "About",
           onPressed: () {
@@ -72,7 +78,7 @@ class SettingsList extends ConsumerWidget {
           },
         ),
         LargeNavButton(
-          title: "Watch Tutorial",
+          title: "Tutorial",
           onPressed: () async {
             ref.read(firstInstallProvider.notifier).setState(true);
             context.goNamed(RouteName.trips.name);

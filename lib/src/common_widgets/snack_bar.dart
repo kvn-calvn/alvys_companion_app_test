@@ -33,4 +33,26 @@ class SnackBarWrapper {
       ),
     );
   }
+
+  static SnackBar getSnackBar(String message) => SnackBar(
+        padding: const EdgeInsets.only(top: 10),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 12),
+              child: Text(message),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            const Divider(
+              height: 0,
+              thickness: 1.5,
+            )
+          ],
+        ),
+        duration: const Duration(milliseconds: 4000),
+      );
 }

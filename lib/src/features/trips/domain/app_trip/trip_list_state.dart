@@ -1,5 +1,3 @@
-import '../../../../utils/extensions.dart';
-
 import '../../../../utils/magic_strings.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 
@@ -17,14 +15,20 @@ class TripListState with _$TripListState {
   }) = _TripListState;
   const TripListState._();
   List<AppTrip> get deliveredTrips {
-    var res = trips.where((element) => element.status == TripStatus.delivered).toList();
-    res.sort((a, b) => sortDates(a.deliveryDate, b.deliveryDate));
+    var res = trips
+        .where((element) => element.status.equalsIgnoreCase(TripStatus.delivered))
+        .orderBy((element) => element.deliveryDate)
+        .toList();
+    // res.sort((a, b) => sortDates(a.deliveryDate, b.deliveryDate));
     return res;
   }
 
   List<AppTrip> get activeTrips {
-    var res = trips.where((element) => element.isTripActive!).toList();
-    res.sort((a, b) => sortDates(a.deliveryDate, b.deliveryDate));
+    var res = trips
+        .where((element) => element.status!.inIgnoreCase([TripStatus.inTransit, TripStatus.dispatched]))
+        .orderBy((element) => element.deliveryDate)
+        .toList();
+    // res.sort((a, b) => sortDates(a.deliveryDate, b.deliveryDate));
     return res;
   }
 
@@ -38,13 +42,14 @@ class TripListState with _$TripListState {
               TripStatus.queued,
             ]))
         .toList();
-    res.sort((a, b) => sortDates(a.deliveryDate, b.deliveryDate));
+    res.orderBy((element) => element.deliveryDate);
+    //.sort((a, b) => sortDates(a.deliveryDate, b.deliveryDate));
     return res;
   }
 
-  int sortDates(DateTime? a, DateTime? b) {
-    return a.isAfterNull(b) ? 1 : -1;
-  }
+  // int sortDates(DateTime? a, DateTime? b) {
+  //   return a.isAfterNull(b) ? 1 : -1;
+  // }
 
   AppTrip getTrip(String tripId) =>
       trips.firstWhere((element) => element.id! == tripId, orElse: () => AppTrip(id: '-', tripNumber: '...'));

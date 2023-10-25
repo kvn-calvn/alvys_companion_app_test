@@ -1,5 +1,9 @@
 import 'dart:async';
 
+import 'package:alvys3/src/common_widgets/snack_bar.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+
+import '../../../../network/http_client.dart';
 import '../../../../utils/provider_args_saver.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -67,8 +71,8 @@ class EcheckPageController extends AutoDisposeFamilyAsyncNotifier<ECheckState, S
   Future<void> generateEcheck(GlobalKey<FormState> formKey, BuildContext context, String tripId) async {
     if (formKey.currentState?.validate() ?? false) {
       state = const AsyncLoading();
-      var firstName = auth.driver!.name!.split('').first;
-      var lastName = auth.driver!.name!.split('').elementAtOrNull(1) ?? '';
+      var firstName = auth.driver!.name!.split(' ').first;
+      var lastName = auth.driver!.name!.split(' ').elementAtOrNull(1) ?? '';
       var trip = tripController.getTrip(tripId)!;
       var req = GenerateECheckRequest(
           tripId: trip.id!,
@@ -80,30 +84,60 @@ class EcheckPageController extends AutoDisposeFamilyAsyncNotifier<ECheckState, S
           driverId: trip.driver1Id!,
           amount: state.value!.amount);
       var res = await repo.generateEcheck<EcheckPageController>(trip.companyCode!, req);
+      ref.read(httpClientProvider).telemetryClient.trackEvent(name: "generate_echeck", additionalProperties: {
+        "tripId": req.tripId,
+        "reason": req.reason,
+        "note": req.note,
+        "amount": req.amount,
+        "stopId": req.stopId ?? "",
+        "first_name": req.firstName,
+        "last_name": req.lastName
+      });
+      await FirebaseAnalytics.instance.logEvent(name: "generate_echeck", parameters: <String, String>{
+        "tripId": req.tripId,
+        "reason": req.reason,
+        "note": req.note,
+        "amount": req.amount.toString(),
+        "stopId": req.stopId.toString(),
+        "first_name": req.firstName,
+        "last_name": req.lastName
+      });
+
       tripController.addEcheck(trip.id!, res);
       state = AsyncData(state.value!);
       if (context.mounted) {
-        Navigator.of(context, rootNavigator: true).pop();
+        resetState();
+        Navigator.of(context, rootNavigator: true).pop(res.expressCheckNumber);
       }
     }
   }
 
-  Future<void> cancelEcheck(String tripId, String echeckNumber) async {
+  Future<void> cancelEcheck(BuildContext context, String tripId, String echeckNumber) async {
     state = AsyncData(state.value!.copyWith(loadingEcheckNumber: echeckNumber));
     var trip = tripController.getTrip(tripId);
+
     if (trip == null) {
       state = AsyncData(state.value!.copyWith(loadingEcheckNumber: null));
       return;
     }
-    var res = await repo.cancelEcheck(trip.companyCode!, echeckNumber);
+    var res = await repo.cancelEcheck<EcheckPageController>(trip.companyCode!, echeckNumber);
     tripController.updateEcheck(tripId, res);
     state = AsyncData(state.value!.copyWith(loadingEcheckNumber: null));
+    var snackbar = SnackBarWrapper.getSnackBar('ECheck $echeckNumber has been canceled');
+    if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(snackbar);
   }
 
   @override
-  FutureOr<void> onError() {
+  FutureOr<void> onError(Exception ex) {
     state = AsyncData(state.value!.copyWith(loadingEcheckNumber: null));
   }
+
+  void resetState() {
+    state = AsyncData(ECheckState(stopId: arg));
+  }
+
+  @override
+  FutureOr<void> refreshPage(String page) {}
 }
 
 final echeckPageControllerProvider =

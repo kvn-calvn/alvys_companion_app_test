@@ -1,20 +1,63 @@
-import 'src/network/network_info.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'src/features/updater/updater_controller.dart';
+import 'src/network/network_info.dart';
 import 'src/routing/app_router.dart';
 import 'src/utils/app_theme.dart';
 import 'src/utils/theme_handler.dart';
 
-class App extends ConsumerWidget {
-  const App(this.isTablet, {Key? key}) : super(key: key);
+class App extends ConsumerStatefulWidget {
+  const App(this.isTablet, {super.key});
   final bool isTablet;
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final router = isTablet ? ref.read(tabletRouteProvider) : ref.read(routerProvider);
+  ConsumerState<ConsumerStatefulWidget> createState() => _AppState();
+}
+
+class _AppState extends ConsumerState<App> with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    switch (state) {
+      case AppLifecycleState.resumed:
+        var data = ref.watch(updaterProvider);
+        data.whenData((value) => value.showUpdateDialog());
+        break;
+      case AppLifecycleState.hidden:
+      case AppLifecycleState.paused:
+      case AppLifecycleState.detached:
+      case AppLifecycleState.inactive:
+        break;
+    }
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     ref.watch(internetConnectionCheckerProvider);
+    ref.watch(updaterProvider);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final router = widget.isTablet
+        ? ref.read(tabletRouteProvider)
+        : ref.read(routerProvider);
     return MaterialApp.router(
       //useInheritedMediaQuery: true,
+      debugShowCheckedModeBanner: false,
       themeMode: ref.watch(themeHandlerProvider),
       theme: AlvysTheme.mainTheme(Brightness.light),
       darkTheme: AlvysTheme.mainTheme(Brightness.dark),

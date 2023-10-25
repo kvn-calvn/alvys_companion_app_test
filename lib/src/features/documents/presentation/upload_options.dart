@@ -64,7 +64,7 @@ class UploadOptions extends ConsumerWidget {
             title: const Text('Gallery'),
             onTap: () async {
               var hasPermission = await PermissionHelper.getPermission(
-                  Platform.isAndroid ? Permission.mediaLibrary : Permission.photos);
+                  Platform.isAndroid ? await PermissionHelper.androidGalleryPermission() : Permission.photos);
               if (!hasPermission) {
                 throw PermissionException("Please enable gallery permission", () {
                   Navigator.of(context, rootNavigator: false).pop();
@@ -107,7 +107,6 @@ class DocumentUploadButton extends ConsumerWidget {
       title: 'Upload');
   static DocumentUploadButton add(UploadDocumentArgs args) => DocumentUploadButton(
         onTap: (ref) async {
-          debugPrint('adding');
           await ref.read(uploadDocumentsController.call(args).notifier).startScan();
         },
         icon: Alvys3Icons.add,
@@ -121,10 +120,12 @@ class DocumentUploadButton extends ConsumerWidget {
       title: 'Delete');
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var backgroundColor = Theme.of(context).cardColor.withOpacity(0.7);
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
         Material(
+          color: backgroundColor,
           shape: const CircleBorder(),
           clipBehavior: Clip.antiAlias,
           elevation: 4,
@@ -141,7 +142,13 @@ class DocumentUploadButton extends ConsumerWidget {
           ),
         ),
         const SizedBox(height: 5),
-        Text(title)
+        Material(
+            borderRadius: BorderRadius.circular(20),
+            color: backgroundColor,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+              child: Text(title),
+            ))
       ],
     );
   }

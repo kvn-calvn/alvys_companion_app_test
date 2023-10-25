@@ -6,7 +6,7 @@ part 'payable_driver.g.dart';
 @freezed
 class PayableDriverAmount with _$PayableDriverAmount {
   const factory PayableDriverAmount({
-    @JsonKey(name: 'Id') String? id,
+    @JsonKey(name: 'id') String? id,
     @JsonKey(name: 'Amount') double? amount,
   }) = _PayableDriverAmount;
 

@@ -1,15 +1,15 @@
-import '../../../common_widgets/unfocus_widget.dart';
-import '../../../utils/tablet_utils.dart';
-import 'auth_provider_controller.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
-import '../../../constants/color.dart';
-import 'package:flutter/material.dart';
+import '../../../common_widgets/buttons.dart';
+import '../../../common_widgets/unfocus_widget.dart';
+import '../../../utils/tablet_utils.dart';
+import 'auth_provider_controller.dart';
 
 class SignInPage extends ConsumerStatefulWidget {
-  const SignInPage({Key? key}) : super(key: key);
+  const SignInPage({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _SignInPageState();
@@ -95,43 +95,6 @@ class _SignInPageState extends ConsumerState<SignInPage> {
             ),
           ),
         ),
-      ),
-    );
-  }
-}
-
-class ButtonStyle1 extends StatelessWidget {
-  const ButtonStyle1(
-      {Key? key,
-      required this.onPressAction,
-      required this.title,
-      this.isLoading = false,
-      this.isDisable = false})
-      : super(key: key);
-
-  final Function onPressAction;
-  final bool isLoading;
-  final bool isDisable;
-  final String title;
-
-  @override
-  Widget build(BuildContext context) {
-    return ElevatedButton(
-      onPressed: isLoading || isDisable ? null : () => onPressAction(),
-      /*onPressed: () {
-                    Navigator.pushNamed(context, '/verifyphone');
-                  },*/
-      style: ElevatedButton.styleFrom(
-        elevation: 0,
-        minimumSize: const Size.fromHeight(50),
-        backgroundColor: ColorManager.primary(Theme.of(context).brightness),
-        textStyle: Theme.of(context).textTheme.titleMedium,
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10.0),
-        ),
-      ),
-      child: Text(
-        isLoading ? "Loading.." : title,
       ),
     );
   }

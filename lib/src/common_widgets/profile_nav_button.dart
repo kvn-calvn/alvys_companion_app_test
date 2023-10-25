@@ -4,11 +4,11 @@ import 'avatar.dart';
 
 class ProfileNavButton extends StatelessWidget {
   const ProfileNavButton({
-    Key? key,
+    super.key,
     required this.title,
     required this.onPressed,
     required this.profileImageUrl,
-  }) : super(key: key);
+  });
 
   final String title;
 

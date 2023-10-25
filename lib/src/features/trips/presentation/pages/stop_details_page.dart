@@ -1,3 +1,4 @@
+import 'package:alvys3/src/common_widgets/stop_card.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
 import '../../../../common_widgets/empty_view.dart';
@@ -18,7 +19,7 @@ import '../../domain/app_trip/m_comodity.dart';
 class StopDetailsPage extends ConsumerStatefulWidget {
   final String tripId;
   final String stopId;
-  const StopDetailsPage(this.tripId, this.stopId, {Key? key}) : super(key: key);
+  const StopDetailsPage(this.tripId, this.stopId, {super.key});
 
   @override
   ConsumerState<StopDetailsPage> createState() => _StopDetailsPageState();
@@ -63,8 +64,8 @@ class StopDetails extends ConsumerWidget {
   const StopDetails(
     this.tripId,
     this.stopId, {
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -104,13 +105,16 @@ class StopDetails extends ConsumerWidget {
                       '${currentStop.address?.city} ${currentStop.address?.state} ${currentStop.address?.zip}',
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
+                    const SizedBox(height: 10),
+                    StopLoadingTypeWidget(currentStop)
                   ],
                 ),
                 const SizedBox(
                   height: 10,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Wrap(
+                  alignment: WrapAlignment.spaceBetween,
+                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -141,8 +145,8 @@ class StopDetails extends ConsumerWidget {
                   ],
                 ),
                 const SizedBox(height: 10),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                Wrap(
+                  alignment: WrapAlignment.spaceBetween,
                   children: [
                     Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -237,9 +241,9 @@ class StopDetails extends ConsumerWidget {
 
 class ReferencesWidget extends StatelessWidget {
   const ReferencesWidget({
-    Key? key,
+    super.key,
     required this.references,
-  }) : super(key: key);
+  });
 
   final List<Reference> references;
 
@@ -260,9 +264,9 @@ class ReferencesWidget extends StatelessWidget {
 
 class ItemsWidget extends StatelessWidget {
   const ItemsWidget({
-    Key? key,
+    super.key,
     required this.commodities,
-  }) : super(key: key);
+  });
 
   final List<MComodity> commodities;
 
@@ -284,7 +288,7 @@ class ItemsWidget extends StatelessWidget {
               child: Padding(
                 padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     Text(
                       item.description ?? '',
@@ -293,8 +297,9 @@ class ItemsWidget extends StatelessWidget {
                     const SizedBox(
                       height: 10,
                     ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    Wrap(
+                      runAlignment: WrapAlignment.spaceBetween,
+                      alignment: WrapAlignment.spaceBetween,
                       children: [
                         Column(
                           crossAxisAlignment: CrossAxisAlignment.start,

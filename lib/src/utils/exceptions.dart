@@ -11,13 +11,13 @@ class AlvysClientException implements ControllerException {
   }
 
   @override
-  String get message => error.errors.entries.firstOrNull?.value[0]?.firstOrNull ?? error.detail ?? '';
+  String get message => error.errors.entries.firstOrNull?.value.firstOrNull ?? error.detail ?? '';
 
   @override
   Type get source => controllerType;
 
   @override
-  String get title => error.title ?? "Client Error";
+  String get title => error.title ?? error.errors.entries.firstOrNull?.key ?? "Client Error";
 }
 
 class AlvysDependencyException implements ControllerException {
@@ -76,7 +76,7 @@ class AlvysException implements Exception {
 }
 
 class AlvysDioError extends DioException {
-  AlvysDioError({required RequestOptions requestOptions}) : super(requestOptions: requestOptions);
+  AlvysDioError({required super.requestOptions});
 }
 
 class AlvysTimeoutException extends ControllerException {
@@ -110,5 +110,6 @@ class ControllerException implements Exception {
 }
 
 abstract class IAppErrorHandler {
-  FutureOr<void> onError();
+  FutureOr<void> onError(Exception ex);
+  FutureOr<void> refreshPage(String page);
 }

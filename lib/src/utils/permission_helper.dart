@@ -1,3 +1,4 @@
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 class PermissionHelper {
@@ -34,5 +35,11 @@ class PermissionHelper {
       case PermissionStatus.provisional:
         return true;
     }
+  }
+
+  static Future<Permission> androidGalleryPermission() async {
+    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
+    var androidInfo = await deviceInfo.androidInfo;
+    return androidInfo.version.sdkInt >= 33 ? Permission.photos : Permission.storage;
   }
 }

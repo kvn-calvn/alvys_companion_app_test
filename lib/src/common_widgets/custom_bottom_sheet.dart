@@ -17,7 +17,7 @@ class CustomBottomSheet extends StatefulWidget {
   final Widget child;
   final Widget? title;
 
-  const CustomBottomSheet({Key? key, required this.child, this.title}) : super(key: key);
+  const CustomBottomSheet({super.key, required this.child, this.title});
 
   @override
   State<CustomBottomSheet> createState() => _CustomBottomSheetState();

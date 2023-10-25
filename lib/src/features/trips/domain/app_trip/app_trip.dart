@@ -1,13 +1,13 @@
-import '../../../../utils/magic_strings.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../../../../utils/magic_strings.dart';
 import '../../../documents/domain/app_document/app_document.dart';
-import 'payable_driver.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
-
 import 'echeck.dart';
+import 'payable_driver.dart';
 import 'stop.dart';
+
 part 'app_trip.freezed.dart';
 part 'app_trip.g.dart';
 
@@ -42,7 +42,7 @@ class AppTrip with _$AppTrip {
     @JsonKey(name: 'Temperature') double? temperature,
     @JsonKey(name: 'Drivers') @Default(<String?>[]) List<String?> drivers,
     @JsonKey(name: 'Stops') @Default(<Stop>[]) List<Stop> stops,
-    @JsonKey(name: 'Echecks') @Default(<ECheck>[]) List<ECheck> eChecks,
+    @JsonKey(name: 'EChecks') @Default(<ECheck>[]) List<ECheck> eChecks,
     @Default(0) @JsonKey(name: 'StopCount') int stopCount,
     @JsonKey(name: 'PickupDate') DateTime? pickupDate,
     @JsonKey(name: 'DeliveryDate') DateTime? deliveryDate,
@@ -71,8 +71,9 @@ class AppTrip with _$AppTrip {
       .firstWhereOrNull(
           (element) => element.timeRecord?.driver?.timeIn == null || element.timeRecord?.driver?.timeOut == null)
       ?.stopId;
-  String? driverPayable(String? driverId) =>
-      payableDriverAmounts.firstWhereOrNull((element) => element.id == driverId)?.amount?.toStringAsFixed(2);
+  double? driverPayable(String? driverId) =>
+      payableDriverAmounts.firstWhereOrNull((element) => element.id?.toLowerCase() == driverId?.toLowerCase())?.amount;
+
   List<AppDocument> getAttachments(bool canViewCustomerConfirmation, bool canViewCarrierConfirmation) {
     return attachments
         .map((e) {
@@ -89,6 +90,7 @@ class AppTrip with _$AppTrip {
           }
         })
         .removeNulls
+        .orderBy((element) => element.date, OrderDirection.desc)
         .toList();
   }
 
@@ -97,4 +99,6 @@ class AppTrip with _$AppTrip {
           e.stopType ?? '', LatLng(double.tryParse(e.latitude ?? '0') ?? 0, double.tryParse(e.longitude ?? '0') ?? 0)))
       .where((element) => element.value.latitude != 0 && element.value.longitude != 0)
       .toList();
+  List<ECheck> get sortedEchecks => eChecks.orderBy((element) => element.dateGenerated, OrderDirection.desc).toList();
+  //  List.from(eChecks) ..sort((a, b) => b.dateGenerated?.compareTo(a.dateGenerated ?? DateTime.now()) ?? 0);
 }

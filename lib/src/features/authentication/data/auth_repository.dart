@@ -49,7 +49,7 @@ class AvysAuthRepository<T> implements AuthRepository<T> {
   @override
   Future<DriverUser> updateDriverUser<K>(String companyCode, UpdateUserDTO dto) async {
     await Helpers.setCompanyCode(companyCode);
-    var res = await httpClient.putData<K>(ApiRoutes.driverInfo, body: dto.toJson().toJsonEncodedString);
+    var res = await httpClient.putData<K>(ApiRoutes.driverInfo, body: dto.toJson().removeNulls.toJsonEncodedString);
     return DriverUser.fromJson(res.body.toDecodedJson);
   }
 

@@ -67,17 +67,17 @@ android {
         prod {
             dimension "default"
             //applicationIdSuffix ""           
-            manifestPlaceholders["appName"] = "Alvys 3"
+            manifestPlaceholders["appName"] = "Alvys"
         }
         qa {
             dimension "default"
             applicationIdSuffix ".qa"
-            manifestPlaceholders["appName"] =  "[qa] Alvys 3"
+            manifestPlaceholders["appName"] =  "[qa] Alvys"
         }
         dev {
             dimension "default"
             applicationIdSuffix ".dev"
-            manifestPlaceholders["appName"] =  "[dev] Alvys 3"
+            manifestPlaceholders["appName"] =  "[dev] Alvys"
         }
     }
 

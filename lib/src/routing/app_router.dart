@@ -30,15 +30,14 @@ import '../utils/extensions.dart';
 import '../utils/global_error_handler.dart';
 import '../utils/magic_strings.dart';
 import '../utils/tablet_utils.dart';
+import 'custom_observer.dart';
 import 'error_page.dart';
 import 'landing.dart';
 
 Provider<GoRouter> get getRouter => TabletUtils.instance.isTablet ? tabletRouteProvider : routerProvider;
 Provider<GoRouter> routerProvider = Provider(
   (ref) => GoRouter(
-    observers: [
-      FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance),
-    ],
+    observers: [FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance), CustomObserver.instance],
     navigatorKey: ref.read(globalErrorHandlerProvider).navKey,
     initialLocation: ref.read(authProvider).value!.driver == null ? RouteName.signIn.toRoute : RouteName.trips.toRoute,
     debugLogDiagnostics: false,
@@ -81,17 +80,24 @@ Provider<GoRouter> routerProvider = Provider(
       ),
       StatefulShellRoute(
           parentNavigatorKey: ref.read(globalErrorHandlerProvider).navKey,
-          pageBuilder: (context, state, navigationShell) => NoTransitionPage(child: navigationShell),
+          pageBuilder: (context, state, navigationShell) => NoTransitionPage(
+                key: state.pageKey,
+                name: state.name,
+                child: navigationShell,
+              ),
           navigatorContainerBuilder: (context, navigationShell, children) => MainBottomNav(
                 navShell: navigationShell,
                 children: children,
               ),
           branches: [
-            StatefulShellBranch(routes: [
+            StatefulShellBranch(observers: [
+              CustomObserver.instance
+            ], routes: [
               GoRoute(
                 name: RouteName.trips.name,
                 path: RouteName.trips.toRoute,
                 pageBuilder: (context, state) => CustomTransitionPage(
+                  name: RouteName.trips.name,
                   child: const LoadListPage(),
                   transitionDuration: Duration.zero,
                   transitionsBuilder: (context, animation, secondaryAnimation, child) => child,
@@ -154,7 +160,9 @@ Provider<GoRouter> routerProvider = Provider(
                 ],
               ),
             ]),
-            StatefulShellBranch(routes: [
+            StatefulShellBranch(observers: [
+              CustomObserver.instance
+            ], routes: [
               GoRoute(
                 name: RouteName.profile.name,
                 path: RouteName.profile.toRoute,
@@ -297,6 +305,7 @@ Provider<GoRouter> tabletRouteProvider = Provider((ref) {
       debugLogDiagnostics: false,
       observers: [
         FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance),
+        CustomObserver.instance
       ],
       routes: [
         GoRoute(
@@ -354,7 +363,9 @@ Provider<GoRouter> tabletRouteProvider = Provider((ref) {
                   )
                 ],
               ),
-              StatefulShellBranch(routes: [
+              StatefulShellBranch(observers: [
+                CustomObserver.instance
+              ], routes: [
                 GoRoute(
                     path: RouteName.trips.toRoute,
                     name: RouteName.trips.name,
@@ -410,7 +421,9 @@ Provider<GoRouter> tabletRouteProvider = Provider((ref) {
                       ),
                     ])
               ]),
-              StatefulShellBranch(routes: [
+              StatefulShellBranch(observers: [
+                CustomObserver.instance
+              ], routes: [
                 GoRoute(
                   name: RouteName.paystubs.name,
                   path: RouteName.paystubs.toRoute,

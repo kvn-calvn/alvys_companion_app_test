@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
+import '../constants/color.dart';
 import 'buttons.dart';
 
 class AppDialogAction {
@@ -9,11 +10,16 @@ class AppDialogAction {
   final bool primary;
   final void Function() action;
 
-  AppDialogAction({required this.label, required this.action, this.primary = false});
+  AppDialogAction(
+      {required this.label, required this.action, this.primary = false});
 }
 
 class AppDialog extends StatelessWidget {
-  const AppDialog({Key? key, required this.title, required this.description, required this.actions}) : super(key: key);
+  const AppDialog(
+      {super.key,
+      required this.title,
+      required this.description,
+      required this.actions});
 
   final String title, description;
   final List<AppDialogAction> actions;
@@ -65,12 +71,41 @@ class AppDialog extends StatelessWidget {
               ),
               for (var action in actions)
                 action.primary
-                    ? ButtonStyle1(onPressAction: action.action, title: action.label)
-                    : TextButton(
-                        onPressed: action.action,
-                        child: Text(
-                          action.label,
-                          style: const TextStyle(fontSize: 12),
+                    ? ButtonStyle1(
+                        onPressAction: action.action,
+                        title: action.label,
+                        isLoading: false,
+                      )
+                    : Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 10),
+                        child: TextButton(
+                          onPressed: action.action,
+                          style: ButtonStyle(
+                            minimumSize: MaterialStateProperty.all(
+                              const Size.fromHeight(60),
+                            ),
+                            padding: MaterialStateProperty.all<EdgeInsets>(
+                                const EdgeInsets.all(15)),
+                            shape: MaterialStateProperty.all<
+                                RoundedRectangleBorder>(
+                              RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                side: BorderSide(
+                                  color: ColorManager.primary(
+                                      Theme.of(context).brightness),
+                                ),
+                              ),
+                            ),
+                          ),
+                          child: Text(
+                            action.label,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium!
+                                .copyWith(
+                                    color: ColorManager.primary(
+                                        Theme.of(context).brightness)),
+                          ),
                         ),
                       )
             ],

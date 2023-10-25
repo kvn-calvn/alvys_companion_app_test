@@ -5,11 +5,14 @@ import 'package:alvys3/src/common_widgets/url_nav_button.dart';
 import 'package:alvys3/src/utils/app_theme.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
+import '../../../network/firebase_remote_config_service.dart';
+
 class AboutPage extends StatelessWidget {
-  const AboutPage({Key? key}) : super(key: key);
+  const AboutPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -45,87 +48,94 @@ class AboutPage extends StatelessWidget {
 
 class AboutPageBody extends StatelessWidget {
   const AboutPageBody({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: Column(children: [
-        const UrlNavButton(title: "Alvys", url: "https://alvys.com"),
-        const UrlNavButton(
-            title: "Terms & Conditions", url: "https://alvys.com/terms/"),
-        const UrlNavButton(
-            title: "Privacy Policy", url: "https://alvys.com/privacy/"),
-        const SizedBox(
-          height: 50.0,
-        ),
-        Platform.isIOS
-            ? FutureBuilder<IosDeviceInfo>(
-                future: DeviceInfoPlugin().iosInfo,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return Column(
-                      children: <Widget>[
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            const Text('Device Model: '),
-                            Text(snapshot.data!.utsname.machine),
-                          ],
-                        ),
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            const Text('OS Version: '),
-                            Text('${snapshot.data?.systemVersion}'),
-                          ],
-                        ),
-                      ],
-                    );
-                  }
-                  return const Text('no data');
-                },
-              )
-            : FutureBuilder<AndroidDeviceInfo>(
-                future: DeviceInfoPlugin().androidInfo,
-                builder: (context, snapshot) {
-                  if (snapshot.hasData) {
-                    return Column(
-                      children: <Widget>[
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            const Text('Device Model: '),
-                            Text(
-                                '${snapshot.data!.manufacturer} ${snapshot.data!.model}'),
-                          ],
-                        ),
-                        Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: <Widget>[
-                            const Text('OS Version: '),
-                            Text('Android ${snapshot.data!.version.release}'),
-                          ],
-                        ),
-                      ],
-                    );
-                  }
-                  return const Text('');
-                },
-              ),
-        FutureBuilder<PackageInfo>(
-            future: PackageInfo.fromPlatform(),
-            builder: (context, snapshot) {
-              if (snapshot.hasData) {
-                return Text(
-                    'App Version: ${snapshot.data!.version} (${snapshot.data!.buildNumber})');
-              }
+      child: Consumer(builder: (context, ref, child) {
+        var alvysURL =
+            ref.watch(firebaseRemoteConfigServiceProvider).alvysUrl();
+        var alvysTermsUrl =
+            ref.watch(firebaseRemoteConfigServiceProvider).alvysTermsUrl();
+        var alvysPrivacyUrl =
+            ref.watch(firebaseRemoteConfigServiceProvider).alvysPrivacyUrl();
 
-              return const Text('');
-            }),
-        //Text(FlavorConfig.instance!.flavor.name.toUpperCase()),
-      ]),
+        return Column(children: [
+          UrlNavButton(title: "Alvys", url: alvysURL),
+          UrlNavButton(title: "Terms", url: alvysTermsUrl),
+          UrlNavButton(title: "Privacy Policy", url: alvysPrivacyUrl),
+          const SizedBox(
+            height: 50.0,
+          ),
+          Platform.isIOS
+              ? FutureBuilder<IosDeviceInfo>(
+                  future: DeviceInfoPlugin().iosInfo,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Column(
+                        children: <Widget>[
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              const Text('Device: '),
+                              Text(snapshot.data!.utsname.machine),
+                            ],
+                          ),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              const Text('OS Version: '),
+                              Text('${snapshot.data?.systemVersion}'),
+                            ],
+                          ),
+                        ],
+                      );
+                    }
+                    return const Text('no data');
+                  },
+                )
+              : FutureBuilder<AndroidDeviceInfo>(
+                  future: DeviceInfoPlugin().androidInfo,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasData) {
+                      return Column(
+                        children: <Widget>[
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              const Text('Device: '),
+                              Text(
+                                  '${snapshot.data!.manufacturer} ${snapshot.data!.model}'),
+                            ],
+                          ),
+                          Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: <Widget>[
+                              const Text('OS Version: '),
+                              Text('Android ${snapshot.data!.version.release}'),
+                            ],
+                          ),
+                        ],
+                      );
+                    }
+                    return const Text('');
+                  },
+                ),
+          FutureBuilder<PackageInfo>(
+              future: PackageInfo.fromPlatform(),
+              builder: (context, snapshot) {
+                if (snapshot.hasData) {
+                  return Text(
+                      'App Version: ${snapshot.data!.version} (${snapshot.data!.buildNumber})');
+                }
+
+                return const Text('');
+              }),
+          //Text(FlavorConfig.instance!.flavor.name.toUpperCase()),
+        ]);
+      }),
     );
   }
 }

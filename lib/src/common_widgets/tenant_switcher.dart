@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 class TenantSwitcher extends ConsumerStatefulWidget {
-  const TenantSwitcher({Key? key}) : super(key: key);
+  const TenantSwitcher({super.key});
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _TenantSwitcherState();

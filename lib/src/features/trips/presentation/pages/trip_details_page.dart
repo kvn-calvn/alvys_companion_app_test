@@ -1,3 +1,6 @@
+import 'package:alvys3/src/utils/alvys_websocket.dart';
+
+import '../../../../network/firebase_remote_config_service.dart';
 import '../../../../network/http_client.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
@@ -24,7 +27,7 @@ import 'trip_documents_page.dart';
 class LoadDetailsPage extends ConsumerStatefulWidget {
   final String tripId;
   final int tabIndex;
-  const LoadDetailsPage(this.tripId, this.tabIndex, {Key? key}) : super(key: key);
+  const LoadDetailsPage(this.tripId, this.tabIndex, {super.key});
 
   @override
   ConsumerState<LoadDetailsPage> createState() => _LoadDetailsPageState();
@@ -48,6 +51,7 @@ class _LoadDetailsPageState extends ConsumerState<LoadDetailsPage> with TickerPr
   @override
   Widget build(BuildContext context) {
     var trip = ref.watch(tripControllerProvider).value!.getTrip(widget.tripId);
+    var showTutBtn = ref.watch(firebaseRemoteConfigServiceProvider).showTutorialBtn();
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -64,33 +68,36 @@ class _LoadDetailsPageState extends ConsumerState<LoadDetailsPage> with TickerPr
           },
         ),
         actions: [
-          IconButton(
-            constraints: const BoxConstraints(),
-            onPressed: () async {
-              var previousTripId = widget.tripId;
-              await ref.read(tripControllerProvider.notifier).showTripDetailsTutorialPreview(
-                  context,
-                  TabletUtils.instance.detailsController.index + 1,
-                  TabletUtils.instance.detailsController.index + 1,
-                  previousTripId);
-              ref.read(httpClientProvider).telemetryClient.trackEvent(name: "trip_details_tour_button_tapped");
-              await FirebaseAnalytics.instance.logEvent(name: "trip_details_tour_button_tapped");
-              // context.goNamed(RouteName.tripDetails.name, pathParameters: {ParamType.tripId.name: testTrip.id!});
-              // ref.read(tripControllerProvider.notifier).prepareTutorialPreview(context,
-              //     TabletUtils.instance.detailsController.index + 1, TabletUtils.instance.detailsController.index + 1);
-              // ref.read(tutorialProvider).showTutorialSection(context, TabletUtils.instance.detailsController.index + 1,
-              //     TabletUtils.instance.detailsController.index + 1, () async {
-              //   context.goNamed(RouteName.tripDetails.name, pathParameters: {ParamType.tripId.name: previousTripId});
-              //   // await ref.read(tripControllerProvider.notifier).refreshTrips(true);
-              // });
-            },
-            icon: const Icon(Icons.info),
-          ),
+          if (showTutBtn) ...[
+            IconButton(
+              constraints: const BoxConstraints(),
+              onPressed: () async {
+                var previousTripId = widget.tripId;
+                await ref.read(tripControllerProvider.notifier).showTripDetailsTutorialPreview(
+                    context,
+                    TabletUtils.instance.detailsController.index + 1,
+                    TabletUtils.instance.detailsController.index + 1,
+                    previousTripId);
+                ref.read(httpClientProvider).telemetryClient.trackEvent(name: "trip_details_tour_button_tapped");
+                await FirebaseAnalytics.instance.logEvent(name: "trip_details_tour_button_tapped");
+                // context.goNamed(RouteName.tripDetails.name, pathParameters: {ParamType.tripId.name: testTrip.id!});
+                // ref.read(tripControllerProvider.notifier).prepareTutorialPreview(context,
+                //     TabletUtils.instance.detailsController.index + 1, TabletUtils.instance.detailsController.index + 1);
+                // ref.read(tutorialProvider).showTutorialSection(context, TabletUtils.instance.detailsController.index + 1,
+                //     TabletUtils.instance.detailsController.index + 1, () async {
+                //   context.goNamed(RouteName.tripDetails.name, pathParameters: {ParamType.tripId.name: previousTripId});
+                //   // await ref.read(tripControllerProvider.notifier).refreshTrips(true);
+                // });
+              },
+              icon: const Icon(Icons.info),
+            ),
+          ],
           IconButton(
             padding: const EdgeInsets.only(right: 18.0, left: 5.0),
             constraints: const BoxConstraints(),
             onPressed: () async {
               await ref.read(tripControllerProvider.notifier).refreshCurrentTrip(widget.tripId);
+              ref.read(websocketProvider).restartConnection();
               ref.read(httpClientProvider).telemetryClient.trackEvent(name: "trip_refresh_button_tapped");
               await FirebaseAnalytics.instance.logEvent(name: "trip_refresh_button_tapped");
             },
@@ -138,7 +145,7 @@ class _LoadDetailsPageState extends ConsumerState<LoadDetailsPage> with TickerPr
 class TripDetails extends ConsumerWidget {
   final String tripId;
   final int tabIndex;
-  const TripDetails(this.tripId, this.tabIndex, {Key? key}) : super(key: key);
+  const TripDetails(this.tripId, this.tabIndex, {super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -151,11 +158,12 @@ class TripDetails extends ConsumerWidget {
       return const EmptyView(title: 'Trip Not found', description: 'Return to the previous page');
     }
 
-    var equipment = "${trip.equipment} ${trip.equipmentLength}";
+    var equipment = "${trip.equipment} ${trip.equipmentLength}".trim();
 
     return RefreshIndicator(
       onRefresh: () async {
         await ref.read(tripControllerProvider.notifier).refreshCurrentTrip(tripId);
+        ref.read(websocketProvider).restartConnection();
       },
       child: ListView(
           scrollDirection: Axis.vertical,
@@ -170,7 +178,7 @@ class TripDetails extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    TripGoogleMap(trip.id!),
+                    TripGoogleMap(key: ValueKey(trip.id!), trip.id!),
                     Column(
                       mainAxisSize: MainAxisSize.max,
                       mainAxisAlignment: MainAxisAlignment.center,
@@ -184,32 +192,16 @@ class TripDetails extends ConsumerWidget {
                               if (equipment.isNotNullOrEmpty) ...[
                                 Chip(
                                   label: Text(
-                                    '${trip.equipment!} ${trip.equipmentLength ?? ''}',
-                                    style: Theme.of(context).textTheme.bodyMedium!,
-                                  ),
-                                ),
-                              ],
-                              if (trip.totalWeight != null) ...[
-                                Chip(
-                                  label: Text(
-                                    '${NumberFormat.decimalPattern().format(trip.totalWeight)} lbs',
-                                    style: Theme.of(context).textTheme.bodyMedium!,
+                                    equipment,
+                                    style: Theme.of(context).textTheme.labelLarge!,
                                   ),
                                 ),
                               ],
                               if (trip.temperature != null) ...[
                                 Chip(
                                   label: Text(
-                                    '${trip.temperature!.toStringAsFixed(1)} °f',
-                                    style: Theme.of(context).textTheme.bodyMedium!,
-                                  ),
-                                ),
-                              ],
-                              if (trip.totalMiles != null) ...[
-                                Chip(
-                                  label: Text(
-                                    '${NumberFormat.decimalPattern().format(trip.totalMiles)} mi',
-                                    style: Theme.of(context).textTheme.bodyMedium!,
+                                    '${trip.temperature!.toStringAsFixed(1)} °f ${(trip.continuous ?? false) ? '(cont.)' : ''}',
+                                    style: Theme.of(context).textTheme.bodyLarge!,
                                   ),
                                 ),
                               ],
@@ -217,7 +209,23 @@ class TripDetails extends ConsumerWidget {
                                 Chip(
                                   label: Text(
                                     'Trailer ${trip.trailerNum}',
-                                    style: Theme.of(context).textTheme.bodyMedium!,
+                                    style: Theme.of(context).textTheme.labelLarge!,
+                                  ),
+                                ),
+                              ],
+                              if (trip.totalWeight != null && trip.totalWeight != 0) ...[
+                                Chip(
+                                  label: Text(
+                                    '${NumberFormat.decimalPattern().format(trip.totalWeight)} lbs',
+                                    style: Theme.of(context).textTheme.labelLarge!,
+                                  ),
+                                ),
+                              ],
+                              if (trip.totalMiles != null) ...[
+                                Chip(
+                                  label: Text(
+                                    '${NumberFormat.decimalPattern().format(trip.totalMiles)} mi',
+                                    style: Theme.of(context).textTheme.labelLarge!,
                                   ),
                                 ),
                               ],
@@ -227,7 +235,7 @@ class TripDetails extends ConsumerWidget {
                                 Chip(
                                   label: Text(
                                     'Driver Payable ${NumberFormat.simpleCurrency().format(trip.driverPayable(authState.value!.tryGetUserTenant(trip.companyCode!)!.assetId!))}',
-                                    style: Theme.of(context).textTheme.bodyMedium!,
+                                    style: Theme.of(context).textTheme.labelLarge!,
                                   ),
                                 ),
                               ],

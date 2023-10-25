@@ -1,4 +1,3 @@
-import '../../authentication/presentation/auth_provider_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -7,6 +6,7 @@ import '../../../common_widgets/load_more_button.dart';
 import '../../../common_widgets/shimmers/documents_shimmer.dart';
 import '../../../utils/app_theme.dart';
 import '../../../utils/magic_strings.dart';
+import '../../authentication/presentation/auth_provider_controller.dart';
 import 'docs_controller.dart';
 import 'document_list.dart';
 import 'upload_options.dart';
@@ -14,7 +14,7 @@ import 'upload_options.dart';
 class DocumentsPage extends ConsumerStatefulWidget {
   final DocumentsArgs args;
 
-  const DocumentsPage(this.args, {Key? key}) : super(key: key);
+  const DocumentsPage(this.args, {super.key});
 
   @override
   ConsumerState<DocumentsPage> createState() => _DocumentsPageState();
@@ -63,7 +63,8 @@ class _DocumentsPageState extends ConsumerState<DocumentsPage> {
           child: docsState.isLoading
               ? const DocumentsShimmer()
               : DocumentList(
-                  documents: docsState.value!.documents(widget.args.documentType, authState.value!.canViewPaystubs),
+                  documents:
+                      docsState.value?.documents(widget.args.documentType, authState.value!.canViewPaystubs) ?? [],
                   refreshFunction: () async {
                     await ref.read(documentsProvider.call(widget.args).notifier).getDocuments();
                   },

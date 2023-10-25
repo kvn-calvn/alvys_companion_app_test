@@ -1,17 +1,17 @@
-import '../../utils/provider_args_saver.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-
-import '../../utils/dummy_data.dart';
-import '../../utils/magic_strings.dart';
-import '../../utils/tablet_utils.dart';
-import 'tutorial.dart';
-import 'tutorial_widgets.dart';
-import '../../routing/app_router.dart';
-import '../../utils/global_error_handler.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../routing/app_router.dart';
+import '../../utils/dummy_data.dart';
+import '../../utils/global_error_handler.dart';
+import '../../utils/magic_strings.dart';
+import '../../utils/provider_args_saver.dart';
+import '../../utils/tablet_utils.dart';
+import 'tutorial.dart';
+import 'tutorial_widgets.dart';
 
 class TutorialElement {
   final LabeledGlobalKey globalKey;

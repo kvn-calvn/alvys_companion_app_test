@@ -1,10 +1,11 @@
 import 'dart:async';
-import '../../authentication/presentation/auth_provider_controller.dart';
-import '../domain/document_state/document_state.dart';
-import '../../../utils/magic_strings.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../../../utils/magic_strings.dart';
+import '../../authentication/presentation/auth_provider_controller.dart';
 import '../data/repositories/documents_repository.dart';
+import '../domain/document_state/document_state.dart';
 
 class DocumentsArgs {
   final DisplayDocumentType documentType;
@@ -22,9 +23,10 @@ class DocumentsNotifier extends AutoDisposeFamilyAsyncNotifier<DocumentState, Do
   FutureOr<DocumentState> build(DocumentsArgs arg) async {
     docRepo = ref.watch(documentsRepositoryProvider);
     auth = ref.read(authProvider.notifier);
-    state = AsyncValue.data(DocumentState());
-    await init();
-    return state.value!;
+    //  state = AsyncValue.data(DocumentState());
+    state = const AsyncValue.loading();
+    await getDocuments();
+    return state.hasValue ? state.value! : DocumentState();
   }
 
   Future<void> init() async {
@@ -37,17 +39,17 @@ class DocumentsNotifier extends AutoDisposeFamilyAsyncNotifier<DocumentState, Do
       case DisplayDocumentType.tripDocuments:
         break;
       case DisplayDocumentType.personalDocuments:
-        var res = await docRepo.getPersonalDocs(auth.driver!);
-        state = AsyncValue.data(state.value!.copyWith(documentList: res));
+        var res = await docRepo.getPersonalDocs(auth.tenantCompanyCodes.first, auth.driver!);
+        state = AsyncData(state.hasValue ? state.value!.copyWith(documentList: res) : DocumentState(documentList: res));
         break;
       case DisplayDocumentType.paystubs:
         await getPaystubs();
-        state = AsyncValue.data(state.value!.copyWith(canLoadMore: state.value!.documentList.length == top));
+        state = AsyncData(state.value!.copyWith(canLoadMore: state.value!.documentList.length == top));
 
         break;
       case DisplayDocumentType.tripReport:
         var res = await docRepo.getTripReportDocs(auth.getCompanyOwned.companyCode!, auth.driver!);
-        state = AsyncValue.data(state.value!.copyWith(documentList: res));
+        state = AsyncData(state.hasValue ? state.value!.copyWith(documentList: res) : DocumentState(documentList: res));
         break;
     }
   }
@@ -59,9 +61,10 @@ class DocumentsNotifier extends AutoDisposeFamilyAsyncNotifier<DocumentState, Do
         auth.driver!,
         top = top,
       );
-      state = AsyncValue.data(state.value!.copyWith(documentList: res));
+      state =
+          AsyncValue.data(state.hasValue ? state.value!.copyWith(documentList: res) : DocumentState(documentList: res));
     } else {
-      state = AsyncValue.data(state.value!.copyWith(documentList: []));
+      state = AsyncValue.data(state.hasValue ? state.value!.copyWith(documentList: []) : DocumentState());
     }
   }
 

@@ -76,7 +76,7 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
         router.pop();
       }
       state = state.copyWith(
-          pages: [...state.pages, ...results.scans.map<String>((e) => Scan.toPathString(e.enhancedUrl!)).toList()]);
+          pages: [...state.pages, ...results.scans.map<String>((e) => Scan.toPathString(e.enhancedUrl!))]);
       firstScan = false;
     } catch (e) {
       if (firstScan) {
@@ -121,8 +121,13 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
     if (context.mounted) {
       Navigator.of(context, rootNavigator: true).pop();
       Navigator.of(context).pop();
+      if (arg.documentType == DisplayDocumentType.tripDocuments) {
+        ref.read(tripControllerProvider.notifier).refreshCurrentTrip(arg.tripId!);
+      }
     }
   }
+
+  void setShowHud(bool show) => state = state.copyWith(showHud: show);
 
   Future<void> _doUpload(File pdfFile) async {
     switch (arg.documentType) {
@@ -150,8 +155,8 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
         return UploadDocumentOptions.getOptionsList([
           'Unclassified',
           'Receipt',
-          'BOL',
-          'Proof of Delivery',
+          'BOL - (unsigned BOL)',
+          'POD - (signed BOL)',
           'Load Securement',
           'Temperature Settings',
           'Seal',
@@ -160,7 +165,8 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
         ], trip?.companyCode);
 
       case DisplayDocumentType.personalDocuments:
-        return UploadDocumentOptions.getOptionsList(["License", "Medical"], userData.getCompanyOwned.companyCode!);
+        return UploadDocumentOptions.getOptionsList(
+            ["Driver License", "Medical"], userData.getCompanyOwned.companyCode!);
       case DisplayDocumentType.paystubs:
         return [];
       case DisplayDocumentType.tripReport:
@@ -169,11 +175,14 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
   }
 
   @override
-  FutureOr<void> onError() {
+  FutureOr<void> onError(Exception ex) {
     if (router.routerDelegate.navigatorKey.currentContext?.mounted ?? false) {
       Navigator.of(router.routerDelegate.navigatorKey.currentContext!, rootNavigator: true).pop();
     }
   }
+
+  @override
+  FutureOr<void> refreshPage(String page) {}
 }
 
 final uploadDocumentsController =

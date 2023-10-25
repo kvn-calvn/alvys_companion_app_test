@@ -8,7 +8,7 @@ import '../../../utils/magic_strings.dart';
 import 'auth_provider_controller.dart';
 
 class ProfilePage extends StatefulWidget {
-  const ProfilePage({Key? key}) : super(key: key);
+  const ProfilePage({super.key});
 
   @override
   State<ProfilePage> createState() => _SettingsPageState();
@@ -38,8 +38,8 @@ class _SettingsPageState extends State<ProfilePage> {
 
 class ProfileList extends ConsumerWidget {
   const ProfileList({
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -55,7 +55,7 @@ class ProfileList extends ConsumerWidget {
           ),
           LargeNavButton(
             title: userState.value!.driver!.name!,
-            padding: 24,
+            //padding: 24,
             onPressed: () {
               context.goNamed(RouteName.userDetails.name);
             },

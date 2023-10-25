@@ -3,8 +3,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class LoadMoreButton extends StatefulWidget {
   final Future Function() loadMoreFunction;
-  const LoadMoreButton({Key? key, required this.loadMoreFunction})
-      : super(key: key);
+  const LoadMoreButton({super.key, required this.loadMoreFunction});
 
   @override
   State<LoadMoreButton> createState() => _LoadMoreButtonState();

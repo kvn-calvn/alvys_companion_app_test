@@ -25,7 +25,7 @@ showCustomPopup<T>(
 class AlvysPopupItem<T> extends StatelessWidget {
   final T value;
   final Widget child;
-  const AlvysPopupItem({Key? key, required this.value, required this.child}) : super(key: key);
+  const AlvysPopupItem({super.key, required this.value, required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -83,18 +83,19 @@ class _AlvysPopupRoute<T> extends PopupRoute<T> {
         children: [
           Positioned(
             top: position.top <= position.bottom ? newPos.top : null,
-            right: MediaQuery.of(context).size.width * 0.05,
+            right: position.right,
             bottom: position.bottom < position.top ? newPos.bottom : null,
             child: AnimatedBuilder(
                 animation: animation,
                 builder: (context, child) {
-                  return ClipRRect(
+                  return Material(
+                    elevation: 4,
                     borderRadius: BorderRadius.circular(8),
-                    child: Align(
-                      alignment: Alignment.topCenter,
-                      heightFactor: animation.value,
-                      child: Material(
-                        elevation: 2,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        heightFactor: animation.value,
                         child: ConstrainedBox(
                           constraints: const BoxConstraints(maxWidth: 100),
                           child: Column(

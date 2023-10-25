@@ -1,3 +1,4 @@
+import '../../../network/firebase_remote_config_service.dart';
 import '../../../utils/magic_strings.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
@@ -9,40 +10,30 @@ import '../../../utils/app_theme.dart';
 import 'auth_provider_controller.dart';
 
 class UserDetailsPage extends ConsumerWidget {
-  const UserDetailsPage({Key? key}) : super(key: key);
+  const UserDetailsPage({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var showEditProfile = ref.watch(firebaseRemoteConfigServiceProvider).showEditProfileBtn();
     var userState = ref.watch(authProvider);
 
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        automaticallyImplyLeading: false,
         title: Text(
           'Profile',
           style: AlvysTheme.appbarTextStyle(context, true),
         ),
         centerTitle: true,
-        leading: IconButton(
-          // 1
-          icon: Icon(
-            Icons.adaptive.arrow_back,
-          ),
-          onPressed: () {
-            GoRouter.of(context).pop();
-          },
-        ),
         actions: [
-          IconButton(
-            icon: const Icon(
-              Icons.edit,
+          if (showEditProfile)
+            IconButton(
+              icon: const Icon(
+                Icons.edit,
+              ),
+              onPressed: () {
+                context.goNamed(RouteName.editProfile.name);
+              },
             ),
-            onPressed: () {
-              debugPrint('IconButton pressed ...');
-              context.goNamed(RouteName.editProfile.name);
-            },
-          ),
         ],
         elevation: 0,
       ),

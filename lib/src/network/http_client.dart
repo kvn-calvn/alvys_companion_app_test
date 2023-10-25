@@ -2,8 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'network_info.dart';
-import '../utils/provider_args_saver.dart';
 import 'package:azure_application_insights/azure_application_insights.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -19,7 +17,9 @@ import '../../flavor_config.dart';
 import '../features/authentication/domain/models/driver_user/driver_user.dart';
 import '../utils/exceptions.dart';
 import '../utils/magic_strings.dart';
+import '../utils/provider_args_saver.dart';
 import 'custom_multipart_request.dart';
+import 'network_info.dart';
 
 final httpClientProvider = Provider<AlvysHttpClient>((ref) {
   return AlvysHttpClient(ref.read(sharedPreferencesProvider)!, ref.watch(internetConnectionCheckerProvider.notifier));
@@ -77,15 +77,9 @@ class AlvysHttpClient {
   }
 
   Future<StreamedResponse> sendData<T>(BaseRequest request) async {
-    try {
-      var streamedRes = await telemetryHttpClient.send(request);
-      _handleResponse(await Response.fromStream(streamedRes));
-      return streamedRes;
-    } on SocketException {
-      return Future.error(AlvysSocketException(T));
-    } on TimeoutException {
-      return Future.error(AlvysTimeoutException(T));
-    }
+    var streamedRes = await _tryRequest<T, StreamedResponse>(() => telemetryHttpClient.send(request));
+    _handleResponse(await Response.fromStream(streamedRes));
+    return streamedRes;
   }
 
   Future<void> upload<T>(
@@ -137,21 +131,14 @@ class AlvysHttpClient {
   }
 
   Future<Response> _executeRequest<T>(Future<Response> Function() op) async {
-    if (!networkInfo.hasInternet) return Future.error(AlvysSocketException(T));
-    try {
-      var companyCode = pref.getString(SharedPreferencesKey.companyCode.name);
-      if (companyCode != null) {
-        telemetryClient.context.properties['tenantId'] = companyCode;
-      }
-      await addPermissionDetails();
-      telemetryClient.context.operation.id = const Uuid().v4(options: {'rng': UuidUtil.cryptoRNG});
-      var res = await op();
-      return _handleResponse<T>(res);
-    } on SocketException {
-      return Future.error(AlvysSocketException(T));
-    } on TimeoutException {
-      return Future.error(AlvysTimeoutException(T));
+    var companyCode = pref.getString(SharedPreferencesKey.companyCode.name);
+    if (companyCode != null) {
+      telemetryClient.context.properties['tenantId'] = companyCode;
     }
+    await addPermissionDetails();
+    telemetryClient.context.operation.id = const Uuid().v4(options: {'rng': UuidUtil.cryptoRNG});
+    var res = await _tryRequest<T, Response>(op);
+    return _handleResponse<T>(res);
   }
 
   Future<Response> _handleResponse<T>(Response response) {
@@ -171,6 +158,20 @@ class AlvysHttpClient {
     }
   }
 
+  Future<TResponse> _tryRequest<TSource, TResponse>(Future<TResponse> Function() op) async {
+    if (!networkInfo.hasInternet) {
+      networkInfo.setInternetState(false);
+      return Future.error(AlvysSocketException(TSource));
+    }
+    try {
+      return await op();
+    } on SocketException {
+      return Future.error(AlvysSocketException(TSource));
+    } on TimeoutException {
+      return Future.error(AlvysTimeoutException(TSource));
+    }
+  }
+
   Future<void> addPermissionDetails() async {
     var permissions = [
       Permission.location,
@@ -185,7 +186,7 @@ class AlvysHttpClient {
         .toJsonEncodedString;
   }
 
-  Future<void> setTelemetryContext({DriverUser? user, String? companyCode, Map<String, dynamic>? extraData}) async {
+  Future<void> setTelemetryContext({DriverUser? user, Map<String, dynamic>? extraData}) async {
     assert((user == null && extraData != null) || (user != null && extraData == null));
     Map<String, dynamic> driver = user == null
         ? extraData!
@@ -220,5 +221,10 @@ class AlvysHttpClient {
       ..user.accountId = user?.id
       ..properties['user'] = jsonEncode(driver)
       ..device.id = Platform.isAndroid ? androidInfo.id : iosInfo.identifierForVendor;
+    await addPermissionDetails();
+    if (user != null) {
+      telemetryClient.context.properties['tenantPermissions'] =
+          Map.fromEntries(user.userTenants.map((e) => MapEntry(e.companyCode!, e.permissions))).toJsonEncodedString;
+    }
   }
 }

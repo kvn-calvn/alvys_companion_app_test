@@ -9,7 +9,7 @@ class ClientError with _$ClientError {
     String? title,
     String? detail,
     required int status,
-    required Map<String, Map<String, List<String>>> errors,
+    required Map<String, List<String>> errors,
   }) = _ClientError;
   ClientError._();
   factory ClientError.fromJson(Map<String, dynamic> json) => _$ClientErrorFromJson(json);

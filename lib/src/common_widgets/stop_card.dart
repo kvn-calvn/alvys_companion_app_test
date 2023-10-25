@@ -1,32 +1,28 @@
-import '../network/http_client.dart';
-import 'package:firebase_analytics/firebase_analytics.dart';
-import 'package:flutter/services.dart';
-
-import '../features/tutorial/tutorial_controller.dart';
-import '../utils/dummy_data.dart';
-
-import '../features/authentication/presentation/auth_provider_controller.dart';
-import '../features/echeck/presentation/pages/generate_echeck.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../constants/color.dart';
 import '../features/trips/domain/app_trip/stop.dart';
 import '../features/trips/presentation/controller/trip_page_controller.dart';
+import '../features/tutorial/tutorial_controller.dart';
+import '../network/http_client.dart';
+import '../utils/dummy_data.dart';
 import '../utils/magic_strings.dart';
 import 'buttons.dart';
 
 class StopCard extends ConsumerWidget {
   const StopCard({
-    Key? key,
+    super.key,
     required this.stop,
     required this.tripId,
     this.canCheckInOutStopId,
     required this.index,
     required this.tabIndex,
-  }) : super(key: key);
+  });
   final int index;
   final Stop stop;
   final String tripId;
@@ -36,7 +32,6 @@ class StopCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var tripNotifier = ref.read(tripControllerProvider.notifier);
     var tripState = ref.read(tripControllerProvider);
-    var authState = ref.watch(authProvider);
     return LayoutBuilder(builder: (context, constraints) {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -58,6 +53,7 @@ class StopCard extends ConsumerWidget {
             child: Container(
               padding: const EdgeInsetsDirectional.fromSTEB(15, 5, 5, 5),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -105,6 +101,8 @@ class StopCard extends ConsumerWidget {
                               ),
                             ),
                             Text(stop.formattedStopDate, style: Theme.of(context).textTheme.bodySmall),
+                            const SizedBox(height: 6),
+                            StopLoadingTypeWidget(stop),
                           ],
                         ),
                         //],
@@ -133,9 +131,11 @@ class StopCard extends ConsumerWidget {
 
                   //Button row
                   const SizedBox(height: 6),
-                  Row(
-                    // buttonPadding: const EdgeInsetsDirectional.only(end: 12),
-                    // alignment: MainAxisAlignment.start,
+                  Wrap(
+                    runAlignment: WrapAlignment.spaceBetween,
+                    runSpacing: 5,
+                    spacing: 5,
+                    alignment: WrapAlignment.spaceBetween,
                     children: [
                       tripState.value!.checkIn && tripState.value!.loadingStopId == stop.stopId!
                           ? const ButtonLoading()
@@ -146,7 +146,7 @@ class StopCard extends ConsumerWidget {
                               title: stop.timeRecord?.driver?.timeIn == null ? "Check In" : "Checked In",
                               isLoading: false,
                             ),
-                      const SizedBox(width: 5),
+                      // const SizedBox(width: 5),
                       !tripState.value!.checkIn && tripState.value!.loadingStopId == stop.stopId!
                           ? const ButtonLoading()
                           : ButtonStyle2(
@@ -156,16 +156,17 @@ class StopCard extends ConsumerWidget {
                               title: stop.timeRecord?.driver?.timeOut == null ? "Check Out" : 'Checked Out',
                               isLoading: false,
                             ),
-                      const SizedBox(width: 5),
+                      // const SizedBox(width: 5),
                       ButtonStyle2(
-                        onPressAction:
-                            authState.value!.shouldShowEcheckButton(tripState.value!.getTrip(tripId).companyCode!)
-                                ? () => showGenerateEcheckDialog(context, tripId, stop.stopId)
-                                : null,
+                        onPressAction: ref.watch(tripControllerProvider.notifier).shouldShowEcheckButton(tripId)
+                            ? () => ref
+                                .read(tripControllerProvider.notifier)
+                                .generateEcheckDialog(context, tripId, stop.stopId!)
+                            : null,
                         title: "E-Check",
                         isLoading: false,
                       ),
-                      const SizedBox(width: 5),
+                      // const SizedBox(width: 5),
                     ],
                   ),
                 ],
@@ -187,5 +188,25 @@ class ButtonLoading extends StatelessWidget {
     return MaterialButton(
         onPressed: null,
         child: SizedBox(width: height, height: height, child: const CircularProgressIndicator.adaptive()));
+  }
+}
+
+class StopLoadingTypeWidget extends StatelessWidget {
+  final Stop stop;
+  const StopLoadingTypeWidget(this.stop, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: ColorManager.stopLoadingTypeColor,
+      borderRadius: BorderRadius.circular(5),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 1.0, horizontal: 6.0),
+        child: Text(
+          stop.loadingType!,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
   }
 }

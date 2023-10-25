@@ -64,29 +64,33 @@ class GlobalErrorHandler {
     List<ExceptionAction> optionalOptions = [];
     String message = '';
     String title = '';
+    String? dismissButtonText;
     bool hasError = true;
     switch (error.runtimeType) {
-      case AlvysClientException:
-      case AlvysEntityNotFoundException:
-      case AlvysSocketException:
-      case AlvysTimeoutException:
-      case AlvysUnauthorizedException:
-      case ApiServerException:
-      case AlvysDependencyException:
-      case ControllerException:
+      case const (AlvysClientException):
+      case const (AlvysEntityNotFoundException):
+      case const (AlvysSocketException):
+      case const (AlvysTimeoutException):
+      case const (AlvysUnauthorizedException):
+      case const (ApiServerException):
+      case const (AlvysDependencyException):
+      case const (ControllerException):
         var e = error as ControllerException;
-        onError = () => executeOnError(e.source);
+        onError = () => executeOnError(e.source, e);
         message = e.message;
         title = e.title;
+
+        dismissButtonText = "Ok";
         break;
-      case PermissionException:
+      case const (PermissionException):
         var e = error as PermissionException;
         message = e.message;
         title = 'Permission Error';
         onError = e.onError;
         optionalOptions = e.optionalActions;
+        dismissButtonText = "Not now";
         break;
-      case AlvysException:
+      case const (AlvysException):
         var e = error as AlvysException;
         message = e.message;
         title = e.title;
@@ -97,20 +101,22 @@ class GlobalErrorHandler {
         handleDefault();
     }
     if (hasError) {
-      showErrorDialog(
-        context: navKey.currentState!.context,
-        afterError: () => onError?.call(),
-        optionalActions: optionalOptions,
-        message: message,
-        title: title,
-      );
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        showErrorDialog(
+            context: navKey.currentState!.context,
+            afterError: () => onError?.call(),
+            optionalActions: optionalOptions,
+            message: message,
+            title: title,
+            dismissButtonText: dismissButtonText);
+      });
     }
   }
 
-  void executeOnError(Type t) {
+  void executeOnError(Type t, Exception ex) {
     var providerData = providers();
     if (providerData.containsKey(t)) {
-      providerData[t]!().onError();
+      providerData[t]!().onError(ex);
     }
     // switch (t) {
     //   case AuthProviderNotifier:
@@ -133,6 +139,7 @@ class GlobalErrorHandler {
           required void Function() afterError,
           required List<ExceptionAction> optionalActions,
           required String message,
+          String? dismissButtonText,
           required String title}) =>
       showDialog(
         context: context,
@@ -141,12 +148,14 @@ class GlobalErrorHandler {
           title: title,
           description: message,
           actions: [
-            AppDialogAction(
-              label: 'OK',
-              action: () => Navigator.pop(context),
-              primary: true,
+            ...optionalActions.map(
+              (e) => AppDialogAction(label: e.title, action: e.action, primary: true),
             ),
-            ...optionalActions.map((e) => AppDialogAction(label: e.title, action: e.action))
+            AppDialogAction(
+              label: dismissButtonText ?? 'Ok',
+              action: () => Navigator.pop(context),
+              primary: optionalActions.isEmpty,
+            ),
           ],
         ),
       ).then((value) => afterError());

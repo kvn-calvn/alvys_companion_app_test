@@ -1,6 +1,7 @@
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
+
 import '../../../../models/address/address.dart';
 import 'm_comodity.dart';
 import 'reference.dart';
@@ -11,25 +12,27 @@ part 'stop.g.dart';
 
 @freezed
 class Stop with _$Stop {
-  const factory Stop(
-      {@JsonKey(name: 'CompanyName') String? companyName,
-      @JsonKey(name: 'Phone') String? phone,
-      @JsonKey(name: 'StopAddress') @Default('') String stopAddress,
-      @JsonKey(name: 'StopDate') DateTime? stopDate,
-      @JsonKey(name: 'ActualStopdate') DateTime? actualStopdate,
-      @JsonKey(name: 'Status') String? status,
-      @JsonKey(name: 'Appointment') String? appointment,
-      @JsonKey(name: 'Comodities') List<MComodity>? comodities,
-      @JsonKey(name: 'Notes') List<Note>? notes,
-      @JsonKey(name: 'References') List<Reference>? references,
-      @JsonKey(name: 'Instructions') String? instructions,
-      @JsonKey(name: 'GeneralInstructions') String? genInstructions,
-      @JsonKey(name: 'TimeRecord') TimeRecord? timeRecord,
-      @JsonKey(name: 'StopId') String? stopId,
-      @JsonKey(name: 'StopType') String? stopType,
-      @JsonKey(name: 'Latitude') String? latitude,
-      @JsonKey(name: 'Longitude') String? longitude,
-      @JsonKey(name: 'Address') Address? address}) = _Stop;
+  const factory Stop({
+    @JsonKey(name: 'CompanyName') String? companyName,
+    @JsonKey(name: 'Phone') String? phone,
+    @JsonKey(name: 'StopAddress') @Default('') String stopAddress,
+    @JsonKey(name: 'StopDate') DateTime? stopDate,
+    @JsonKey(name: 'ActualStopdate') DateTime? actualStopdate,
+    @JsonKey(name: 'Status') String? status,
+    @JsonKey(name: 'Appointment') String? appointment,
+    @JsonKey(name: 'Comodities') List<MComodity>? comodities,
+    @JsonKey(name: 'Notes') List<Note>? notes,
+    @JsonKey(name: 'References') List<Reference>? references,
+    @JsonKey(name: 'Instructions') String? instructions,
+    @JsonKey(name: 'GeneralInstructions') String? genInstructions,
+    @JsonKey(name: 'TimeRecord') TimeRecord? timeRecord,
+    @JsonKey(name: 'StopId') String? stopId,
+    @JsonKey(name: 'StopType') String? stopType,
+    @JsonKey(name: 'Latitude') String? latitude,
+    @JsonKey(name: 'Longitude') String? longitude,
+    @JsonKey(name: 'LoadingType') String? loadingType,
+    @JsonKey(name: 'Address') Address? address,
+  }) = _Stop;
 
   factory Stop.fromJson(Map<String, dynamic> json) => _$StopFromJson(json);
   const Stop._();
@@ -39,7 +42,11 @@ class Stop with _$Stop {
       checkOutStopId == stopId && timeRecord?.driver?.timeIn != null && timeRecord?.driver?.timeOut == null;
   String get formattedStopDate => stopDate == null
       ? '-'
-      : "${DateFormat('MMM dd, yyyy').format(stopDate!)}${appointment.isNullOrEmpty ? '' : ' @ $appointment'}";
+      : DateFormat(appointment.isNullOrEmpty ? 'MMM d, yyyy' : 'MMM d, yyyy @ HH:mm').format(stopDate!);
+  String get tripCardAddress {
+    if (address == null) return "-";
+    return '${address!.street.isNotNullOrEmpty ? address!.street : "-"} \n${address!.city.isNotNullOrEmpty ? address!.city : "-"}, ${address!.state.isNotNullOrEmpty ? address!.state : "-"} ${address!.zip.isNotNullOrEmpty ? address!.zip : ""}';
+  }
 }
 
 @freezed

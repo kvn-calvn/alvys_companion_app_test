@@ -1,3 +1,4 @@
+// import 'package:fade_shimmer/fade_shimmer.dart';
 import 'package:fade_shimmer/fade_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,7 +7,7 @@ import '../../constants/color.dart';
 import 'shimmer_widget.dart';
 
 class TripListShimmer extends StatelessWidget {
-  const TripListShimmer({Key? key}) : super(key: key);
+  const TripListShimmer({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +16,7 @@ class TripListShimmer extends StatelessWidget {
 }
 
 class TripCardShimmer extends ConsumerWidget {
-  const TripCardShimmer({Key? key, this.millisecondsDelay = 2000}) : super(key: key);
+  const TripCardShimmer({super.key, this.millisecondsDelay = 2000});
 
   final int millisecondsDelay;
 
@@ -175,7 +176,7 @@ class TripCardShimmer extends ConsumerWidget {
 
 class TripCardDetail extends StatelessWidget {
   final int millisecondsDelay;
-  const TripCardDetail({Key? key, required this.millisecondsDelay}) : super(key: key);
+  const TripCardDetail({super.key, required this.millisecondsDelay});
 
   @override
   Widget build(BuildContext context) {

@@ -1,16 +1,16 @@
-import 'tablet_utils.dart';
-
-import '../constants/color.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+import '../constants/color.dart';
 import 'extensions.dart';
-import 'package:flutter/material.dart';
+import 'tablet_utils.dart';
 
 class AlvysTheme {
   static ThemeData mainTheme(Brightness brightness) {
     final textTheme = appTextTheme(
-        MediaQueryData.fromView(WidgetsBinding.instance.platformDispatcher.implicitView!).size.width, brightness);
+        MediaQueryData.fromView(WidgetsBinding.instance.platformDispatcher.implicitView!).size.shortestSide,
+        brightness);
     return ThemeData(
         textTheme: textTheme,
         brightness: brightness,
@@ -30,7 +30,7 @@ class AlvysTheme {
             statusBarBrightness: brightness,
           ),
           titleTextStyle: appTextTheme(
-                  MediaQueryData.fromView(WidgetsBinding.instance.platformDispatcher.implicitView!).size.width,
+                  MediaQueryData.fromView(WidgetsBinding.instance.platformDispatcher.implicitView!).size.shortestSide,
                   brightness)
               .bodyLarge!
               .copyWith(
@@ -192,19 +192,19 @@ class AlvysTheme {
         ),
         bodyLarge: const TextStyle(
           // height: 24,
-          fontSize: 16,
+          fontSize: 18,
           wordSpacing: 0.15,
           fontWeight: FontWeight.w600,
         ),
         bodyMedium: TextStyle(
             // height: 20,
-            fontSize: 14,
+            fontSize: 16,
             wordSpacing: 0.25,
             fontWeight: FontWeight.w400,
             color: ColorManager.greyColorScheme1(brightness)),
         bodySmall: const TextStyle(
           // height: 16,
-          fontSize: 12,
+          fontSize: 14,
           wordSpacing: 0.4,
           fontWeight: FontWeight.w400,
         ),

@@ -1,3 +1,6 @@
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
+import 'package:intl/intl.dart';
+
 import '../../../../utils/tablet_utils.dart';
 
 import '../../../../utils/dummy_data.dart';
@@ -57,9 +60,10 @@ class TripDocuments extends ConsumerWidget {
                   itemCount: attachments.length,
                   padding: const EdgeInsets.only(top: 16.0),
                   itemBuilder: (context, index) {
-                    var doc = state.value!.getTrip(tripId).attachments[index];
+                    var doc = attachments[index];
                     return LargeNavButton(
                         title: doc.documentType,
+                        subtitle: DateFormat('MMM d, yyyy @ HH:mm').formatNullDate(doc.date?.toLocal(), ""),
                         key: index == 0 && tripId == testTrip.id! ? ref.read(tutorialProvider).documentCard : null,
                         onPressed: () {
                           context.pushNamed(RouteName.tripDocumentView.name,
