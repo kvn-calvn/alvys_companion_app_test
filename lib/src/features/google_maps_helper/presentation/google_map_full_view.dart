@@ -44,7 +44,7 @@ class FullScreenMap extends ConsumerWidget {
             left: 0,
             right: 0,
             child: SizedBox(
-              height: MediaQuery.of(context).size.longestSide * 0.16,
+              height: MediaQuery.of(context).size.longestSide * 0.2,
               child: MapStopsView(mapNotifier.trips.value!.getTrip(tripId).stops, tripId),
             ),
           )

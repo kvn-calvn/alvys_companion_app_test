@@ -243,7 +243,7 @@ class TutorialController {
                   return;
                 }
                 await item.onSkip?.call();
-                WidgetsBinding.instance.addPostFrameCallback((_) async {
+                WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
                   next(context, endIndex!);
                 });
               },
@@ -253,7 +253,7 @@ class TutorialController {
   }
 
   void showTutorialSection(BuildContext context, int startIndex, int endIndex, void Function() onEnd) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       // this.onEnd = onEnd;
       firstInstall.setState(true);
       startTutorial(context, onEnd, startIndex, endIndex);

@@ -32,7 +32,6 @@ class _TripGoogleMapState extends ConsumerState<TripGoogleMap> with WidgetsBindi
   void didChangePlatformBrightness() {
     super.didChangePlatformBrightness();
     var mapNotifier = ref.read(mapProvider.call(widget.tripId).notifier);
-    mapNotifier.setMiniMapStyle();
     mapNotifier.setMapStyle().then((value) => mapNotifier.setMiniMapStyle());
   }
 
@@ -61,7 +60,7 @@ class _TripGoogleMapState extends ConsumerState<TripGoogleMap> with WidgetsBindi
           initialCameraPosition: const CameraPosition(
             tilt: 20,
             target: LatLng(37.6, -95.665),
-            zoom: 5,
+            zoom: 3,
           ),
           markers: mapState.value?.markers ?? {},
           polylines: mapState.value?.polyLines ?? {},

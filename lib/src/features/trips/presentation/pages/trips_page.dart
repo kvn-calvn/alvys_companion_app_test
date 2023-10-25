@@ -36,7 +36,7 @@ class _LoadListPageState extends ConsumerState<LoadListPage> with TickerProvider
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       ref
           .read(tutorialProvider)
           .startTutorial(context, () async => ref.read(tripControllerProvider.notifier).handleAfterTutorial(context));

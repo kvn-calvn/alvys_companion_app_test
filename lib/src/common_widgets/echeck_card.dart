@@ -112,11 +112,16 @@ class EcheckCard extends ConsumerWidget {
                                 ],
                               ),
                             ),
-                            const Text(
-                              'Funds Available',
-                            ),
+                            Text('Funds Available',
+                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                      decoration: eCheck.isCanceled ? TextDecoration.lineThrough : TextDecoration.none,
+                                      decorationThickness: 3,
+                                    )),
                             Text('\$${eCheck.amount?.toStringAsFixed(2)}',
-                                style: Theme.of(context).textTheme.bodyLarge),
+                                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                                      decoration: eCheck.isCanceled ? TextDecoration.lineThrough : TextDecoration.none,
+                                      decorationThickness: 4,
+                                    )),
                             Padding(
                               padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
                               child: Row(
