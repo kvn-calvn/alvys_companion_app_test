@@ -101,6 +101,8 @@ class StopCard extends ConsumerWidget {
                               ),
                             ),
                             Text(stop.formattedStopDate, style: Theme.of(context).textTheme.bodySmall),
+                            const SizedBox(height: 6),
+                            StopLoadingTypeWidget(stop),
                           ],
                         ),
                         //],
@@ -186,5 +188,25 @@ class ButtonLoading extends StatelessWidget {
     return MaterialButton(
         onPressed: null,
         child: SizedBox(width: height, height: height, child: const CircularProgressIndicator.adaptive()));
+  }
+}
+
+class StopLoadingTypeWidget extends StatelessWidget {
+  final Stop stop;
+  const StopLoadingTypeWidget(this.stop, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Material(
+      color: ColorManager.stopLoadingTypeColor,
+      borderRadius: BorderRadius.circular(5),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(vertical: 1.0, horizontal: 6.0),
+        child: Text(
+          stop.loadingType!,
+          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+      ),
+    );
   }
 }

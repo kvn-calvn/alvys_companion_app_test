@@ -45,10 +45,10 @@ class FirebaseRemoteConfigService {
 
   bool showRefreshBtn() => firebaseRemoteConfig.getBool('show_refresh_btn');
   bool showTutorialBtn() => firebaseRemoteConfig.getBool('show_tutorial_btn');
+  bool showEditProfileBtn() => firebaseRemoteConfig.getBool('edit_profile');
   String alvysHelpUrl() => firebaseRemoteConfig.getString('alvys_help_url');
   String alvysUrl() => firebaseRemoteConfig.getString('alvys_url');
   String alvysTermsUrl() => firebaseRemoteConfig.getString('alvys_terms_url');
-  String alvysPrivacyUrl() =>
-      firebaseRemoteConfig.getString('alvys_privacy_url');
+  String alvysPrivacyUrl() => firebaseRemoteConfig.getString('alvys_privacy_url');
   bool showCompanyCode() => firebaseRemoteConfig.getBool('show_company_code');
 }

@@ -65,6 +65,7 @@ final AppTrip testTrip = AppTrip(
   stops: [
     Stop(
       comodities: [],
+      loadingType: "Live",
       companyName: 'Test company 1',
       actualStopdate: DateTime.now().add(const Duration(days: 3)),
       address: Address(street: '345 Test Blvd', city: 'Test Town', zip: '3241', state: 'CA'),
@@ -87,6 +88,7 @@ final AppTrip testTrip = AppTrip(
     ),
     Stop(
       comodities: [],
+      loadingType: "Drop&Hook",
       companyName: 'Test company 2',
       actualStopdate: DateTime.now().add(const Duration(days: 10)),
       address: Address(street: '34 Test Ave', city: 'Testville', zip: '4425', state: 'VA'),

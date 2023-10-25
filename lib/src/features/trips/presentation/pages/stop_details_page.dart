@@ -1,3 +1,4 @@
+import 'package:alvys3/src/common_widgets/stop_card.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
 import '../../../../common_widgets/empty_view.dart';
@@ -104,6 +105,8 @@ class StopDetails extends ConsumerWidget {
                       '${currentStop.address?.city} ${currentStop.address?.state} ${currentStop.address?.zip}',
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
+                    const SizedBox(height: 10),
+                    StopLoadingTypeWidget(currentStop)
                   ],
                 ),
                 const SizedBox(

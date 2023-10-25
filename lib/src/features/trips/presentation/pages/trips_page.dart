@@ -73,7 +73,6 @@ class _LoadListPageState extends ConsumerState<LoadListPage> with TickerProvider
   @override
   Widget build(BuildContext context) {
     var showTutBtn = ref.watch(firebaseRemoteConfigServiceProvider).showTutorialBtn();
-    debugPrint("Show tut button? $showTutBtn");
     return Scaffold(
       appBar: AppBar(
         leading: const Padding(

@@ -30,6 +30,7 @@ class Stop with _$Stop {
     @JsonKey(name: 'StopType') String? stopType,
     @JsonKey(name: 'Latitude') String? latitude,
     @JsonKey(name: 'Longitude') String? longitude,
+    @JsonKey(name: 'LoadingType') String? loadingType,
     @JsonKey(name: 'Address') Address? address,
   }) = _Stop;
 
@@ -41,7 +42,7 @@ class Stop with _$Stop {
       checkOutStopId == stopId && timeRecord?.driver?.timeIn != null && timeRecord?.driver?.timeOut == null;
   String get formattedStopDate => stopDate == null
       ? '-'
-      : DateFormat(appointment.isNullOrEmpty ? ' MMM d, yyyy' : 'MMM d, yyyy @ HH:mm').format(stopDate!);
+      : DateFormat(appointment.isNullOrEmpty ? 'MMM d, yyyy' : 'MMM d, yyyy @ HH:mm').format(stopDate!);
   String get tripCardAddress {
     if (address == null) return "-";
     return '${address!.street.isNotNullOrEmpty ? address!.street : "-"} \n${address!.city.isNotNullOrEmpty ? address!.city : "-"}, ${address!.state.isNotNullOrEmpty ? address!.state : "-"} ${address!.zip.isNotNullOrEmpty ? address!.zip : ""}';

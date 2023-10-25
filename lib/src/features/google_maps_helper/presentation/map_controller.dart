@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
+import 'package:flutter/services.dart';
 
 import '../../../utils/map_styles.dart';
 import '../../../utils/theme_handler.dart';
@@ -45,13 +46,18 @@ class MapNotifier extends AutoDisposeFamilyAsyncNotifier<MapState, String> {
           .toSet();
       state = AsyncData(MapState(markers: markers));
       GoogleMapController miniController = await this.miniController.future;
-
+      if (markers.isNullOrEmpty) return;
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         try {
-          miniController.animateCamera(
-              CameraUpdate.newLatLngBounds(repo.boundsFromLatLngList(markers.map((e) => e.position).toList()), 72));
-        } catch (e) {
-          miniController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: markers.first.position)));
+          try {
+            miniController.animateCamera(
+                CameraUpdate.newLatLngBounds(repo.boundsFromLatLngList(markers.map((e) => e.position).toList()), 72));
+          } catch (e) {
+            miniController
+                .animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: markers.first.position)));
+          }
+        } on PlatformException {
+          return;
         }
       });
       var polylines = await repo.getPolyLines(trip.stopLocations.map((e) => e.value).toList());
