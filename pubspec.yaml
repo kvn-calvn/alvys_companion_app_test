@@ -3,7 +3,7 @@ description: Alvys mobile driver app.
 
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
-version: 3.0.3+236
+version: 3.0.2+236
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
