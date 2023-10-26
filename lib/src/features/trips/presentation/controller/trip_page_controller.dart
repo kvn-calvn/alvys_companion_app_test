@@ -303,7 +303,10 @@ class TripController extends _$TripController implements IAppErrorHandler {
 
   @override
   FutureOr<void> onError(Exception ex) {
-    state = AsyncData(state.value!.copyWith(loadingStopId: null));
+    state = AsyncData(state.value!.copyWith(
+      trips: state.value!.trips.where((element) => element.id != testTrip.id).toList(),
+      loadingStopId: null,
+    ));
   }
 
   @override
