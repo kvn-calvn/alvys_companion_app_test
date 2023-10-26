@@ -32,11 +32,11 @@ class _DocumentsPageState extends ConsumerState<DocumentsPage> {
     }
   }
 
+  DocumentsNotifier get docsNotifier => ref.read(documentsProvider.call(widget.args).notifier);
   @override
   Widget build(BuildContext context) {
     final docsState = ref.watch(documentsProvider.call(widget.args));
     final authState = ref.watch(authProvider);
-    final docsNotifier = ref.read(documentsProvider.call(widget.args).notifier);
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -60,22 +60,23 @@ class _DocumentsPageState extends ConsumerState<DocumentsPage> {
           : null,
       body: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: docsState.isLoading
-              ? const DocumentsShimmer()
-              : DocumentList(
-                  documents:
-                      docsState.value?.documents(widget.args.documentType, authState.value!.canViewPaystubs) ?? [],
-                  refreshFunction: () async {
-                    await ref.read(documentsProvider.call(widget.args).notifier).getDocuments();
-                  },
-                  args: widget.args,
-                  emptyMessage: "No ${docsNotifier.pageTitle}",
-                  extra: docsState.value!.canLoadMore
-                      ? LoadMoreButton(loadMoreFunction: () async {
-                          await ref.read(documentsProvider.call(widget.args).notifier).loadMorePaystubs();
-                        })
-                      : null,
-                )),
+          child: docsState.when(
+              skipError: true,
+              data: (value) => DocumentList(
+                    documents: value.documents(widget.args.documentType, authState.value!.canViewPaystubs),
+                    refreshFunction: () async {
+                      await ref.read(documentsProvider.call(widget.args).notifier).getDocuments();
+                    },
+                    args: widget.args,
+                    emptyMessage: "No ${docsNotifier.pageTitle}",
+                    extra: value.canLoadMore
+                        ? LoadMoreButton(loadMoreFunction: () async {
+                            await ref.read(documentsProvider.call(widget.args).notifier).loadMorePaystubs();
+                          })
+                        : null,
+                  ),
+              error: (error, trace) => throw error,
+              loading: () => const DocumentsShimmer())),
     );
   }
 }

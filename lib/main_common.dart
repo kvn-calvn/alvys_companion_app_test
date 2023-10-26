@@ -25,6 +25,7 @@ import 'src/features/tutorial/tutorial_controller.dart';
 import 'src/network/firebase_remote_config_service.dart';
 import 'src/network/http_client.dart';
 import 'src/network/network_info.dart';
+import 'src/utils/exceptions.dart';
 import 'src/utils/global_error_handler.dart';
 import 'src/utils/magic_strings.dart';
 import 'src/utils/platform_channel.dart';
@@ -44,6 +45,12 @@ Future<void> mainCommon() async {
     await Firebase.initializeApp(
       options: DefaultFirebaseOptions.currentPlatform,
     );
+    ErrorWidget.builder = (details) {
+      if (details.exception is ControllerException) {
+        return const Center(child: CircularProgressIndicator.adaptive());
+      }
+      return ErrorWidget(details.exception);
+    };
 
     final firebaseRemoteConfigService = FirebaseRemoteConfigService(
       firebaseRemoteConfig: FirebaseRemoteConfig.instance,
