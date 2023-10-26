@@ -18,15 +18,14 @@ import org.json.JSONObject
 
 @Suppress("UNCHECKED_CAST")
 class MainActivity : FlutterActivity() {
-
-    private var isBound = false
-    private lateinit var mConnection : ServiceConnection
+    private lateinit var locationTrackingServiceIntent: Intent
     private var startString: String? = null
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
-        NotificationHub.setListener(NHNotificationListener())
-        val locationTrackingServiceIntent = Intent(this, LocationTrackingService::class.java)
-
         super.configureFlutterEngine(flutterEngine)
+        NotificationHub.setListener(NHNotificationListener())
+        locationTrackingServiceIntent = Intent(this, LocationTrackingService::class.java)
+
+
         val messenger = flutterEngine.dartExecutor.binaryMessenger
 
         MethodChannel(messenger, "PLATFORM_CHANNEL")
@@ -47,12 +46,13 @@ class MainActivity : FlutterActivity() {
                             "DRIVER-INFO",
                             JSONObject(call.arguments as Map<String, String>).toString()
                         )
-                        bindService(locationTrackingServiceIntent, mConnection, Context.BIND_AUTO_CREATE)
+                        context.startForegroundService(locationTrackingServiceIntent)!!
 
-                        context.startService(locationTrackingServiceIntent)
+                        result.success(1)
                     }
                     "stopLocationTracking" -> {
                         context.stopService(locationTrackingServiceIntent)
+                        result.success(1)
                     }
                     "initialLink" -> {
                         if (startString != null) {
@@ -61,38 +61,30 @@ class MainActivity : FlutterActivity() {
                     }
                     "isTablet" ->{
                         result.success( (context.resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE)
-//                        val metrics = WindowMetricsCalculator.getOrCreate()
-//                            .computeCurrentWindowMetrics(this)
-//                        val widthDp = metrics.bounds.width() /
-//                                resources.displayMetrics.density
-//                        val heightDp = metrics.bounds.height() /
-//                                resources.displayMetrics.density
-//                        var larger = if(widthDp > heightDp) widthDp else heightDp
-//                       result.success(larger > 700f)
                     }
                     else -> result.notImplemented()
                 }
             }
 
-        var mService: LocationTrackingService
 
-           mConnection = object : ServiceConnection {
-            // Called when the connection with the service is established
-            override fun onServiceConnected(className: ComponentName, service: IBinder) {
-                // Because we have bound to an explicit
-                // service that is running in our own process, we can
-                // cast its IBinder to a concrete class and directly access it.
-                val binder = service as LocationTrackingService.MyLocalBinder
-                mService = binder.getService()
-                isBound = true
-            }
 
-            // Called when the connection with the service disconnects unexpectedly
-            override fun onServiceDisconnected(className: ComponentName) {
-                Log.e("", "onServiceDisconnected")
-                isBound = false
-            }
-        }
+//           mConnection = object : ServiceConnection {
+//            // Called when the connection with the service is established
+//            override fun onServiceConnected(className: ComponentName, service: IBinder) {
+//                // Because we have bound to an explicit
+//                // service that is running in our own process, we can
+//                // cast its IBinder to a concrete class and directly access it.
+//                val binder = service as LocationTrackingService.MyLocalBinder
+//                mService = binder.getService()
+//                isBound = true
+//            }
+//
+//            // Called when the connection with the service disconnects unexpectedly
+//            override fun onServiceDisconnected(className: ComponentName) {
+//                Log.e("", "onServiceDisconnected")
+//                isBound = false
+//            }
+//        }
 
     }
 
@@ -101,6 +93,4 @@ class MainActivity : FlutterActivity() {
         val intent = intent
         startString = intent.data?.toString()
     }
-
-
 }
