@@ -1,25 +1,36 @@
 package io.alvys.app.alvys3
 
-import android.content.ComponentName
-import android.content.Context
 import android.content.Intent
-import android.content.ServiceConnection
-import android.content.res.Configuration
+import android.graphics.Point
 import android.os.Build
 import android.os.Bundle
-import android.os.IBinder
-import android.util.Log
-import androidx.window.layout.WindowMetricsCalculator
+import android.view.WindowManager
 import com.microsoft.windowsazure.messaging.notificationhubs.NotificationHub
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import org.json.JSONObject
+import kotlin.math.hypot
+import kotlin.math.sqrt
+
 
 @Suppress("UNCHECKED_CAST")
 class MainActivity : FlutterActivity() {
     private lateinit var locationTrackingServiceIntent: Intent
     private var startString: String? = null
+
+    private fun WindowManager.currentDeviceRealSize(): Pair<Int, Int> {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            return Pair(
+                maximumWindowMetrics.bounds.width(),
+                maximumWindowMetrics.bounds.height())
+        } else {
+            val size = Point()
+            @Suppress("DEPRECATION")
+            defaultDisplay.getRealSize(size)
+            Pair(size.x, size.y)
+        }
+    }
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
         NotificationHub.setListener(NHNotificationListener())
@@ -60,7 +71,16 @@ class MainActivity : FlutterActivity() {
                         }
                     }
                     "isTablet" ->{
-                        result.success( (context.resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE)
+                        val (width, height) = windowManager.currentDeviceRealSize()
+                        val widthInInches: Double = (width / resources.displayMetrics.xdpi).toDouble()
+                        val heightInInches: Double = (height / resources.displayMetrics.ydpi).toDouble()
+                        val screenSize = hypot(widthInInches, heightInInches)
+//                        Log.e("Density", resources.displayMetrics.xdpi.toString())
+//                        Log.e("Width", widthInInches.toString())
+//                        Log.e("Height", heightInInches.toString())
+//                        Log.e("Size", screenSize.toString())
+                        result.success((if (widthInInches < heightInInches)  widthInInches else heightInInches) >=5)
+                        // result.success( (context.resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE)
                     }
                     else -> result.notImplemented()
                 }
