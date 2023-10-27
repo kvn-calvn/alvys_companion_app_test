@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:alvys3/src/utils/permission_helper.dart';
 import 'package:azure_application_insights/azure_application_insights.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -165,9 +166,11 @@ class AlvysHttpClient {
     }
     try {
       return await op();
-    } on SocketException {
+    } on SocketException catch (e) {
+      print('Socket exception From $TSource $e');
       return Future.error(AlvysSocketException(TSource));
-    } on TimeoutException {
+    } on TimeoutException catch (e) {
+      print('Timeout From $TSource $e');
       return Future.error(AlvysTimeoutException(TSource));
     }
   }
@@ -178,7 +181,7 @@ class AlvysHttpClient {
       Permission.locationAlways,
       Permission.locationWhenInUse,
       Permission.notification,
-      Platform.isAndroid ? Permission.mediaLibrary : Permission.photos,
+      Platform.isAndroid ? await PermissionHelper.androidGalleryPermission() : Permission.photos,
       Permission.camera
     ];
     telemetryClient.context.properties['permissionStatus'] = Map.fromEntries(await permissions.mapAsync(
