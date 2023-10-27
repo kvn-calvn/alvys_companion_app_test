@@ -81,8 +81,8 @@ class SettingsList extends ConsumerWidget {
           title: "Tutorial",
           onPressed: () async {
             ref.read(firstInstallProvider.notifier).setState(true);
-            context.goNamed(RouteName.trips.name);
             ref.read(tabletViewProvider.notifier).setState(0);
+            context.goNamed(RouteName.trips.name);
             ref.read(httpClientProvider).telemetryClient.trackEvent(name: "watch_tutorial");
             await FirebaseAnalytics.instance.logEvent(name: "watch_tutorial");
           },
