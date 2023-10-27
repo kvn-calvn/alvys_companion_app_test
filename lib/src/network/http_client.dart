@@ -35,7 +35,7 @@ class AlvysHttpClient {
     final processor = TransmissionProcessor(
       instrumentationKey: FlavorConfig.instance!.azureTelemetryKey,
       httpClient: client,
-      timeout: const Duration(seconds: 10),
+      timeout: const Duration(seconds: 100),
     );
 
     telemetryClient = TelemetryClient(

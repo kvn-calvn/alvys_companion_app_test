@@ -130,7 +130,7 @@ class _PhoneNumberVerificationPageState extends ConsumerState<PhoneNumberVerific
                         FilteringTextInputFormatter.allow(RegExp('[0-9]')),
                       ],
                       onCompleted: (pin) async {
-                        await ref.read(authProvider.notifier).verifyDriver(context, mounted);
+                        await ref.read(authProvider.notifier).verifyDriver(context);
                       },
                       focusedPinTheme: defaultPinTheme(context).copyWith(
                         decoration: defaultPinTheme(context).decoration!.copyWith(
@@ -158,7 +158,7 @@ class _PhoneNumberVerificationPageState extends ConsumerState<PhoneNumberVerific
                       ButtonStyle1(
                           isDisable: ref.watch(authProvider).value!.verificationCode.length != 6,
                           onPressAction: () async {
-                            await ref.read(authProvider.notifier).verifyDriver(context, mounted);
+                            await ref.read(authProvider.notifier).verifyDriver(context);
                           },
                           title: "Verify",
                           isLoading: false),

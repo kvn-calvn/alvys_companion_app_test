@@ -57,10 +57,12 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppError
 
   DriverUser? get driver => state.value!.driver;
 
-  Future<void> verifyDriver(BuildContext context, bool mounted) async {
+  Future<void> verifyDriver(BuildContext context) async {
     state = const AsyncValue.loading();
     var driverRes = await authRepo.verifyDriverCode(state.value!.phone, state.value!.verificationCode);
-    var driverTenant = driverRes.userTenants.firstWhereOrNull((element) => element.companyOwnedAsset!);
+    var driverTenant = driverRes.userTenants.length == 1
+        ? driverRes.userTenants.firstOrNull
+        : driverRes.userTenants.firstWhereOrNull((element) => element.companyOwnedAsset ?? false);
     await pref.setString(SharedPreferencesKey.driverData.name, driverRes.toJson().toJsonEncodedString);
     await pref.setString(
       SharedPreferencesKey.driverToken.name,
@@ -82,9 +84,9 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppError
     var notificationStatus = await Permission.notification.status;
 
     if (locationStatus.isPermanentlyDenied || locationStatus.isDenied) {
-      if (mounted) context.goNamed(RouteName.locationPermission.name);
+      if (context.mounted) context.goNamed(RouteName.locationPermission.name);
     } else if (notificationStatus.isDenied || notificationStatus.isPermanentlyDenied) {
-      if (mounted) context.goNamed(RouteName.notificationPermission.name);
+      if (context.mounted) context.goNamed(RouteName.notificationPermission.name);
     } else {
       debugPrint("GO_STRAIGHT_HOME");
 /*
@@ -96,17 +98,17 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppError
             ServiceGlobals.notificationHubUrl,
             ServiceGlobals.notificationHubName);
       }*/
-      if (mounted) context.goNamed(RouteName.trips.name);
+      if (context.mounted) context.goNamed(RouteName.trips.name);
     }
 
     //state = AsyncValue.data(state.value!);
   }
 
-  Future<void> signInDriver(BuildContext context, bool mounted) async {
+  Future<void> signInDriver(BuildContext context) async {
     state = const AsyncValue.loading();
     await authRepo.signInDriverByPhone(state.value!.phone);
 
-    if (mounted) context.goNamed(RouteName.verify.name);
+    if (context.mounted) context.goNamed(RouteName.verify.name);
     state = AsyncValue.data(state.value!);
   }
 
@@ -177,12 +179,12 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppError
   UserTenant? getCurrentUserTenant(String companyCode) =>
       state.value!.driver!.userTenants.firstWhereOrNull((element) => element.companyCode == companyCode);
   UserTenant get getCompanyOwned =>
-      state.value!.driver!.userTenants.firstWhereOrNull((element) => element.companyOwnedAsset!) ??
+      state.value!.driver!.userTenants.firstWhereOrNull((element) => element.companyOwnedAsset ?? false) ??
       state.value!.driver!.userTenants.first;
 
   Future<void> refreshDriverUser() async {
     var res = await authRepo.getDriverUser(getCompanyOwned.companyCode!, driver!.id!);
-    var driverTenant = res.userTenants.firstWhereOrNull((element) => element.companyOwnedAsset!);
+    var driverTenant = res.userTenants.firstWhereOrNull((element) => element.companyOwnedAsset ?? false);
     updateUser(res);
     if (driverTenant != null) {
       var driverAsset = await authRepo.getDriverAsset(driverTenant.companyCode!, driverTenant.assetId!);
