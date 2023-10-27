@@ -89,9 +89,15 @@ class _LoadListPageState extends ConsumerState<LoadListPage> with TickerProvider
             IconButton(
               constraints: const BoxConstraints(),
               onPressed: () async {
-                await ref.read(tripControllerProvider.notifier).showTripListPreview(context, 0, 0);
-                ref.read(httpClientProvider).telemetryClient.trackEvent(name: "trip_list_tour_button_tapped");
-                await FirebaseAnalytics.instance.logEvent(name: "trip_list_tour_button_tapped");
+                bool isNotAtActive = _tabController.index != 0;
+                if (_tabController.index != 0) {
+                  _tabController.animateTo(0);
+                }
+                Future.delayed(isNotAtActive ? _tabController.animationDuration : Duration.zero).then((value) async {
+                  await ref.read(tripControllerProvider.notifier).showTripListPreview(context, 0, 0);
+                  ref.read(httpClientProvider).telemetryClient.trackEvent(name: "trip_list_tour_button_tapped");
+                  await FirebaseAnalytics.instance.logEvent(name: "trip_list_tour_button_tapped");
+                });
               },
               icon: const Icon(Icons.info),
             ),

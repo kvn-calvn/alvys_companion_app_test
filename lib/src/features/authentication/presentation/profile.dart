@@ -44,9 +44,8 @@ class ProfileList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var userState = ref.watch(authProvider);
-    var userNotifier = ref.watch(authProvider.notifier);
     return RefreshIndicator.adaptive(
-      onRefresh: userNotifier.refreshDriverUser,
+      onRefresh: ref.read(authProvider.notifier).refreshDriverUser,
       child: ListView(
         scrollDirection: Axis.vertical,
         children: [
