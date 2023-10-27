@@ -66,14 +66,14 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppError
     await pref.setString(SharedPreferencesKey.driverData.name, driverRes.toJson().toJsonEncodedString);
     await pref.setString(
       SharedPreferencesKey.driverToken.name,
-      base64.encode(utf8.encode("${driverRes.userName}:${driverRes.appToken}")),
+      base64.encode(utf8.encode("${driverRes.userName}:${driverRes.appToken ?? driverRes.currentToken?.accessToken}")),
     );
     String? driverStatus;
     if (driverTenant != null) {
       var driverAsset = await authRepo.getDriverAsset(driverTenant.companyCode!, driverTenant.assetId!);
       await pref.setString(
           SharedPreferencesKey.driverStatus.name, DriverStatus.initStatus(driverAsset.status).titleCase);
-      driverStatus = driverAsset.status;
+      driverStatus = DriverStatus.initStatus(driverAsset.status).titleCase;
     }
     state = AsyncValue.data(state.value!.copyWith(driver: driverRes, driverStatus: driverStatus?.titleCase));
     await FirebaseAnalytics.instance.setUserId(id: driverRes.phone);
