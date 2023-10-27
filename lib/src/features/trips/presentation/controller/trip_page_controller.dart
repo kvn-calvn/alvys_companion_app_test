@@ -48,7 +48,6 @@ class TripController extends _$TripController implements IAppErrorHandler {
     tutorial = ref.read(tutorialProvider);
     pref = ref.read(sharedPreferencesProvider)!;
     auth.refreshDriverUser();
-    print('built');
     if (!tutorial.firstInstall.currentState) {
       state = AsyncValue.data(TripListState());
       await getTrips();

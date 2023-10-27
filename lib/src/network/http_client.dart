@@ -166,11 +166,9 @@ class AlvysHttpClient {
     }
     try {
       return await op();
-    } on SocketException catch (e) {
-      print('Socket exception From $TSource $e');
+    } on SocketException {
       return Future.error(AlvysSocketException(TSource));
-    } on TimeoutException catch (e) {
-      print('Timeout From $TSource $e');
+    } on TimeoutException {
       return Future.error(AlvysTimeoutException(TSource));
     }
   }
