@@ -21,10 +21,8 @@ class FilteredTripPage extends ConsumerWidget {
       body: SafeArea(
           child: RefreshIndicator(
         onRefresh: () async {
-          if (context.mounted) {
-            await ref.read(tripControllerProvider.notifier).refreshTrips();
-            ref.read(websocketProvider).restartConnection();
-          }
+          await ref.read(tripControllerProvider.notifier).refreshTrips();
+          if (context.mounted) ref.read(websocketProvider).restartConnection();
         },
         child: trips.isNotEmpty
             ? ListView(
