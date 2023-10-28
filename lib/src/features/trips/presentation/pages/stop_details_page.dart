@@ -322,7 +322,7 @@ class ItemsWidget extends StatelessWidget {
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                             Text(
-                              NumberFormat.decimalPattern().format(item.numPieces),
+                              item.numPieces.isNull ? '-' : NumberFormat.decimalPattern().format(item.numPieces ?? 0),
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           ],
@@ -335,7 +335,9 @@ class ItemsWidget extends StatelessWidget {
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                             Text(
-                              '${NumberFormat.decimalPattern().format(item.weight)} ${item.weightType}',
+                              item.weight.isNull
+                                  ? '-'
+                                  : '${NumberFormat.decimalPattern().format(item.weight)} ${item.weightType}',
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           ],
