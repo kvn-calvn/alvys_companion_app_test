@@ -44,35 +44,37 @@ class _TripGoogleMapState extends ConsumerState<TripGoogleMap> with WidgetsBindi
         borderRadius: const BorderRadius.all(
           Radius.circular(10.0),
         ),
-        child: GoogleMap(
-          onTap: (argument) async {
-            if (!mapState.isLoading) {
-              Navigator.of(context, rootNavigator: true).push(
-                MaterialPageRoute(builder: (context) => FullScreenMap(widget.tripId)),
-              );
+        child: Center(
+          child: GoogleMap(
+            onTap: (argument) async {
+              if (!mapState.isLoading) {
+                Navigator.of(context, rootNavigator: true).push(
+                  MaterialPageRoute(builder: (context) => FullScreenMap(widget.tripId)),
+                );
 
-              ref.read(httpClientProvider).telemetryClient.trackEvent(name: "open_map");
-              await FirebaseAnalytics.instance.logEvent(name: "open_map");
-            }
-          },
-          onMapCreated: (controller) =>
-              ref.read(mapProvider.call(widget.tripId).notifier).onMapCreated(controller, false),
-          initialCameraPosition: const CameraPosition(
-            tilt: 20,
-            target: LatLng(37.6, -95.665),
-            zoom: 3,
+                ref.read(httpClientProvider).telemetryClient.trackEvent(name: "open_map");
+                await FirebaseAnalytics.instance.logEvent(name: "open_map");
+              }
+            },
+            onMapCreated: (controller) =>
+                ref.read(mapProvider.call(widget.tripId).notifier).onMapCreated(controller, false),
+            initialCameraPosition: const CameraPosition(
+              tilt: 20,
+              target: LatLng(37.6, -95.665),
+              zoom: 3,
+            ),
+            markers: mapState.value?.markers ?? {},
+            polylines: mapState.value?.polyLines ?? {},
+            mapToolbarEnabled: false,
+            rotateGesturesEnabled: false,
+            scrollGesturesEnabled: false,
+            tiltGesturesEnabled: false,
+            zoomGesturesEnabled: false,
+            myLocationButtonEnabled: false,
+            zoomControlsEnabled: false,
+            compassEnabled: false,
+            mapType: MapType.normal,
           ),
-          markers: mapState.value?.markers ?? {},
-          polylines: mapState.value?.polyLines ?? {},
-          mapToolbarEnabled: false,
-          rotateGesturesEnabled: false,
-          scrollGesturesEnabled: false,
-          tiltGesturesEnabled: false,
-          zoomGesturesEnabled: false,
-          myLocationButtonEnabled: false,
-          zoomControlsEnabled: false,
-          compassEnabled: false,
-          mapType: MapType.normal,
         ),
       ),
     );
