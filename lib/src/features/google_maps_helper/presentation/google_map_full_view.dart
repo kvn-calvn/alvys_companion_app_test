@@ -19,7 +19,9 @@ class FullScreenMap extends ConsumerWidget {
       body: Stack(
         children: [
           GoogleMap(
-            onMapCreated: (controller) => mapNotifier.onMapCreated(controller, true),
+            onMapCreated: (controller) {
+              mapNotifier.onMapCreated(controller, true);
+            },
             mapType: mapState.value!.mapType,
             markers: mapState.value?.markers ?? {},
             polylines: mapState.value?.polyLines ?? {},
