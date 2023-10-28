@@ -56,8 +56,9 @@ class _TripGoogleMapState extends ConsumerState<TripGoogleMap> with WidgetsBindi
                 await FirebaseAnalytics.instance.logEvent(name: "open_map");
               }
             },
-            onMapCreated: (controller) =>
-                ref.read(mapProvider.call(widget.tripId).notifier).onMapCreated(controller, false),
+            onMapCreated: (controller) {
+              ref.read(mapProvider.call(widget.tripId).notifier).onMapCreated(controller, false);
+            },
             initialCameraPosition: const CameraPosition(
               tilt: 20,
               target: LatLng(37.6, -95.665),
