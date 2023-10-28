@@ -203,11 +203,11 @@ class TripController extends _$TripController implements IAppErrorHandler {
     if (distance > 10) {
       ref.read(httpClientProvider).telemetryClient.trackEvent(name: "distance_too_far", additionalProperties: {
         "location": '${location.latitude}, ${location.longitude}',
-        "distance": '$distance meters'
+        "distance": '$distance miles'
       });
       await FirebaseAnalytics.instance.logEvent(
           name: "distance_too_far",
-          parameters: {"location": '${location.latitude}, ${location.longitude}', "distance": '$distance meters'});
+          parameters: {"location": '${location.latitude}, ${location.longitude}', "distance": '$distance miles'});
       throw AlvysException('''You are too far from the stop location to check in.
       Move closer and try again.''', 'Too Far', () {
         state = AsyncValue.data(state.value!.copyWith(loadingStopId: null));
