@@ -1,4 +1,4 @@
-import 'package:alvys3/src/utils/alvys_websocket.dart';
+import '../../../../utils/alvys_websocket.dart';
 
 import '../../../../network/firebase_remote_config_service.dart';
 import '../../../../network/http_client.dart';

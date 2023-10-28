@@ -1,4 +1,4 @@
-import 'package:alvys3/src/common_widgets/buttons.dart';
+import '../../../../common_widgets/buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -13,8 +13,7 @@ import '../../../trips/domain/app_trip/stop.dart';
 import '../../../trips/presentation/controller/trip_page_controller.dart';
 import '../controller/echeck_page_controller.dart';
 
-Future<String?> showGenerateEcheckDialog(BuildContext context, String tripId,
-        [String? stopId]) =>
+Future<String?> showGenerateEcheckDialog(BuildContext context, String tripId, [String? stopId]) =>
     showGeneralDialog<String?>(
         context: context,
         useRootNavigator: true,
@@ -34,21 +33,16 @@ class GenerateEcheck extends ConsumerStatefulWidget {
 class _GenerateEcheckState extends ConsumerState<GenerateEcheck> {
   GlobalKey<FormState> formGlobalKey = GlobalKey<FormState>();
   var amountMaskFormatter = MaskTextInputFormatter(
-      mask: '\$##########',
-      filter: {"#": RegExp(r'[0-9\.]')},
-      type: MaskAutoCompletionType.eager);
-  final TextEditingController amount = TextEditingController(),
-      notes = TextEditingController();
-  EcheckPageController get notifier =>
-      ref.read(echeckPageControllerProvider.call(widget.stopId).notifier);
+      mask: '\$##########', filter: {"#": RegExp(r'[0-9\.]')}, type: MaskAutoCompletionType.eager);
+  final TextEditingController amount = TextEditingController(), notes = TextEditingController();
+  EcheckPageController get notifier => ref.read(echeckPageControllerProvider.call(widget.stopId).notifier);
   @override
   Widget build(BuildContext context) {
     var state = ref.watch(echeckPageControllerProvider.call(widget.stopId));
     return Dialog(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       // contentPadding: EdgeInsets.zero,
-      insetPadding: EdgeInsets.symmetric(
-          horizontal: TabletUtils.instance.isTablet ? 250 : 12, vertical: 6),
+      insetPadding: EdgeInsets.symmetric(horizontal: TabletUtils.instance.isTablet ? 250 : 12, vertical: 6),
       child: UnfocusWidget(
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -82,16 +76,13 @@ class _GenerateEcheckState extends ConsumerState<GenerateEcheck> {
                                 keyboardType: TextInputType.number,
                                 onChanged: notifier.setAmount,
                                 validator: notifier.validDouble,
-                                decoration:
-                                    const InputDecoration(hintText: "Amount"),
+                                decoration: const InputDecoration(hintText: "Amount"),
                               ),
                               const SizedBox(
                                 height: 16,
                               ),
                               DropdownButtonFormField(
-                                isDense: TabletUtils.instance.isTablet
-                                    ? false
-                                    : true,
+                                isDense: TabletUtils.instance.isTablet ? false : true,
                                 value: state.value!.reason,
                                 hint: const Text('Reason'),
                                 onChanged: notifier.setReason,
@@ -102,17 +93,12 @@ class _GenerateEcheckState extends ConsumerState<GenerateEcheck> {
                               ),
                               if (state.value!.showStopDropdown) ...[
                                 const Text("Select a Stop"),
-                                for (Stop stop in ref
-                                    .watch(tripControllerProvider)
-                                    .value!
-                                    .getTrip(widget.tripId)
-                                    .stops)
+                                for (Stop stop in ref.watch(tripControllerProvider).value!.getTrip(widget.tripId).stops)
                                   ECheckStopCard(
                                     stop: stop,
                                     onTap: notifier.setStopId,
                                     currentStopId: state.value!.stopId,
-                                    selectedColor: ColorManager.primary(
-                                        Theme.of(context).brightness),
+                                    selectedColor: ColorManager.primary(Theme.of(context).brightness),
                                   ),
                                 const SizedBox(
                                   height: 16,
@@ -122,8 +108,7 @@ class _GenerateEcheckState extends ConsumerState<GenerateEcheck> {
                                 thickness: 2,
                                 child: TextField(
                                   controller: notes,
-                                  decoration:
-                                      const InputDecoration(hintText: "Note"),
+                                  decoration: const InputDecoration(hintText: "Note"),
                                   maxLines: 6,
                                   minLines: 2,
                                   keyboardType: TextInputType.multiline,
@@ -136,8 +121,7 @@ class _GenerateEcheckState extends ConsumerState<GenerateEcheck> {
                               ButtonStyle1(
                                 isDisable: !state.value!.showGenerateButton,
                                 onPressAction: () async {
-                                  await notifier.generateEcheck(
-                                      formGlobalKey, context, widget.tripId);
+                                  await notifier.generateEcheck(formGlobalKey, context, widget.tripId);
                                 },
                                 title: "Generate",
                               ),
@@ -147,13 +131,11 @@ class _GenerateEcheckState extends ConsumerState<GenerateEcheck> {
                               TextButton(
                                 style: TextButton.styleFrom(
                                   minimumSize: const Size.fromHeight(50),
-                                  textStyle:
-                                      Theme.of(context).textTheme.titleMedium,
+                                  textStyle: Theme.of(context).textTheme.titleMedium,
                                 ),
                                 onPressed: () {
                                   notifier.resetState();
-                                  Navigator.of(context, rootNavigator: true)
-                                      .pop();
+                                  Navigator.of(context, rootNavigator: true).pop();
                                 },
                                 child: const Text('Cancel'),
                               ),

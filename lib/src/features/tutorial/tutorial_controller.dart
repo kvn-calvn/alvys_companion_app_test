@@ -218,7 +218,6 @@ class TutorialController {
     endIndex ??= tutorials.length;
     index = startIndex;
     var item = tutorials[index];
-
     entry = OverlayEntry(
         builder: (c) => Tutorial(
               data: item.elements

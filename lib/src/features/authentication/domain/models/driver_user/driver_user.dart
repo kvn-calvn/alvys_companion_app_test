@@ -1,8 +1,8 @@
-import '../../../../../utils/magic_strings.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../../../../models/address/address.dart';
+import '../../../../../utils/magic_strings.dart';
 import 'user_tenant.dart';
 
 part 'driver_user.freezed.dart';

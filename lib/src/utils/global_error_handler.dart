@@ -1,4 +1,4 @@
-import 'package:alvys3/src/features/documents/presentation/docs_controller.dart';
+import '../features/documents/presentation/docs_controller.dart';
 
 import '../features/authentication/presentation/edit_profile_controller.dart';
 import '../features/echeck/presentation/controller/echeck_page_controller.dart';

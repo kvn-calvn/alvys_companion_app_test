@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:alvys3/src/utils/permission_helper.dart';
+import '../utils/permission_helper.dart';
 import 'package:azure_application_insights/azure_application_insights.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:device_info_plus/device_info_plus.dart';

@@ -1,4 +1,4 @@
-import 'package:alvys3/src/common_widgets/stop_card.dart';
+import '../../../../common_widgets/stop_card.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
 import '../../../../common_widgets/empty_view.dart';

@@ -1,8 +1,8 @@
 import 'dart:async';
 
-import 'package:alvys3/src/features/documents/presentation/upload_documents_controller.dart';
-import 'package:alvys3/src/utils/exceptions.dart';
-import 'package:alvys3/src/utils/provider_args_saver.dart';
+import 'upload_documents_controller.dart';
+import '../../../utils/exceptions.dart';
+import '../../../utils/provider_args_saver.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../utils/magic_strings.dart';

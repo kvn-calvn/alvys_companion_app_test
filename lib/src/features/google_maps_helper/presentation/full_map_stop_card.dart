@@ -1,7 +1,8 @@
-import '../../../constants/color.dart';
-import '../../trips/domain/app_trip/stop.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../../constants/color.dart';
+import '../../trips/domain/app_trip/stop.dart';
 
 class FullMapStopCard extends ConsumerWidget {
   final Stop stop;

@@ -1,3 +1,5 @@
+import '../../trips/presentation/controller/trip_page_controller.dart';
+import '../../../utils/tablet_utils.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -81,8 +83,13 @@ class SettingsList extends ConsumerWidget {
           title: "Tutorial",
           onPressed: () async {
             ref.read(firstInstallProvider.notifier).setState(true);
-            ref.read(tabletViewProvider.notifier).setState(0);
-            context.goNamed(RouteName.trips.name);
+            if (TabletUtils.instance.isTablet) {
+              ref.invalidate(tripControllerProvider);
+              ref.read(tabletViewProvider.notifier).setState(0);
+            } else {
+              context.goNamed(RouteName.trips.name);
+            }
+
             ref.read(httpClientProvider).telemetryClient.trackEvent(name: "watch_tutorial");
             await FirebaseAnalytics.instance.logEvent(name: "watch_tutorial");
           },
