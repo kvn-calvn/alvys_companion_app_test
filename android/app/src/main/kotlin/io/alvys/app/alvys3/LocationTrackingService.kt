@@ -53,11 +53,14 @@ class LocationTrackingService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        val driverInfoString = intent?.getStringExtra("DRIVER-INFO").toString()
-        driverInfo = JSONObject(driverInfoString)
-        prepareForegroundNotification()
-        startLocationUpdates()
-        return START_STICKY
+      if(intent != null)  {
+          val driverInfoString = intent.getStringExtra("DRIVER-INFO").toString()
+          driverInfo = JSONObject(driverInfoString)
+          prepareForegroundNotification()
+          startLocationUpdates()
+          return START_STICKY
+        }
+        return START_REDELIVER_INTENT
     }
 
     override fun stopService(name: Intent?): Boolean {
