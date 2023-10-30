@@ -42,6 +42,7 @@ class DriverStatusDropdown extends ConsumerWidget {
                       Text(
                         e,
                         style: Theme.of(context).textTheme.titleMedium,
+                        textScaleFactor: 1,
                       ),
                     ],
                   ),

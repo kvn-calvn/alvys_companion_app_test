@@ -82,9 +82,8 @@ class _GenerateEcheckState extends ConsumerState<GenerateEcheck> {
                                 height: 16,
                               ),
                               DropdownButtonFormField(
-                                isDense: TabletUtils.instance.isTablet ? false : true,
                                 value: state.value!.reason,
-                                hint: const Text('Reason'),
+                                decoration: const InputDecoration(hintText: "Reason"),
                                 onChanged: notifier.setReason,
                                 items: notifier.reasonsDropdown,
                               ),

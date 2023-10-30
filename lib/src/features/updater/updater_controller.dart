@@ -54,7 +54,5 @@ class UpdaterController {
     });
   }
 
-  UpdaterController({required this.errorHandler}) {
-    showUpdateDialog();
-  }
+  UpdaterController({required this.errorHandler});
 }
