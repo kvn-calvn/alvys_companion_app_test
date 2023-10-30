@@ -114,19 +114,19 @@ class _LoadDetailsPageState extends ConsumerState<LoadDetailsPage> with TickerPr
             Consumer(builder: (context, ref, child) {
               return Tab(
                 key: ref.read(tutorialProvider).infoTab,
-                text: 'Details',
+                child: const Text('Details', textScaleFactor: 1),
               );
             }),
             Consumer(builder: (context, ref, child) {
               return Tab(
                 key: ref.read(tutorialProvider).echeckTab,
-                text: 'E-Checks',
+                child: const Text('E-Checks', textScaleFactor: 1),
               );
             }),
             Consumer(builder: (context, ref, child) {
               return Tab(
                 key: ref.read(tutorialProvider).documentTab,
-                text: 'Documents',
+                child: const Text('Documents', textScaleFactor: 1),
               );
             })
           ],

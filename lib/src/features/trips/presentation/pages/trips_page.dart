@@ -125,13 +125,13 @@ class _LoadListPageState extends ConsumerState<LoadListPage> with TickerProvider
           },
           tabs: const <Widget>[
             Tab(
-              text: 'Active',
+              child: Text('Active', textScaleFactor: 1),
             ),
             Tab(
-              text: 'Delivered',
+              child: Text('Delivered', textScaleFactor: 1),
             ),
             Tab(
-              text: 'Processing',
+              child: Text('Processing', textScaleFactor: 1),
             )
           ],
         ),

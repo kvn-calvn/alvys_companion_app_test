@@ -94,7 +94,7 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
     var pages = List<String>.from(state.pages);
     pages.removeAt(state.pageNumber);
     var indexToResetTo = state.pageNumber >= state.pages.length - 1 ? state.pageNumber - 1 : state.pageNumber;
-    state = state.copyWith(pages: pages, pageNumber: indexToResetTo);
+    state = state.copyWith(pages: pages, pageNumber: indexToResetTo.clamp(0, pages.length + 1));
   }
 
   void updatePageNumber(int index) {
