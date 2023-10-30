@@ -145,15 +145,15 @@ class AlvysHttpClient {
   Future<Response> _handleResponse<T>(Response response) {
     switch (response.statusCode) {
       case (400):
-        return Future.error(AlvysClientException(jsonDecode(response.body), T));
+        throw AlvysClientException(jsonDecode(response.body), T);
       case (404):
-        return Future.error(AlvysEntityNotFoundException(jsonDecode(response.body), T));
+        throw AlvysEntityNotFoundException(jsonDecode(response.body), T);
       case (401):
-        return Future.error(AlvysUnauthorizedException(T));
+        throw AlvysUnauthorizedException(T);
       case (504):
-        return Future.error(AlvysDependencyException(jsonDecode(response.body), T));
+        throw AlvysDependencyException(jsonDecode(response.body), T);
       case 500:
-        return Future.error(ApiServerException(T));
+        throw ApiServerException(T);
       default:
         return Future.value(response);
     }
@@ -162,14 +162,19 @@ class AlvysHttpClient {
   Future<TResponse> _tryRequest<TSource, TResponse>(Future<TResponse> Function() op) async {
     if (!networkInfo.hasInternet) {
       networkInfo.setInternetState(false);
-      return Future.error(AlvysSocketException(TSource));
+      throw AlvysSocketException(TSource);
     }
     try {
-      return await op();
+      return await op().timeout(
+        const Duration(seconds: 30),
+        onTimeout: () {
+          throw AlvysTimeoutException(TSource);
+        },
+      );
     } on SocketException {
-      return Future.error(AlvysSocketException(TSource));
+      throw AlvysSocketException(TSource);
     } on TimeoutException {
-      return Future.error(AlvysTimeoutException(TSource));
+      throw AlvysTimeoutException(TSource);
     }
   }
 
