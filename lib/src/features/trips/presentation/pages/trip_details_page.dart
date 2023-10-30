@@ -1,3 +1,4 @@
+import '../../../../common_widgets/tab_text.dart';
 import '../../../../utils/alvys_websocket.dart';
 
 import '../../../../network/firebase_remote_config_service.dart';
@@ -114,19 +115,19 @@ class _LoadDetailsPageState extends ConsumerState<LoadDetailsPage> with TickerPr
             Consumer(builder: (context, ref, child) {
               return Tab(
                 key: ref.read(tutorialProvider).infoTab,
-                child: const Text('Details', textScaleFactor: 1),
+                child: const TabText('Details'),
               );
             }),
             Consumer(builder: (context, ref, child) {
               return Tab(
                 key: ref.read(tutorialProvider).echeckTab,
-                child: const Text('E-Checks', textScaleFactor: 1),
+                child: const TabText('E-Checks'),
               );
             }),
             Consumer(builder: (context, ref, child) {
               return Tab(
                 key: ref.read(tutorialProvider).documentTab,
-                child: const Text('Documents', textScaleFactor: 1),
+                child: const TabText('Documents'),
               );
             })
           ],

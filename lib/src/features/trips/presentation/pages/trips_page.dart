@@ -1,3 +1,5 @@
+import 'package:alvys3/src/common_widgets/tab_text.dart';
+
 import '../../../../network/firebase_remote_config_service.dart';
 
 import '../../../../network/http_client.dart';
@@ -125,13 +127,13 @@ class _LoadListPageState extends ConsumerState<LoadListPage> with TickerProvider
           },
           tabs: const <Widget>[
             Tab(
-              child: Text('Active', textScaleFactor: 1),
+              child: TabText('Active'),
             ),
             Tab(
-              child: Text('Delivered', textScaleFactor: 1),
+              child: TabText('Delivered'),
             ),
             Tab(
-              child: Text('Processing', textScaleFactor: 1),
+              child: TabText('Processing'),
             )
           ],
         ),
