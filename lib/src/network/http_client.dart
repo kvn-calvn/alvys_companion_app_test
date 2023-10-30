@@ -225,7 +225,9 @@ class AlvysHttpClient {
     await addPermissionDetails();
     if (user != null) {
       telemetryClient.context.properties['tenantPermissions'] =
-          Map.fromEntries(user.userTenants.map((e) => MapEntry(e.companyCode!, e.permissions))).toJsonEncodedString;
+          Map.fromEntries(user.userTenants.map((e) => MapEntry(e.companyCode, e.permissions))).toJsonEncodedString;
+      telemetryClient.context.properties['driverTypes'] =
+          Map.fromEntries(user.userTenants.map((e) => MapEntry(e.companyCode, e.contractorType))).toJsonEncodedString;
     }
   }
 }
