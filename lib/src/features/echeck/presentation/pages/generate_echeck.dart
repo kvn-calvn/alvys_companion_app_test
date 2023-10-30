@@ -73,7 +73,7 @@ class _GenerateEcheckState extends ConsumerState<GenerateEcheck> {
                                 autofocus: true,
                                 controller: amount,
                                 inputFormatters: [amountMaskFormatter],
-                                keyboardType: TextInputType.number,
+                                keyboardType: const TextInputType.numberWithOptions(decimal: true),
                                 onChanged: notifier.setAmount,
                                 validator: notifier.validDouble,
                                 decoration: const InputDecoration(hintText: "Amount"),
