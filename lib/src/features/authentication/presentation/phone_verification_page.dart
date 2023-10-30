@@ -91,103 +91,106 @@ class _PhoneNumberVerificationPageState extends ConsumerState<PhoneNumberVerific
               padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
               child: Form(
                 key: formKey,
-                child: Column(
-                  mainAxisSize: MainAxisSize.max,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    const SizedBox(
-                      height: 25,
-                    ),
-                    Text('Verification', textAlign: TextAlign.center, style: Theme.of(context).textTheme.headlineLarge),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    const Text(
-                      'Enter the code sent to the number',
-                      textAlign: TextAlign.center,
-                    ),
-                    Text(ref.watch(authProvider).value!.phone.toPhoneNumberString,
-                        textAlign: TextAlign.center, style: Theme.of(context).textTheme.titleMedium),
-                    const SizedBox(
-                      height: 40,
-                    ),
-                    Pinput(
-                      length: length,
-                      controller: pinController,
-                      focusNode: focusNode,
-                      onChanged: ref.watch(authProvider.notifier).setVerificationCode,
-                      defaultPinTheme: defaultPinTheme(context),
-                      cursor: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 12.0),
-                        child: Container(
-                          decoration: BoxDecoration(color: Theme.of(context).textSelectionTheme.cursorColor),
-                          height: double.infinity,
-                          width: 2,
+                child: SingleChildScrollView(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      const SizedBox(
+                        height: 25,
+                      ),
+                      Text('Verification',
+                          textAlign: TextAlign.center, style: Theme.of(context).textTheme.headlineLarge),
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      const Text(
+                        'Enter the code sent to the number',
+                        textAlign: TextAlign.center,
+                      ),
+                      Text(ref.watch(authProvider).value!.phone.toPhoneNumberString,
+                          textAlign: TextAlign.center, style: Theme.of(context).textTheme.titleMedium),
+                      const SizedBox(
+                        height: 40,
+                      ),
+                      Pinput(
+                        length: length,
+                        controller: pinController,
+                        focusNode: focusNode,
+                        onChanged: ref.watch(authProvider.notifier).setVerificationCode,
+                        defaultPinTheme: defaultPinTheme(context),
+                        cursor: Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 12.0),
+                          child: Container(
+                            decoration: BoxDecoration(color: Theme.of(context).textSelectionTheme.cursorColor),
+                            height: double.infinity,
+                            width: 2,
+                          ),
                         ),
-                      ),
-                      inputFormatters: [
-                        FilteringTextInputFormatter.allow(RegExp('[0-9]')),
-                      ],
-                      onCompleted: (pin) async {
-                        await ref.read(authProvider.notifier).verifyDriver(context);
-                      },
-                      focusedPinTheme: defaultPinTheme(context).copyWith(
-                        decoration: defaultPinTheme(context).decoration!.copyWith(
-                              border: Border.all(
-                                color: ColorManager.primary(Theme.of(context).brightness).withOpacity(0.8),
+                        inputFormatters: [
+                          FilteringTextInputFormatter.allow(RegExp('[0-9]')),
+                        ],
+                        onCompleted: (pin) async {
+                          await ref.read(authProvider.notifier).verifyDriver(context);
+                        },
+                        focusedPinTheme: defaultPinTheme(context).copyWith(
+                          decoration: defaultPinTheme(context).decoration!.copyWith(
+                                border: Border.all(
+                                  color: ColorManager.primary(Theme.of(context).brightness).withOpacity(0.8),
+                                ),
                               ),
-                            ),
-                      ),
-                      errorPinTheme: defaultPinTheme(context).copyWith(
-                        decoration: BoxDecoration(
-                          color: ColorManager.cancelColor,
-                          borderRadius: BorderRadius.circular(8),
                         ),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    if (ref.watch(authProvider).isLoading)
-                      SpinKitFoldingCube(
-                        size: 30,
-                        color: Theme.of(context).colorScheme.primary,
-                      )
-                    else ...[
-                      ButtonStyle1(
-                          isDisable: ref.watch(authProvider).value!.verificationCode.length != 6,
-                          onPressAction: () async {
-                            await ref.read(authProvider.notifier).verifyDriver(context);
-                          },
-                          title: "Verify",
-                          isLoading: false),
-                      SizedBox(
-                        width: double.infinity,
-                        child: TextButton(
-                          onPressed: canResend
-                              ? () {
-                                  setState(() => canResend = false);
-                                  ref.read(authProvider.notifier).resendCode();
-                                }
-                              : null,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              const Text(
-                                'Resend Code',
-                              ),
-                              ResendTimer(
-                                  canResend: canResend,
-                                  resendCodeUpdater: (b) {
-                                    setState(() => canResend = true);
-                                  })
-                            ],
+                        errorPinTheme: defaultPinTheme(context).copyWith(
+                          decoration: BoxDecoration(
+                            color: ColorManager.cancelColor,
+                            borderRadius: BorderRadius.circular(8),
                           ),
                         ),
                       ),
-                    ]
-                  ],
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      if (ref.watch(authProvider).isLoading)
+                        SpinKitFoldingCube(
+                          size: 30,
+                          color: Theme.of(context).colorScheme.primary,
+                        )
+                      else ...[
+                        ButtonStyle1(
+                            isDisable: ref.watch(authProvider).value!.verificationCode.length != 6,
+                            onPressAction: () async {
+                              await ref.read(authProvider.notifier).verifyDriver(context);
+                            },
+                            title: "Verify",
+                            isLoading: false),
+                        SizedBox(
+                          width: double.infinity,
+                          child: TextButton(
+                            onPressed: canResend
+                                ? () {
+                                    setState(() => canResend = false);
+                                    ref.read(authProvider.notifier).resendCode();
+                                  }
+                                : null,
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                const Text(
+                                  'Resend Code',
+                                ),
+                                ResendTimer(
+                                    canResend: canResend,
+                                    resendCodeUpdater: (b) {
+                                      setState(() => canResend = true);
+                                    })
+                              ],
+                            ),
+                          ),
+                        ),
+                      ]
+                    ],
+                  ),
                 ),
               ),
             ),
