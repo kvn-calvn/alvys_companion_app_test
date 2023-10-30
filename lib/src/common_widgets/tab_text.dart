@@ -10,6 +10,7 @@ class TabText extends StatelessWidget {
       data,
       textScaleFactor: 0.9,
       softWrap: false,
+      overflow: TextOverflow.fade,
     );
   }
 }
