@@ -61,21 +61,21 @@ class AppDocumentRepository<C, T> implements DocumentsRepository<C, T> {
       String companyCode, UploadDocumentOptions docData, File document, String tripId) async {
     await Helpers.setCompanyCode(companyCode);
     var data = await MultipartFile.fromPath(docData.title, document.path);
-    await httpClient.upload(Uri.parse(ApiRoutes.tripDocument(tripId)),
+    await httpClient.upload<T>(Uri.parse(ApiRoutes.tripDocument(tripId)),
         files: [data], onProgress: fileProgress.updateProgress);
   }
 
   @override
   Future<void> uploadPersonalDocuments(UploadDocumentOptions docData, File document) async {
     var data = await MultipartFile.fromPath(docData.title, document.path);
-    await httpClient.upload(ApiRoutes.personalDocuments(), files: [data], onProgress: fileProgress.updateProgress);
+    await httpClient.upload<T>(ApiRoutes.personalDocuments(), files: [data], onProgress: fileProgress.updateProgress);
   }
 
   @override
   Future<void> uploadTripReport(String companyCode, UploadDocumentOptions docData, File document) async {
     await Helpers.setCompanyCode(companyCode);
     var data = await MultipartFile.fromPath(docData.title, document.path);
-    await httpClient.upload(Uri.parse(ApiRoutes.tripReport), files: [data], onProgress: fileProgress.updateProgress);
+    await httpClient.upload<T>(Uri.parse(ApiRoutes.tripReport), files: [data], onProgress: fileProgress.updateProgress);
   }
 }
 
