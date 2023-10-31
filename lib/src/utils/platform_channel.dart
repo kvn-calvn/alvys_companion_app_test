@@ -3,14 +3,10 @@ import 'package:flutter/services.dart';
 
 class PlatformChannel {
   static const platform = MethodChannel('PLATFORM_CHANNEL');
-  static void getNotification(
-      String driverPhone, String hubName, String connectionString) async {
+  static void getNotification(String driverPhone, String hubName, String connectionString) async {
     try {
-      await platform.invokeMethod('registerForNotification', <String, String>{
-        'driverPhone': driverPhone,
-        'hubName': hubName,
-        'connectionString': connectionString
-      });
+      await platform.invokeMethod('registerForNotification',
+          <String, String>{'driverPhone': driverPhone, 'hubName': hubName, 'connectionString': connectionString});
     } on PlatformException catch (e) {
       debugPrint(
         "Invoke registerForNotification unsuccessful $e",
@@ -19,13 +15,14 @@ class PlatformChannel {
   }
 
   static void startLocationTracking(
-      String driverName,
-      String driverID,
-      String tripNumber,
-      String tripId,
-      String token,
-      String url,
-      String companyCode) async {
+    String driverName,
+    String driverID,
+    String tripNumber,
+    String tripId,
+    String token,
+    String url,
+    String companyCode,
+  ) async {
     debugPrint("START_LOCATION_TRACKING_MC_CALLED");
     await platform.invokeMethod('startLocationTracking', <String, dynamic>{
       'DriverName': driverName,
@@ -42,7 +39,7 @@ class PlatformChannel {
     try {
       debugPrint("STOP_LOCATION_TRACKING_MC_CALLED");
 
-      await platform.invokeMethod("stopLocationTracking", <String, dynamic>{});
+      platform.invokeMethod("stopLocationTracking", <String, dynamic>{});
     } on PlatformException catch (e) {
       debugPrint(
         "Invoke stopLocationTracking unsuccessful: \n $e",

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:alvys3/src/common_widgets/snack_bar.dart';
+import '../../../../common_widgets/snack_bar.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
 import '../../../../network/http_client.dart';

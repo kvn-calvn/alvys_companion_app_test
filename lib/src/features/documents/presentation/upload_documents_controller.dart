@@ -26,7 +26,7 @@ import 'docs_controller.dart';
 
 class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocumentsState, UploadDocumentArgs>
     implements IAppErrorHandler {
-  late AppDocumentRepository<UploadDocumentsController> docRepo;
+  late AppDocumentRepository<DocumentsNotifier, UploadDocumentsController> docRepo;
   late TripController trips;
   late DocumentsNotifier docList;
   late ScanningNotifier isScanning;
@@ -75,8 +75,8 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
       if (firstScan && results.scans.isEmpty) {
         router.pop();
       }
-      state = state.copyWith(
-          pages: [...state.pages, ...results.scans.map<String>((e) => Scan.toPathString(e.enhancedUrl!))]);
+      state = state
+          .copyWith(pages: [...state.pages, ...results.scans.map<String>((e) => Scan.toPathString(e.enhancedUrl!))]);
       firstScan = false;
     } catch (e) {
       if (firstScan) {
@@ -94,7 +94,7 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
     var pages = List<String>.from(state.pages);
     pages.removeAt(state.pageNumber);
     var indexToResetTo = state.pageNumber >= state.pages.length - 1 ? state.pageNumber - 1 : state.pageNumber;
-    state = state.copyWith(pages: pages, pageNumber: indexToResetTo);
+    state = state.copyWith(pages: pages, pageNumber: indexToResetTo.clamp(0, pages.length + 1));
   }
 
   void updatePageNumber(int index) {
@@ -120,7 +120,7 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
 
     if (context.mounted) {
       Navigator.of(context, rootNavigator: true).pop();
-      Navigator.of(context).pop();
+      router.pop();
       if (arg.documentType == DisplayDocumentType.tripDocuments) {
         ref.read(tripControllerProvider.notifier).refreshCurrentTrip(arg.tripId!);
       }

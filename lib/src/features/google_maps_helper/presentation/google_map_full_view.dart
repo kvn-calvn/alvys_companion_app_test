@@ -19,7 +19,9 @@ class FullScreenMap extends ConsumerWidget {
       body: Stack(
         children: [
           GoogleMap(
-            onMapCreated: (controller) => mapNotifier.onMapCreated(controller, true),
+            onMapCreated: (controller) {
+              mapNotifier.onMapCreated(controller, true);
+            },
             mapType: mapState.value!.mapType,
             markers: mapState.value?.markers ?? {},
             polylines: mapState.value?.polyLines ?? {},
@@ -44,7 +46,7 @@ class FullScreenMap extends ConsumerWidget {
             left: 0,
             right: 0,
             child: SizedBox(
-              height: MediaQuery.of(context).size.longestSide * 0.16,
+              height: MediaQuery.of(context).size.longestSide * 0.2,
               child: MapStopsView(mapNotifier.trips.value!.getTrip(tripId).stops, tripId),
             ),
           )

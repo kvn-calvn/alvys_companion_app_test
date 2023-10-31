@@ -20,7 +20,7 @@ class LocationTrackingService : Service() {
     private val INTERVAL_IN_MILLISECONDS = 900000 //Every 15mins
     private var mFusedLocationClient: FusedLocationProviderClient? = null
     private var locationRequest: LocationRequest? = null
-    private val localBinder = MyLocalBinder()
+//    private val localBinder = MyLocalBinder()
     private var driverInfo = JSONObject()
 
     override fun onCreate() {
@@ -53,9 +53,14 @@ class LocationTrackingService : Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        prepareForegroundNotification()
-        startLocationUpdates()
-        return START_STICKY
+      if(intent != null)  {
+          val driverInfoString = intent.getStringExtra("DRIVER-INFO").toString()
+          driverInfo = JSONObject(driverInfoString)
+          prepareForegroundNotification()
+          startLocationUpdates()
+          return START_STICKY
+        }
+        return START_REDELIVER_INTENT
     }
 
     override fun stopService(name: Intent?): Boolean {
@@ -69,6 +74,11 @@ class LocationTrackingService : Service() {
         mFusedLocationClient!!.removeLocationUpdates(locationCallback)
         super.onDestroy()
     }
+
+    override fun onBind(p0: Intent?): IBinder? {
+        return null
+    }
+
     @SuppressLint("MissingPermission")
     private fun startLocationUpdates() {
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
@@ -110,27 +120,27 @@ class LocationTrackingService : Service() {
         val notification: Notification = Notification.Builder(this, "CHANNEL_ID_01")
             //.setContentTitle(getString(R.string.app_name))
             .setContentTitle("Your location will be tracked when assigned a trip.")
-            //.setSmallIcon("")
+            .setSmallIcon(R.mipmap.ic_notification)
             .setContentIntent(pendingIntent)
             .build()
         startForeground(1, notification)
     }
 
-    override fun onBind(intent: Intent?): IBinder {
+//    override fun onBind(intent: Intent?): IBinder {
+//        Log.e("Binded", "Bind")
+//        val driverInfoString = intent?.getStringExtra("DRIVER-INFO").toString()
+//        driverInfo = JSONObject(driverInfoString)
+//
+//        Log.d("ONBIND_INTENT",  driverInfo.get("url").toString())
+//        Log.d("ONBIND_INTENT", "$driverInfoString")
+//        return localBinder
+//    }
 
-        val driverInfoString = intent?.getStringExtra("DRIVER-INFO").toString()
-        driverInfo = JSONObject(driverInfoString)
-
-        Log.d("ONBIND_INTENT",  driverInfo.get("url").toString())
-        Log.d("ONBIND_INTENT", "$driverInfoString")
-        return localBinder
-    }
-
-    inner class MyLocalBinder : Binder() {
-        fun getService() : LocationTrackingService {
-            return this@LocationTrackingService
-        }
-    }
+//    inner class MyLocalBinder : Binder() {
+//        fun getService() : LocationTrackingService {
+//            return this@LocationTrackingService
+//        }
+//    }
 
     private fun initData() {
 

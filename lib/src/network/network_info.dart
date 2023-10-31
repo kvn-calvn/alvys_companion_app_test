@@ -103,7 +103,11 @@ class _NoInternetWidgetState extends ConsumerState<NoInternetWidget> with Single
         animation: _controller.view,
         builder: (context, child) {
           if (ref.watch(internetConnectionCheckerProvider)) {
-            _controller.reverse().then((value) => widget.removeBanner.call());
+            _controller.reverse().then((value) {
+              try {
+                widget.removeBanner.call();
+              } catch (_) {}
+            });
           }
           return Stack(
             children: [

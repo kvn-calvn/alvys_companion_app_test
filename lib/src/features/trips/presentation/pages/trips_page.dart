@@ -1,3 +1,5 @@
+import 'package:alvys3/src/common_widgets/tab_text.dart';
+
 import '../../../../network/firebase_remote_config_service.dart';
 
 import '../../../../network/http_client.dart';
@@ -36,7 +38,7 @@ class _LoadListPageState extends ConsumerState<LoadListPage> with TickerProvider
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
 
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       ref
           .read(tutorialProvider)
           .startTutorial(context, () async => ref.read(tripControllerProvider.notifier).handleAfterTutorial(context));
@@ -89,9 +91,15 @@ class _LoadListPageState extends ConsumerState<LoadListPage> with TickerProvider
             IconButton(
               constraints: const BoxConstraints(),
               onPressed: () async {
-                await ref.read(tripControllerProvider.notifier).showTripListPreview(context, 0, 0);
-                ref.read(httpClientProvider).telemetryClient.trackEvent(name: "trip_list_tour_button_tapped");
-                await FirebaseAnalytics.instance.logEvent(name: "trip_list_tour_button_tapped");
+                bool isNotAtActive = _tabController.index != 0;
+                if (_tabController.index != 0) {
+                  _tabController.animateTo(0);
+                }
+                Future.delayed(isNotAtActive ? _tabController.animationDuration : Duration.zero).then((value) async {
+                  await ref.read(tripControllerProvider.notifier).showTripListPreview(context, 0, 0);
+                  ref.read(httpClientProvider).telemetryClient.trackEvent(name: "trip_list_tour_button_tapped");
+                  await FirebaseAnalytics.instance.logEvent(name: "trip_list_tour_button_tapped");
+                });
               },
               icon: const Icon(Icons.info),
             ),
@@ -119,13 +127,13 @@ class _LoadListPageState extends ConsumerState<LoadListPage> with TickerProvider
           },
           tabs: const <Widget>[
             Tab(
-              text: 'Active',
+              child: TabText('Active'),
             ),
             Tab(
-              text: 'Delivered',
+              child: TabText('Delivered'),
             ),
             Tab(
-              text: 'Processing',
+              child: TabText('Processing'),
             )
           ],
         ),
@@ -160,7 +168,7 @@ class TripList extends ConsumerWidget {
             child: RefreshIndicator(
               onRefresh: () async {
                 await ref.read(tripControllerProvider.notifier).refreshTrips();
-                ref.read(websocketProvider).restartConnection();
+                if (context.mounted) ref.read(websocketProvider).restartConnection();
               },
               child: tripsState.value!.activeTrips.isNotEmpty
                   ? ListView(

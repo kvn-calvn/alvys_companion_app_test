@@ -47,7 +47,7 @@ class AlvysTheme {
               borderRadius: BorderRadius.circular(10.0),
             ),
             textStyle: appTextTheme(
-                    MediaQueryData.fromView(WidgetsBinding.instance.platformDispatcher.implicitView!).size.width,
+                    MediaQueryData.fromView(WidgetsBinding.instance.platformDispatcher.implicitView!).size.shortestSide,
                     brightness)
                 .labelMedium!
                 .copyWith(
@@ -211,7 +211,7 @@ class AlvysTheme {
       );
   static TextTheme appTextTheme(double width, Brightness brightness) {
     return GoogleFonts.poppinsTextTheme(defaultTextTheme(brightness).apply(
-      fontSizeFactor: (width / 1000) * 2.55 * (TabletUtils.instance.isTablet ? 0.45 : 1),
+      fontSizeFactor: (width / 1000) * 2.55 * (TabletUtils.instance.isTablet ? 0.4 : 1),
     ));
   }
 }

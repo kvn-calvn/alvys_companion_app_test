@@ -1,4 +1,4 @@
-import 'package:alvys3/src/common_widgets/stop_card.dart';
+import '../../../../common_widgets/stop_card.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
 import '../../../../common_widgets/empty_view.dart';
@@ -322,7 +322,7 @@ class ItemsWidget extends StatelessWidget {
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                             Text(
-                              NumberFormat.decimalPattern().format(item.numPieces),
+                              item.numPieces.isNull ? '-' : NumberFormat.decimalPattern().format(item.numPieces ?? 0),
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           ],
@@ -335,7 +335,9 @@ class ItemsWidget extends StatelessWidget {
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                             Text(
-                              '${NumberFormat.decimalPattern().format(item.weight)} ${item.weightType}',
+                              item.weight.isNull
+                                  ? '-'
+                                  : '${NumberFormat.decimalPattern().format(item.weight)} ${item.weightType}',
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           ],

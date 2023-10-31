@@ -96,7 +96,7 @@ class AlvysWebsocket {
       (args) {
         try {
           var trip = AppTrip.fromJson(jsonDecode(jsonEncode(args))[0]);
-          if (trip.stops.isNullOrEmpty) return;
+          if (trip.stops.isNullOrEmpty || !ref.exists(tripControllerProvider)) return;
           ref.read(tripControllerProvider.notifier).updateTrip(trip);
         } catch (_) {}
       },

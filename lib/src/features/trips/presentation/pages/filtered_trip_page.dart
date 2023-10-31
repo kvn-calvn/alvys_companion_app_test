@@ -22,7 +22,7 @@ class FilteredTripPage extends ConsumerWidget {
           child: RefreshIndicator(
         onRefresh: () async {
           await ref.read(tripControllerProvider.notifier).refreshTrips();
-          ref.read(websocketProvider).restartConnection();
+          if (context.mounted) ref.read(websocketProvider).restartConnection();
         },
         child: trips.isNotEmpty
             ? ListView(

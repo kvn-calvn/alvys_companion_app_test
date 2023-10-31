@@ -47,6 +47,7 @@ class TripController extends _$TripController implements IAppErrorHandler {
     auth = ref.read(authProvider.notifier);
     tutorial = ref.read(tutorialProvider);
     pref = ref.read(sharedPreferencesProvider)!;
+    auth.refreshDriverUser();
     if (!tutorial.firstInstall.currentState) {
       state = AsyncValue.data(TripListState());
       await getTrips();
@@ -140,7 +141,7 @@ class TripController extends _$TripController implements IAppErrorHandler {
     var res = await PermissionHelper.getPermission(Permission.location);
     if (res) {
       PlatformChannel.startLocationTracking(
-        userState.value!.driver!.name!,
+        userState.value!.driver!.name ?? "",
         trip.driver1Id!,
         trip.tripNumber!,
         trip.id!,
@@ -202,11 +203,11 @@ class TripController extends _$TripController implements IAppErrorHandler {
     if (distance > 10) {
       ref.read(httpClientProvider).telemetryClient.trackEvent(name: "distance_too_far", additionalProperties: {
         "location": '${location.latitude}, ${location.longitude}',
-        "distance": '$distance meters'
+        "distance": '$distance miles'
       });
       await FirebaseAnalytics.instance.logEvent(
           name: "distance_too_far",
-          parameters: {"location": '${location.latitude}, ${location.longitude}', "distance": '$distance meters'});
+          parameters: {"location": '${location.latitude}, ${location.longitude}', "distance": '$distance miles'});
       throw AlvysException('''You are too far from the stop location to check in.
       Move closer and try again.''', 'Too Far', () {
         state = AsyncValue.data(state.value!.copyWith(loadingStopId: null));
@@ -303,7 +304,10 @@ class TripController extends _$TripController implements IAppErrorHandler {
 
   @override
   FutureOr<void> onError(Exception ex) {
-    state = AsyncData(state.value!.copyWith(loadingStopId: null));
+    state = AsyncData(state.value!.copyWith(
+      trips: state.value!.trips.where((element) => element.id != testTrip.id).toList(),
+      loadingStopId: null,
+    ));
   }
 
   @override

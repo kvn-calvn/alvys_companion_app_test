@@ -1,3 +1,5 @@
+import '../features/documents/presentation/docs_controller.dart';
+
 import '../features/authentication/presentation/edit_profile_controller.dart';
 import '../features/echeck/presentation/controller/echeck_page_controller.dart';
 import '../features/trips/presentation/controller/trip_page_controller.dart';
@@ -20,6 +22,8 @@ final globalErrorHandlerProvider = Provider<GlobalErrorHandler>((ref) {
             AuthProviderNotifier: () => ref.read(authProvider.notifier),
             UploadDocumentsController: () =>
                 ref.read(uploadDocumentsController.call(ProviderArgsSaver.instance.uploadArgs!).notifier),
+            DocumentsNotifier: () =>
+                ref.read(documentsProvider.call(ProviderArgsSaver.instance.documentArgs!).notifier),
             EditProfileNotifier: () => ref.read(editProfileProvider.notifier),
             TripController: () => ref.read(tripControllerProvider.notifier),
             EcheckPageController: () =>

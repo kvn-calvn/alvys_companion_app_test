@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import '../utils/permission_helper.dart';
 import 'package:azure_application_insights/azure_application_insights.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -35,7 +36,7 @@ class AlvysHttpClient {
     final processor = TransmissionProcessor(
       instrumentationKey: FlavorConfig.instance!.azureTelemetryKey,
       httpClient: client,
-      timeout: const Duration(seconds: 10),
+      timeout: const Duration(seconds: 100),
     );
 
     telemetryClient = TelemetryClient(
@@ -142,33 +143,39 @@ class AlvysHttpClient {
   }
 
   Future<Response> _handleResponse<T>(Response response) {
+    networkInfo.setInternetState(true);
     switch (response.statusCode) {
       case (400):
-        return Future.error(AlvysClientException(jsonDecode(response.body), T));
+        throw AlvysClientException(jsonDecode(response.body), T);
       case (404):
-        return Future.error(AlvysEntityNotFoundException(jsonDecode(response.body), T));
+        throw AlvysEntityNotFoundException(jsonDecode(response.body), T);
       case (401):
-        return Future.error(AlvysUnauthorizedException(T));
+        throw AlvysUnauthorizedException(T);
       case (504):
-        return Future.error(AlvysDependencyException(jsonDecode(response.body), T));
+        throw AlvysDependencyException(jsonDecode(response.body), T);
       case 500:
-        return Future.error(ApiServerException(T));
+        throw ApiServerException(T);
       default:
         return Future.value(response);
     }
   }
 
   Future<TResponse> _tryRequest<TSource, TResponse>(Future<TResponse> Function() op) async {
-    if (!networkInfo.hasInternet) {
-      networkInfo.setInternetState(false);
-      return Future.error(AlvysSocketException(TSource));
-    }
+    // if (!networkInfo.hasInternet) {
+    //   networkInfo.setInternetState(false);
+    //   throw AlvysSocketException(TSource);
+    // }
     try {
-      return await op();
+      return await op().timeout(
+        const Duration(seconds: 30),
+        onTimeout: () {
+          throw AlvysTimeoutException(TSource);
+        },
+      );
     } on SocketException {
-      return Future.error(AlvysSocketException(TSource));
+      throw AlvysSocketException(TSource);
     } on TimeoutException {
-      return Future.error(AlvysTimeoutException(TSource));
+      throw AlvysTimeoutException(TSource);
     }
   }
 
@@ -178,7 +185,7 @@ class AlvysHttpClient {
       Permission.locationAlways,
       Permission.locationWhenInUse,
       Permission.notification,
-      Platform.isAndroid ? Permission.mediaLibrary : Permission.photos,
+      Platform.isAndroid ? await PermissionHelper.androidGalleryPermission() : Permission.photos,
       Permission.camera
     ];
     telemetryClient.context.properties['permissionStatus'] = Map.fromEntries(await permissions.mapAsync(
@@ -224,7 +231,9 @@ class AlvysHttpClient {
     await addPermissionDetails();
     if (user != null) {
       telemetryClient.context.properties['tenantPermissions'] =
-          Map.fromEntries(user.userTenants.map((e) => MapEntry(e.companyCode!, e.permissions))).toJsonEncodedString;
+          Map.fromEntries(user.userTenants.map((e) => MapEntry(e.companyCode, e.permissions))).toJsonEncodedString;
+      telemetryClient.context.properties['driverTypes'] =
+          Map.fromEntries(user.userTenants.map((e) => MapEntry(e.companyCode, e.contractorType))).toJsonEncodedString;
     }
   }
 }

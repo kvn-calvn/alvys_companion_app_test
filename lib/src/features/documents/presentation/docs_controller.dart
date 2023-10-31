@@ -1,5 +1,8 @@
 import 'dart:async';
 
+import 'upload_documents_controller.dart';
+import '../../../utils/exceptions.dart';
+import '../../../utils/provider_args_saver.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../utils/magic_strings.dart';
@@ -14,15 +17,17 @@ class DocumentsArgs {
   DocumentsArgs(this.documentType, this.tripId);
 }
 
-class DocumentsNotifier extends AutoDisposeFamilyAsyncNotifier<DocumentState, DocumentsArgs> {
-  late AppDocumentRepository docRepo;
+class DocumentsNotifier extends AutoDisposeFamilyAsyncNotifier<DocumentState, DocumentsArgs>
+    implements IAppErrorHandler {
+  late AppDocumentRepository<DocumentsNotifier, UploadDocumentsController> docRepo;
   late AuthProviderNotifier auth;
   int top = 10;
 
   @override
   FutureOr<DocumentState> build(DocumentsArgs arg) async {
-    docRepo = ref.watch(documentsRepositoryProvider);
+    docRepo = ref.read(documentsRepositoryProvider);
     auth = ref.read(authProvider.notifier);
+    ProviderArgsSaver.instance.documentArgs = arg;
     //  state = AsyncValue.data(DocumentState());
     state = const AsyncValue.loading();
     await getDocuments();
@@ -92,6 +97,14 @@ class DocumentsNotifier extends AutoDisposeFamilyAsyncNotifier<DocumentState, Do
       }
     }
   }
+
+  @override
+  FutureOr<void> onError(Exception ex) {
+    state = !state.hasValue ? AsyncValue.data(DocumentState()) : AsyncData(state.value!);
+  }
+
+  @override
+  FutureOr<void> refreshPage(String page) {}
 }
 
 final documentsProvider =

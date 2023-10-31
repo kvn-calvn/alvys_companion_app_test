@@ -47,14 +47,13 @@ class _AppState extends ConsumerState<App> with WidgetsBindingObserver {
   void didChangeDependencies() {
     super.didChangeDependencies();
     ref.watch(internetConnectionCheckerProvider);
-    ref.watch(updaterProvider);
+    var data = ref.watch(updaterProvider);
+    data.whenData((value) => value.showUpdateDialog());
   }
 
   @override
   Widget build(BuildContext context) {
-    final router = widget.isTablet
-        ? ref.read(tabletRouteProvider)
-        : ref.read(routerProvider);
+    final router = widget.isTablet ? ref.read(tabletRouteProvider) : ref.read(routerProvider);
     return MaterialApp.router(
       //useInheritedMediaQuery: true,
       debugShowCheckedModeBanner: false,

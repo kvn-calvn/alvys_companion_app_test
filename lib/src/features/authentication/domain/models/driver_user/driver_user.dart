@@ -1,8 +1,8 @@
-import '../../../../../utils/magic_strings.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../../../../models/address/address.dart';
+import '../../../../../utils/magic_strings.dart';
 import 'user_tenant.dart';
 
 part 'driver_user.freezed.dart';
@@ -29,6 +29,7 @@ class DriverUser with _$DriverUser {
     @Default(true) @JsonKey(name: "FirstLogin") bool firstLogin,
     @Default(false) @JsonKey(name: "IsDeleted") bool isDeleted,
     @Default(<UserTenant>[]) @JsonKey(name: "UserTenants") List<UserTenant> userTenants,
+    @JsonKey(name: 'CurrentToken') CurrentToken? currentToken,
   }) = _DriverUser;
   DriverUser._();
   factory DriverUser.fromJson(Map<String, dynamic> json) => _$DriverUserFromJson(json);
@@ -39,4 +40,11 @@ class DriverUser with _$DriverUser {
   bool hasContractorType(String contractorType) =>
       userTenants.any((element) => element.contractorType == contractorType);
   bool get isCompanyDriver => hasContractorType(ContractorType.companyDriver);
+}
+
+@freezed
+class CurrentToken with _$CurrentToken {
+  factory CurrentToken({@JsonKey(name: "access_token") required String accessToken}) = _CurrentToken;
+
+  factory CurrentToken.fromJson(Map<String, dynamic> json) => _$CurrentTokenFromJson(json);
 }

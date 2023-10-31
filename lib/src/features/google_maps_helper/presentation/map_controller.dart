@@ -29,14 +29,12 @@ class MapNotifier extends AutoDisposeFamilyAsyncNotifier<MapState, String> {
   }
 
   Future<void> getPolyLinesAndMarkers() async {
-    setMiniMapStyle();
     var trip = trips.value!.tryGetTrip(arg);
     if (trip != null) {
       state = const AsyncLoading();
-      var deliveryData = await repo.getMapMarkerBytesFromAsset('assets/delivery-1.png'),
-          pickupData = await repo.getMapMarkerBytesFromAsset('assets/pickup-1.png');
-      BitmapDescriptor delivery = BitmapDescriptor.fromBytes(deliveryData),
-          pickup = BitmapDescriptor.fromBytes(pickupData);
+      var delivery = BitmapDescriptor.fromBytes(await repo.getMapMarkerBytesFromAsset('assets/delivery-1.png')),
+          pickup = BitmapDescriptor.fromBytes(await repo.getMapMarkerBytesFromAsset('assets/pickup-1.png'));
+
       var markers = trip.stopLocations
           .map((e) => Marker(
               markerId: MarkerId('${e.value.latitude}${e.value.longitude}_'),
@@ -56,9 +54,8 @@ class MapNotifier extends AutoDisposeFamilyAsyncNotifier<MapState, String> {
             miniController
                 .animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: markers.first.position)));
           }
-        } on PlatformException {
-          return;
-        }
+          // ignore: empty_catches
+        } on PlatformException {}
       });
       var polylines = await repo.getPolyLines(trip.stopLocations.map((e) => e.value).toList());
       state = AsyncData(MapState(markers: markers, polyLines: polylines.values.toSet()));
@@ -66,15 +63,18 @@ class MapNotifier extends AutoDisposeFamilyAsyncNotifier<MapState, String> {
   }
 
   void onMapCreated(GoogleMapController controller, [bool fullMap = false]) {
-    if (fullMap) {
-      this.controller = Completer();
-      this.controller.complete(controller);
-      setMapStyle();
-      controller.animateCamera(
-          CameraUpdate.newCameraPosition(CameraPosition(target: state.value!.markers.first.position, zoom: 15)));
-    } else {
-      if (!miniController.isCompleted) miniController.complete(controller);
-    }
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      if (fullMap) {
+        this.controller = Completer();
+        this.controller.complete(controller);
+        setMapStyle();
+        controller.animateCamera(
+            CameraUpdate.newCameraPosition(CameraPosition(target: state.value!.markers.first.position, zoom: 15)));
+      } else {
+        setMiniMapStyle();
+        if (!miniController.isCompleted) miniController.complete(controller);
+      }
+    });
   }
 
   Future<void> onStopChanged(int index) async {
