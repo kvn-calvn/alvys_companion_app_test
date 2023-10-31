@@ -143,6 +143,7 @@ class AlvysHttpClient {
   }
 
   Future<Response> _handleResponse<T>(Response response) {
+    networkInfo.setInternetState(true);
     switch (response.statusCode) {
       case (400):
         throw AlvysClientException(jsonDecode(response.body), T);
@@ -160,10 +161,6 @@ class AlvysHttpClient {
   }
 
   Future<TResponse> _tryRequest<TSource, TResponse>(Future<TResponse> Function() op) async {
-    if (!networkInfo.hasInternet) {
-      networkInfo.setInternetState(false);
-      throw AlvysSocketException(TSource);
-    }
     try {
       return await op().timeout(
         const Duration(seconds: 30),
