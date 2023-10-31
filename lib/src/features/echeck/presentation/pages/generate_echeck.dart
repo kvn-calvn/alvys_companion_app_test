@@ -42,7 +42,8 @@ class _GenerateEcheckState extends ConsumerState<GenerateEcheck> {
     return Dialog(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       // contentPadding: EdgeInsets.zero,
-      insetPadding: EdgeInsets.symmetric(horizontal: TabletUtils.instance.isTablet ? 250 : 12, vertical: 6),
+      insetPadding: EdgeInsets.symmetric(
+          horizontal: TabletUtils.instance.isTablet ? (MediaQuery.of(context).size.width * 0.1) : 12, vertical: 6),
       child: UnfocusWidget(
         child: Column(
           mainAxisSize: MainAxisSize.min,
