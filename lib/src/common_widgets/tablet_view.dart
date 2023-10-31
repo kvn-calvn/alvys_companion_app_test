@@ -15,12 +15,13 @@ class TabletView extends ConsumerWidget {
   const TabletView(this.navShell, this.children, {super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var size = MediaQuery.of(context).size;
     return Material(
       color: Colors.transparent,
       child: Row(
         children: [
-          const Flexible(flex: 4, child: TabletLeftNav()),
-          Flexible(flex: 6, child: children[navShell.currentIndex])
+          Flexible(flex: size.width < size.height ? 5 : 4, child: const TabletLeftNav()),
+          Flexible(flex: size.width < size.height ? 5 : 6, child: children[navShell.currentIndex])
         ],
       ),
     );
