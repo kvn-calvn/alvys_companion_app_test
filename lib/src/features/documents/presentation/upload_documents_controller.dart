@@ -155,8 +155,8 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
         return UploadDocumentOptions.getOptionsList([
           'Unclassified',
           'Receipt',
-          'BOL - (unsigned BOL)',
-          'POD - (signed BOL)',
+          'BOL',
+          'Proof of Delivery',
           'Load Securement',
           'Temperature Settings',
           'Seal',
