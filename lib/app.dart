@@ -1,3 +1,4 @@
+import 'package:alvys3/src/network/http_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -28,9 +29,12 @@ class _AppState extends ConsumerState<App> with WidgetsBindingObserver {
       case AppLifecycleState.resumed:
         var data = ref.watch(updaterProvider);
         data.whenData((value) => value.showUpdateDialog());
+        ref.read(internetConnectionCheckerProvider.notifier).runCheck = true;
         break;
       case AppLifecycleState.hidden:
       case AppLifecycleState.paused:
+        ref.read(internetConnectionCheckerProvider.notifier).runCheck = false;
+        break;
       case AppLifecycleState.detached:
       case AppLifecycleState.inactive:
         break;

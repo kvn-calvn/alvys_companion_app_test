@@ -123,6 +123,8 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppError
     resetFields();
     await pref.remove(SharedPreferencesKey.driverData.name);
     await pref.remove(SharedPreferencesKey.driverToken.name);
+    await pref.remove(SharedPreferencesKey.companyCode.name);
+    await pref.remove(SharedPreferencesKey.driverStatus.name);
     state = AsyncValue.data(state.value!.copyWith(driver: null));
   }
 

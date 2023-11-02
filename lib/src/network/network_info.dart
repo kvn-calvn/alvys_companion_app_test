@@ -17,6 +17,7 @@ class NetworkNotifier extends Notifier<bool> {
         RouteName.tripDetails.name: ref.read(tripControllerProvider.notifier),
       };
   bool? initConnection;
+  bool runCheck = true;
   bool _hasInsert = false;
   late GlobalErrorHandler errorHandler;
   late OverlayEntry noInternetOverlay;
@@ -39,7 +40,11 @@ class NetworkNotifier extends Notifier<bool> {
       });
       Connectivity().onConnectivityChanged.listen((event) async {
         var oldState = state;
-        state = event == ConnectivityResult.none ? false : await InternetConnectionChecker().hasConnection;
+        state = event == ConnectivityResult.none
+            ? false
+            : !runCheck
+                ? true
+                : await InternetConnectionChecker().hasConnection;
         updateOverlay(oldState);
       });
     });

@@ -2,6 +2,8 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:http/retry.dart';
+
 import '../utils/permission_helper.dart';
 import 'package:azure_application_insights/azure_application_insights.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
@@ -32,7 +34,10 @@ class AlvysHttpClient {
   final SharedPreferences pref;
   final NetworkNotifier networkInfo;
   AlvysHttpClient(this.pref, this.networkInfo) {
-    final client = Client();
+    final client = RetryClient(
+      Client(),
+      whenError: (error, trace) => error is SocketException,
+    );
     final processor = TransmissionProcessor(
       instrumentationKey: FlavorConfig.instance!.azureTelemetryKey,
       httpClient: client,
@@ -144,6 +149,7 @@ class AlvysHttpClient {
 
   Future<Response> _handleResponse<T>(Response response) {
     networkInfo.setInternetState(true);
+    pref.remove(SharedPreferencesKey.companyCode.name);
     switch (response.statusCode) {
       case (400):
         throw AlvysClientException(jsonDecode(response.body), T);
