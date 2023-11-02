@@ -47,7 +47,7 @@ class TripController extends _$TripController implements IAppErrorHandler {
     auth = ref.read(authProvider.notifier);
     tutorial = ref.read(tutorialProvider);
     pref = ref.read(sharedPreferencesProvider)!;
-    auth.refreshDriverUser();
+
     if (!tutorial.firstInstall.currentState) {
       state = AsyncValue.data(TripListState());
       await getTrips();
@@ -61,6 +61,7 @@ class TripController extends _$TripController implements IAppErrorHandler {
       // Request system's tracking authorization dialog
       await AppTrackingTransparency.requestTrackingAuthorization();
     }
+    auth.refreshDriverUser();
 
     return state.value!;
   }

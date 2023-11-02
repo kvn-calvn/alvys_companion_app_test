@@ -46,10 +46,12 @@ class _PDFViewerState extends State<PDFViewer> {
         }
       },
     ).catchError((err) {
-      setState(() {
-        errorMessage = "Failed to download file.";
-        progress = 1;
-      });
+      if (mounted) {
+        setState(() {
+          errorMessage = "Failed to download file.";
+          progress = 1;
+        });
+      }
       return Response(requestOptions: RequestOptions(path: ''));
     });
   }

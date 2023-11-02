@@ -98,9 +98,11 @@ class _LoadDetailsPageState extends ConsumerState<LoadDetailsPage> with TickerPr
             constraints: const BoxConstraints(),
             onPressed: () async {
               await ref.read(tripControllerProvider.notifier).refreshCurrentTrip(widget.tripId);
-              ref.read(websocketProvider).restartConnection();
-              ref.read(httpClientProvider).telemetryClient.trackEvent(name: "trip_refresh_button_tapped");
-              await FirebaseAnalytics.instance.logEvent(name: "trip_refresh_button_tapped");
+              if (mounted) {
+                ref.read(websocketProvider).restartConnection();
+                ref.read(httpClientProvider).telemetryClient.trackEvent(name: "trip_refresh_button_tapped");
+                await FirebaseAnalytics.instance.logEvent(name: "trip_refresh_button_tapped");
+              }
             },
             icon: const Icon(Icons.refresh),
           )

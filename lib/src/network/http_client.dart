@@ -144,12 +144,13 @@ class AlvysHttpClient {
     await addPermissionDetails();
     telemetryClient.context.operation.id = const Uuid().v4(options: {'rng': UuidUtil.cryptoRNG});
     var res = await _tryRequest<T, Response>(op);
+    await pref.remove(SharedPreferencesKey.companyCode.name);
     return _handleResponse<T>(res);
   }
 
   Future<Response> _handleResponse<T>(Response response) {
     networkInfo.setInternetState(true);
-    pref.remove(SharedPreferencesKey.companyCode.name);
+
     switch (response.statusCode) {
       case (400):
         throw AlvysClientException(jsonDecode(response.body), T);
