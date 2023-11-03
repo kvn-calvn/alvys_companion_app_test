@@ -16,7 +16,7 @@ import '../../domain/app_document/app_document.dart';
 import '../../presentation/upload_documents_controller.dart';
 
 abstract class DocumentsRepository<C, T> {
-  Future<List<AppDocument>> getPaystubs([int top = 10]);
+  Future<List<AppDocument>> getPaystubs(DriverUser user, [int top = 10]);
   Future<List<AppDocument>> getPersonalDocs(String companyCode, DriverUser user);
   Future<List<AppDocument>> getTripReportDocs(String companyCode, DriverUser user);
   Future<void> uploadTripDocuments(String companyCode, UploadDocumentOptions docData, File document, String tripId);
@@ -29,7 +29,13 @@ class AppDocumentRepository<C, T> implements DocumentsRepository<C, T> {
   final FileUploadProgressNotifier fileProgress;
   AppDocumentRepository(this.fileProgress, this.httpClient);
   @override
-  Future<List<AppDocument>> getPaystubs([int top = 10]) async {
+  Future<List<AppDocument>> getPaystubs(DriverUser user, [int top = 10]) async {
+    var companyCode = user.userTenants
+        .firstWhereOrNull(
+            (element) => (element.companyOwnedAsset ?? false) && !element.contractorType.equalsIgnoreCase('Contractor'))
+        ?.companyCode;
+    if (companyCode == null) return [];
+    await Helpers.setCompanyCode(companyCode);
     var dto = DriverPaystubDTO(top: top.toString());
     var res = await httpClient.getData<C>(ApiRoutes.paystubs(dto));
     return (res.body.toDecodedJson as List<dynamic>?).toListNotNull().map((x) => AppDocument.fromJson(x)).toList();

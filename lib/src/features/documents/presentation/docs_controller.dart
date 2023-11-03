@@ -61,7 +61,10 @@ class DocumentsNotifier extends AutoDisposeFamilyAsyncNotifier<DocumentState, Do
 
   Future<void> getPaystubs() async {
     if (auth.state.value!.canViewPaystubs) {
-      var res = await docRepo.getPaystubs(top = top);
+      var res = await docRepo.getPaystubs(
+        auth.driver!,
+        top = top,
+      );
       state =
           AsyncValue.data(state.hasValue ? state.value!.copyWith(documentList: res) : DocumentState(documentList: res));
     } else {
