@@ -30,13 +30,11 @@ class AppDocumentRepository<C, T> implements DocumentsRepository<C, T> {
   AppDocumentRepository(this.fileProgress, this.httpClient);
   @override
   Future<List<AppDocument>> getPaystubs(DriverUser user, [int top = 10]) async {
-    var companyCode = user.userTenants
-        .firstWhereOrNull(
-            (element) => (element.companyOwnedAsset ?? false) && !element.contractorType.equalsIgnoreCase('Contractor'))
-        ?.companyCode;
-    if (companyCode == null) return [];
-    await Helpers.setCompanyCode(companyCode);
-    var dto = DriverPaystubDTO(top: top.toString());
+    var tenant = user.userTenants.firstWhereOrNull(
+        (element) => (element.companyOwnedAsset ?? false) && !element.contractorType.equalsIgnoreCase('Contractor'));
+    if (tenant == null) return [];
+    await Helpers.setCompanyCode(tenant.companyCode!);
+    var dto = DriverPaystubDTO(top: top.toString(), driverId: tenant.assetId);
     var res = await httpClient.getData<C>(ApiRoutes.paystubs(dto));
     return (res.body.toDecodedJson as List<dynamic>?).toListNotNull().map((x) => AppDocument.fromJson(x)).toList();
   }
