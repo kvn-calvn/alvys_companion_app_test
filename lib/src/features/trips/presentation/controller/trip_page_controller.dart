@@ -127,6 +127,7 @@ class TripController extends _$TripController implements IAppErrorHandler {
   Future<void> getTrips() async {
     state = const AsyncValue.loading();
     final result = await tripRepo.getTrips<TripController>();
+    if (!ref.exists(tripControllerProvider)) return;
     state = AsyncValue.data(state.value!.copyWith(trips: result));
     await startLocationTracking();
   }

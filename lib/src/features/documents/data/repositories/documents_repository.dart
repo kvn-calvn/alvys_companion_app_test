@@ -16,7 +16,7 @@ import '../../domain/app_document/app_document.dart';
 import '../../presentation/upload_documents_controller.dart';
 
 abstract class DocumentsRepository<C, T> {
-  Future<List<AppDocument>> getPaystubs(String companyCode, DriverUser user, [int top = 10]);
+  Future<List<AppDocument>> getPaystubs([int top = 10]);
   Future<List<AppDocument>> getPersonalDocs(String companyCode, DriverUser user);
   Future<List<AppDocument>> getTripReportDocs(String companyCode, DriverUser user);
   Future<void> uploadTripDocuments(String companyCode, UploadDocumentOptions docData, File document, String tripId);
@@ -29,11 +29,8 @@ class AppDocumentRepository<C, T> implements DocumentsRepository<C, T> {
   final FileUploadProgressNotifier fileProgress;
   AppDocumentRepository(this.fileProgress, this.httpClient);
   @override
-  Future<List<AppDocument>> getPaystubs(String companyCode, DriverUser user, [int top = 10]) async {
-    await Helpers.setCompanyCode(companyCode);
-    var driverId = user.userTenants.firstWhereOrNull((element) => element.companyOwnedAsset ?? false)?.assetId;
-    if (driverId == null) return [];
-    var dto = DriverPaystubDTO(top: top.toString(), driverId: driverId);
+  Future<List<AppDocument>> getPaystubs([int top = 10]) async {
+    var dto = DriverPaystubDTO(top: top.toString());
     var res = await httpClient.getData<C>(ApiRoutes.paystubs(dto));
     return (res.body.toDecodedJson as List<dynamic>?).toListNotNull().map((x) => AppDocument.fromJson(x)).toList();
   }
@@ -60,21 +57,21 @@ class AppDocumentRepository<C, T> implements DocumentsRepository<C, T> {
   Future<void> uploadTripDocuments(
       String companyCode, UploadDocumentOptions docData, File document, String tripId) async {
     await Helpers.setCompanyCode(companyCode);
-    var data = await MultipartFile.fromPath(docData.title, document.path);
+    var data = await MultipartFile.fromPath(docData.value, document.path);
     await httpClient.upload<T>(Uri.parse(ApiRoutes.tripDocument(tripId)),
         files: [data], onProgress: fileProgress.updateProgress);
   }
 
   @override
   Future<void> uploadPersonalDocuments(UploadDocumentOptions docData, File document) async {
-    var data = await MultipartFile.fromPath(docData.title, document.path);
+    var data = await MultipartFile.fromPath(docData.value, document.path);
     await httpClient.upload<T>(ApiRoutes.personalDocuments(), files: [data], onProgress: fileProgress.updateProgress);
   }
 
   @override
   Future<void> uploadTripReport(String companyCode, UploadDocumentOptions docData, File document) async {
     await Helpers.setCompanyCode(companyCode);
-    var data = await MultipartFile.fromPath(docData.title, document.path);
+    var data = await MultipartFile.fromPath(docData.value, document.path);
     await httpClient.upload<T>(Uri.parse(ApiRoutes.tripReport), files: [data], onProgress: fileProgress.updateProgress);
   }
 }

@@ -153,24 +153,26 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
       case DisplayDocumentType.tripDocuments:
         var trip = trips.getTrip(arg.tripId!);
         return UploadDocumentOptions.getOptionsList([
-          'Unclassified',
-          'Receipt',
-          'BOL',
-          'Proof of Delivery',
-          'Load Securement',
-          'Temperature Settings',
-          'Seal',
-          'Trailer Photo',
-          'Other'
+          (title: 'Unclassified', data: 'Unclassified'),
+          (title: 'Receipt', data: 'Receipt'),
+          (title: 'BOL - (unsigned BOL)', data: 'BOL'),
+          (title: 'POD - (signed BOL)', data: 'Proof of Delivery'),
+          (title: 'Load Securement', data: 'Load Securement'),
+          (title: 'Temperature Settings', data: 'Temperature Settings'),
+          (title: 'Seal', data: 'Seal'),
+          (title: 'Trailer Photo', data: 'Trailer Photo'),
+          (title: 'Other', data: 'Other')
         ], trip?.companyCode);
 
       case DisplayDocumentType.personalDocuments:
         return UploadDocumentOptions.getOptionsList(
-            ["Driver License", "Medical"], userData.getCompanyOwned.companyCode!);
+            [(title: "Driver License", data: "Driver License"), (title: "Medical", data: "Medical")],
+            userData.getCompanyOwned.companyCode!);
       case DisplayDocumentType.paystubs:
         return [];
       case DisplayDocumentType.tripReport:
-        return UploadDocumentOptions.getOptionsList(['Trip Report'], userData.getCompanyOwned.companyCode!);
+        return UploadDocumentOptions.getOptionsList(
+            [(title: 'Trip Report', data: 'Trip Report')], userData.getCompanyOwned.companyCode!);
     }
   }
 
@@ -208,10 +210,10 @@ class UploadDocumentArgs {
 }
 
 class UploadDocumentOptions {
-  final String companyCode, title;
+  final String companyCode, title, value;
 
-  UploadDocumentOptions({required this.companyCode, required this.title});
+  UploadDocumentOptions({required this.companyCode, required this.title, required this.value});
 
-  static List<UploadDocumentOptions> getOptionsList(List<String> titles, String? companyCode) =>
-      titles.map((e) => UploadDocumentOptions(companyCode: companyCode ?? "", title: e)).toList();
+  static List<UploadDocumentOptions> getOptionsList(List<({String title, String data})> titles, String? companyCode) =>
+      titles.map((e) => UploadDocumentOptions(companyCode: companyCode ?? "", title: e.title, value: e.data)).toList();
 }

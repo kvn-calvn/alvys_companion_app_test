@@ -34,10 +34,8 @@ class AlvysHttpClient {
   final SharedPreferences pref;
   final NetworkNotifier networkInfo;
   AlvysHttpClient(this.pref, this.networkInfo) {
-    final client = RetryClient(
-      Client(),
-      whenError: (error, trace) => error is SocketException,
-    );
+    final client = Client();
+
     final processor = TransmissionProcessor(
       instrumentationKey: FlavorConfig.instance!.azureTelemetryKey,
       httpClient: client,
