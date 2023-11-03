@@ -15,25 +15,21 @@ class TripListState with _$TripListState {
   }) = _TripListState;
   const TripListState._();
   List<AppTrip> get deliveredTrips {
-    var res = trips
+    return trips
         .where((element) => element.status.equalsIgnoreCase(TripStatus.delivered))
-        .orderBy((element) => element.deliveryDate)
+        .orderBy((element) => element.deliveryDate, OrderDirection.desc)
         .toList();
-    // res.sort((a, b) => sortDates(a.deliveryDate, b.deliveryDate));
-    return res;
   }
 
   List<AppTrip> get activeTrips {
-    var res = trips
+    return trips
         .where((element) => element.status!.inIgnoreCase([TripStatus.inTransit, TripStatus.dispatched]))
-        .orderBy((element) => element.deliveryDate)
+        .orderBy((element) => element.deliveryDate, OrderDirection.desc)
         .toList();
-    // res.sort((a, b) => sortDates(a.deliveryDate, b.deliveryDate));
-    return res;
   }
 
   List<AppTrip> get processingTrips {
-    var res = trips
+    return trips
         .where((element) => element.status!.inIgnoreCase([
               TripStatus.tonu,
               TripStatus.released,
@@ -41,10 +37,8 @@ class TripListState with _$TripListState {
               TripStatus.completed,
               TripStatus.queued,
             ]))
+        .orderBy((element) => element.deliveryDate, OrderDirection.desc)
         .toList();
-    res.orderBy((element) => element.deliveryDate);
-    //.sort((a, b) => sortDates(a.deliveryDate, b.deliveryDate));
-    return res;
   }
 
   // int sortDates(DateTime? a, DateTime? b) {
