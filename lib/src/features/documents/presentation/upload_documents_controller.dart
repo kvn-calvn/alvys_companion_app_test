@@ -136,7 +136,7 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
         await docRepo.uploadTripDocuments(trip!.companyCode!, state.documentType!, pdfFile, arg.tripId!);
         await trips.refreshCurrentTrip(arg.tripId!);
       case DisplayDocumentType.personalDocuments:
-        await docRepo.uploadPersonalDocuments(state.documentType!, pdfFile);
+        await docRepo.uploadPersonalDocuments(userData.getCompanyOwned.companyCode!, state.documentType!, pdfFile);
         await docList.getDocuments();
       case DisplayDocumentType.paystubs:
         await Future.value(null);

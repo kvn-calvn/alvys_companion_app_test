@@ -20,7 +20,7 @@ abstract class DocumentsRepository<C, T> {
   Future<List<AppDocument>> getPersonalDocs(String companyCode, DriverUser user);
   Future<List<AppDocument>> getTripReportDocs(String companyCode, DriverUser user);
   Future<void> uploadTripDocuments(String companyCode, UploadDocumentOptions docData, File document, String tripId);
-  Future<void> uploadPersonalDocuments(UploadDocumentOptions docData, File document);
+  Future<void> uploadPersonalDocuments(String companyCode, UploadDocumentOptions docData, File document);
   Future<void> uploadTripReport(String companyCode, UploadDocumentOptions docData, File document);
 }
 
@@ -67,7 +67,8 @@ class AppDocumentRepository<C, T> implements DocumentsRepository<C, T> {
   }
 
   @override
-  Future<void> uploadPersonalDocuments(UploadDocumentOptions docData, File document) async {
+  Future<void> uploadPersonalDocuments(String companyCode, UploadDocumentOptions docData, File document) async {
+    await Helpers.setCompanyCode(companyCode);
     var data = await MultipartFile.fromPath(docData.value, document.path);
     await httpClient.upload<T>(ApiRoutes.personalDocuments(), files: [data], onProgress: fileProgress.updateProgress);
   }
