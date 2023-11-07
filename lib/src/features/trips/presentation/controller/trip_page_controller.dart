@@ -61,7 +61,7 @@ class TripController extends _$TripController implements IAppErrorHandler {
       // Request system's tracking authorization dialog
       await AppTrackingTransparency.requestTrackingAuthorization();
     }
-    auth.refreshDriverUser();
+    await auth.refreshDriverUser();
 
     return state.value!;
   }

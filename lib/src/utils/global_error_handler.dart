@@ -78,6 +78,7 @@ class GlobalErrorHandler {
       case const (AlvysUnauthorizedException):
       case const (ApiServerException):
       case const (AlvysDependencyException):
+      case const (AlvysServiceUnavailableException):
       case const (ControllerException):
         var e = error as ControllerException;
         onError = () => executeOnError(e.source, e);

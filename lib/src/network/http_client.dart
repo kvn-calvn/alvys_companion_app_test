@@ -58,7 +58,7 @@ class AlvysHttpClient {
     return telemetryClient.trackEvent(name: name, additionalProperties: additionalProperties, timestamp: timestamp);
   }
 
-  Map<String, String> get getBaseHeaders {
+  Map<String, String> getBaseHeaders() {
     var token = pref.getString(SharedPreferencesKey.driverToken.name);
     var companyCode = pref.getString(SharedPreferencesKey.companyCode.name);
     return token == null
@@ -71,7 +71,7 @@ class AlvysHttpClient {
   }
 
   Map<String, String> getHeaders(Map<String, String>? headers) {
-    var newHeaders = getBaseHeaders;
+    var newHeaders = getBaseHeaders();
     if (headers != null) {
       newHeaders.addAll(headers);
     }
@@ -93,7 +93,7 @@ class AlvysHttpClient {
     var request = CustomMultipartRequest("POST", url, onProgress: onProgress);
     request.files.addAll(files);
     if (headers != null) request.headers.addAll(headers);
-    request.headers.addAll(getBaseHeaders);
+    request.headers.addAll(getBaseHeaders());
     await sendData<T>(request);
   }
 
@@ -104,7 +104,7 @@ class AlvysHttpClient {
   }) async {
     var request = CustomMultipartRequest("GET", url, onProgress: onProgress);
     if (headers != null) request.headers.addAll(headers);
-    request.headers.addAll(getBaseHeaders);
+    request.headers.addAll(getBaseHeaders());
     await sendData<T>(request);
   }
 
@@ -155,7 +155,12 @@ class AlvysHttpClient {
       case (401):
         throw AlvysUnauthorizedException(T);
       case (504):
-        throw AlvysDependencyException(jsonDecode(response.body), T);
+        try {
+          var data = jsonDecode(response.body);
+          throw AlvysDependencyException(data, T);
+        } on FormatException {
+          throw AlvysServiceUnavailableException(T);
+        }
       case 500:
         throw ApiServerException(T);
       default:

@@ -61,8 +61,9 @@ class AvysAuthRepository<T> implements AuthRepository<T> {
   }
 
   @override
-  Future<void> updateDriverStatus(String companyCode, UpdateDriverStatusDTO dto) {
-    return httpClient.patchData<T>(ApiRoutes.driverStatus, body: dto.toJson().toJsonEncodedString);
+  Future<void> updateDriverStatus(String companyCode, UpdateDriverStatusDTO dto) async {
+    await Helpers.setCompanyCode(companyCode);
+    await httpClient.patchData<T>(ApiRoutes.driverStatus, body: dto.toJson().toJsonEncodedString);
   }
 }
 

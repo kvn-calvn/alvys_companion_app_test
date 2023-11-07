@@ -43,8 +43,10 @@ class _StopDetailsPageState extends ConsumerState<StopDetailsPage> {
             constraints: const BoxConstraints(),
             onPressed: () async {
               await ref.read(tripControllerProvider.notifier).refreshCurrentTrip(widget.tripId);
-              ref.read(httpClientProvider).telemetryClient.trackEvent(name: "stop_refresh_button_tapped");
-              await FirebaseAnalytics.instance.logEvent(name: "stop_refresh_button_tapped");
+              if (mounted) {
+                ref.read(httpClientProvider).telemetryClient.trackEvent(name: "stop_refresh_button_tapped");
+                await FirebaseAnalytics.instance.logEvent(name: "stop_refresh_button_tapped");
+              }
             },
             icon: const Icon(Icons.refresh),
           )
@@ -79,6 +81,10 @@ class StopDetails extends ConsumerWidget {
     return RefreshIndicator(
       onRefresh: () async {
         await ref.read(tripControllerProvider.notifier).refreshCurrentTrip(tripId);
+        if (context.mounted) {
+          ref.read(httpClientProvider).telemetryClient.trackEvent(name: "stop_refresh_button_tapped");
+          await FirebaseAnalytics.instance.logEvent(name: "stop_refresh_button_tapped");
+        }
       },
       child: currentStop == null
           ? const EmptyView(
