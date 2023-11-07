@@ -37,7 +37,7 @@ enum DisplayDocumentType { tripDocuments, personalDocuments, paystubs, tripRepor
 
 enum Environment { dev, qa, sandbox }
 
-enum SharedPreferencesKey { driverData, themeMode, driverToken, companyCode, driverStatus, firstInstall }
+enum SharedPreferencesKey { driverData, themeMode, driverToken, driverStatus, firstInstall }
 
 class DriverStatus {
   static const String sleeping = 'Sleeping',

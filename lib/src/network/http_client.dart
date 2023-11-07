@@ -58,9 +58,8 @@ class AlvysHttpClient {
     return telemetryClient.trackEvent(name: name, additionalProperties: additionalProperties, timestamp: timestamp);
   }
 
-  Map<String, String> getBaseHeaders() {
+  Map<String, String> getBaseHeaders(String? companyCode) {
     var token = pref.getString(SharedPreferencesKey.driverToken.name);
-    var companyCode = pref.getString(SharedPreferencesKey.companyCode.name);
     return token == null
         ? {HttpHeaders.contentTypeHeader: ContentType.json.value}
         : {
@@ -70,8 +69,8 @@ class AlvysHttpClient {
           };
   }
 
-  Map<String, String> getHeaders(Map<String, String>? headers) {
-    var newHeaders = getBaseHeaders();
+  Map<String, String> getHeaders(String? companyCode, Map<String, String>? headers) {
+    var newHeaders = getBaseHeaders(companyCode);
     if (headers != null) {
       newHeaders.addAll(headers);
     }
@@ -85,7 +84,8 @@ class AlvysHttpClient {
   }
 
   Future<void> upload<T>(
-    Uri url, {
+    Uri url,
+    String? companyCode, {
     required List<MultipartFile> files,
     required Function(int current, int total) onProgress,
     Map<String, String>? headers,
@@ -93,7 +93,7 @@ class AlvysHttpClient {
     var request = CustomMultipartRequest("POST", url, onProgress: onProgress);
     request.files.addAll(files);
     if (headers != null) request.headers.addAll(headers);
-    request.headers.addAll(getBaseHeaders());
+    request.headers.addAll(getBaseHeaders(companyCode));
     await sendData<T>(request);
   }
 
@@ -104,43 +104,54 @@ class AlvysHttpClient {
   }) async {
     var request = CustomMultipartRequest("GET", url, onProgress: onProgress);
     if (headers != null) request.headers.addAll(headers);
-    request.headers.addAll(getBaseHeaders());
+    request.headers.addAll(getBaseHeaders(null));
     await sendData<T>(request);
   }
 
-  Future<Response> getData<T>(Uri uri, {Map<String, String>? headers}) {
-    return _executeRequest<T>(() async => telemetryHttpClient.get(uri, headers: getHeaders(headers)));
-  }
-
-  Future<Response> postData<T>(Uri uri, {Map<String, String>? headers, Object? body, Encoding? encoding}) {
+  Future<Response> getData<T>(Uri uri, String? companyCode, {Map<String, String>? headers}) {
     return _executeRequest<T>(
-        () async => telemetryHttpClient.post(uri, headers: getHeaders(headers), body: body, encoding: encoding));
+        companyCode, () async => telemetryHttpClient.get(uri, headers: getHeaders(companyCode, headers)));
   }
 
-  Future<Response> putData<T>(Uri uri, {Map<String, String>? headers, Object? body, Encoding? encoding}) {
+  Future<Response> postData<T>(Uri uri, String? companyCode,
+      {Map<String, String>? headers, Object? body, Encoding? encoding}) {
     return _executeRequest<T>(
-        () async => telemetryHttpClient.put(uri, headers: getHeaders(headers), body: body, encoding: encoding));
+        companyCode,
+        () async =>
+            telemetryHttpClient.post(uri, headers: getHeaders(companyCode, headers), body: body, encoding: encoding));
   }
 
-  Future<Response> deleteData<T>(Uri uri, {Map<String, String>? headers, Object? body, Encoding? encoding}) {
+  Future<Response> putData<T>(Uri uri, String? companyCode,
+      {Map<String, String>? headers, Object? body, Encoding? encoding}) {
     return _executeRequest<T>(
-        () async => telemetryHttpClient.delete(uri, headers: getHeaders(headers), body: body, encoding: encoding));
+        companyCode,
+        () async =>
+            telemetryHttpClient.put(uri, headers: getHeaders(companyCode, headers), body: body, encoding: encoding));
   }
 
-  Future<Response> patchData<T>(Uri uri, {Map<String, String>? headers, Object? body, Encoding? encoding}) {
+  Future<Response> deleteData<T>(Uri uri, String? companyCode,
+      {Map<String, String>? headers, Object? body, Encoding? encoding}) {
     return _executeRequest<T>(
-        () async => telemetryHttpClient.patch(uri, headers: getHeaders(headers), body: body, encoding: encoding));
+        companyCode,
+        () async =>
+            telemetryHttpClient.delete(uri, headers: getHeaders(companyCode, headers), body: body, encoding: encoding));
   }
 
-  Future<Response> _executeRequest<T>(Future<Response> Function() op) async {
-    var companyCode = pref.getString(SharedPreferencesKey.companyCode.name);
+  Future<Response> patchData<T>(Uri uri, String? companyCode,
+      {Map<String, String>? headers, Object? body, Encoding? encoding}) {
+    return _executeRequest<T>(
+        companyCode,
+        () async =>
+            telemetryHttpClient.patch(uri, headers: getHeaders(companyCode, headers), body: body, encoding: encoding));
+  }
+
+  Future<Response> _executeRequest<T>(String? companyCode, Future<Response> Function() op) async {
     if (companyCode != null) {
       telemetryClient.context.properties['tenantId'] = companyCode;
     }
     await addPermissionDetails();
     telemetryClient.context.operation.id = const Uuid().v4(options: {'rng': UuidUtil.cryptoRNG});
     var res = await _tryRequest<T, Response>(op);
-    await pref.remove(SharedPreferencesKey.companyCode.name);
     return _handleResponse<T>(res);
   }
 
