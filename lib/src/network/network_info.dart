@@ -23,6 +23,8 @@ class NetworkNotifier extends Notifier<bool> {
   late InternetConnectionChecker checker;
   Stream<bool>? internetUpdate;
   Stream<ConnectivityResult>? connectionUpdate;
+  late StreamSubscription<ConnectivityResult>? connectionSubscription;
+  late StreamSubscription<bool>? internetSubscription;
   NetworkNotifier([this.initConnection]) {
     checker = InternetConnectionChecker.createInstance(checkTimeout: const Duration(minutes: 2));
   }
@@ -37,12 +39,12 @@ class NetworkNotifier extends Notifier<bool> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       errorHandler = ref.read(globalErrorHandlerProvider);
       updateOverlay(!state);
-      internetUpdate?.listen((event) {
+      internetSubscription = internetUpdate?.listen((event) {
         var oldState = state;
         state = event;
         updateOverlay(oldState);
       });
-      connectionUpdate?.listen((event) async {
+      connectionSubscription = connectionUpdate?.listen((event) async {
         var oldState = state;
         state = event == ConnectivityResult.none ? false : await checker.hasConnection;
         updateOverlay(oldState);
@@ -53,6 +55,8 @@ class NetworkNotifier extends Notifier<bool> {
   void stopUpdates() {
     internetUpdate = null;
     connectionUpdate = null;
+    connectionSubscription?.cancel();
+    internetSubscription?.cancel();
     initState();
   }
 
