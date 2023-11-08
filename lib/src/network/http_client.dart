@@ -186,7 +186,7 @@ class AlvysHttpClient {
     // }
     try {
       return await op().timeout(
-        const Duration(seconds: 30),
+        const Duration(minutes: 2),
         onTimeout: () {
           throw AlvysTimeoutException(TSource);
         },

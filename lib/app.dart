@@ -28,14 +28,13 @@ class _AppState extends ConsumerState<App> with WidgetsBindingObserver {
       case AppLifecycleState.resumed:
         var data = ref.watch(updaterProvider);
         data.whenData((value) => value.showUpdateDialog());
-        ref.read(internetConnectionCheckerProvider.notifier).runCheck = true;
+        ref.read(internetConnectionCheckerProvider.notifier).startUpdates();
         break;
       case AppLifecycleState.hidden:
       case AppLifecycleState.paused:
-        ref.read(internetConnectionCheckerProvider.notifier).runCheck = false;
-        break;
       case AppLifecycleState.detached:
       case AppLifecycleState.inactive:
+        ref.read(internetConnectionCheckerProvider.notifier).stopUpdates();
         break;
     }
   }

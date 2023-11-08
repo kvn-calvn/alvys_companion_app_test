@@ -17,11 +17,15 @@ class NetworkNotifier extends Notifier<bool> {
         RouteName.tripDetails.name: ref.read(tripControllerProvider.notifier),
       };
   bool? initConnection;
-  bool runCheck = true;
   bool _hasInsert = false;
   late GlobalErrorHandler errorHandler;
   late OverlayEntry noInternetOverlay;
-  NetworkNotifier([this.initConnection]);
+  late InternetConnectionChecker checker;
+  Stream<bool>? internetUpdate;
+  Stream<ConnectivityResult>? connectionUpdate;
+  NetworkNotifier([this.initConnection]) {
+    checker = InternetConnectionChecker.createInstance(checkTimeout: const Duration(minutes: 2));
+  }
   @override
   bool build() {
     state = initConnection ?? true;
@@ -33,27 +37,34 @@ class NetworkNotifier extends Notifier<bool> {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       errorHandler = ref.read(globalErrorHandlerProvider);
       updateOverlay(!state);
-      internetConnectionStream.listen((event) {
+      internetUpdate?.listen((event) {
         var oldState = state;
         state = event;
         updateOverlay(oldState);
       });
-      Connectivity().onConnectivityChanged.listen((event) async {
+      connectionUpdate?.listen((event) async {
         var oldState = state;
-        state = event == ConnectivityResult.none
-            ? false
-            : !runCheck
-                ? true
-                : await InternetConnectionChecker().hasConnection;
+        state = event == ConnectivityResult.none ? false : await checker.hasConnection;
         updateOverlay(oldState);
       });
     });
   }
 
+  void stopUpdates() {
+    internetUpdate = null;
+    connectionUpdate = null;
+    initState();
+  }
+
+  void startUpdates() {
+    internetUpdate = internetConnectionStream;
+    connectionUpdate = Connectivity().onConnectivityChanged;
+    initState();
+  }
+
   void setInternetState(bool internetState) => state = internetState;
   Stream<bool> get internetConnectionStream {
-    return Stream.periodic(const Duration(seconds: 30), (index) => InternetConnectionChecker().hasConnection)
-        .asyncMap((event) => event);
+    return Stream.periodic(const Duration(seconds: 30), (index) => checker.hasConnection).asyncMap((event) => event);
   }
 
   void updateOverlay(bool oldState) {
