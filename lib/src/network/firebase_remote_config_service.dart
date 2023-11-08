@@ -33,7 +33,8 @@ class FirebaseRemoteConfigService {
         "alvys_terms_url": "https://alvys.com/terms/",
         "alvys_privacy_url": "https://alvys.com/privacy/",
         "show_company_code": false,
-        "edit_profile": false
+        "edit_profile": false,
+        "show_distance": false
       });
       await firebaseRemoteConfig.fetchAndActivate();
     } catch (exception) {
@@ -47,6 +48,8 @@ class FirebaseRemoteConfigService {
   String alvysHelpUrl() => firebaseRemoteConfig.getString('alvys_help_url');
   String alvysUrl() => firebaseRemoteConfig.getString('alvys_url');
   String alvysTermsUrl() => firebaseRemoteConfig.getString('alvys_terms_url');
-  String alvysPrivacyUrl() => firebaseRemoteConfig.getString('alvys_privacy_url');
+  String alvysPrivacyUrl() =>
+      firebaseRemoteConfig.getString('alvys_privacy_url');
   bool showCompanyCode() => firebaseRemoteConfig.getBool('show_company_code');
+  bool showTooFarDistance() => firebaseRemoteConfig.getBool('show_distance');
 }
