@@ -45,7 +45,7 @@ class NetworkNotifier extends Notifier<bool> {
       });
       connectionSubscription = connectionUpdate?.listen((event) async {
         var oldState = state;
-        state = event == ConnectivityResult.none ? false : await checker.hasConnection;
+        state = await checker.hasConnection;
         updateOverlay(oldState);
       });
     });
@@ -106,6 +106,7 @@ class _NoInternetWidgetState extends ConsumerState<NoInternetWidget> with Single
   void initState() {
     super.initState();
     _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 250));
+    print('called');
     _controller.forward();
   }
 

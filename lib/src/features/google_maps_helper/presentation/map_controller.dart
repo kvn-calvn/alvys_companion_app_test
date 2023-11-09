@@ -47,9 +47,10 @@ class MapNotifier extends AutoDisposeFamilyAsyncNotifier<MapState, String> {
               consumeTapEvents: true,
               position: e.value))
           .toSet();
+      if (markers.isNullOrEmpty) return;
       state = AsyncData(MapState(markers: markers));
       GoogleMapController miniController = await this.miniController.future;
-      if (markers.isNullOrEmpty) return;
+      state = const AsyncLoading();
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         try {
           try {

@@ -40,7 +40,6 @@ class GoogleMapsRepo {
   }
 
   Future<Map<PolylineId, Polyline>> getPolyLines(List<LatLng> coordinates, [String overview = 'simplified']) async {
-    var hasResults = true;
     var res = <PolylineId, Polyline>{};
     for (int i = 0; i < coordinates.length - 1; i++) {
       var response = await get(
@@ -66,14 +65,10 @@ class GoogleMapsRepo {
           onTap: () {},
         );
         res[id] = polyline;
-        hasResults = true;
-      } else {
-        hasResults = false;
-        break;
       }
     }
 
-    return hasResults ? res : {};
+    return res;
   }
 
   LatLngBounds boundsFromLatLngList(List<LatLng> list) {
