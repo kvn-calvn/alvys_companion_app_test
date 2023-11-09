@@ -108,6 +108,11 @@ class StopDetails extends ConsumerWidget {
                           text: currentStop.address?.street ?? "",
                           style: Theme.of(context).textTheme.bodyMedium,
                           children: [
+                            if (currentStop.address?.apartmentNumber.isNotNullOrEmpty ?? false)
+                              TextSpan(
+                                text: '\n${currentStop.address?.apartmentNumber}',
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
                             TextSpan(
                               text:
                                   '\n${currentStop.address?.city} ${currentStop.address?.state} ${currentStop.address?.zip}',
