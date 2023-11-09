@@ -38,7 +38,6 @@ class NetworkNotifier extends Notifier<bool> {
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       errorHandler = ref.read(globalErrorHandlerProvider);
-      updateOverlay(!state);
       internetSubscription = internetUpdate?.listen((event) {
         var oldState = state;
         state = event;
