@@ -114,14 +114,16 @@ class StopCard extends ConsumerWidget {
                         opacity: 0.5,
                         child: IconButton(
                           onPressed: () async {
-                            Clipboard.setData(ClipboardData(text: stop.formattedStopDate));
+                            Clipboard.setData(ClipboardData(text: stop.address?.formattedAddress ?? ""));
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(content: Text('Address Coppied')),
                             );
                             ref.read(httpClientProvider).telemetryClient.trackEvent(
-                                name: "copied_stop_address", additionalProperties: {"address": stop.formattedStopDate});
-                            await FirebaseAnalytics.instance
-                                .logEvent(name: "copied_stop_address", parameters: {"address": stop.formattedStopDate});
+                                name: "copied_stop_address",
+                                additionalProperties: {"address": stop.address?.formattedAddress ?? ""});
+                            await FirebaseAnalytics.instance.logEvent(
+                                name: "copied_stop_address",
+                                parameters: {"address": stop.address?.formattedAddress ?? ""});
                           },
                           icon: const Icon(Icons.copy),
                         ),

@@ -103,13 +103,17 @@ class StopDetails extends ConsumerWidget {
                       currentStop.companyName ?? "",
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
-                    Text(
-                      currentStop.address?.street ?? "",
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                    Text(
-                      '${currentStop.address?.city} ${currentStop.address?.state} ${currentStop.address?.zip}',
-                      style: Theme.of(context).textTheme.bodyMedium,
+                    SelectableText.rich(
+                      TextSpan(
+                          text: currentStop.address?.street ?? "",
+                          style: Theme.of(context).textTheme.bodyMedium,
+                          children: [
+                            TextSpan(
+                              text:
+                                  '\n${currentStop.address?.city} ${currentStop.address?.state} ${currentStop.address?.zip}',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            )
+                          ]),
                     ),
                     const SizedBox(height: 10),
                     StopLoadingTypeWidget(currentStop)
