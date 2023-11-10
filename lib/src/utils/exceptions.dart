@@ -109,7 +109,8 @@ class AlvysSocketException extends ControllerException {
 
 class AlvysUnauthorizedException extends ControllerException {
   final Type s;
-  AlvysUnauthorizedException(this.s) : super('Unauthorized', 'You are not authorized to access this item', s);
+  AlvysUnauthorizedException(this.s)
+      : super('Unauthorized', 'You are not authorized to access this item. Relog and try again', s);
 }
 
 class ApiServerException extends ControllerException {
