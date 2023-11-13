@@ -34,8 +34,10 @@ class DriverUser with _$DriverUser {
   DriverUser._();
   factory DriverUser.fromJson(Map<String, dynamic> json) => _$DriverUserFromJson(json);
 
-  String get companyCodes => userTenants.map((e) => e.companyCode).removeNulls.join(',');
-  String get companyCodesWithSpace => userTenants.map((e) => e.companyCode).removeNulls.join(', ');
+  List<UserTenant> get activeTenants => userTenants.where((element) => !(element.isDisabled ?? false)).toList();
+
+  String get companyCodes => activeTenants.map((e) => e.companyCode).removeNulls.join(',');
+  String get companyCodesWithSpace => activeTenants.map((e) => e.companyCode).removeNulls.join(', ');
 
   bool hasContractorType(String contractorType) =>
       userTenants.any((element) => element.contractorType == contractorType);

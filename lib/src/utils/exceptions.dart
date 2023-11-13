@@ -38,6 +38,21 @@ class AlvysDependencyException implements ControllerException {
   String get title => "Dependency Failure Error";
 }
 
+class AlvysServiceUnavailableException implements ControllerException {
+  late DependencyError error;
+  late Type controllerType;
+  AlvysServiceUnavailableException(this.controllerType);
+
+  @override
+  String get message => '''Service Unavailable''';
+
+  @override
+  Type get source => controllerType;
+
+  @override
+  String get title => "Service Unavailable";
+}
+
 class AlvysEntityNotFoundException implements ControllerException {
   late NotFoundError error;
   late Type controllerType;
@@ -94,7 +109,8 @@ class AlvysSocketException extends ControllerException {
 
 class AlvysUnauthorizedException extends ControllerException {
   final Type s;
-  AlvysUnauthorizedException(this.s) : super('Unauthorized', 'You are not authorized to access this item', s);
+  AlvysUnauthorizedException(this.s)
+      : super('Unauthorized', 'You are not authorized to access this item. Re-login and try again', s);
 }
 
 class ApiServerException extends ControllerException {

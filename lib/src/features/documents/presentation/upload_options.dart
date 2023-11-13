@@ -128,7 +128,7 @@ class DocumentUploadButton extends ConsumerWidget {
           color: backgroundColor,
           shape: const CircleBorder(),
           clipBehavior: Clip.antiAlias,
-          elevation: 4,
+          //elevation: 4,
           child: InkWell(
             onTap: () {
               onTap(ref);

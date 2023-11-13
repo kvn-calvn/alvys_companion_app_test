@@ -7,11 +7,11 @@ part 'address.g.dart';
 @freezed
 class Address with _$Address {
   factory Address({
-    @JsonKey(name: 'Street') required String street,
+    @JsonKey(name: 'Street') String? street,
     @JsonKey(name: 'ApartmentNumber') String? apartmentNumber,
-    @JsonKey(name: 'City') required String city,
-    @JsonKey(name: 'Zip') required String zip,
-    @JsonKey(name: 'State') required String state,
+    @JsonKey(name: 'City') String? city,
+    @JsonKey(name: 'Zip') String? zip,
+    @JsonKey(name: 'State') String? state,
     @JsonKey(name: 'Country') String? country,
     @JsonKey(name: 'Phone') @Default(<String>[]) List<String> phone,
     @JsonKey(name: 'Email') @Default(<String>[]) List<String> email,

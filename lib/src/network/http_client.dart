@@ -33,6 +33,7 @@ class AlvysHttpClient {
   final NetworkNotifier networkInfo;
   AlvysHttpClient(this.pref, this.networkInfo) {
     final client = Client();
+
     final processor = TransmissionProcessor(
       instrumentationKey: FlavorConfig.instance!.azureTelemetryKey,
       httpClient: client,
@@ -57,9 +58,8 @@ class AlvysHttpClient {
     return telemetryClient.trackEvent(name: name, additionalProperties: additionalProperties, timestamp: timestamp);
   }
 
-  Map<String, String> get getBaseHeaders {
+  Map<String, String> getBaseHeaders(String? companyCode) {
     var token = pref.getString(SharedPreferencesKey.driverToken.name);
-    var companyCode = pref.getString(SharedPreferencesKey.companyCode.name);
     return token == null
         ? {HttpHeaders.contentTypeHeader: ContentType.json.value}
         : {
@@ -69,8 +69,8 @@ class AlvysHttpClient {
           };
   }
 
-  Map<String, String> getHeaders(Map<String, String>? headers) {
-    var newHeaders = getBaseHeaders;
+  Map<String, String> getHeaders(String? companyCode, Map<String, String>? headers) {
+    var newHeaders = getBaseHeaders(companyCode);
     if (headers != null) {
       newHeaders.addAll(headers);
     }
@@ -84,7 +84,8 @@ class AlvysHttpClient {
   }
 
   Future<void> upload<T>(
-    Uri url, {
+    Uri url,
+    String? companyCode, {
     required List<MultipartFile> files,
     required Function(int current, int total) onProgress,
     Map<String, String>? headers,
@@ -92,7 +93,7 @@ class AlvysHttpClient {
     var request = CustomMultipartRequest("POST", url, onProgress: onProgress);
     request.files.addAll(files);
     if (headers != null) request.headers.addAll(headers);
-    request.headers.addAll(getBaseHeaders);
+    request.headers.addAll(getBaseHeaders(companyCode));
     await sendData<T>(request);
   }
 
@@ -103,36 +104,48 @@ class AlvysHttpClient {
   }) async {
     var request = CustomMultipartRequest("GET", url, onProgress: onProgress);
     if (headers != null) request.headers.addAll(headers);
-    request.headers.addAll(getBaseHeaders);
+    request.headers.addAll(getBaseHeaders(null));
     await sendData<T>(request);
   }
 
-  Future<Response> getData<T>(Uri uri, {Map<String, String>? headers}) {
-    return _executeRequest<T>(() async => telemetryHttpClient.get(uri, headers: getHeaders(headers)));
-  }
-
-  Future<Response> postData<T>(Uri uri, {Map<String, String>? headers, Object? body, Encoding? encoding}) {
+  Future<Response> getData<T>(Uri uri, String? companyCode, {Map<String, String>? headers}) {
     return _executeRequest<T>(
-        () async => telemetryHttpClient.post(uri, headers: getHeaders(headers), body: body, encoding: encoding));
+        companyCode, () async => telemetryHttpClient.get(uri, headers: getHeaders(companyCode, headers)));
   }
 
-  Future<Response> putData<T>(Uri uri, {Map<String, String>? headers, Object? body, Encoding? encoding}) {
+  Future<Response> postData<T>(Uri uri, String? companyCode,
+      {Map<String, String>? headers, Object? body, Encoding? encoding}) {
     return _executeRequest<T>(
-        () async => telemetryHttpClient.put(uri, headers: getHeaders(headers), body: body, encoding: encoding));
+        companyCode,
+        () async =>
+            telemetryHttpClient.post(uri, headers: getHeaders(companyCode, headers), body: body, encoding: encoding));
   }
 
-  Future<Response> deleteData<T>(Uri uri, {Map<String, String>? headers, Object? body, Encoding? encoding}) {
+  Future<Response> putData<T>(Uri uri, String? companyCode,
+      {Map<String, String>? headers, Object? body, Encoding? encoding}) {
     return _executeRequest<T>(
-        () async => telemetryHttpClient.delete(uri, headers: getHeaders(headers), body: body, encoding: encoding));
+        companyCode,
+        () async =>
+            telemetryHttpClient.put(uri, headers: getHeaders(companyCode, headers), body: body, encoding: encoding));
   }
 
-  Future<Response> patchData<T>(Uri uri, {Map<String, String>? headers, Object? body, Encoding? encoding}) {
+  Future<Response> deleteData<T>(Uri uri, String? companyCode,
+      {Map<String, String>? headers, Object? body, Encoding? encoding}) {
     return _executeRequest<T>(
-        () async => telemetryHttpClient.patch(uri, headers: getHeaders(headers), body: body, encoding: encoding));
+        companyCode,
+        () async =>
+            telemetryHttpClient.delete(uri, headers: getHeaders(companyCode, headers), body: body, encoding: encoding));
   }
 
-  Future<Response> _executeRequest<T>(Future<Response> Function() op) async {
-    var companyCode = pref.getString(SharedPreferencesKey.companyCode.name);
+  Future<Response> patchData<T>(Uri uri, String? companyCode,
+      {Map<String, String>? headers, Object? body, Encoding? encoding}) {
+    return _executeRequest<T>(
+        companyCode,
+        () async =>
+            telemetryHttpClient.patch(uri, headers: getHeaders(companyCode, headers), body: body, encoding: encoding));
+  }
+
+  Future<Response> _executeRequest<T>(String? companyCode, Future<Response> Function() op) async {
     if (companyCode != null) {
       telemetryClient.context.properties['tenantId'] = companyCode;
     }
@@ -144,6 +157,7 @@ class AlvysHttpClient {
 
   Future<Response> _handleResponse<T>(Response response) {
     networkInfo.setInternetState(true);
+
     switch (response.statusCode) {
       case (400):
         throw AlvysClientException(jsonDecode(response.body), T);
@@ -152,7 +166,12 @@ class AlvysHttpClient {
       case (401):
         throw AlvysUnauthorizedException(T);
       case (504):
-        throw AlvysDependencyException(jsonDecode(response.body), T);
+        try {
+          var data = jsonDecode(response.body);
+          throw AlvysDependencyException(data, T);
+        } on FormatException {
+          throw AlvysServiceUnavailableException(T);
+        }
       case 500:
         throw ApiServerException(T);
       default:
@@ -167,7 +186,7 @@ class AlvysHttpClient {
     // }
     try {
       return await op().timeout(
-        const Duration(seconds: 30),
+        const Duration(minutes: 2),
         onTimeout: () {
           throw AlvysTimeoutException(TSource);
         },

@@ -40,7 +40,6 @@ class GoogleMapsRepo {
   }
 
   Future<Map<PolylineId, Polyline>> getPolyLines(List<LatLng> coordinates, [String overview = 'simplified']) async {
-    var hasResults = true;
     var res = <PolylineId, Polyline>{};
     for (int i = 0; i < coordinates.length - 1; i++) {
       var response = await get(
@@ -66,14 +65,10 @@ class GoogleMapsRepo {
           onTap: () {},
         );
         res[id] = polyline;
-        hasResults = true;
-      } else {
-        hasResults = false;
-        break;
       }
     }
 
-    return hasResults ? res : {};
+    return res;
   }
 
   LatLngBounds boundsFromLatLngList(List<LatLng> list) {
@@ -92,11 +87,11 @@ class GoogleMapsRepo {
     return LatLngBounds(northeast: LatLng(x1!, y1!), southwest: LatLng(x0!, y0!));
   }
 
-  Future<Uint8List> getMapMarkerBytesFromAsset(String path, [int width = 24]) async {
+  Future<Uint8List?> getMapMarkerBytesFromAsset(String path, [int width = 24]) async {
     var w = (WidgetsBinding.instance.platformDispatcher.implicitView!.devicePixelRatio * width).toInt();
     ByteData data = await rootBundle.load(path);
     var codec = await instantiateImageCodec(data.buffer.asUint8List(), targetWidth: w);
     FrameInfo fi = await codec.getNextFrame();
-    return (await fi.image.toByteData(format: ImageByteFormat.png))!.buffer.asUint8List();
+    return (await fi.image.toByteData(format: ImageByteFormat.png))?.buffer.asUint8List();
   }
 }

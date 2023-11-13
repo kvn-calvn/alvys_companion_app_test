@@ -43,8 +43,10 @@ class _StopDetailsPageState extends ConsumerState<StopDetailsPage> {
             constraints: const BoxConstraints(),
             onPressed: () async {
               await ref.read(tripControllerProvider.notifier).refreshCurrentTrip(widget.tripId);
-              ref.read(httpClientProvider).telemetryClient.trackEvent(name: "stop_refresh_button_tapped");
-              await FirebaseAnalytics.instance.logEvent(name: "stop_refresh_button_tapped");
+              if (mounted) {
+                ref.read(httpClientProvider).telemetryClient.trackEvent(name: "stop_refresh_button_tapped");
+                await FirebaseAnalytics.instance.logEvent(name: "stop_refresh_button_tapped");
+              }
             },
             icon: const Icon(Icons.refresh),
           )
@@ -79,6 +81,10 @@ class StopDetails extends ConsumerWidget {
     return RefreshIndicator(
       onRefresh: () async {
         await ref.read(tripControllerProvider.notifier).refreshCurrentTrip(tripId);
+        if (context.mounted) {
+          ref.read(httpClientProvider).telemetryClient.trackEvent(name: "stop_refresh_button_tapped");
+          await FirebaseAnalytics.instance.logEvent(name: "stop_refresh_button_tapped");
+        }
       },
       child: currentStop == null
           ? const EmptyView(
@@ -97,13 +103,22 @@ class StopDetails extends ConsumerWidget {
                       currentStop.companyName ?? "",
                       style: Theme.of(context).textTheme.bodyMedium,
                     ),
-                    Text(
-                      currentStop.address?.street ?? "",
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                    Text(
-                      '${currentStop.address?.city} ${currentStop.address?.state} ${currentStop.address?.zip}',
-                      style: Theme.of(context).textTheme.bodyMedium,
+                    SelectableText.rich(
+                      TextSpan(
+                          text: currentStop.address?.street ?? "",
+                          style: Theme.of(context).textTheme.bodyMedium,
+                          children: [
+                            if (currentStop.address?.apartmentNumber.isNotNullOrEmpty ?? false)
+                              TextSpan(
+                                text: '\n${currentStop.address?.apartmentNumber}',
+                                style: Theme.of(context).textTheme.bodyMedium,
+                              ),
+                            TextSpan(
+                              text:
+                                  '\n${currentStop.address?.city} ${currentStop.address?.state} ${currentStop.address?.zip}',
+                              style: Theme.of(context).textTheme.bodyMedium,
+                            )
+                          ]),
                     ),
                     const SizedBox(height: 10),
                     StopLoadingTypeWidget(currentStop)

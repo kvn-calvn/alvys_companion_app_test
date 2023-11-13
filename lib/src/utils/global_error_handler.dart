@@ -18,6 +18,7 @@ import '../features/documents/presentation/upload_documents_controller.dart';
 
 final globalErrorHandlerProvider = Provider<GlobalErrorHandler>((ref) {
   return GlobalErrorHandler(
+      auth: () => ref.read(authProvider.notifier),
       providers: () => {
             AuthProviderNotifier: () => ref.read(authProvider.notifier),
             UploadDocumentsController: () =>
@@ -36,7 +37,8 @@ class GlobalErrorHandler {
   final AlvysHttpClient telemetry;
   LabeledGlobalKey<NavigatorState> navKey = LabeledGlobalKey<NavigatorState>("MainNavKey");
   Map<Type, IAppErrorHandler Function()> Function() providers;
-  GlobalErrorHandler({required this.providers, required this.telemetry});
+  AuthProviderNotifier Function() auth;
+  GlobalErrorHandler({required this.providers, required this.telemetry, required this.auth});
   void handle(FlutterErrorDetails? details, bool flutterError, [Object? error, StackTrace? trace]) {
     _handleError(
       flutterError ? details!.exception : error!,
@@ -75,12 +77,23 @@ class GlobalErrorHandler {
       case const (AlvysEntityNotFoundException):
       case const (AlvysSocketException):
       case const (AlvysTimeoutException):
-      case const (AlvysUnauthorizedException):
       case const (ApiServerException):
       case const (AlvysDependencyException):
+      case const (AlvysServiceUnavailableException):
       case const (ControllerException):
         var e = error as ControllerException;
         onError = () => executeOnError(e.source, e);
+        message = e.message;
+        title = e.title;
+
+        dismissButtonText = "Ok";
+        break;
+      case const (AlvysUnauthorizedException):
+        var e = error as AlvysUnauthorizedException;
+        onError = () {
+          executeOnError(e.source, e);
+          auth().signOut(navKey.currentContext!);
+        };
         message = e.message;
         title = e.title;
 

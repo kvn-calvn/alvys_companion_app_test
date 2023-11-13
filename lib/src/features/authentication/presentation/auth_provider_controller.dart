@@ -123,6 +123,7 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppError
     resetFields();
     await pref.remove(SharedPreferencesKey.driverData.name);
     await pref.remove(SharedPreferencesKey.driverToken.name);
+    await pref.remove(SharedPreferencesKey.driverStatus.name);
     state = AsyncValue.data(state.value!.copyWith(driver: null));
   }
 
@@ -179,12 +180,14 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppError
   UserTenant? getCurrentUserTenant(String companyCode) =>
       state.value!.driver!.userTenants.firstWhereOrNull((element) => element.companyCode == companyCode);
   UserTenant get getCompanyOwned =>
-      state.value!.driver!.userTenants.firstWhereOrNull((element) => element.companyOwnedAsset ?? false) ??
+      state.value!.driver!.userTenants
+          .firstWhereOrNull((element) => (element.companyOwnedAsset ?? false) && !(element.isDisabled ?? true)) ??
       state.value!.driver!.userTenants.first;
 
   Future<void> refreshDriverUser() async {
     var res = await authRepo.getDriverUser(getCompanyOwned.companyCode!, driver!.id!);
-    var driverTenant = res.userTenants.firstWhereOrNull((element) => element.companyOwnedAsset ?? false);
+    var driverTenant = res.userTenants
+        .firstWhereOrNull((element) => (element.companyOwnedAsset ?? false) && !(element.isDisabled ?? true));
     updateUser(res);
     if (driverTenant != null) {
       var driverAsset = await authRepo.getDriverAsset(driverTenant.companyCode!, driverTenant.assetId!);

@@ -1,3 +1,4 @@
+import 'package:alvys3/src/common_widgets/shimmers/shimmer_widget.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -45,36 +46,47 @@ class _TripGoogleMapState extends ConsumerState<TripGoogleMap> with WidgetsBindi
           Radius.circular(10.0),
         ),
         child: Center(
-          child: GoogleMap(
-            onTap: (argument) async {
-              if (!mapState.isLoading) {
-                Navigator.of(context, rootNavigator: true).push(
-                  MaterialPageRoute(builder: (context) => FullScreenMap(widget.tripId)),
-                );
+          child: Stack(
+            children: [
+              GoogleMap(
+                onTap: (argument) async {
+                  if (!mapState.isLoading) {
+                    Navigator.of(context, rootNavigator: true).push(
+                      MaterialPageRoute(builder: (context) => FullScreenMap(widget.tripId)),
+                    );
 
-                ref.read(httpClientProvider).telemetryClient.trackEvent(name: "open_map");
-                await FirebaseAnalytics.instance.logEvent(name: "open_map");
-              }
-            },
-            onMapCreated: (controller) {
-              ref.read(mapProvider.call(widget.tripId).notifier).onMapCreated(controller, false);
-            },
-            initialCameraPosition: const CameraPosition(
-              tilt: 20,
-              target: LatLng(37.6, -95.665),
-              zoom: 3,
-            ),
-            markers: mapState.value?.markers ?? {},
-            polylines: mapState.value?.polyLines ?? {},
-            mapToolbarEnabled: false,
-            rotateGesturesEnabled: false,
-            scrollGesturesEnabled: false,
-            tiltGesturesEnabled: false,
-            zoomGesturesEnabled: false,
-            myLocationButtonEnabled: false,
-            zoomControlsEnabled: false,
-            compassEnabled: false,
-            mapType: MapType.normal,
+                    ref.read(httpClientProvider).telemetryClient.trackEvent(name: "open_map");
+                    await FirebaseAnalytics.instance.logEvent(name: "open_map");
+                  }
+                },
+                onMapCreated: (controller) {
+                  ref.read(mapProvider.call(widget.tripId).notifier).onMapCreated(controller);
+                },
+                initialCameraPosition: const CameraPosition(
+                  tilt: 20,
+                  target: LatLng(37.6, -95.665),
+                  zoom: 3,
+                ),
+                markers: mapState.value?.markers ?? {},
+                polylines: mapState.value?.polyLines ?? {},
+                mapToolbarEnabled: false,
+                rotateGesturesEnabled: false,
+                scrollGesturesEnabled: false,
+                tiltGesturesEnabled: false,
+                zoomGesturesEnabled: false,
+                myLocationButtonEnabled: false,
+                zoomControlsEnabled: false,
+                compassEnabled: false,
+                mapType: MapType.normal,
+              ),
+              if (mapState.isLoading)
+                AlvysSingleChildShimmer(
+                    child: Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  color: Theme.of(context).cardColor.withOpacity(0.4),
+                ))
+            ],
           ),
         ),
       ),

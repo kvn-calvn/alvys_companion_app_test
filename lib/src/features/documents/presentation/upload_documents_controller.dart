@@ -120,7 +120,7 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
 
     if (context.mounted) {
       Navigator.of(context, rootNavigator: true).pop();
-      router.pop();
+      Navigator.pop(context);
       if (arg.documentType == DisplayDocumentType.tripDocuments) {
         ref.read(tripControllerProvider.notifier).refreshCurrentTrip(arg.tripId!);
       }
@@ -136,7 +136,7 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
         await docRepo.uploadTripDocuments(trip!.companyCode!, state.documentType!, pdfFile, arg.tripId!);
         await trips.refreshCurrentTrip(arg.tripId!);
       case DisplayDocumentType.personalDocuments:
-        await docRepo.uploadPersonalDocuments(state.documentType!, pdfFile);
+        await docRepo.uploadPersonalDocuments(userData.getCompanyOwned.companyCode!, state.documentType!, pdfFile);
         await docList.getDocuments();
       case DisplayDocumentType.paystubs:
         await Future.value(null);
@@ -153,24 +153,28 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
       case DisplayDocumentType.tripDocuments:
         var trip = trips.getTrip(arg.tripId!);
         return UploadDocumentOptions.getOptionsList([
-          'Unclassified',
-          'Receipt',
-          'BOL - (unsigned BOL)',
-          'POD - (signed BOL)',
-          'Load Securement',
-          'Temperature Settings',
-          'Seal',
-          'Trailer Photo',
-          'Other'
+          (title: 'Unclassified', data: 'Unclassified'),
+          (title: 'Receipt', data: 'Receipt'),
+          // (title: 'BOL - (unsigned BOL)', data: 'BOL'),
+          // (title: 'POD - (signed BOL)', data: 'Proof of Delivery'),
+          (title: 'BOL', data: 'BOL'),
+          (title: 'Proof of Delivery', data: 'Proof of Delivery'),
+          (title: 'Load Securement', data: 'Load Securement'),
+          (title: 'Temperature Settings', data: 'Temperature Settings'),
+          (title: 'Seal', data: 'Seal'),
+          (title: 'Trailer Photo', data: 'Trailer Photo'),
+          (title: 'Other', data: 'Other')
         ], trip?.companyCode);
 
       case DisplayDocumentType.personalDocuments:
         return UploadDocumentOptions.getOptionsList(
-            ["Driver License", "Medical"], userData.getCompanyOwned.companyCode!);
+            [(title: "Driver License", data: "Driver License"), (title: "Medical", data: "Medical")],
+            userData.getCompanyOwned.companyCode!);
       case DisplayDocumentType.paystubs:
         return [];
       case DisplayDocumentType.tripReport:
-        return UploadDocumentOptions.getOptionsList(['Trip Report'], userData.getCompanyOwned.companyCode!);
+        return UploadDocumentOptions.getOptionsList(
+            [(title: 'Trip Report', data: 'Trip Report')], userData.getCompanyOwned.companyCode!);
     }
   }
 
@@ -208,10 +212,10 @@ class UploadDocumentArgs {
 }
 
 class UploadDocumentOptions {
-  final String companyCode, title;
+  final String companyCode, title, value;
 
-  UploadDocumentOptions({required this.companyCode, required this.title});
+  UploadDocumentOptions({required this.companyCode, required this.title, required this.value});
 
-  static List<UploadDocumentOptions> getOptionsList(List<String> titles, String? companyCode) =>
-      titles.map((e) => UploadDocumentOptions(companyCode: companyCode ?? "", title: e)).toList();
+  static List<UploadDocumentOptions> getOptionsList(List<({String title, String data})> titles, String? companyCode) =>
+      titles.map((e) => UploadDocumentOptions(companyCode: companyCode ?? "", title: e.title, value: e.data)).toList();
 }
