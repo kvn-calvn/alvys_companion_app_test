@@ -31,6 +31,8 @@ class NetworkNotifier extends Notifier<bool> {
   @override
   bool build() {
     state = initConnection ?? true;
+    internetUpdate = internetConnectionStream;
+    connectionUpdate = Connectivity().onConnectivityChanged;
     initState();
     return state;
   }
@@ -66,7 +68,7 @@ class NetworkNotifier extends Notifier<bool> {
 
   void setInternetState(bool internetState) => state = internetState;
   Stream<bool> get internetConnectionStream {
-    return Stream.periodic(const Duration(seconds: 30), (index) => checker.hasConnection).asyncMap((event) => event);
+    return Stream.periodic(const Duration(seconds: 45), (index) => checker.hasConnection).asyncMap((event) => event);
   }
 
   void updateOverlay(bool oldState) {

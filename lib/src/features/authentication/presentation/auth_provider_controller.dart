@@ -74,6 +74,9 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppError
       await pref.setString(
           SharedPreferencesKey.driverStatus.name, DriverStatus.initStatus(driverAsset.status).titleCase);
       driverStatus = DriverStatus.initStatus(driverAsset.status).titleCase;
+      if (driverAsset.status.equalsIgnoreCase(DriverStatus.offDuty)) {
+        await initDriverStatus(DriverStatus.online);
+      }
     }
     state = AsyncValue.data(state.value!.copyWith(driver: driverRes, driverStatus: driverStatus?.titleCase));
     await FirebaseAnalytics.instance.setUserId(id: driverRes.phone);
@@ -149,12 +152,16 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppError
     if (s != null) {
       status = state.value!.driverStatus;
       state = AsyncValue.data(state.value!.copyWith(driverStatus: s));
-      var location = await Helpers.getUserPosition(() {});
-      var dto = UpdateDriverStatusDTO(
-          status: s.toUpperCase(), id: '', latitude: location.latitude, longitude: location.longitude);
-      await authRepo.updateDriverStatus(getCompanyOwned.companyCode!, dto);
+      await initDriverStatus(s);
       await pref.setString(SharedPreferencesKey.driverStatus.name, s);
     }
+  }
+
+  Future<void> initDriverStatus(String status) async {
+    var location = await Helpers.getUserPosition(() {});
+    var dto = UpdateDriverStatusDTO(
+        status: status.toUpperCase(), id: '', latitude: location.latitude, longitude: location.longitude);
+    await authRepo.updateDriverStatus(getCompanyOwned.companyCode!, dto);
   }
 
   void updateUserFromDetails(UserDetails user) {
