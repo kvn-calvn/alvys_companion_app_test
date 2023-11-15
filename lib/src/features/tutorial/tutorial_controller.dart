@@ -222,8 +222,8 @@ class TutorialController {
         builder: (c) => Tutorial(
               data: item.elements
                   .map((e) {
-                    var position = e.globalKey.getKeyPosition(context)!;
-                    // if (position == null) return null;
+                    var position = e.globalKey.getKeyPosition(context);
+                    if (position == null) return null;
                     return TutorialData(
                       position: position.renderBox,
                       shape: e.shape,
