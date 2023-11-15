@@ -140,6 +140,11 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppError
   void updateUser(DriverUser user) {
     if (state.value?.driver != null) {
       state = AsyncValue.data(state.value!.copyWith(driver: user));
+      pref.setString(SharedPreferencesKey.driverData.name, user.toJson().toJsonEncodedString);
+      pref.setString(
+        SharedPreferencesKey.driverToken.name,
+        base64.encode(utf8.encode("${user.userName}:${user.appToken ?? user.currentToken?.accessToken}")),
+      );
     }
   }
 
