@@ -26,7 +26,8 @@ class NetworkNotifier extends Notifier<bool> {
   late StreamSubscription<ConnectivityResult>? connectionSubscription;
   late StreamSubscription<bool>? internetSubscription;
   NetworkNotifier([this.initConnection]) {
-    checker = InternetConnectionChecker.createInstance(checkTimeout: const Duration(minutes: 2));
+    checker = InternetConnectionChecker.createInstance(
+        checkTimeout: const Duration(minutes: 2), checkInterval: const Duration(seconds: 45));
   }
   @override
   bool build() {
@@ -68,7 +69,7 @@ class NetworkNotifier extends Notifier<bool> {
 
   void setInternetState(bool internetState) => state = internetState;
   Stream<bool> get internetConnectionStream {
-    return Stream.periodic(const Duration(seconds: 45), (index) => checker.hasConnection).asyncMap((event) => event);
+    return checker.onStatusChange.map((event) => event == InternetConnectionStatus.connected);
   }
 
   void updateOverlay(bool oldState) {
