@@ -16,7 +16,7 @@ import '../../data/echeck_repository.dart';
 import '../../domain/echeck_state/echeck_state.dart';
 import '../../domain/generate_echeck/generate_echeck_request.dart';
 
-class EcheckPageController extends AutoDisposeFamilyAsyncNotifier<ECheckState, String?> implements IAppErrorHandler {
+class EcheckPageController extends AutoDisposeFamilyAsyncNotifier<ECheckState, String?> implements IErrorHandler {
   late TripController tripController;
   late EcheckRepository repo;
   late AuthProviderNotifier auth;

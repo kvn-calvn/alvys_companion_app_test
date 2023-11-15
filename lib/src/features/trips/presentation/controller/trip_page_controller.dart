@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:intl/intl.dart';
 
 import '../../../../common_widgets/snack_bar.dart';
-import 'package:coder_matthews_extensions/coder_matthews_extensions.dart' as extensions;
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
@@ -38,7 +38,7 @@ import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 part 'trip_page_controller.g.dart';
 
 @riverpod
-class TripController extends _$TripController implements IAppErrorHandler {
+class TripController extends _$TripController implements IErrorHandler {
   late TripRepository tripRepo;
   late AuthProviderNotifier auth;
   late TutorialController tutorial;

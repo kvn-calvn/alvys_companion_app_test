@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:coder_matthews_extensions/coder_matthews_extensions.dart' as extensions;
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:flutter/material.dart';
@@ -25,7 +25,7 @@ import '../domain/models/update_driver_status_dto/update_driver_status_dto.dart'
 import '../domain/models/update_user_dto/update_user_dto.dart';
 import '../domain/models/user_details/user_details.dart';
 
-class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppErrorHandler {
+class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IErrorHandler {
   final DriverUser? initDriver;
   String? status;
   late AuthRepository<AuthProviderNotifier> authRepo;

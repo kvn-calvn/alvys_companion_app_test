@@ -12,7 +12,7 @@ import '../utils/global_error_handler.dart';
 import '../utils/magic_strings.dart';
 
 class NetworkNotifier extends Notifier<bool> {
-  Map<String, IAppErrorHandler> get refreshControllers => {
+  Map<String, IErrorHandler> get refreshControllers => {
         RouteName.trips.name: ref.read(tripControllerProvider.notifier),
         RouteName.tripDetails.name: ref.read(tripControllerProvider.notifier),
       };

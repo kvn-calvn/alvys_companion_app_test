@@ -25,7 +25,7 @@ import '../domain/upload_documents_state/upload_documents_state.dart';
 import 'docs_controller.dart';
 
 class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocumentsState, UploadDocumentArgs>
-    implements IAppErrorHandler {
+    implements IErrorHandler {
   late AppDocumentRepository<DocumentsNotifier, UploadDocumentsController> docRepo;
   late TripController trips;
   late DocumentsNotifier docList;

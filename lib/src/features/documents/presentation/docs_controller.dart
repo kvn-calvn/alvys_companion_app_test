@@ -17,8 +17,7 @@ class DocumentsArgs {
   DocumentsArgs(this.documentType, this.tripId);
 }
 
-class DocumentsNotifier extends AutoDisposeFamilyAsyncNotifier<DocumentState, DocumentsArgs>
-    implements IAppErrorHandler {
+class DocumentsNotifier extends AutoDisposeFamilyAsyncNotifier<DocumentState, DocumentsArgs> implements IErrorHandler {
   late AppDocumentRepository<DocumentsNotifier, UploadDocumentsController> docRepo;
   late AuthProviderNotifier auth;
   int top = 10;

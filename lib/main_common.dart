@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:coder_matthews_extensions/coder_matthews_extensions.dart' as extensions;
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
@@ -46,7 +46,7 @@ Future<void> mainCommon() async {
       options: DefaultFirebaseOptions.currentPlatform,
     );
     ErrorWidget.builder = (details) {
-      if (details.exception is ControllerException) {
+      if (details.exception is AppControllerException) {
         return const Center(child: CircularProgressIndicator.adaptive());
       }
       return ErrorWidget(details.exception);

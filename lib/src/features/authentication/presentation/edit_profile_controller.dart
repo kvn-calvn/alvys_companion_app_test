@@ -13,7 +13,7 @@ import '../../google_maps_helper/domain/google_places_details_result.dart';
 final editProfileProvider =
     AutoDisposeAsyncNotifierProvider<EditProfileNotifier, UpdateUserProfileState>(EditProfileNotifier.new);
 
-class EditProfileNotifier extends AutoDisposeAsyncNotifier<UpdateUserProfileState> implements IAppErrorHandler {
+class EditProfileNotifier extends AutoDisposeAsyncNotifier<UpdateUserProfileState> implements IErrorHandler {
   late AuthProviderNotifier auth;
   late TextEditingController street, city, addressState, zip, apartmentNumber;
   @override
