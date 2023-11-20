@@ -3,6 +3,7 @@ import '../features/documents/presentation/docs_controller.dart';
 import '../features/authentication/presentation/edit_profile_controller.dart';
 import '../features/echeck/presentation/controller/echeck_page_controller.dart';
 import '../features/trips/presentation/controller/trip_page_controller.dart';
+import '../routing/custom_observer.dart';
 import 'provider_args_saver.dart';
 
 import '../network/http_client.dart';
@@ -49,6 +50,7 @@ class GlobalErrorHandler {
             "Error": details!.exception.toString(),
             "StackTrace": details.stack.toString(),
             "ErrorType": "Flutter error",
+            "Page": '${CustomObserver.instance.currentRoute}',
           });
           FlutterError.presentError(details);
         } else {
@@ -57,6 +59,7 @@ class GlobalErrorHandler {
             "Error": error.toString(),
             "StackTrace": trace.toString(),
             "ErrorType": "Regular",
+            "Page": '${CustomObserver.instance.currentRoute}',
           });
           debugPrint("$error");
           debugPrintStack(stackTrace: trace);
