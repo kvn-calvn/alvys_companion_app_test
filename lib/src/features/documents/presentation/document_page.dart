@@ -1,3 +1,5 @@
+import 'package:alvys3/src/common_widgets/empty_view.dart';
+import 'package:alvys3/src/utils/exceptions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -75,7 +77,14 @@ class _DocumentsPageState extends ConsumerState<DocumentsPage> {
                           })
                         : null,
                   ),
-              error: (error, trace) => throw error,
+              error: (error, trace) {
+                if (error is AppControllerException) {
+                  return RefreshIndicator(
+                      onRefresh: ref.read(documentsProvider.call(widget.args).notifier).getDocuments,
+                      child: EmptyView(title: 'Error Occured', description: error.message));
+                }
+                throw error;
+              },
               loading: () => const DocumentsShimmer())),
     );
   }

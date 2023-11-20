@@ -12,7 +12,6 @@ import java.net.URL
 class PostUserLocation {
     @OptIn(DelicateCoroutinesApi::class)
     fun sendLocation(driverName: String, driverId: String, tripNumber: String, tripId: String, lat: Double, lng: Double, postURL: String, token: String, companyCode: String,speed: String) {
-        try {
             // Create JSON using JSONObject
             val jsonObject = JSONObject()
             jsonObject.put("Driver1Name", driverName)
@@ -26,8 +25,10 @@ class PostUserLocation {
 
             // Convert JSONObject to String
             val jsonObjectString = jsonObject.toString()
-
-            GlobalScope.launch(Dispatchers.IO) {
+            val handler =
+                CoroutineExceptionHandler { _, _ -> }
+            val scope = CoroutineScope(SupervisorJob() + handler)
+            scope.launch(Dispatchers.IO) {
                 val url = URL(postURL)
                 val httpURLConnection = url.openConnection() as HttpURLConnection
                 httpURLConnection.requestMethod = "POST"
@@ -69,6 +70,5 @@ class PostUserLocation {
                     Log.e("HTTPURLCONNECTION_ERROR", responseMsg.toString())
                 }
             }
-        }catch (_: Exception){}
     }
 }
