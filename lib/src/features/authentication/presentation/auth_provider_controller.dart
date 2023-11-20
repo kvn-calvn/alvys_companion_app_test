@@ -74,11 +74,11 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IErrorHan
       await pref.setString(
           SharedPreferencesKey.driverStatus.name, DriverStatus.initStatus(driverAsset.status).titleCase);
       driverStatus = DriverStatus.initStatus(driverAsset.status).titleCase;
-      if (driverAsset.status.equalsIgnoreCase(DriverStatus.offDuty)) {
-        await initDriverStatus(DriverStatus.online);
-      }
     }
     state = AsyncValue.data(state.value!.copyWith(driver: driverRes, driverStatus: driverStatus?.titleCase));
+    if (driverStatus.equalsIgnoreCase(DriverStatus.offDuty)) {
+      await initDriverStatus(DriverStatus.online);
+    }
     await FirebaseAnalytics.instance.setUserId(id: driverRes.phone);
     await FirebaseAnalytics.instance.setUserProperty(name: 'driverId', value: driverRes.phone);
     await FirebaseCrashlytics.instance.setUserIdentifier(driverRes.phone.toString());
