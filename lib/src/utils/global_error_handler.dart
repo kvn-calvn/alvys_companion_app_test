@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import '../features/documents/presentation/docs_controller.dart';
 
 import '../features/authentication/presentation/edit_profile_controller.dart';
@@ -44,6 +46,7 @@ class GlobalErrorHandler {
     _handleError(
       flutterError ? details!.exception : error!,
       () {
+        if ((details?.exception ?? error) is SocketException) return;
         if (flutterError) {
           telemetry.telemetryClient
               .trackTrace(severity: Severity.error, message: 'mobile_app_client_error', additionalProperties: {
