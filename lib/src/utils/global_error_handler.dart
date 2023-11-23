@@ -46,7 +46,6 @@ class GlobalErrorHandler {
     _handleError(
       flutterError ? details!.exception : error!,
       () {
-        if ((details?.exception ?? error) is SocketException) return;
         if (flutterError) {
           telemetry.telemetryClient
               .trackTrace(severity: Severity.error, message: 'mobile_app_client_error', additionalProperties: {
@@ -57,13 +56,15 @@ class GlobalErrorHandler {
           });
           FlutterError.presentError(details);
         } else {
-          telemetry.telemetryClient
-              .trackTrace(severity: Severity.error, message: 'mobile_app_client_error', additionalProperties: {
-            "Error": error.toString(),
-            "StackTrace": trace.toString(),
-            "ErrorType": "Regular",
-            "Page": '${CustomObserver.instance.currentRoute}',
-          });
+          if (error is! SocketException) {
+            telemetry.telemetryClient
+                .trackTrace(severity: Severity.error, message: 'mobile_app_client_error', additionalProperties: {
+              "Error": error.toString(),
+              "StackTrace": trace.toString(),
+              "ErrorType": "Regular",
+              "Page": '${CustomObserver.instance.currentRoute}',
+            });
+          }
           debugPrint("$error");
           debugPrintStack(stackTrace: trace);
         }
