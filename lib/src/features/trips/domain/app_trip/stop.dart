@@ -43,12 +43,9 @@ class Stop with _$Stop {
       checkOutStopId == stopId && timeRecord?.driver?.timeIn != null && timeRecord?.driver?.timeOut == null;
   String get formattedStopDate {
     if (stopDate == null) return '-';
-    var format = companyShippingHours.isNotNullOrEmpty
-        ? 'MMM d, yyyy @ $companyShippingHours'
-        : appointment.isNullOrEmpty
-            ? 'MMM d, yyyy'
-            : 'MMM d, yyyy @ HH:mm';
-    return DateFormat(format).format(stopDate!);
+    var format = appointment.isNullOrEmpty ? 'MMM d, yyyy' : 'MMM d, yyyy @ HH:mm';
+    return DateFormat(format).format(stopDate!) +
+        (companyShippingHours.isNotNullOrEmpty ? ' $companyShippingHours' : "");
   }
 
   String get tripCardAddress {
