@@ -32,6 +32,7 @@ class Stop with _$Stop {
     @JsonKey(name: 'Longitude') String? longitude,
     @JsonKey(name: 'LoadingType') String? loadingType,
     @JsonKey(name: 'Address') Address? address,
+    @JsonKey(name: 'CompanyShippingHours') String? companyShippingHours,
   }) = _Stop;
 
   factory Stop.fromJson(Map<String, dynamic> json) => _$StopFromJson(json);
@@ -40,9 +41,16 @@ class Stop with _$Stop {
 
   bool canCheckOut(String? checkOutStopId) =>
       checkOutStopId == stopId && timeRecord?.driver?.timeIn != null && timeRecord?.driver?.timeOut == null;
-  String get formattedStopDate => stopDate == null
-      ? '-'
-      : DateFormat(appointment.isNullOrEmpty ? 'MMM d, yyyy' : 'MMM d, yyyy @ HH:mm').format(stopDate!);
+  String get formattedStopDate {
+    if (stopDate == null) return '-';
+    var format = companyShippingHours.isNotNullOrEmpty
+        ? 'MMM d, yyyy @ $companyShippingHours'
+        : appointment.isNullOrEmpty
+            ? 'MMM d, yyyy'
+            : 'MMM d, yyyy @ HH:mm';
+    return DateFormat(format).format(stopDate!);
+  }
+
   String get tripCardAddress {
     if (address == null) return "-";
     return '${address!.street.isNotNullOrEmpty ? address!.street : "-"} \n${address!.city.isNotNullOrEmpty ? address!.city : "-"}, ${address!.state.isNotNullOrEmpty ? address!.state : "-"} ${address!.zip.isNotNullOrEmpty ? address!.zip : ""}';
