@@ -45,7 +45,7 @@ class Stop with _$Stop {
     if (stopDate == null) return '-';
     var format = appointment.isNullOrEmpty ? 'MMM d, yyyy' : 'MMM d, yyyy @ HH:mm';
     return DateFormat(format).format(stopDate!) +
-        (companyShippingHours.isNotNullOrEmpty ? ' $companyShippingHours' : "");
+        (companyShippingHours.isNotNullOrEmpty ? ' ($companyShippingHours)' : "");
   }
 
   String get tripCardAddress {
