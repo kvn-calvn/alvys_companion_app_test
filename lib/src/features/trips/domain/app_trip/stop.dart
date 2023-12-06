@@ -49,6 +49,10 @@ class Stop with _$Stop {
 
   bool canCheckOut(String? checkOutStopId) =>
       checkOutStopId == stopId && timeRecord?.driver?.timeIn != null && timeRecord?.driver?.timeOut == null;
+
+  bool canCheckInNew(String? checkInStopId) => checkInStopId == stopId && arrived == null;
+
+  bool canCheckOutNew(String? checkOutStopId) => checkOutStopId == stopId && arrived != null && departed == null;
   String get formattedStopDate {
     if (stopDate == null) return '-';
     var format = appointment.isNullOrEmpty ? 'MMM d, yyyy' : 'MMM d, yyyy @ HH:mm';
@@ -58,7 +62,7 @@ class Stop with _$Stop {
   String get timeWindow {
     var timeFormat = DateFormat('HH:mm');
     return scheduleType.equalsIgnoreCase(ScheduleType.firstComeFirstServe)
-        ? ' (${timeFormat.formatNullDate(stopOpenDate?.localDate)} - ${timeFormat.formatNullDate(stopCloseDate?.localDate)})'
+        ? ' (${timeFormat.formatNullDate(stopOpenDate?.localDate)} - ${timeFormat.formatNullDate(stopCloseDate?.localDate)}) ${ScheduleType.firstComeFirstServe.toUpperCase()}'
         : "";
   }
 
