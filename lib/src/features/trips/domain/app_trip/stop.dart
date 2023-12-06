@@ -1,3 +1,4 @@
+import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
@@ -33,6 +34,13 @@ class Stop with _$Stop {
     @JsonKey(name: 'LoadingType') String? loadingType,
     @JsonKey(name: 'Address') Address? address,
     @JsonKey(name: 'CompanyShippingHours') String? companyShippingHours,
+    @JsonKey(name: 'ScheduleType') String? scheduleType,
+    @JsonKey(name: 'AppointmentDate') DateTimeTZ? appointmentDate,
+    @JsonKey(name: 'StopOpenDate') DateTimeTZ? stopOpenDate,
+    @JsonKey(name: 'StopCloseDate') DateTimeTZ? stopCloseDate,
+    @JsonKey(name: 'ETA') DateTimeTZ? eta,
+    @JsonKey(name: 'Arrived') DateTimeTZ? arrived,
+    @JsonKey(name: 'Departed') DateTimeTZ? departed,
   }) = _Stop;
 
   factory Stop.fromJson(Map<String, dynamic> json) => _$StopFromJson(json);
@@ -44,8 +52,14 @@ class Stop with _$Stop {
   String get formattedStopDate {
     if (stopDate == null) return '-';
     var format = appointment.isNullOrEmpty ? 'MMM d, yyyy' : 'MMM d, yyyy @ HH:mm';
-    return DateFormat(format).format(stopDate!) +
-        (companyShippingHours.isNotNullOrEmpty ? ' ($companyShippingHours)' : "");
+    return DateFormat(format).format(appointmentDate?.localDate ?? stopDate!) + timeWindow;
+  }
+
+  String get timeWindow {
+    var timeFormat = DateFormat('HH:mm');
+    return scheduleType.equalsIgnoreCase(ScheduleType.firstComeFirstServe)
+        ? ' (${timeFormat.formatNullDate(stopOpenDate?.localDate)} - ${timeFormat.formatNullDate(stopCloseDate?.localDate)})'
+        : "";
   }
 
   String get tripCardAddress {
@@ -62,4 +76,16 @@ class Note with _$Note {
   }) = _Note;
 
   factory Note.fromJson(Map<String, dynamic> json) => _$NoteFromJson(json);
+}
+
+@freezed
+class DateTimeTZ with _$DateTimeTZ {
+  factory DateTimeTZ({
+    @JsonKey(name: 'LocalDate') required DateTime localDate,
+    @JsonKey(name: 'UtcDate') required DateTime utcDate,
+    @JsonKey(name: 'OffsetMinutes') required int offsetMinutes,
+    @JsonKey(name: 'TimeZoneId') required String timeZoneId,
+  }) = _DateTimeTZ;
+
+  factory DateTimeTZ.fromJson(Map<String, dynamic> json) => _$DateTimeTZFromJson(json);
 }
