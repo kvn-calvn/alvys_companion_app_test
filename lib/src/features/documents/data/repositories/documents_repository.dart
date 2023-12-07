@@ -62,7 +62,7 @@ class AppDocumentRepository<C, T> implements DocumentsRepository<C, T> {
     var tenant =
         user.userTenants.firstWhereOrNull((element) => element.companyCode.equalsIgnoreCase(trip.companyCode!));
     var fileName =
-        '${trip.tripNumber}_${tenant?.assetId ?? user.id!}_${docData.value}_${(DateTime.now().millisecondsSinceEpoch % 1000000).ceil()}.pdf';
+        '${trip.tripNumber}_${docData.value}_${tenant?.assetId ?? user.id!}_${(DateTime.now().millisecondsSinceEpoch % 1000000).ceil()}.pdf';
     var data = await MultipartFile.fromPath(docData.value, document.path, filename: fileName);
     await httpClient.upload<T>(Uri.parse(ApiRoutes.tripDocument(trip.id!)), trip.companyCode!,
         files: [data], onProgress: fileProgress.updateProgress);
