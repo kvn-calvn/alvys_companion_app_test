@@ -138,7 +138,7 @@ class StopDetails extends ConsumerWidget {
                           'Contact',
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
-                        Text(
+                        SelectableText(
                           currentStop.phone ?? "-",
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
