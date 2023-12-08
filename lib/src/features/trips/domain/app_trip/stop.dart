@@ -36,8 +36,8 @@ class Stop with _$Stop {
     @JsonKey(name: 'CompanyShippingHours') String? companyShippingHours,
     @JsonKey(name: 'ScheduleType') String? scheduleType,
     @JsonKey(name: 'AppointmentDate') DateTimeTZ? appointmentDate,
-    @JsonKey(name: 'StopOpenDate') DateTimeTZ? stopOpenDate,
-    @JsonKey(name: 'StopCloseDate') DateTimeTZ? stopCloseDate,
+    @JsonKey(name: 'StopWindowBegin') DateTimeTZ? stopWindowBegin,
+    @JsonKey(name: 'StopWindowEnd') DateTimeTZ? stopWindowEnd,
     @JsonKey(name: 'ETA') DateTimeTZ? eta,
     @JsonKey(name: 'Arrived') DateTimeTZ? arrived,
     @JsonKey(name: 'Departed') DateTimeTZ? departed,
@@ -61,8 +61,8 @@ class Stop with _$Stop {
 
   String get timeWindow {
     var timeFormat = DateFormat('HH:mm');
-    return scheduleType.equalsIgnoreCase(ScheduleType.firstComeFirstServe)
-        ? ' (${timeFormat.formatNullDate(stopOpenDate?.localDate)} - ${timeFormat.formatNullDate(stopCloseDate?.localDate)}) ${ScheduleType.firstComeFirstServe.toUpperCase()}'
+    return scheduleType.equalsIgnoreCase(ScheduleType.firstComeFirstServe) && stopWindowBegin.isNotNull
+        ? '\n(${timeFormat.formatNullDate(stopWindowBegin?.localDate)}${stopWindowEnd.isNotNull ? ' - ${timeFormat.formatNullDate(stopWindowEnd?.localDate)}' : ''}) ${ScheduleType.firstComeFirstServe.toUpperCase()}'
         : "";
   }
 

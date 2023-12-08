@@ -1,4 +1,5 @@
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../constants/api_routes.dart';
@@ -20,6 +21,7 @@ class AppTripRepository implements TripRepository {
   @override
   Future<List<AppTrip>> getTrips<T>() async {
     var res = await httpClient.getData<T>(Uri.parse(ApiRoutes.trips), null);
+    debugPrint(res.body, wrapWidth: 100);
     return (res.body.toDecodedJson as List).map((x) => AppTrip.fromJson(x)).toList();
   }
 
