@@ -152,7 +152,7 @@ class StopDetails extends ConsumerWidget {
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         Text(
-                          DateFormat.yMMMd().addPattern('@').add_Hm().formatNullDate(currentStop.actualStopdate),
+                          currentStop.formattedStopDate,
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
