@@ -62,7 +62,7 @@ class Stop with _$Stop {
   String get timeWindow {
     var timeFormat = DateFormat('HH:mm');
     return scheduleType.equalsIgnoreCase(ScheduleType.firstComeFirstServe) && stopWindowBegin.isNotNull
-        ? '\n(${timeFormat.formatNullDate(stopWindowBegin?.localDate)}${stopWindowEnd.isNotNull ? ' - ${timeFormat.formatNullDate(stopWindowEnd?.localDate)}' : ''}) ${ScheduleType.firstComeFirstServe.toUpperCase()}'
+        ? '\n${ScheduleType.firstComeFirstServe.toUpperCase()}: ${timeFormat.formatNullDate(stopWindowBegin?.localDate)}${stopWindowEnd.isNotNull ? ' - ${timeFormat.formatNullDate(stopWindowEnd?.localDate)}' : ''}'
         : "";
   }
 
