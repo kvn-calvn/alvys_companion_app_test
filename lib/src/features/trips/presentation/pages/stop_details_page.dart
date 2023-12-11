@@ -154,6 +154,7 @@ class StopDetails extends ConsumerWidget {
                         Text(
                           currentStop.formattedStopDate,
                           style: Theme.of(context).textTheme.bodyMedium,
+                          textAlign: TextAlign.right,
                         ),
                       ],
                     ),
