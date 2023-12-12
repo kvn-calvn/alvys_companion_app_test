@@ -1,3 +1,4 @@
+import 'package:alvys3/src/features/trips/presentation/pages/stop_details_page.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -87,8 +88,7 @@ class TripCard extends ConsumerWidget {
                                 constraints: BoxConstraints(
                                   maxWidth: constraints.maxWidth * 0.8,
                                 ),
-                                child: Text(trip.stops.firstOrNull?.formattedStopDate ?? '',
-                                    style: Theme.of(context).textTheme.bodyMedium!),
+                                child: StopDateDetails(args: trip.stops.firstOrNull?.formattedStopDate),
                               )
                             ],
                           ),
@@ -129,8 +129,7 @@ class TripCard extends ConsumerWidget {
                                 constraints: BoxConstraints(
                                   maxWidth: constraints.maxWidth * 0.8,
                                 ),
-                                child: Text(trip.stops.lastOrNull?.formattedStopDate ?? '-',
-                                    style: Theme.of(context).textTheme.bodyMedium!),
+                                child: StopDateDetails(args: trip.stops.lastOrNull?.formattedStopDate),
                               ),
                             ],
                           ),

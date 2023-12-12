@@ -45,6 +45,9 @@ class Stop with _$Stop {
 
   factory Stop.fromJson(Map<String, dynamic> json) => _$StopFromJson(json);
   const Stop._();
+
+  DateFormat get stopTimeFormat => DateFormat('MMM d, yyyy @ HH:mm');
+  DateFormat get oldStopDateFormat => DateFormat(appointment.isNullOrEmpty ? 'MMM d, yyyy' : 'MMM d, yyyy @ HH:mm');
   bool canCheckIn(String? checkInStopId) => checkInStopId == stopId && timeRecord?.driver?.timeIn == null;
 
   bool canCheckOut(String? checkOutStopId) =>
@@ -53,22 +56,50 @@ class Stop with _$Stop {
   bool canCheckInNew(String? checkInStopId) => checkInStopId == stopId && arrived == null;
 
   bool canCheckOutNew(String? checkOutStopId) => checkOutStopId == stopId && arrived != null && departed == null;
-  String get formattedStopDate {
-    if (stopDate == null) return '-';
-    var format = appointment.isNullOrEmpty ? 'MMM d, yyyy' : 'MMM d, yyyy @ HH:mm';
-    return DateFormat(format).format(appointmentDate?.localDate ?? stopDate!) + timeWindow;
+  StopTimeArgs get formattedStopDate {
+    return switch (scheduleType?.toUpperCase()) {
+      ScheduleType.firstComeFirstServe => firstComeFirstServe,
+      ScheduleType.appointment => appointmentDateTime,
+      _ => StopTimeArgs(title: '', date: oldStopDateFormat.formatNullDate(stopDate))
+    };
   }
 
-  String get timeWindow {
-    var timeFormat = DateFormat('HH:mm');
+  StopTimeArgs get firstComeFirstServe {
     return scheduleType.equalsIgnoreCase(ScheduleType.firstComeFirstServe) && stopWindowBegin.isNotNull
-        ? '\n${ScheduleType.firstComeFirstServe.toUpperCase()}: ${timeFormat.formatNullDate(stopWindowBegin?.localDate)}${stopWindowEnd.isNotNull ? ' - ${timeFormat.formatNullDate(stopWindowEnd?.localDate)}' : ''}'
-        : "";
+        ? StopTimeArgs(
+            title: '${ScheduleType.firstComeFirstServe.toUpperCase()}: ',
+            date:
+                '${stopTimeFormat.formatNullDate(stopWindowBegin?.localDate)}${stopWindowEnd.isNotNull ? '\n${stopTimeFormat.formatNullDate(stopWindowEnd?.localDate)}' : ''}')
+        : StopTimeArgs.empty();
+  }
+
+  StopTimeArgs get appointmentDateTime {
+    return scheduleType.equalsIgnoreCase(ScheduleType.appointment) && appointmentDate.isNotNull
+        ? StopTimeArgs(
+            title: '${ScheduleType.appointment.toUpperCase()}: ',
+            date: stopTimeFormat.formatNullDate(appointmentDate?.localDate))
+        : StopTimeArgs.empty();
   }
 
   String get tripCardAddress {
     if (address == null) return "-";
     return '${address!.street.isNotNullOrEmpty ? address!.street : "-"} \n${address!.city.isNotNullOrEmpty ? address!.city : "-"}, ${address!.state.isNotNullOrEmpty ? address!.state : "-"} ${address!.zip.isNotNullOrEmpty ? address!.zip : ""}';
+  }
+}
+
+class StopTimeArgs {
+  final String title, date;
+
+  StopTimeArgs({required this.title, required this.date});
+
+  StopTimeArgs.empty()
+      : date = '',
+        title = '';
+  bool get isEmpty => date.isEmpty && title.isEmpty;
+
+  @override
+  String toString() {
+    return title + date;
   }
 }
 

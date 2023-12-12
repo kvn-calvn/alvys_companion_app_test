@@ -8,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import '../constants/color.dart';
 import '../features/trips/domain/app_trip/stop.dart';
 import '../features/trips/presentation/controller/trip_page_controller.dart';
+import '../features/trips/presentation/pages/stop_details_page.dart';
 import '../features/tutorial/tutorial_controller.dart';
 import '../network/http_client.dart';
 import '../utils/dummy_data.dart';
@@ -100,7 +101,7 @@ class StopCard extends ConsumerWidget {
                                 ],
                               ),
                             ),
-                            Text(stop.formattedStopDate, style: Theme.of(context).textTheme.bodySmall),
+                            StopDateDetails(args: stop.formattedStopDate, style: Theme.of(context).textTheme.bodySmall),
                             const SizedBox(height: 6),
                             StopLoadingTypeWidget(stop),
                           ],

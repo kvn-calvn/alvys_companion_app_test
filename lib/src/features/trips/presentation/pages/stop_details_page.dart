@@ -1,3 +1,5 @@
+import 'package:alvys3/src/features/trips/domain/app_trip/stop.dart';
+
 import '../../../../common_widgets/stop_card.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
@@ -152,7 +154,7 @@ class StopDetails extends ConsumerWidget {
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         Text(
-                          currentStop.formattedStopDate,
+                          currentStop.formattedStopDate.toString(),
                           style: Theme.of(context).textTheme.bodyMedium,
                           textAlign: TextAlign.right,
                         ),
@@ -365,5 +367,23 @@ class ItemsWidget extends StatelessWidget {
               )),
         )
     ]);
+  }
+}
+
+class StopDateDetails extends StatelessWidget {
+  final StopTimeArgs? args;
+  final TextStyle? style;
+  const StopDateDetails({super.key, required this.args, this.style});
+
+  @override
+  Widget build(BuildContext context) {
+    return DefaultTextStyle(
+        style: (style ?? Theme.of(context).textTheme.bodyMedium!).copyWith(height: 1.2),
+        child: args?.isEmpty ?? true
+            ? const Text('-')
+            : Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [Text(args!.title), Text(args!.date)],
+              ));
   }
 }
