@@ -12,7 +12,7 @@ import '../utils/global_error_handler.dart';
 import '../utils/magic_strings.dart';
 
 class NetworkNotifier extends Notifier<bool> {
-  Map<String, IAppErrorHandler> get refreshControllers => {
+  Map<String, IErrorHandler> get refreshControllers => {
         RouteName.trips.name: ref.read(tripControllerProvider.notifier),
         RouteName.tripDetails.name: ref.read(tripControllerProvider.notifier),
       };
@@ -26,11 +26,14 @@ class NetworkNotifier extends Notifier<bool> {
   late StreamSubscription<ConnectivityResult>? connectionSubscription;
   late StreamSubscription<bool>? internetSubscription;
   NetworkNotifier([this.initConnection]) {
-    checker = InternetConnectionChecker.createInstance(checkTimeout: const Duration(minutes: 2));
+    checker = InternetConnectionChecker.createInstance(
+        checkTimeout: const Duration(minutes: 2), checkInterval: const Duration(seconds: 45));
   }
   @override
   bool build() {
     state = initConnection ?? true;
+    internetUpdate = internetConnectionStream;
+    connectionUpdate = Connectivity().onConnectivityChanged;
     initState();
     return state;
   }
@@ -66,7 +69,7 @@ class NetworkNotifier extends Notifier<bool> {
 
   void setInternetState(bool internetState) => state = internetState;
   Stream<bool> get internetConnectionStream {
-    return Stream.periodic(const Duration(seconds: 30), (index) => checker.hasConnection).asyncMap((event) => event);
+    return checker.onStatusChange.map((event) => event == InternetConnectionStatus.connected);
   }
 
   void updateOverlay(bool oldState) {

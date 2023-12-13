@@ -110,9 +110,11 @@ class _LoadListPageState extends ConsumerState<LoadListPage> with TickerProvider
             key: ref.read(tutorialProvider).refresh,
             onPressed: () async {
               await ref.read(tripControllerProvider.notifier).refreshTrips(true);
-              ref.read(websocketProvider).restartConnection();
-              ref.read(httpClientProvider).telemetryClient.trackEvent(name: "refresh_button_tapped");
-              await FirebaseAnalytics.instance.logEvent(name: "refresh_button_tapped");
+              if (context.mounted) {
+                ref.read(websocketProvider).restartConnection();
+                ref.read(httpClientProvider).telemetryClient.trackEvent(name: "refresh_button_tapped");
+                await FirebaseAnalytics.instance.logEvent(name: "refresh_button_tapped");
+              }
             },
             icon: const Icon(Icons.refresh),
           )

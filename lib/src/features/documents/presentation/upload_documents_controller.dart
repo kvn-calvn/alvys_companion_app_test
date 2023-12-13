@@ -25,7 +25,7 @@ import '../domain/upload_documents_state/upload_documents_state.dart';
 import 'docs_controller.dart';
 
 class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocumentsState, UploadDocumentArgs>
-    implements IAppErrorHandler {
+    implements IErrorHandler {
   late AppDocumentRepository<DocumentsNotifier, UploadDocumentsController> docRepo;
   late TripController trips;
   late DocumentsNotifier docList;
@@ -120,7 +120,7 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
 
     if (context.mounted) {
       Navigator.of(context, rootNavigator: true).pop();
-      Navigator.pop(context);
+      context.pop();
       if (arg.documentType == DisplayDocumentType.tripDocuments) {
         ref.read(tripControllerProvider.notifier).refreshCurrentTrip(arg.tripId!);
       }
@@ -133,7 +133,7 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
     switch (arg.documentType) {
       case DisplayDocumentType.tripDocuments:
         var trip = trips.getTrip(arg.tripId!);
-        await docRepo.uploadTripDocuments(trip!.companyCode!, state.documentType!, pdfFile, arg.tripId!);
+        await docRepo.uploadTripDocuments(userData.driver!, state.documentType!, pdfFile, trip!);
         await trips.refreshCurrentTrip(arg.tripId!);
       case DisplayDocumentType.personalDocuments:
         await docRepo.uploadPersonalDocuments(userData.getCompanyOwned.companyCode!, state.documentType!, pdfFile);

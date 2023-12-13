@@ -116,3 +116,7 @@ class ContractorType {
   static const String companyDriver = "Company Driver";
   static const String contractor = "Contractor";
 }
+
+class ScheduleType {
+  static const String firstComeFirstServe = 'FCFS', appointment = 'APPT';
+}

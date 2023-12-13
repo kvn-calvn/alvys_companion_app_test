@@ -3,7 +3,7 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import '../network/client_error/client_error.dart';
 
-class AlvysClientException implements ControllerException {
+class AlvysClientException implements AppControllerException {
   late ClientError error;
   late Type controllerType;
   AlvysClientException(dynamic msg, this.controllerType) {
@@ -20,7 +20,7 @@ class AlvysClientException implements ControllerException {
   String get title => error.title ?? error.errors.entries.firstOrNull?.key ?? "Client Error";
 }
 
-class AlvysDependencyException implements ControllerException {
+class AlvysDependencyException implements AppControllerException {
   late DependencyError error;
   late Type controllerType;
   AlvysDependencyException(dynamic msg, this.controllerType) {
@@ -38,7 +38,7 @@ class AlvysDependencyException implements ControllerException {
   String get title => "Dependency Failure Error";
 }
 
-class AlvysServiceUnavailableException implements ControllerException {
+class AlvysServiceUnavailableException implements AppControllerException {
   late DependencyError error;
   late Type controllerType;
   AlvysServiceUnavailableException(this.controllerType);
@@ -53,7 +53,7 @@ class AlvysServiceUnavailableException implements ControllerException {
   String get title => "Service Unavailable";
 }
 
-class AlvysEntityNotFoundException implements ControllerException {
+class AlvysEntityNotFoundException implements AppControllerException {
   late NotFoundError error;
   late Type controllerType;
   AlvysEntityNotFoundException(dynamic msg, this.controllerType) {
@@ -94,38 +94,38 @@ class AlvysDioError extends DioException {
   AlvysDioError({required super.requestOptions});
 }
 
-class AlvysTimeoutException extends ControllerException {
+class AlvysTimeoutException extends AppControllerException {
   final Type s;
   AlvysTimeoutException(this.s)
       : super('Request Timeout', 'The request for this resource has timed out. Try again later', s);
 }
 
-class AlvysSocketException extends ControllerException {
+class AlvysSocketException extends AppControllerException {
   final Type s;
   AlvysSocketException(this.s)
       : super('Connection Error',
             'There was an error with connecting to the server. Check your internet connection and try again later', s);
 }
 
-class AlvysUnauthorizedException extends ControllerException {
+class AlvysUnauthorizedException extends AppControllerException {
   final Type s;
   AlvysUnauthorizedException(this.s)
       : super('Unauthorized', 'You are not authorized to access this item. Re-login and try again', s);
 }
 
-class ApiServerException extends ControllerException {
+class ApiServerException extends AppControllerException {
   final Type s;
   ApiServerException(this.s) : super('Server Error', 'A server error has occured. Try again later', s);
 }
 
-class ControllerException implements Exception {
+class AppControllerException implements Exception {
   final String message, title;
   final Type source;
 
-  ControllerException(this.title, this.message, this.source);
+  AppControllerException(this.title, this.message, this.source);
 }
 
-abstract class IAppErrorHandler {
+abstract class IErrorHandler {
   FutureOr<void> onError(Exception ex);
   FutureOr<void> refreshPage(String page);
 }

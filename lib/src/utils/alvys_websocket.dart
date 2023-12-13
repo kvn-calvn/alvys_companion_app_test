@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:signalr_netcore/ihub_protocol.dart';
-import 'package:signalr_netcore/signalr_client.dart';
+import 'package:signalr_netcore2/ihub_protocol.dart';
+import 'package:signalr_netcore2/signalr_client.dart';
 
 import '../constants/api_routes.dart';
 import '../features/authentication/domain/models/user_details/user_details.dart';

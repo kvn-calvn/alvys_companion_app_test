@@ -46,7 +46,7 @@ Future<void> mainCommon() async {
       options: DefaultFirebaseOptions.currentPlatform,
     );
     ErrorWidget.builder = (details) {
-      if (details.exception is ControllerException) {
+      if (details.exception is AppControllerException) {
         return const Center(child: CircularProgressIndicator.adaptive());
       }
       return ErrorWidget(details.exception);

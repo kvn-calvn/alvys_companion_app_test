@@ -25,7 +25,7 @@ import '../domain/models/update_driver_status_dto/update_driver_status_dto.dart'
 import '../domain/models/update_user_dto/update_user_dto.dart';
 import '../domain/models/user_details/user_details.dart';
 
-class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppErrorHandler {
+class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IErrorHandler {
   final DriverUser? initDriver;
   String? status;
   late AuthRepository<AuthProviderNotifier> authRepo;
@@ -76,6 +76,9 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppError
       driverStatus = DriverStatus.initStatus(driverAsset.status).titleCase;
     }
     state = AsyncValue.data(state.value!.copyWith(driver: driverRes, driverStatus: driverStatus?.titleCase));
+    if (driverStatus.equalsIgnoreCase(DriverStatus.offDuty)) {
+      await initDriverStatus(DriverStatus.online);
+    }
     await FirebaseAnalytics.instance.setUserId(id: driverRes.phone);
     await FirebaseAnalytics.instance.setUserProperty(name: 'driverId', value: driverRes.phone);
     await FirebaseCrashlytics.instance.setUserIdentifier(driverRes.phone.toString());
@@ -137,6 +140,11 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppError
   void updateUser(DriverUser user) {
     if (state.value?.driver != null) {
       state = AsyncValue.data(state.value!.copyWith(driver: user));
+      pref.setString(SharedPreferencesKey.driverData.name, user.toJson().toJsonEncodedString);
+      pref.setString(
+        SharedPreferencesKey.driverToken.name,
+        base64.encode(utf8.encode("${user.userName}:${user.appToken ?? user.currentToken?.accessToken}")),
+      );
     }
   }
 
@@ -149,12 +157,16 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IAppError
     if (s != null) {
       status = state.value!.driverStatus;
       state = AsyncValue.data(state.value!.copyWith(driverStatus: s));
-      var location = await Helpers.getUserPosition(() {});
-      var dto = UpdateDriverStatusDTO(
-          status: s.toUpperCase(), id: '', latitude: location.latitude, longitude: location.longitude);
-      await authRepo.updateDriverStatus(getCompanyOwned.companyCode!, dto);
+      await initDriverStatus(s);
       await pref.setString(SharedPreferencesKey.driverStatus.name, s);
     }
+  }
+
+  Future<void> initDriverStatus(String status) async {
+    var location = await Helpers.getUserPosition(() {});
+    var dto = UpdateDriverStatusDTO(
+        status: status.toUpperCase(), id: '', latitude: location.latitude, longitude: location.longitude);
+    await authRepo.updateDriverStatus(getCompanyOwned.companyCode!, dto);
   }
 
   void updateUserFromDetails(UserDetails user) {

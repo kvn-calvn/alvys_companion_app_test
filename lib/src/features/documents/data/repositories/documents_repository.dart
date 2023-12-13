@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:alvys3/src/features/trips/domain/app_trip/app_trip.dart';
+
 import '../../presentation/docs_controller.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,7 +20,7 @@ abstract class DocumentsRepository<C, T> {
   Future<List<AppDocument>> getPaystubs(DriverUser user, [int top = 10]);
   Future<List<AppDocument>> getPersonalDocs(String companyCode, DriverUser user);
   Future<List<AppDocument>> getTripReportDocs(String companyCode, DriverUser user);
-  Future<void> uploadTripDocuments(String companyCode, UploadDocumentOptions docData, File document, String tripId);
+  Future<void> uploadTripDocuments(DriverUser user, UploadDocumentOptions docData, File document, AppTrip trip);
   Future<void> uploadPersonalDocuments(String companyCode, UploadDocumentOptions docData, File document);
   Future<void> uploadTripReport(String companyCode, UploadDocumentOptions docData, File document);
 }
@@ -56,10 +58,13 @@ class AppDocumentRepository<C, T> implements DocumentsRepository<C, T> {
   }
 
   @override
-  Future<void> uploadTripDocuments(
-      String companyCode, UploadDocumentOptions docData, File document, String tripId) async {
-    var data = await MultipartFile.fromPath(docData.value, document.path);
-    await httpClient.upload<T>(Uri.parse(ApiRoutes.tripDocument(tripId)), companyCode,
+  Future<void> uploadTripDocuments(DriverUser user, UploadDocumentOptions docData, File document, AppTrip trip) async {
+    var tenant =
+        user.userTenants.firstWhereOrNull((element) => element.companyCode.equalsIgnoreCase(trip.companyCode!));
+    var fileName =
+        '${trip.tripNumber}_${docData.value}_${tenant?.assetId ?? user.id!}_${(DateTime.now().millisecondsSinceEpoch % 1000000).ceil()}.pdf';
+    var data = await MultipartFile.fromPath(docData.value, document.path, filename: fileName);
+    await httpClient.upload<T>(Uri.parse(ApiRoutes.tripDocument(trip.id!)), trip.companyCode!,
         files: [data], onProgress: fileProgress.updateProgress);
   }
 

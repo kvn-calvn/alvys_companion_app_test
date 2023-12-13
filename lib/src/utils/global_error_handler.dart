@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import '../features/documents/presentation/docs_controller.dart';
 
 import '../features/authentication/presentation/edit_profile_controller.dart';
 import '../features/echeck/presentation/controller/echeck_page_controller.dart';
 import '../features/trips/presentation/controller/trip_page_controller.dart';
+import '../routing/custom_observer.dart';
 import 'provider_args_saver.dart';
 
 import '../network/http_client.dart';
@@ -36,7 +39,7 @@ final globalErrorHandlerProvider = Provider<GlobalErrorHandler>((ref) {
 class GlobalErrorHandler {
   final AlvysHttpClient telemetry;
   LabeledGlobalKey<NavigatorState> navKey = LabeledGlobalKey<NavigatorState>("MainNavKey");
-  Map<Type, IAppErrorHandler Function()> Function() providers;
+  Map<Type, IErrorHandler Function()> Function() providers;
   AuthProviderNotifier Function() auth;
   GlobalErrorHandler({required this.providers, required this.telemetry, required this.auth});
   void handle(FlutterErrorDetails? details, bool flutterError, [Object? error, StackTrace? trace]) {
@@ -49,15 +52,19 @@ class GlobalErrorHandler {
             "Error": details!.exception.toString(),
             "StackTrace": details.stack.toString(),
             "ErrorType": "Flutter error",
+            "Page": '${CustomObserver.instance.currentRoute}',
           });
           FlutterError.presentError(details);
         } else {
-          telemetry.telemetryClient
-              .trackTrace(severity: Severity.error, message: 'mobile_app_client_error', additionalProperties: {
-            "Error": error.toString(),
-            "StackTrace": trace.toString(),
-            "ErrorType": "Regular",
-          });
+          if (error is! SocketException) {
+            telemetry.telemetryClient
+                .trackTrace(severity: Severity.error, message: 'mobile_app_client_error', additionalProperties: {
+              "Error": error.toString(),
+              "StackTrace": trace.toString(),
+              "ErrorType": "Regular",
+              "Page": '${CustomObserver.instance.currentRoute}',
+            });
+          }
           debugPrint("$error");
           debugPrintStack(stackTrace: trace);
         }
@@ -80,8 +87,8 @@ class GlobalErrorHandler {
       case const (ApiServerException):
       case const (AlvysDependencyException):
       case const (AlvysServiceUnavailableException):
-      case const (ControllerException):
-        var e = error as ControllerException;
+      case const (AppControllerException):
+        var e = error as AppControllerException;
         onError = () => executeOnError(e.source, e);
         message = e.message;
         title = e.title;

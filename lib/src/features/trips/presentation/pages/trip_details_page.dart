@@ -166,7 +166,7 @@ class TripDetails extends ConsumerWidget {
     return RefreshIndicator(
       onRefresh: () async {
         await ref.read(tripControllerProvider.notifier).refreshCurrentTrip(tripId);
-        ref.read(websocketProvider).restartConnection();
+        if (context.mounted) ref.read(websocketProvider).restartConnection();
       },
       child: ListView(
           scrollDirection: Axis.vertical,

@@ -110,30 +110,26 @@ class AlvysHttpClient {
 
   Future<Response> getData<T>(Uri uri, String? companyCode, {Map<String, String>? headers}) {
     return _executeRequest<T>(
-        companyCode, () async => telemetryHttpClient.get(uri, headers: getHeaders(companyCode, headers)));
+        companyCode, () => telemetryHttpClient.get(uri, headers: getHeaders(companyCode, headers)));
   }
 
   Future<Response> postData<T>(Uri uri, String? companyCode,
       {Map<String, String>? headers, Object? body, Encoding? encoding}) {
-    return _executeRequest<T>(
-        companyCode,
-        () async =>
-            telemetryHttpClient.post(uri, headers: getHeaders(companyCode, headers), body: body, encoding: encoding));
+    return _executeRequest<T>(companyCode,
+        () => telemetryHttpClient.post(uri, headers: getHeaders(companyCode, headers), body: body, encoding: encoding));
   }
 
   Future<Response> putData<T>(Uri uri, String? companyCode,
       {Map<String, String>? headers, Object? body, Encoding? encoding}) {
-    return _executeRequest<T>(
-        companyCode,
-        () async =>
-            telemetryHttpClient.put(uri, headers: getHeaders(companyCode, headers), body: body, encoding: encoding));
+    return _executeRequest<T>(companyCode,
+        () => telemetryHttpClient.put(uri, headers: getHeaders(companyCode, headers), body: body, encoding: encoding));
   }
 
   Future<Response> deleteData<T>(Uri uri, String? companyCode,
       {Map<String, String>? headers, Object? body, Encoding? encoding}) {
     return _executeRequest<T>(
         companyCode,
-        () async =>
+        () =>
             telemetryHttpClient.delete(uri, headers: getHeaders(companyCode, headers), body: body, encoding: encoding));
   }
 
@@ -141,7 +137,7 @@ class AlvysHttpClient {
       {Map<String, String>? headers, Object? body, Encoding? encoding}) {
     return _executeRequest<T>(
         companyCode,
-        () async =>
+        () =>
             telemetryHttpClient.patch(uri, headers: getHeaders(companyCode, headers), body: body, encoding: encoding));
   }
 

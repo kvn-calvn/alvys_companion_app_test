@@ -24,7 +24,7 @@ class TripListState with _$TripListState {
   List<AppTrip> get activeTrips {
     return trips
         .where((element) => element.status!.inIgnoreCase([TripStatus.inTransit, TripStatus.dispatched]))
-        .orderBy((element) => element.deliveryDate, OrderDirection.desc)
+        .orderBy((element) => element.deliveryDate, OrderDirection.asc)
         .toList();
   }
 

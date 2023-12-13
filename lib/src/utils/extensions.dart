@@ -107,10 +107,20 @@ extension DateTimeExtn on DateTime? {
     return DateTime.now().isAfter(this!);
   }
 
+  bool get isNullOrAfterNowOnlyDate {
+    if (this == null) return true;
+    return DateTime.now().onlyDate!.isAfter(this!);
+  }
+
   bool isAfterNull(DateTime? other) {
     if (other == null) return true;
     if (this == null) return false;
     return this!.isAfter(other);
+  }
+
+  DateTime? get onlyDate {
+    if (this == null) return null;
+    return DateTime(this!.year, this!.month, this!.day);
   }
 }
 

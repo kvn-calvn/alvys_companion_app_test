@@ -1,3 +1,4 @@
+import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
@@ -32,20 +33,73 @@ class Stop with _$Stop {
     @JsonKey(name: 'Longitude') String? longitude,
     @JsonKey(name: 'LoadingType') String? loadingType,
     @JsonKey(name: 'Address') Address? address,
+    @JsonKey(name: 'CompanyShippingHours') String? companyShippingHours,
+    @JsonKey(name: 'ScheduleType') String? scheduleType,
+    @JsonKey(name: 'AppointmentDate') DateTimeTZ? appointmentDate,
+    @JsonKey(name: 'StopWindowBegin') DateTimeTZ? stopWindowBegin,
+    @JsonKey(name: 'StopWindowEnd') DateTimeTZ? stopWindowEnd,
+    @JsonKey(name: 'ETA') DateTimeTZ? eta,
+    @JsonKey(name: 'Arrived') DateTimeTZ? arrived,
+    @JsonKey(name: 'Departed') DateTimeTZ? departed,
   }) = _Stop;
 
   factory Stop.fromJson(Map<String, dynamic> json) => _$StopFromJson(json);
   const Stop._();
+
+  DateFormat get stopTimeFormat => DateFormat('MMM d, yyyy @ HH:mm');
+  DateFormat get oldStopDateFormat => DateFormat(appointment.isNullOrEmpty ? 'MMM d, yyyy' : 'MMM d, yyyy @ HH:mm');
   bool canCheckIn(String? checkInStopId) => checkInStopId == stopId && timeRecord?.driver?.timeIn == null;
 
   bool canCheckOut(String? checkOutStopId) =>
       checkOutStopId == stopId && timeRecord?.driver?.timeIn != null && timeRecord?.driver?.timeOut == null;
-  String get formattedStopDate => stopDate == null
-      ? '-'
-      : DateFormat(appointment.isNullOrEmpty ? 'MMM d, yyyy' : 'MMM d, yyyy @ HH:mm').format(stopDate!);
+
+  bool canCheckInNew(String? checkInStopId) => checkInStopId == stopId && arrived == null;
+
+  bool canCheckOutNew(String? checkOutStopId) => checkOutStopId == stopId && arrived != null && departed == null;
+  StopTimeArgs get formattedStopDate {
+    return switch (scheduleType?.toUpperCase()) {
+      ScheduleType.firstComeFirstServe => firstComeFirstServe,
+      ScheduleType.appointment => appointmentDateTime,
+      _ => StopTimeArgs(title: '', date: oldStopDateFormat.formatNullDate(stopDate))
+    };
+  }
+
+  StopTimeArgs get firstComeFirstServe {
+    return scheduleType.equalsIgnoreCase(ScheduleType.firstComeFirstServe) && stopWindowBegin.isNotNull
+        ? StopTimeArgs(
+            title: '${ScheduleType.firstComeFirstServe.toUpperCase()}: ',
+            date:
+                '${stopTimeFormat.formatNullDate(stopWindowBegin?.localDate)}${stopWindowEnd.isNotNull ? '\n${stopTimeFormat.formatNullDate(stopWindowEnd?.localDate)}' : ''}')
+        : StopTimeArgs.empty();
+  }
+
+  StopTimeArgs get appointmentDateTime {
+    return scheduleType.equalsIgnoreCase(ScheduleType.appointment) && appointmentDate.isNotNull
+        ? StopTimeArgs(
+            title: '${ScheduleType.appointment.toUpperCase()}: ',
+            date: stopTimeFormat.formatNullDate(appointmentDate?.localDate))
+        : StopTimeArgs.empty();
+  }
+
   String get tripCardAddress {
     if (address == null) return "-";
     return '${address!.street.isNotNullOrEmpty ? address!.street : "-"} \n${address!.city.isNotNullOrEmpty ? address!.city : "-"}, ${address!.state.isNotNullOrEmpty ? address!.state : "-"} ${address!.zip.isNotNullOrEmpty ? address!.zip : ""}';
+  }
+}
+
+class StopTimeArgs {
+  final String title, date;
+
+  StopTimeArgs({required this.title, required this.date});
+
+  StopTimeArgs.empty()
+      : date = '',
+        title = '';
+  bool get isEmpty => date.isEmpty && title.isEmpty;
+
+  @override
+  String toString() {
+    return title + date;
   }
 }
 
@@ -57,4 +111,16 @@ class Note with _$Note {
   }) = _Note;
 
   factory Note.fromJson(Map<String, dynamic> json) => _$NoteFromJson(json);
+}
+
+@freezed
+class DateTimeTZ with _$DateTimeTZ {
+  factory DateTimeTZ({
+    @JsonKey(name: 'LocalDate') required DateTime localDate,
+    @JsonKey(name: 'UtcDate') required DateTime utcDate,
+    @JsonKey(name: 'OffsetMinutes') required int offsetMinutes,
+    @JsonKey(name: 'TimeZoneId') required String timeZoneId,
+  }) = _DateTimeTZ;
+
+  factory DateTimeTZ.fromJson(Map<String, dynamic> json) => _$DateTimeTZFromJson(json);
 }
