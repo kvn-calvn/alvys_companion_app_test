@@ -55,19 +55,24 @@ class ButtonStyle2 extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressAction,
       style: ButtonStyle(
-          elevation: MaterialStateProperty.all(0),
-          backgroundColor: onPressAction == null
-              ? MaterialStateProperty.all<Color>(
-                  ColorManager.secondaryButtonDisabled(
-                      Theme.of(context).brightness),
-                )
-              : MaterialStateProperty.all<Color>(
-                  ColorManager.secondaryButton(Theme.of(context).brightness),
-                )),
+        elevation: MaterialStateProperty.all(0),
+        backgroundColor: onPressAction == null
+            ? MaterialStateProperty.all<Color>(
+                ColorManager.secondaryButtonDisabled(
+                    Theme.of(context).brightness),
+              )
+            : MaterialStateProperty.all<Color>(
+                ColorManager.secondaryButton(Theme.of(context).brightness),
+              ),
+      ),
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10.0),
         child: Text(
           title,
+          style: TextStyle(
+              color: onPressAction == null
+                  ? ColorManager.greyColorScheme2
+                  : ColorManager.white),
         ),
       ),
     );

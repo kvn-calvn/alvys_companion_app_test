@@ -14,24 +14,30 @@ class UploadDocuments extends ConsumerStatefulWidget {
   const UploadDocuments({required this.args, super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _UploadDocumentsState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _UploadDocumentsState();
 }
 
 class _UploadDocumentsState extends ConsumerState<UploadDocuments> {
-  UploadDocumentsController get uploadDocsNotifier => ref.read(uploadDocumentsController.call(widget.args).notifier);
+  UploadDocumentsController get uploadDocsNotifier =>
+      ref.read(uploadDocumentsController.call(widget.args).notifier);
   Duration get fadeDuration => const Duration(milliseconds: 350);
   @override
   Widget build(BuildContext context) {
-    final uploadDocsState = ref.watch(uploadDocumentsController.call(widget.args));
+    final uploadDocsState =
+        ref.watch(uploadDocumentsController.call(widget.args));
     return Scaffold(
       body: Stack(
         children: [
           uploadDocsState.pages.isEmpty
-              ? const EmptyView(title: 'No Pages', description: 'Click the add button to add pages.')
+              ? const EmptyView(
+                  title: 'No Pages',
+                  description: 'Click the add button to add pages.')
               : PageView.builder(
                   onPageChanged: uploadDocsNotifier.updatePageNumber,
                   itemCount: uploadDocsState.pages.length,
-                  itemBuilder: (context, index) => DocumentPageView(File(uploadDocsState.pages[index]), widget.args),
+                  itemBuilder: (context, index) => DocumentPageView(
+                      File(uploadDocsState.pages[index]), widget.args),
                 ),
           Positioned(
             bottom: 20,
@@ -41,11 +47,13 @@ class _UploadDocumentsState extends ConsumerState<UploadDocuments> {
               opacity: uploadDocsState.showHud ? 1 : 0,
               duration: fadeDuration,
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                //mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   DocumentUploadButton.add(widget.args),
+                  const Spacer(),
                   if (uploadDocsNotifier.shouldShowDeleteAndUploadButton) ...[
                     DocumentUploadButton.delete(widget.args),
+                    const Spacer(),
                     DocumentUploadButton.upload(widget.args, context)
                   ],
                 ],
@@ -123,10 +131,14 @@ class DocumentPageView extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return GestureDetector(
         onLongPressStart: (details) {
-          ref.read(uploadDocumentsController.call(args).notifier).setShowHud(false);
+          ref
+              .read(uploadDocumentsController.call(args).notifier)
+              .setShowHud(false);
         },
         onLongPressEnd: (details) {
-          ref.read(uploadDocumentsController.call(args).notifier).setShowHud(true);
+          ref
+              .read(uploadDocumentsController.call(args).notifier)
+              .setShowHud(true);
         },
         child: Image.file(imageFile));
   }
