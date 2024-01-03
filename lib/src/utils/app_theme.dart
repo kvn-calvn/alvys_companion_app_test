@@ -15,6 +15,7 @@ class AlvysTheme {
             .shortestSide,
         brightness);
     return ThemeData(
+        useMaterial3: false,
         textTheme: textTheme,
         brightness: brightness,
         primaryColor: brightness.isLight ? Colors.white : Colors.black,
