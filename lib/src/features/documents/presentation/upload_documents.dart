@@ -47,14 +47,12 @@ class _UploadDocumentsState extends ConsumerState<UploadDocuments> {
               opacity: uploadDocsState.showHud ? 1 : 0,
               duration: fadeDuration,
               child: Row(
-                //mainAxisAlignment: MainAxisAlignment.spaceAround,
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
                   DocumentUploadButton.add(widget.args),
-                  const Spacer(),
                   if (uploadDocsNotifier.shouldShowDeleteAndUploadButton) ...[
                     DocumentUploadButton.delete(widget.args),
-                    const Spacer(),
-                    DocumentUploadButton.upload(widget.args, context)
+                    DocumentUploadButton.upload(widget.args, context),
                   ],
                 ],
               ),

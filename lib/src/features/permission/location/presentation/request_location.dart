@@ -33,7 +33,8 @@ class RequestLocation extends StatelessWidget {
             padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
             child: Container(
               constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.longestSide * (TabletUtils.instance.isTablet ? 0.5 : 1)),
+                  maxWidth: MediaQuery.of(context).size.longestSide *
+                      (TabletUtils.instance.isTablet ? 0.5 : 1)),
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -61,27 +62,32 @@ class RequestLocation extends StatelessWidget {
                       isLoading: false,
                       isDisable: false,
                       onPressAction: () async {
-                        var requestLocationResult = await Permission.location.request();
+                        var requestLocationResult =
+                            await Permission.location.request();
                         await Permission.locationAlways.request();
 
-                        var notificationPermStatus = await Permission.notification.status;
+                        var notificationPermStatus =
+                            await Permission.notification.status;
 
                         if (requestLocationResult.isPermanentlyDenied) {
-                          debugPrint('Location request was denied');
+                          //debugPrint('Location request was denied');
                           //AppSettings.openLocationSettings();
                         }
 
-                        debugPrint("Notification status: $notificationPermStatus");
+                        //debugPrint("Notification status: $notificationPermStatus");
 
                         if (notificationPermStatus.isDenied) {
                           if (!mounted) return;
-                          context.goNamed(RouteName.notificationPermission.name);
+                          context
+                              .goNamed(RouteName.notificationPermission.name);
                         }
 
                         if (notificationPermStatus.isGranted) {
                           if (!mounted) return;
                           PlatformChannel.getNotification(
-                              "DR", FlavorConfig.instance!.hubName, FlavorConfig.instance!.connectionString);
+                              "DR",
+                              FlavorConfig.instance!.hubName,
+                              FlavorConfig.instance!.connectionString);
                           context.goNamed(RouteName.trips.name);
                         }
 
@@ -102,13 +108,16 @@ class RequestLocation extends StatelessWidget {
                     ),
                     TextButton(
                       onPressed: () async {
-                        var notificationPermStatus = await Permission.notification.status;
-                        if (notificationPermStatus.isGranted || notificationPermStatus.isDenied) {
+                        var notificationPermStatus =
+                            await Permission.notification.status;
+                        if (notificationPermStatus.isGranted ||
+                            notificationPermStatus.isDenied) {
                           if (!mounted) return;
                           context.goNamed(RouteName.trips.name);
                         } else {
                           if (!mounted) return;
-                          context.goNamed(RouteName.notificationPermission.name);
+                          context
+                              .goNamed(RouteName.notificationPermission.name);
                         }
                       },
                       child: const Text(

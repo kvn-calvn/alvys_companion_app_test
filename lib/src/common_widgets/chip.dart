@@ -20,7 +20,7 @@ class ChipCard extends StatelessWidget {
         //set border radius more than 50% of height and width to make circle
       ),
       child: Padding(
-        padding: const EdgeInsets.all(10),
+        padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 10),
         child: Text(
           text,
           style: Theme.of(context).textTheme.labelLarge!,

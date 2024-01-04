@@ -10,7 +10,9 @@ class TabText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       data,
-      textScaleFactor: TabletUtils.instance.isTablet ? 1.25 : 0.9,
+      textScaler: TextScaler.linear(
+        TabletUtils.instance.isTablet ? 1.25 : 0.9,
+      ),
       softWrap: false,
       overflow: TextOverflow.fade,
     );

@@ -1,7 +1,6 @@
 import 'package:alvys3/src/common_widgets/chip.dart';
 
 import '../../../../common_widgets/tab_text.dart';
-import '../../../../constants/color.dart';
 import '../../../../utils/alvys_websocket.dart';
 
 import '../../../../network/firebase_remote_config_service.dart';
