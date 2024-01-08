@@ -1,3 +1,5 @@
+import 'package:alvys3/src/utils/dummy_data.dart';
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
@@ -24,6 +26,7 @@ class PlatformChannel {
     String companyCode,
   ) async {
     debugPrint("START_LOCATION_TRACKING_MC_CALLED");
+    if (companyCode.equalsIgnoreCase(testTrip.companyCode ?? "")) return;
     await platform.invokeMethod('startLocationTracking', <String, dynamic>{
       'DriverName': driverName,
       'DriverId': driverID,
