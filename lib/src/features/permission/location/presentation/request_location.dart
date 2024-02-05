@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:alvys3/src/features/authentication/presentation/auth_provider_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -12,11 +14,16 @@ import '../../../../utils/magic_strings.dart';
 import '../../../../utils/platform_channel.dart';
 import '../../../../utils/tablet_utils.dart';
 
-class RequestLocation extends StatelessWidget {
+class RequestLocation extends ConsumerStatefulWidget {
   const RequestLocation({super.key});
 
   @override
-  Widget build(BuildContext context, [bool mounted = true]) {
+  ConsumerState<ConsumerStatefulWidget> createState() => _RequestLocationState();
+}
+
+class _RequestLocationState extends ConsumerState<RequestLocation> {
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -33,8 +40,7 @@ class RequestLocation extends StatelessWidget {
             padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
             child: Container(
               constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.longestSide *
-                      (TabletUtils.instance.isTablet ? 0.5 : 1)),
+                  maxWidth: MediaQuery.of(context).size.longestSide * (TabletUtils.instance.isTablet ? 0.5 : 1)),
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -62,12 +68,10 @@ class RequestLocation extends StatelessWidget {
                       isLoading: false,
                       isDisable: false,
                       onPressAction: () async {
-                        var requestLocationResult =
-                            await Permission.location.request();
+                        var requestLocationResult = await Permission.location.request();
                         await Permission.locationAlways.request();
 
-                        var notificationPermStatus =
-                            await Permission.notification.status;
+                        var notificationPermStatus = await Permission.notification.status;
 
                         if (requestLocationResult.isPermanentlyDenied) {
                           //debugPrint('Location request was denied');
@@ -78,16 +82,13 @@ class RequestLocation extends StatelessWidget {
 
                         if (notificationPermStatus.isDenied) {
                           if (!mounted) return;
-                          context
-                              .goNamed(RouteName.notificationPermission.name);
+                          context.goNamed(RouteName.notificationPermission.name);
                         }
 
                         if (notificationPermStatus.isGranted) {
                           if (!mounted) return;
-                          PlatformChannel.getNotification(
-                              "DR",
-                              FlavorConfig.instance!.hubName,
-                              FlavorConfig.instance!.connectionString);
+                          PlatformChannel.getNotification(ref.read(authProvider).value!.driver!.phone!,
+                              FlavorConfig.instance!.hubName, FlavorConfig.instance!.connectionString);
                           context.goNamed(RouteName.trips.name);
                         }
 
@@ -108,16 +109,13 @@ class RequestLocation extends StatelessWidget {
                     ),
                     TextButton(
                       onPressed: () async {
-                        var notificationPermStatus =
-                            await Permission.notification.status;
-                        if (notificationPermStatus.isGranted ||
-                            notificationPermStatus.isDenied) {
+                        var notificationPermStatus = await Permission.notification.status;
+                        if (notificationPermStatus.isGranted || notificationPermStatus.isDenied) {
                           if (!mounted) return;
                           context.goNamed(RouteName.trips.name);
                         } else {
                           if (!mounted) return;
-                          context
-                              .goNamed(RouteName.notificationPermission.name);
+                          context.goNamed(RouteName.notificationPermission.name);
                         }
                       },
                       child: const Text(
