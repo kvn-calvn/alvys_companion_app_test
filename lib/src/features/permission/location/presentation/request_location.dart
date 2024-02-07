@@ -1,6 +1,8 @@
 import 'dart:io';
 
+import 'package:alvys3/src/features/authentication/presentation/auth_provider_controller.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -12,11 +14,16 @@ import '../../../../utils/magic_strings.dart';
 import '../../../../utils/platform_channel.dart';
 import '../../../../utils/tablet_utils.dart';
 
-class RequestLocation extends StatelessWidget {
+class RequestLocation extends ConsumerStatefulWidget {
   const RequestLocation({super.key});
 
   @override
-  Widget build(BuildContext context, [bool mounted = true]) {
+  ConsumerState<ConsumerStatefulWidget> createState() => _RequestLocationState();
+}
+
+class _RequestLocationState extends ConsumerState<RequestLocation> {
+  @override
+  Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
           automaticallyImplyLeading: false,
@@ -67,11 +74,11 @@ class RequestLocation extends StatelessWidget {
                         var notificationPermStatus = await Permission.notification.status;
 
                         if (requestLocationResult.isPermanentlyDenied) {
-                          debugPrint('Location request was denied');
+                          //debugPrint('Location request was denied');
                           //AppSettings.openLocationSettings();
                         }
 
-                        debugPrint("Notification status: $notificationPermStatus");
+                        //debugPrint("Notification status: $notificationPermStatus");
 
                         if (notificationPermStatus.isDenied) {
                           if (!mounted) return;
@@ -80,8 +87,8 @@ class RequestLocation extends StatelessWidget {
 
                         if (notificationPermStatus.isGranted) {
                           if (!mounted) return;
-                          PlatformChannel.getNotification(
-                              "DR", FlavorConfig.instance!.hubName, FlavorConfig.instance!.connectionString);
+                          PlatformChannel.getNotification(ref.read(authProvider).value!.driver!.phone!,
+                              FlavorConfig.instance!.hubName, FlavorConfig.instance!.connectionString);
                           context.goNamed(RouteName.trips.name);
                         }
 

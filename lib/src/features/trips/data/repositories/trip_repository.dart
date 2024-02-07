@@ -1,5 +1,4 @@
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../../constants/api_routes.dart';
@@ -11,7 +10,8 @@ import '../../domain/update_stop_time_record/update_stop_time_record.dart';
 abstract class TripRepository {
   Future<List<AppTrip>> getTrips<T>();
   Future<AppTrip> getTripDetails<T>(String tripId, String companyCode);
-  Future<Stop> updateStopTimeRecord<T>(String companyCode, String tripId, String stopId, UpdateStopTimeRecord record);
+  Future<Stop> updateStopTimeRecord<T>(String companyCode, String tripId,
+      String stopId, UpdateStopTimeRecord record);
 }
 
 class AppTripRepository implements TripRepository {
@@ -21,19 +21,22 @@ class AppTripRepository implements TripRepository {
   @override
   Future<List<AppTrip>> getTrips<T>() async {
     var res = await httpClient.getData<T>(Uri.parse(ApiRoutes.trips), null);
-    debugPrint(res.body, wrapWidth: 100);
-    return (res.body.toDecodedJson as List).map((x) => AppTrip.fromJson(x)).toList();
+    //debugPrint(res.body, wrapWidth: 100);
+    return (res.body.toDecodedJson as List)
+        .map((x) => AppTrip.fromJson(x))
+        .toList();
   }
 
   @override
   Future<AppTrip> getTripDetails<T>(String tripId, String companyCode) async {
-    var res = await httpClient.getData<T>(Uri.parse(ApiRoutes.tripDetails(tripId)), companyCode);
+    var res = await httpClient.getData<T>(
+        Uri.parse(ApiRoutes.tripDetails(tripId)), companyCode);
     return AppTrip.fromJson(res.body.toDecodedJson);
   }
 
   @override
-  Future<Stop> updateStopTimeRecord<T>(
-      String companyCode, String tripId, String stopId, UpdateStopTimeRecord record) async {
+  Future<Stop> updateStopTimeRecord<T>(String companyCode, String tripId,
+      String stopId, UpdateStopTimeRecord record) async {
     var res = await httpClient.putData<T>(
       Uri.parse(ApiRoutes.timeStopRecord(tripId, stopId)),
       companyCode,

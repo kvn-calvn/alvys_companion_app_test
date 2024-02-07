@@ -23,7 +23,9 @@ class TripCard extends ConsumerWidget {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Material(
-          key: trip.id == testTrip.id! ? ref.read(tutorialProvider).tripCard : null,
+          key: trip.id == testTrip.id!
+              ? ref.read(tutorialProvider).tripCard
+              : null,
           color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(12),
           clipBehavior: Clip.antiAlias,
@@ -54,8 +56,11 @@ class TripCard extends ConsumerWidget {
                           'Trip# ${trip.tripNumber}',
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
-                        if (authState.value!.shouldShowOOPRate(trip.companyCode!))
-                          Text(NumberFormat.simpleCurrency().format(trip.tripValue),
+                        if (authState.value!
+                            .shouldShowOOPRate(trip.companyCode!))
+                          Text(
+                              NumberFormat.simpleCurrency()
+                                  .format(trip.tripValue),
                               style: Theme.of(context).textTheme.bodyMedium),
                       ],
                     ),
@@ -72,7 +77,8 @@ class TripCard extends ConsumerWidget {
                           size: 24,
                         ),
                         Padding(
-                          padding: const EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
+                          padding:
+                              const EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
                           child: Column(
                             mainAxisSize: MainAxisSize.max,
                             crossAxisAlignment: CrossAxisAlignment.start,
@@ -81,14 +87,19 @@ class TripCard extends ConsumerWidget {
                                 constraints: BoxConstraints(
                                   maxWidth: constraints.maxWidth * 0.75,
                                 ),
-                                child: Text(trip.stops.firstOrNull?.tripCardAddress ?? "-",
-                                    style: Theme.of(context).textTheme.bodyLarge),
+                                child: Text(
+                                    trip.stops.firstOrNull?.tripCardAddress ??
+                                        "-",
+                                    style:
+                                        Theme.of(context).textTheme.bodyLarge),
                               ),
                               ConstrainedBox(
                                 constraints: BoxConstraints(
                                   maxWidth: constraints.maxWidth * 0.8,
                                 ),
-                                child: StopDateDetails(args: trip.stops.firstOrNull?.formattedStopDate),
+                                child: StopDateDetails(
+                                    args: trip
+                                        .stops.firstOrNull?.formattedStopDate),
                               )
                             ],
                           ),
@@ -108,28 +119,35 @@ class TripCard extends ConsumerWidget {
                           size: 24,
                         ),
                         Padding(
-                          padding: const EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
+                          padding:
+                              const EdgeInsetsDirectional.fromSTEB(10, 0, 0, 0),
                           child: Column(
                             mainAxisSize: MainAxisSize.max,
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Padding(
-                                  padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 10, 0),
+                                  padding: const EdgeInsetsDirectional.fromSTEB(
+                                      0, 0, 10, 0),
                                   child: ConstrainedBox(
                                     constraints: BoxConstraints(
                                       maxWidth: constraints.maxWidth * 0.75,
                                     ),
                                     child: Text(
-                                      trip.stops.lastOrNull?.tripCardAddress ?? "-",
+                                      trip.stops.lastOrNull?.tripCardAddress ??
+                                          "-",
                                       maxLines: 2,
-                                      style: Theme.of(context).textTheme.bodyLarge!,
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodyLarge!,
                                     ),
                                   )),
                               ConstrainedBox(
                                 constraints: BoxConstraints(
                                   maxWidth: constraints.maxWidth * 0.8,
                                 ),
-                                child: StopDateDetails(args: trip.stops.lastOrNull?.formattedStopDate),
+                                child: StopDateDetails(
+                                    args: trip
+                                        .stops.lastOrNull?.formattedStopDate),
                               ),
                             ],
                           ),
@@ -153,6 +171,7 @@ class TripCard extends ConsumerWidget {
                           height: 32,
                           child: VerticalDivider(
                             width: 10,
+                            thickness: 0.1,
                           ),
                         ),
                         TripCardDetail(
@@ -165,6 +184,7 @@ class TripCard extends ConsumerWidget {
                           height: 32,
                           child: VerticalDivider(
                             width: 10,
+                            thickness: 0.1,
                           ),
                         ),
                         TripCardDetail(
@@ -175,11 +195,13 @@ class TripCard extends ConsumerWidget {
                           height: 32,
                           child: VerticalDivider(
                             width: 10,
+                            thickness: 0.1,
                           ),
                         ),
                         TripCardDetail(
                           title: 'Wgt.',
-                          details: '${NumberFormat.decimalPattern().format(trip.totalWeight ?? 0)} lbs',
+                          details:
+                              '${NumberFormat.decimalPattern().format(trip.totalWeight ?? 0)} lbs',
                         ),
                       ],
                     ),
