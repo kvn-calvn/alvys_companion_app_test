@@ -47,7 +47,10 @@ class MapNotifier extends AutoDisposeFamilyAsyncNotifier<MapState, String> {
               consumeTapEvents: true,
               position: e.value))
           .toSet();
-      if (markers.isNullOrEmpty) return;
+      if (markers.isNullOrEmpty) {
+        state = AsyncData(MapState());
+        return;
+      }
       state = AsyncData(MapState(markers: markers));
       GoogleMapController miniController = await this.miniController.future;
       state = const AsyncLoading();
@@ -65,6 +68,8 @@ class MapNotifier extends AutoDisposeFamilyAsyncNotifier<MapState, String> {
       });
       var polylines = await repo.getPolyLines(trip.stopLocations.map((e) => e.value).toList());
       state = AsyncData(MapState(markers: markers, polyLines: polylines.values.toSet()));
+    } else {
+      state = AsyncData(MapState());
     }
   }
 

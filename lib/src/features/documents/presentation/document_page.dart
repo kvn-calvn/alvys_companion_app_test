@@ -1,5 +1,5 @@
-import 'package:alvys3/src/common_widgets/empty_view.dart';
-import 'package:alvys3/src/utils/exceptions.dart';
+import '../../../common_widgets/empty_view.dart';
+import '../../../utils/exceptions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 

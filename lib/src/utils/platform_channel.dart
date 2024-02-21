@@ -1,4 +1,4 @@
-import 'package:alvys3/src/utils/dummy_data.dart';
+import 'dummy_data.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';

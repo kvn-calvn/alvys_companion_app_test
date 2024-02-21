@@ -1,7 +1,8 @@
-import 'tutorial_controller.dart';
-import '../../utils/extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import '../../utils/extensions.dart';
+import 'tutorial_controller.dart';
 
 enum WidgetShape { circle, square }
 

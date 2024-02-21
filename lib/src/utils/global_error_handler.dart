@@ -1,23 +1,20 @@
 import 'dart:io';
 
-import '../features/documents/presentation/docs_controller.dart';
-
-import '../features/authentication/presentation/edit_profile_controller.dart';
-import '../features/echeck/presentation/controller/echeck_page_controller.dart';
-import '../features/trips/presentation/controller/trip_page_controller.dart';
-import '../routing/custom_observer.dart';
-import 'provider_args_saver.dart';
-
-import '../network/http_client.dart';
 import 'package:azure_application_insights/azure_application_insights.dart';
-
-import '../common_widgets/app_dialog.dart';
-import 'exceptions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import '../common_widgets/app_dialog.dart';
 import '../features/authentication/presentation/auth_provider_controller.dart';
+import '../features/authentication/presentation/edit_profile_controller.dart';
+import '../features/documents/presentation/docs_controller.dart';
 import '../features/documents/presentation/upload_documents_controller.dart';
+import '../features/echeck/presentation/controller/echeck_page_controller.dart';
+import '../features/trips/presentation/controller/trip_page_controller.dart';
+import '../network/http_client.dart';
+import '../routing/custom_observer.dart';
+import 'exceptions.dart';
+import 'provider_args_saver.dart';
 
 final globalErrorHandlerProvider = Provider<GlobalErrorHandler>((ref) {
   return GlobalErrorHandler(

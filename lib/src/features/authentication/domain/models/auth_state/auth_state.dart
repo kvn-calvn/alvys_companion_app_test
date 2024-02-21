@@ -19,6 +19,7 @@ class AuthState with _$AuthState {
     @Default('') String phone,
     @Default('') String verificationCode,
     @Default(false) bool driverLoggedIn,
+    @Default(false) bool hasLoginError,
   }) = _AuthState;
 
   UserTenant? tryGetUserTenant(String companyCode) =>

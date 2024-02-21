@@ -75,7 +75,8 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IErrorHan
           SharedPreferencesKey.driverStatus.name, DriverStatus.initStatus(driverAsset.status).titleCase);
       driverStatus = DriverStatus.initStatus(driverAsset.status).titleCase;
     }
-    state = AsyncValue.data(state.value!.copyWith(driver: driverRes, driverStatus: driverStatus?.titleCase));
+    state = AsyncValue.data(
+        state.value!.copyWith(driver: driverRes, driverStatus: driverStatus?.titleCase, hasLoginError: false));
     if (driverStatus.equalsIgnoreCase(DriverStatus.offDuty)) {
       await initDriverStatus(DriverStatus.online);
     }
@@ -212,7 +213,12 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IErrorHan
 
   @override
   FutureOr<void> onError(Exception ex) {
-    state = AsyncValue.data(status == null ? state.value! : state.value!.copyWith(driverStatus: status));
+    state = AsyncValue.data(status == null
+        ? state.value!
+        : state.value!.copyWith(
+            driverStatus: status,
+            hasLoginError: ex is AlvysClientException ? true : state.value!.hasLoginError,
+          ));
   }
 
   @override
@@ -222,3 +228,11 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IErrorHan
 }
 
 var authProvider = AsyncNotifierProvider<AuthProviderNotifier, AuthState>(AuthProviderNotifier.new);
+
+
+// ACCEPT NOT WORKING
+// connection issues: reaccept, error in backend
+// integration not available (extreme)
+
+// TENDER NOT AVAILABLE
+
