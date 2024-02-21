@@ -1,8 +1,8 @@
-import '../../../../common_widgets/buttons.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 
+import '../../../../common_widgets/buttons.dart';
 import '../../../../common_widgets/echeck_stop_card.dart';
 import '../../../../common_widgets/shimmers/generate_echeck_shimmer.dart';
 import '../../../../common_widgets/unfocus_widget.dart';

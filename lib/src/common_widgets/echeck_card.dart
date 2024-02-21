@@ -1,12 +1,9 @@
-import 'package:intl/intl.dart';
-
-import 'shimmers/shimmer_widget.dart';
-import 'snack_bar.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
 
 import '../features/authentication/presentation/auth_provider_controller.dart';
 import '../features/echeck/presentation/controller/echeck_page_controller.dart';
@@ -15,6 +12,8 @@ import '../features/tutorial/tutorial_controller.dart';
 import '../utils/dummy_data.dart';
 import '../utils/magic_strings.dart';
 import 'popup_dropdown.dart';
+import 'shimmers/shimmer_widget.dart';
+import 'snack_bar.dart';
 
 class EcheckCard extends ConsumerWidget {
   final ECheck eCheck;

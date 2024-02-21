@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 showCustomPopup<T>(
     {required BuildContext context,
-    required Function(T) onSelected,
+    required Function(T value) onSelected,
     required List<AlvysPopupItem<T>> Function(BuildContext context) items,
     bool useRootNavigator = true}) async {
   final RenderBox button = context.findRenderObject() as RenderBox;

@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:alvys3/src/features/authentication/presentation/auth_provider_controller.dart';
+import '../../../authentication/presentation/auth_provider_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';

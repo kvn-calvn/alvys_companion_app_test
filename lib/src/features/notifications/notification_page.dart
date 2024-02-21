@@ -1,5 +1,6 @@
-import '../../common_widgets/empty_view.dart';
 import 'package:flutter/material.dart';
+
+import '../../common_widgets/empty_view.dart';
 
 class NotificationPage extends StatefulWidget {
   const NotificationPage({super.key});

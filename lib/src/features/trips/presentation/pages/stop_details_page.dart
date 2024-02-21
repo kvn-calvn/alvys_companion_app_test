@@ -1,4 +1,4 @@
-import 'package:alvys3/src/features/trips/domain/app_trip/stop.dart';
+import '../../domain/app_trip/stop.dart';
 
 import '../../../../common_widgets/stop_card.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';

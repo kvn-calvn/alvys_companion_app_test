@@ -1,4 +1,4 @@
-import 'package:alvys3/src/common_widgets/tab_text.dart';
+import '../../../../common_widgets/tab_text.dart';
 
 import '../../../../network/firebase_remote_config_service.dart';
 
