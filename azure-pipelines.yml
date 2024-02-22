@@ -1,0 +1,79 @@
+pool:
+  vmImage: "macos-latest"
+
+variables:
+  flutterVersion: "3.16.9" # Specify your Flutter version here
+  sdkPath: "$(Agent.ToolsDirectory)/flutter/$(flutterVersion)"
+  flutterToolPath: "$(sdkPath)/bin"
+  keyPropertiesPath: "$(Build.SourcesDirectory)/android/key.properties"
+
+stages:
+  - stage: Prepare_Environment
+    jobs:
+      - job: Setup_Config
+        steps:
+            - task: DownloadSecureFile@1
+              name: key
+              displayName: Download Android signing key
+              inputs:
+                secureFile: 'Alvys.jks'
+            - task: Bash@3
+              displayName: Copy config files
+              inputs:
+                targetType: 'inline'
+                script: |
+                  cp $(key.secureFilePath) $(Build.SourcesDirectory)/android/app/key.jks
+                  echo "key.jks copied to $(Build.SourcesDirectory)/android/app/key.jks"
+            - script: |
+                echo "storeFile=$(Build.SourcesDirectory)/android/app/key.jks" >> $(keyPropertiesPath)
+                echo "storePassword=$(STORE_PWD)" >> $(keyPropertiesPath)
+                echo "keyAlias=$(KEY_ALIAS)" >> $(keyPropertiesPath)
+                echo "keyPassword=$(KEY_PWD)" >> $(keyPropertiesPath)
+              displayName: 'Generate key.properties file'
+            - script: |
+                cat >> "$(Build.SourcesDirectory)/.env" <<EOF
+                GMAPSKEY=$(GMAPSKEY)
+                HEREMAPSKEY=$(HEREMAPSKEY)
+                ANDROID_GENIUSSCANSDKKEY=$(ANDROID_GENIUSSCANSDKKEY)
+                IOS_GENIUSSCANSDKKEY=$(IOS_GENIUSSCANSDKKEY)
+                IOS_GENIUSSCANSDKKEY_DEV=$(IOS_GENIUSSCANSDKKEY_DEV)
+                IOS_GENIUSSCANSDKKEY_QA=$(IOS_GENIUSSCANSDKKEY_QA)
+                ANDROID_GENIUSSCANSDKKEY_DEV=$(ANDROID_GENIUSSCANSDKKEY_DEV)
+                ANDROID_GENIUSSCANSDKKEY_QA=$(ANDROID_GENIUSSCANSDKKEY_QA)
+                AZURETELEMETRYKEY_DEV=$(AZURETELEMETRYKEY_DEV)
+                AZURETELEMETRYKEY_PROD=$(AZURETELEMETRYKEY_PROD)
+                AZURETELEMETRYKEY_QA=$(AZURETELEMETRYKEY_QA)
+                HUB_NAME_QA=$(HUB_NAME_QA)
+                HUB_NAME_PROD=$(HUB_NAME_PROD)
+                HUB_NAME_DEV=$(HUB_NAME_DEV)
+                CONNECTION_STRING_QA=$(CONNECTION_STRING_QA)
+                CONNECTION_STRING_PROD=$(CONNECTION_STRING_PROD)
+                CONNECTION_STRING_DEV=$(CONNECTION_STRING_DEV)
+                EOF
+              displayName: Generate .env file
+            - task: PublishBuildArtifacts@1
+              inputs:
+                PathtoPublish: '$(Build.SourcesDirectory)/.env'
+                ArtifactName: 'env'
+                publishLocation: 'Container'
+
+      - job: Setup_Flutter
+        dependsOn: Setup_Config
+        steps:
+            - task: FlutterInstall@0
+              inputs:
+                mode: 'custom'
+                customUrl: 'https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_3.16.9-stable.zip'                             
+            - script: |
+                $(FlutterToolPath)/flutter doctor -v
+              displayName: "Run Flutter diagnostics"
+            - script: |
+                $(FlutterToolPath)/flutter pub get && $(FlutterToolPath)/flutter pub run build_runner build --delete-conflicting-outputs
+              displayName: ""
+            - task: FlutterBuild@0
+              displayName: "Build application"
+              inputs:
+                target: 'apk'
+                projectDirectory: '$(Build.SourcesDirectory)'
+                buildFlavour: 'qa'
+                entryPoint: 'lib/qa.dart'
