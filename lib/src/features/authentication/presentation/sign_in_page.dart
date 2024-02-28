@@ -35,17 +35,12 @@ class _SignInPageState extends ConsumerState<SignInPage> {
   Widget build(BuildContext context) {
     var authState = ref.watch(authProvider);
 
-    var loginTitle =
-        ref.watch(firebaseRemoteConfigServiceProvider).loginTitle();
-    var loginMessage =
-        ref.watch(firebaseRemoteConfigServiceProvider).loginMessage();
+    var loginTitle = ref.watch(firebaseRemoteConfigServiceProvider).loginTitle();
+    var loginMessage = ref.watch(firebaseRemoteConfigServiceProvider).loginMessage();
     var salesUrl = ref.watch(firebaseRemoteConfigServiceProvider).salesUrl();
-    var copySupportEmail =
-        ref.watch(firebaseRemoteConfigServiceProvider).copySupportEmail();
-    var loginErrorMessage =
-        ref.watch(firebaseRemoteConfigServiceProvider).loginErrorMessage();
-    var supportUrl =
-        ref.watch(firebaseRemoteConfigServiceProvider).supportUrl();
+    var copySupportEmail = ref.watch(firebaseRemoteConfigServiceProvider).copySupportEmail();
+    var loginErrorMessage = ref.watch(firebaseRemoteConfigServiceProvider).loginErrorMessage();
+    var supportUrl = ref.watch(firebaseRemoteConfigServiceProvider).supportUrl();
 
     return UnfocusWidget(
       child: Scaffold(
@@ -57,8 +52,7 @@ class _SignInPageState extends ConsumerState<SignInPage> {
           child: Container(
             padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
             constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.longestSide *
-                    (TabletUtils.instance.isTablet ? 0.5 : 1)),
+                maxWidth: MediaQuery.of(context).size.longestSide * (TabletUtils.instance.isTablet ? 0.5 : 1)),
             child: SingleChildScrollView(
               child: Column(
                 mainAxisSize: MainAxisSize.max,
@@ -69,19 +63,13 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                   const SizedBox(
                     height: 25,
                   ),
-                  Text(
-                      authState.value!.hasLoginError
-                          ? "Phone number not registered."
-                          : loginTitle,
-                      textAlign: TextAlign.center,
-                      style: Theme.of(context).textTheme.headlineLarge),
+                  Text(authState.value!.hasLoginError ? "Phone number not registered." : loginTitle,
+                      textAlign: TextAlign.center, style: Theme.of(context).textTheme.headlineLarge),
                   const SizedBox(
                     height: 20,
                   ),
                   Text(
-                    authState.value!.hasLoginError
-                        ? loginErrorMessage
-                        : loginMessage,
+                    authState.value!.hasLoginError ? loginErrorMessage : loginMessage,
                     textAlign: TextAlign.center,
                   ),
                   const SizedBox(
@@ -97,8 +85,7 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                     },
                     textAlign: TextAlign.center,
                     autofocus: true,
-                    decoration:
-                        const InputDecoration(hintText: "(###) ###-####"),
+                    decoration: const InputDecoration(hintText: "(###) ###-####"),
                   ),
                   const SizedBox(
                     height: 12,
@@ -114,33 +101,23 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                             ButtonStyle1(
                                 title: "Next",
                                 isLoading: false,
-                                isDisable: ref
-                                        .watch(authProvider)
-                                        .value!
-                                        .phone
-                                        .length <
-                                    10,
+                                isDisable: ref.watch(authProvider).value!.phone.length < 10,
                                 onPressAction: () async {
-                                  await ref
-                                      .read(authProvider.notifier)
-                                      .signInDriver(context);
+                                  await ref.read(authProvider.notifier).signInDriver(context);
                                 }),
                             const SizedBox(height: 70),
-                            const Wrap(children: <Widget>[
+                            Wrap(children: <Widget>[
                               RedirectCard(
                                 title: 'Not an Alvys customer?',
                                 buttonTitle: 'Contact sales',
-                                url:
-                                    'https://alvys.com/try-for-free-landing-page/',
-                                copyText:
-                                    'https://alvys.com/try-for-free-landing-page/',
+                                url: salesUrl,
+                                copyText: salesUrl,
                               ),
                               RedirectCard(
                                 title: 'Need customer support?',
                                 buttonTitle: 'Contact support',
-                                url:
-                                    'mailto:support@alvys.com?subject=Login%20Help',
-                                copyText: 'support@alvys.com',
+                                url: supportUrl,
+                                copyText: copySupportEmail,
                               )
                             ]
                                 // .addBetween(const SizedBox(
@@ -167,11 +144,7 @@ class _SignInPageState extends ConsumerState<SignInPage> {
 class RedirectCard extends StatefulWidget {
   final String title, buttonTitle, url, copyText;
   const RedirectCard(
-      {super.key,
-      required this.title,
-      required this.buttonTitle,
-      required this.url,
-      required this.copyText});
+      {super.key, required this.title, required this.buttonTitle, required this.url, required this.copyText});
 
   @override
   State<RedirectCard> createState() => _RedirectCardState();
@@ -187,17 +160,12 @@ class _RedirectCardState extends State<RedirectCard> {
     return Padding(
         padding: const EdgeInsets.all(8.0),
         child: Consumer(builder: (context, ref, child) {
-          ref
-              .read(httpClientProvider)
-              .telemetryClient
-              .trackEvent(name: "${widget.buttonTitle}_button_tapped");
-          FirebaseAnalytics.instance
-              .logEvent(name: "${widget.buttonTitle}_button_tapped");
+          ref.read(httpClientProvider).telemetryClient.trackEvent(name: "${widget.buttonTitle}_button_tapped");
+          FirebaseAnalytics.instance.logEvent(name: "${widget.buttonTitle}_button_tapped");
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Text(widget.title,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith()),
+              Text(widget.title, style: Theme.of(context).textTheme.bodyMedium?.copyWith()),
               InkWell(
                   key: currentKey,
                   onTap: () async {
@@ -208,23 +176,19 @@ class _RedirectCardState extends State<RedirectCard> {
                       context: context,
                       onSelected: (value) {
                         Clipboard.setData(ClipboardData(text: widget.copyText));
-                        ref
-                            .read(httpClientProvider)
-                            .telemetryClient
-                            .trackEvent(name: "${widget.copyText}_copied");
+                        ref.read(httpClientProvider).telemetryClient.trackEvent(name: "${widget.copyText}_copied");
                       },
-                      items: (context) => [
-                        const AlvysPopupItem(value: "", child: Text('Copy'))
-                      ],
+                      items: (context) => [const AlvysPopupItem(value: "", child: Text('Copy'))],
                     );
                   },
                   child: Padding(
                     padding: const EdgeInsets.all(4.0),
                     child: Text(
                       widget.buttonTitle,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: ColorManager.primary(
-                              Theme.of(context).brightness)),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(color: ColorManager.primary(Theme.of(context).brightness)),
                     ),
                   ))
             ],
