@@ -35,11 +35,10 @@ class FirebaseRemoteConfigService {
         "show_company_code": false,
         "edit_profile": false,
         "show_distance": false,
-        "login_title": "Let's get you set up",
+        "login_title": "Welcome Drivers!",
         "login_message":
-            "This app is for the drivers of current Alvys customers. If you're a driver, you're in the right place, just make sure the office has registered your cell phone number in the main Alvys platform.",
-        "login_error_message":
-            "Please ask the office to add your phone number in Alvys.",
+            "Before continuing, make sure your office has registered your number in the Alvys platform. Already registered? Enter your cell below.",
+        "login_error_message": "Please ask the office to add your phone number in Alvys.",
         "sales_url": "https://alvys.com/try-for-free-landing-page/",
         "support_url": "mailto:support@alvys.com?subject=Login%20Help",
         "copy_support_email": "support@alvys.com"
@@ -56,16 +55,13 @@ class FirebaseRemoteConfigService {
   String alvysHelpUrl() => firebaseRemoteConfig.getString('alvys_help_url');
   String alvysUrl() => firebaseRemoteConfig.getString('alvys_url');
   String alvysTermsUrl() => firebaseRemoteConfig.getString('alvys_terms_url');
-  String alvysPrivacyUrl() =>
-      firebaseRemoteConfig.getString('alvys_privacy_url');
+  String alvysPrivacyUrl() => firebaseRemoteConfig.getString('alvys_privacy_url');
   bool showCompanyCode() => firebaseRemoteConfig.getBool('show_company_code');
   bool showTooFarDistance() => firebaseRemoteConfig.getBool('show_distance');
   String loginTitle() => firebaseRemoteConfig.getString('login_title');
   String loginMessage() => firebaseRemoteConfig.getString('login_message');
   String salesUrl() => firebaseRemoteConfig.getString('sales_url');
   String supportUrl() => firebaseRemoteConfig.getString('support_url');
-  String copySupportEmail() =>
-      firebaseRemoteConfig.getString('copy_support_email');
-  String loginErrorMessage() =>
-      firebaseRemoteConfig.getString('login_error_message');
+  String copySupportEmail() => firebaseRemoteConfig.getString('copy_support_email');
+  String loginErrorMessage() => firebaseRemoteConfig.getString('login_error_message');
 }
