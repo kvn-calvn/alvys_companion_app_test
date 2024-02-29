@@ -91,12 +91,12 @@ class Stop with _$Stop {
     return longitude.isNotNullOrEmpty && latitude.isNotNullOrEmpty;
   }
 
-  void validateCoordinates() {
+  void validateCoordinates(void Function() afterError) {
     if (!validCoordinates) {
       throw AlvysException(
-          "The stop you're trying to check into has invalid coordinates. Unable to validate your proximity to the stop. Contact your dispatcher and have them address the invalid cordinates on stop ${companyName ?? ""}",
+          "The stop you're trying to check into has invalid coordinates. Unable to validate your proximity to the stop. Contact your dispatcher and have them address the invalid cordinates on stop '${companyName ?? ""}'",
           "Stop Coordinate Error",
-          () {});
+          afterError);
     }
   }
 }

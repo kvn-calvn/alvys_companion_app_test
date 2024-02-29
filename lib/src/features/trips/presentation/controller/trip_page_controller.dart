@@ -203,7 +203,9 @@ class TripController extends _$TripController implements IErrorHandler {
     var location = await Helpers.getUserPosition(() {
       state = AsyncValue.data(state.value!.copyWith(loadingStopId: null));
     });
-    stop.validateCoordinates();
+    stop.validateCoordinates(() {
+      state = AsyncValue.data(state.value!.copyWith(loadingStopId: null));
+    });
     var distance = Geolocator.distanceBetween(
             location.latitude, location.longitude, double.parse(stop.latitude!), double.parse(stop.longitude!)) /
         1609.34;
