@@ -48,90 +48,93 @@ class _SignInPageState extends ConsumerState<SignInPage> {
           elevation: 0,
           backgroundColor: Colors.transparent,
         ),
-        body: SafeArea(
-          child: Container(
-            padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
-            constraints: BoxConstraints(
-                maxWidth: MediaQuery.of(context).size.longestSide * (TabletUtils.instance.isTablet ? 0.5 : 1)),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisSize: MainAxisSize.max,
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const AlvysLogo.subText(),
-                  const SizedBox(
-                    height: 25,
-                  ),
-                  Text(authState.value!.hasLoginError ? "Phone number not registered." : loginTitle,
-                      textAlign: TextAlign.center, style: Theme.of(context).textTheme.headlineLarge),
-                  const SizedBox(
-                    height: 20,
-                  ),
-                  Text(
-                    authState.value!.hasLoginError ? loginErrorMessage : loginMessage,
-                    textAlign: TextAlign.center,
-                  ),
-                  const SizedBox(
-                    height: 30,
-                  ),
-                  TextField(
-                    autocorrect: false,
-                    readOnly: ref.watch(authProvider).isLoading,
-                    keyboardType: TextInputType.number,
-                    inputFormatters: [phoneNumberMaskFormatter],
-                    onChanged: (value) {
-                      ref.read(authProvider.notifier).setPhone(value);
-                    },
-                    textAlign: TextAlign.center,
-                    autofocus: true,
-                    decoration: const InputDecoration(hintText: "(###) ###-####"),
-                  ),
-                  const SizedBox(
-                    height: 12,
-                  ),
-                  ref.watch(authProvider).isLoading
-                      ? SpinKitFoldingCube(
-                          size: 30,
-                          color: Theme.of(context).colorScheme.primary,
-                        )
-                      : Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            ButtonStyle1(
-                                title: "Next",
-                                isLoading: false,
-                                isDisable: ref.watch(authProvider).value!.phone.length < 10,
-                                onPressAction: () async {
-                                  await ref.read(authProvider.notifier).signInDriver(context);
-                                }),
-                            const SizedBox(height: 70),
-                            Wrap(children: <Widget>[
-                              RedirectCard(
-                                title: 'Not an Alvys customer?',
-                                buttonTitle: 'Contact sales',
-                                url: salesUrl,
-                                copyText: salesUrl,
-                              ),
-                              RedirectCard(
-                                title: 'Need customer support?',
-                                buttonTitle: 'Contact support',
-                                url: supportUrl,
-                                copyText: copySupportEmail,
-                              )
-                            ]
-                                // .addBetween(const SizedBox(
-                                //   height: 40,
-                                //   child: VerticalDivider(
-                                //     width: 16,
-                                //     thickness: 1,
-                                //   ),
-                                // ))
-                                // .toList(),
+        body: Center(
+          child: SafeArea(
+            child: Container(
+              alignment: Alignment.topCenter,
+              padding: const EdgeInsets.fromLTRB(24, 0, 24, 0),
+              constraints: BoxConstraints(
+                  maxWidth: MediaQuery.of(context).size.longestSide * (TabletUtils.instance.isTablet ? 0.5 : 1)),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.max,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    const AlvysLogo.subText(),
+                    const SizedBox(
+                      height: 25,
+                    ),
+                    Text(authState.value!.hasLoginError ? "Phone number not registered." : loginTitle,
+                        textAlign: TextAlign.center, style: Theme.of(context).textTheme.headlineLarge),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    Text(
+                      authState.value!.hasLoginError ? loginErrorMessage : loginMessage,
+                      textAlign: TextAlign.center,
+                    ),
+                    const SizedBox(
+                      height: 30,
+                    ),
+                    TextField(
+                      autocorrect: false,
+                      readOnly: ref.watch(authProvider).isLoading,
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [phoneNumberMaskFormatter],
+                      onChanged: (value) {
+                        ref.read(authProvider.notifier).setPhone(value);
+                      },
+                      textAlign: TextAlign.center,
+                      autofocus: true,
+                      decoration: const InputDecoration(hintText: "(###) ###-####"),
+                    ),
+                    const SizedBox(
+                      height: 12,
+                    ),
+                    ref.watch(authProvider).isLoading
+                        ? SpinKitFoldingCube(
+                            size: 30,
+                            color: Theme.of(context).colorScheme.primary,
+                          )
+                        : Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              ButtonStyle1(
+                                  title: "Next",
+                                  isLoading: false,
+                                  isDisable: ref.watch(authProvider).value!.phone.length < 10,
+                                  onPressAction: () async {
+                                    await ref.read(authProvider.notifier).signInDriver(context);
+                                  }),
+                              const SizedBox(height: 70),
+                              Wrap(children: <Widget>[
+                                RedirectCard(
+                                  title: 'Not an Alvys customer?',
+                                  buttonTitle: 'Contact sales',
+                                  url: salesUrl,
+                                  copyText: salesUrl,
+                                ),
+                                RedirectCard(
+                                  title: 'Need customer support?',
+                                  buttonTitle: 'Contact support',
+                                  url: supportUrl,
+                                  copyText: copySupportEmail,
                                 )
-                          ],
-                        ),
-                ],
+                              ]
+                                  // .addBetween(const SizedBox(
+                                  //   height: 40,
+                                  //   child: VerticalDivider(
+                                  //     width: 16,
+                                  //     thickness: 1,
+                                  //   ),
+                                  // ))
+                                  // .toList(),
+                                  )
+                            ],
+                          ),
+                  ],
+                ),
               ),
             ),
           ),
