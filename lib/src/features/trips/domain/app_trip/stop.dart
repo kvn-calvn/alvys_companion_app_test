@@ -1,10 +1,10 @@
-import '../../../../utils/magic_strings.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../models/address/address.dart';
 import '../../../../utils/exceptions.dart';
+import '../../../../utils/magic_strings.dart';
 import 'm_comodity.dart';
 import 'reference.dart';
 import 'time_record.dart';

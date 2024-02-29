@@ -1,6 +1,7 @@
+import 'package:flutter/material.dart';
+
 import '../../custom_icons/alvys3_icons.dart';
 import '../constants/color.dart';
-import 'package:flutter/material.dart';
 
 class AlvysLogo extends StatelessWidget {
   final bool showSubtext;

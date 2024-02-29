@@ -81,12 +81,12 @@ class _RequestLocationState extends ConsumerState<RequestLocation> {
                         //debugPrint("Notification status: $notificationPermStatus");
 
                         if (notificationPermStatus.isDenied) {
-                          if (!mounted) return;
+                          if (!context.mounted) return;
                           context.goNamed(RouteName.notificationPermission.name);
                         }
 
                         if (notificationPermStatus.isGranted) {
-                          if (!mounted) return;
+                          if (!context.mounted) return;
                           PlatformChannel.getNotification(ref.read(authProvider).value!.driver!.phone!,
                               FlavorConfig.instance!.hubName, FlavorConfig.instance!.connectionString);
                           context.goNamed(RouteName.trips.name);
@@ -111,10 +111,10 @@ class _RequestLocationState extends ConsumerState<RequestLocation> {
                       onPressed: () async {
                         var notificationPermStatus = await Permission.notification.status;
                         if (notificationPermStatus.isGranted || notificationPermStatus.isDenied) {
-                          if (!mounted) return;
+                          if (!context.mounted) return;
                           context.goNamed(RouteName.trips.name);
                         } else {
-                          if (!mounted) return;
+                          if (!context.mounted) return;
                           context.goNamed(RouteName.notificationPermission.name);
                         }
                       },
