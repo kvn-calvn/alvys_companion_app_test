@@ -1,8 +1,4 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
-
-import '../../../common_widgets/alvys_logo.dart';
-import '../../../common_widgets/popup_dropdown.dart';
-import '../../../constants/color.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,8 +6,11 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 
+import '../../../common_widgets/alvys_logo.dart';
 import '../../../common_widgets/buttons.dart';
+import '../../../common_widgets/popup_dropdown.dart';
 import '../../../common_widgets/unfocus_widget.dart';
+import '../../../constants/color.dart';
 import '../../../network/firebase_remote_config_service.dart';
 import '../../../network/http_client.dart';
 import '../../../utils/tablet_utils.dart';

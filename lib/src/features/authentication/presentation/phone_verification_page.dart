@@ -86,7 +86,6 @@ class _PhoneNumberVerificationPageState extends ConsumerState<PhoneNumberVerific
           alignment: Alignment.topCenter,
           child: SafeArea(
             child: Container(
-              alignment: Alignment.topCenter,
               constraints: BoxConstraints(
                   maxWidth: MediaQuery.of(context).size.longestSide * (TabletUtils.instance.isTablet ? 0.5 : 1)),
               padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
