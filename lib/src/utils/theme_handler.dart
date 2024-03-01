@@ -1,9 +1,9 @@
-import 'provider_args_saver.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'magic_strings.dart';
+import 'provider_args_saver.dart';
 
 class ThemeHandlerNotifier extends Notifier<ThemeMode> {
   late ThemeMode currentThemeMode;

@@ -1,11 +1,11 @@
-import 'full_map_stop_card.dart';
-import 'map_controller.dart';
-import '../../../utils/tablet_utils.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../../../utils/tablet_utils.dart';
 import '../../trips/domain/app_trip/stop.dart';
+import 'full_map_stop_card.dart';
+import 'map_controller.dart';
 
 class FullScreenMap extends ConsumerWidget {
   final String tripId;

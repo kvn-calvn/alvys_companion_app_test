@@ -1,4 +1,4 @@
-import '../features/trips/presentation/pages/stop_details_page.dart';
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -6,10 +6,10 @@ import 'package:intl/intl.dart';
 
 import '../features/authentication/presentation/auth_provider_controller.dart';
 import '../features/trips/domain/app_trip/app_trip.dart';
+import '../features/trips/presentation/pages/stop_details_page.dart';
 import '../features/tutorial/tutorial_controller.dart';
 import '../utils/dummy_data.dart';
 import '../utils/magic_strings.dart';
-import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 
 class TripCard extends ConsumerWidget {
   const TripCard({super.key, required this.trip});

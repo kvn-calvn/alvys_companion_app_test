@@ -1,10 +1,10 @@
-import '../../../../utils/magic_strings.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:intl/intl.dart';
 
 import '../../../../models/address/address.dart';
 import '../../../../utils/exceptions.dart';
+import '../../../../utils/magic_strings.dart';
 import 'm_comodity.dart';
 import 'reference.dart';
 import 'time_record.dart';
@@ -91,12 +91,12 @@ class Stop with _$Stop {
     return longitude.isNotNullOrEmpty && latitude.isNotNullOrEmpty;
   }
 
-  void validateCoordinates() {
+  void validateCoordinates(void Function() afterError) {
     if (!validCoordinates) {
       throw AlvysException(
-          "The stop you're trying to check into has invalid coordinates. Unable to validate your proximity to the stop. Contact your dispatcher and have them address the invalid cordinates on stop ${companyName ?? ""}",
+          "The stop you're trying to check into has invalid coordinates. Unable to validate your proximity to the stop. Contact your dispatcher and have them address the invalid cordinates on stop '${companyName ?? ""}'",
           "Stop Coordinate Error",
-          () {});
+          afterError);
     }
   }
 }

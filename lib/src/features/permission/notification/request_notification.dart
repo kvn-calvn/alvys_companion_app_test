@@ -65,7 +65,7 @@ class RequestNotification extends ConsumerWidget {
                         var requestNotificationResult = await Permission.notification.request();
 
                         if (requestNotificationResult.isPermanentlyDenied) {
-                          if (mounted) {
+                          if (context.mounted) {
                             await showDialog(
                                 context: context,
                                 builder: (context) {
@@ -87,7 +87,7 @@ class RequestNotification extends ConsumerWidget {
                         }
 
                         if (requestNotificationResult.isGranted) {
-                          if (!mounted) return;
+                          if (!context.mounted) return;
 
                           debugPrint("PHONE_NUMBER: ${userState.value!.driver!.phone!}");
 

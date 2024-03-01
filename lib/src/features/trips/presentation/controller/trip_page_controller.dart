@@ -1,17 +1,17 @@
 import 'dart:async';
 
-import 'package:intl/intl.dart';
-
-import '../../../../common_widgets/snack_bar.dart';
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../common_widgets/snack_bar.dart';
 import '../../../../constants/api_routes.dart';
 import '../../../../network/firebase_remote_config_service.dart';
 import '../../../../network/http_client.dart';
@@ -33,7 +33,6 @@ import '../../domain/app_trip/echeck.dart';
 import '../../domain/app_trip/stop.dart';
 import '../../domain/app_trip/trip_list_state.dart';
 import '../../domain/update_stop_time_record/update_stop_time_record.dart';
-import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 
 part 'trip_page_controller.g.dart';
 
@@ -218,7 +217,9 @@ class TripController extends _$TripController implements IErrorHandler {
     var location = await Helpers.getUserPosition(() {
       state = AsyncValue.data(state.value!.copyWith(loadingStopId: null));
     });
-    stop.validateCoordinates();
+    stop.validateCoordinates(() {
+      state = AsyncValue.data(state.value!.copyWith(loadingStopId: null));
+    });
     var distance = Geolocator.distanceBetween(
             location.latitude,
             location.longitude,

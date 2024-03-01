@@ -48,7 +48,7 @@ class _LoadListPageState extends ConsumerState<LoadListPage> with TickerProvider
 
   Future<void> checkLocationPermission(BuildContext context) async {
     if (await Permission.location.isPermanentlyDenied || await Permission.location.isDenied) {
-      if (mounted) {
+      if (context.mounted) {
         await showDialog(
           context: context,
           builder: (BuildContext context) {
