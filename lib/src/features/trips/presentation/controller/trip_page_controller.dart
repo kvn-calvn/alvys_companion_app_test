@@ -127,7 +127,9 @@ class TripController extends _$TripController implements IErrorHandler {
       if (status.equalsIgnoreCase(DriverStatus.online)) {
         startLocationTracking(status);
       } else {
-        PlatformChannel.stopLocationTracking();
+        if (await Permission.location.status.isGranted) {
+          PlatformChannel.stopLocationTracking();
+        }
       }
       await auth.updateDriverStatus(status);
     }
