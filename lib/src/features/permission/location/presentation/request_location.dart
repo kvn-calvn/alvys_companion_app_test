@@ -18,7 +18,8 @@ class RequestLocation extends ConsumerStatefulWidget {
   const RequestLocation({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _RequestLocationState();
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _RequestLocationState();
 }
 
 class _RequestLocationState extends ConsumerState<RequestLocation> {
@@ -40,7 +41,8 @@ class _RequestLocationState extends ConsumerState<RequestLocation> {
             padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
             child: Container(
               constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.longestSide * (TabletUtils.instance.isTablet ? 0.5 : 1)),
+                  maxWidth: MediaQuery.of(context).size.longestSide *
+                      (TabletUtils.instance.isTablet ? 0.5 : 1)),
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -68,10 +70,12 @@ class _RequestLocationState extends ConsumerState<RequestLocation> {
                       isLoading: false,
                       isDisable: false,
                       onPressAction: () async {
-                        var requestLocationResult = await Permission.location.request();
+                        var requestLocationResult =
+                            await Permission.location.request();
                         await Permission.locationAlways.request();
 
-                        var notificationPermStatus = await Permission.notification.status;
+                        var notificationPermStatus =
+                            await Permission.notification.status;
 
                         if (requestLocationResult.isPermanentlyDenied) {
                           //debugPrint('Location request was denied');
@@ -82,13 +86,16 @@ class _RequestLocationState extends ConsumerState<RequestLocation> {
 
                         if (notificationPermStatus.isDenied) {
                           if (!context.mounted) return;
-                          context.goNamed(RouteName.notificationPermission.name);
+                          context
+                              .goNamed(RouteName.notificationPermission.name);
                         }
 
                         if (notificationPermStatus.isGranted) {
                           if (!context.mounted) return;
-                          PlatformChannel.getNotification(ref.read(authProvider).value!.driver!.phone!,
-                              FlavorConfig.instance!.hubName, FlavorConfig.instance!.connectionString);
+                          PlatformChannel.getNotification(
+                              ref.read(authProvider).value!.driver!.phone!,
+                              FlavorConfig.instance!.hubName,
+                              FlavorConfig.instance!.connectionString);
                           context.goNamed(RouteName.trips.name);
                         }
 
@@ -109,13 +116,16 @@ class _RequestLocationState extends ConsumerState<RequestLocation> {
                     ),
                     TextButton(
                       onPressed: () async {
-                        var notificationPermStatus = await Permission.notification.status;
-                        if (notificationPermStatus.isGranted || notificationPermStatus.isDenied) {
+                        var notificationPermStatus =
+                            await Permission.notification.status;
+                        if (notificationPermStatus.isGranted ||
+                            notificationPermStatus.isPermanentlyDenied) {
                           if (!context.mounted) return;
                           context.goNamed(RouteName.trips.name);
                         } else {
                           if (!context.mounted) return;
-                          context.goNamed(RouteName.notificationPermission.name);
+                          context
+                              .goNamed(RouteName.notificationPermission.name);
                         }
                       },
                       child: const Text(
