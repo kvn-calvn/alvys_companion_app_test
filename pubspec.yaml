@@ -3,7 +3,7 @@ description: Alvys mobile driver app.
 
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
-version: 3.0.13+254
+version: 3.0.14+256
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -92,6 +92,7 @@ flutter:
     - .env
     - assets/lottie/green_pulse.json
     - assets/
+    - assets/images/
   # To add assets to your application, add an assets section, like this:
   # assets:
   #   - images/a_dot_burr.jpeg

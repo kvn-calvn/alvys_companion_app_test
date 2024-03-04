@@ -82,8 +82,9 @@ class _PhoneNumberVerificationPageState extends ConsumerState<PhoneNumberVerific
             },
           ),
         ),
-        body: SafeArea(
-          child: Center(
+        body: Container(
+          alignment: Alignment.topCenter,
+          child: SafeArea(
             child: Container(
               constraints: BoxConstraints(
                   maxWidth: MediaQuery.of(context).size.longestSide * (TabletUtils.instance.isTablet ? 0.5 : 1)),

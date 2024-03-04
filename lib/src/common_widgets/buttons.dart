@@ -4,11 +4,7 @@ import '../constants/color.dart';
 
 class ButtonStyle1 extends StatelessWidget {
   const ButtonStyle1(
-      {super.key,
-      required this.onPressAction,
-      required this.title,
-      this.isLoading = false,
-      this.isDisable = false});
+      {super.key, required this.onPressAction, required this.title, this.isLoading = false, this.isDisable = false});
 
   final Function onPressAction;
   final bool isLoading;
@@ -21,7 +17,7 @@ class ButtonStyle1 extends StatelessWidget {
       onPressed: isLoading || isDisable ? null : () => onPressAction(),
       style: ElevatedButton.styleFrom(
         elevation: 0,
-        minimumSize: const Size.fromHeight(60),
+        minimumSize: const Size.fromHeight(54),
         //fixedSize: const Size.fromHeight(80),
         backgroundColor: ColorManager.primary(Theme.of(context).brightness),
         shape: RoundedRectangleBorder(
@@ -30,21 +26,14 @@ class ButtonStyle1 extends StatelessWidget {
       ),
       child: Text(
         isLoading ? "Loading.." : title,
-        style: Theme.of(context)
-            .textTheme
-            .labelLarge!
-            .copyWith(color: Colors.white),
+        style: Theme.of(context).textTheme.labelLarge!.copyWith(color: Colors.white),
       ),
     );
   }
 }
 
 class ButtonStyle2 extends StatelessWidget {
-  const ButtonStyle2(
-      {super.key,
-      required this.onPressAction,
-      required this.title,
-      required this.isLoading});
+  const ButtonStyle2({super.key, required this.onPressAction, required this.title, required this.isLoading});
 
   final Function()? onPressAction;
   final bool isLoading;
@@ -58,8 +47,7 @@ class ButtonStyle2 extends StatelessWidget {
         elevation: MaterialStateProperty.all(0),
         backgroundColor: onPressAction == null
             ? MaterialStateProperty.all<Color>(
-                ColorManager.secondaryButtonDisabled(
-                    Theme.of(context).brightness),
+                ColorManager.secondaryButtonDisabled(Theme.of(context).brightness),
               )
             : MaterialStateProperty.all<Color>(
                 ColorManager.secondaryButton(Theme.of(context).brightness),
@@ -69,10 +57,7 @@ class ButtonStyle2 extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 10.0),
         child: Text(
           title,
-          style: TextStyle(
-              color: onPressAction == null
-                  ? ColorManager.greyColorScheme2
-                  : ColorManager.white),
+          style: TextStyle(color: onPressAction == null ? ColorManager.greyColorScheme2 : ColorManager.white),
         ),
       ),
     );
