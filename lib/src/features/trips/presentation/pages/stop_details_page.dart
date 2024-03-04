@@ -1,22 +1,19 @@
-import 'package:alvys3/src/features/trips/domain/app_trip/stop.dart';
-
-import '../../../../common_widgets/stop_card.dart';
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../common_widgets/empty_view.dart';
 import '../../../../common_widgets/shimmers/stop_details_shimmer.dart';
-
+import '../../../../common_widgets/stop_card.dart';
 import '../../../../network/http_client.dart';
-import '../../domain/app_trip/reference.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
-
-import '../controller/trip_page_controller.dart';
-import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:intl/intl.dart';
 import '../../../../utils/app_theme.dart';
 import '../../domain/app_trip/m_comodity.dart';
+import '../../domain/app_trip/reference.dart';
+import '../../domain/app_trip/stop.dart';
+import '../controller/trip_page_controller.dart';
 
 class StopDetailsPage extends ConsumerStatefulWidget {
   final String tripId;

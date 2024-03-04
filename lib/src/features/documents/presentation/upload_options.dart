@@ -50,7 +50,7 @@ class UploadOptions extends ConsumerWidget {
                       title: 'Open Settings', action: () => AppSettings.openAppSettings(type: AppSettingsType.settings))
                 ]);
               }
-              if (mounted) {
+              if (context.mounted) {
                 Navigator.of(context, rootNavigator: true).pop();
                 context.goNamed(route,
                     extra: UploadType.camera,
@@ -73,7 +73,7 @@ class UploadOptions extends ConsumerWidget {
                       title: 'Open Settings', action: () => AppSettings.openAppSettings(type: AppSettingsType.settings))
                 ]);
               }
-              if (mounted) {
+              if (context.mounted) {
                 Navigator.of(context, rootNavigator: true).pop();
                 context.goNamed(
                   route,

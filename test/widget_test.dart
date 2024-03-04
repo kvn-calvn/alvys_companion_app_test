@@ -29,10 +29,10 @@ void main() {
     expect(find.text('0'), findsNothing);
     expect(find.text('1'), findsOneWidget);
   });
-/*
-  test('shouldFormatDate', () {
-    var data = testTrip.stops.map((x) => x.formattedStopDate).join('\n');
-    var k = data;
-  });
-  */
+
+  // test('shouldFormatDate', () {
+  //   var data = Uri.parse("mailto:support@alvys.com?subject=Login%20Help");
+  //   var data2 = Uri.parse("https://alvys.com/try-for-free-landing-page/");
+  //   var k = data;
+  // });
 }

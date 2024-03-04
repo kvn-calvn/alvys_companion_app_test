@@ -14,7 +14,6 @@ import '../../../network/firebase_remote_config_service.dart';
 import '../../../network/http_client.dart';
 import '../../../utils/app_theme.dart';
 import '../../../utils/magic_strings.dart';
-import '../../../utils/platform_channel.dart';
 import '../../authentication/presentation/auth_provider_controller.dart';
 import '../../tutorial/tutorial_controller.dart';
 
@@ -68,7 +67,8 @@ class SettingsList extends ConsumerWidget {
         ),
         Consumer(
           builder: (context, ref, child) {
-            var alvysHelp = ref.watch(firebaseRemoteConfigServiceProvider).alvysHelpUrl();
+            var alvysHelp =
+                ref.watch(firebaseRemoteConfigServiceProvider).alvysHelpUrl();
             return UrlNavButton(title: "Help", url: alvysHelp);
           },
         ),
@@ -90,16 +90,23 @@ class SettingsList extends ConsumerWidget {
               context.goNamed(RouteName.trips.name);
             }
 
-            ref.read(httpClientProvider).telemetryClient.trackEvent(name: "watch_tutorial");
+            ref
+                .read(httpClientProvider)
+                .telemetryClient
+                .trackEvent(name: "watch_tutorial");
             await FirebaseAnalytics.instance.logEvent(name: "watch_tutorial");
           },
         ),
         LargeNavButton(
           title: "Sign Out",
           onPressed: () async {
-            PlatformChannel.stopLocationTracking();
-            ref.read(authProvider.notifier).signOut(context);
-            ref.read(httpClientProvider).telemetryClient.trackEvent(name: "signed_out");
+            if (context.mounted) {
+              ref.read(authProvider.notifier).signOut(context);
+            }
+            ref
+                .read(httpClientProvider)
+                .telemetryClient
+                .trackEvent(name: "signed_out");
             await FirebaseAnalytics.instance.logEvent(name: "signed_out");
           },
         ),

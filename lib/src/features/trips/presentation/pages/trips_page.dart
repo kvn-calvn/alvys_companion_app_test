@@ -1,4 +1,4 @@
-import 'package:alvys3/src/common_widgets/tab_text.dart';
+import '../../../../common_widgets/tab_text.dart';
 
 import '../../../../network/firebase_remote_config_service.dart';
 
@@ -48,7 +48,7 @@ class _LoadListPageState extends ConsumerState<LoadListPage> with TickerProvider
 
   Future<void> checkLocationPermission(BuildContext context) async {
     if (await Permission.location.isPermanentlyDenied || await Permission.location.isDenied) {
-      if (mounted) {
+      if (context.mounted) {
         await showDialog(
           context: context,
           builder: (BuildContext context) {

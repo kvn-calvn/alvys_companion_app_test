@@ -1,7 +1,7 @@
-import '../../../../utils/utc_date_converter.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
 import '../../../../../flavor_config.dart';
-import 'package:freezed_annotation/freezed_annotation.dart';
+import '../../../../utils/utc_date_converter.dart';
 
 part 'app_document.freezed.dart';
 part 'app_document.g.dart';
