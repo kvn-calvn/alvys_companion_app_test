@@ -1,3 +1,6 @@
+import 'dart:io';
+
+import 'package:alvys3/flavor_config.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -6,10 +9,14 @@ import 'dummy_data.dart';
 
 class PlatformChannel {
   static const platform = MethodChannel('PLATFORM_CHANNEL');
-  static void getNotification(String driverPhone, String hubName, String connectionString) async {
+  static void getNotification(
+      String driverPhone, String hubName, String connectionString) async {
     try {
-      await platform.invokeMethod('registerForNotification',
-          <String, String>{'driverPhone': driverPhone, 'hubName': hubName, 'connectionString': connectionString});
+      await platform.invokeMethod('registerForNotification', <String, String>{
+        'driverPhone': driverPhone,
+        'hubName': hubName,
+        'connectionString': connectionString
+      });
     } on PlatformException catch (e) {
       debugPrint(
         "Invoke registerForNotification unsuccessful $e",
@@ -59,6 +66,20 @@ class PlatformChannel {
         "Determining if device is a tablet was unsuccessful: \n $e",
       );
       return false;
+    }
+  }
+
+  static Future<void> passApiKeys() async {
+    try {
+      platform.invokeMethod("nativeApiKeys", <String, String>{
+        'appcenterKey': Platform.isIOS
+            ? FlavorConfig.instance!.appcenterIOS
+            : FlavorConfig.instance!.appcenterAndroid
+      });
+    } on Exception catch (e) {
+      debugPrint(
+        "Sending api keys unsuccessful: \n $e",
+      );
     }
   }
 }
