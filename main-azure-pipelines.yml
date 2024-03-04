@@ -1,0 +1,20 @@
+trigger:
+  - main
+ 
+pool: 
+  vmImage: "macos-13"
+
+resources:
+  repositories:
+    - repository: PipelineTemplates 
+      type: git
+      name: PipelineTemplates
+      ref: main
+
+variables:
+  - template: vars.yaml@PipelineTemplates
+
+stages:
+  - stage: ${{variables.environment}}
+    jobs: 
+    - template: alvyscompanion-pipeline.yaml@PipelineTemplates
