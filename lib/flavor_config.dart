@@ -15,6 +15,8 @@ class FlavorConfig {
   final String azureTelemetryKey;
   final String hubName;
   final String connectionString;
+  final String appcenterIOS;
+  final String appcenterAndroid;
 
   static FlavorConfig? _instance;
 
@@ -32,22 +34,25 @@ class FlavorConfig {
     required String azureTelemetryKey,
     required String hubName,
     required String connectionString,
+    required String appcenterIOS,
+    required String appcenterAndroid,
   }) {
     _instance ??= FlavorConfig._internal(
-      flavor,
-      env,
-      rawApiBase,
-      baseUrl,
-      storageUrl,
-      mobileBaseApi,
-      gMapsKey,
-      hereMapsKey,
-      iosGeniusScanSDKKey,
-      androidGeniusScanSDKKey,
-      azureTelemetryKey,
-      hubName,
-      connectionString,
-    );
+        flavor,
+        env,
+        rawApiBase,
+        baseUrl,
+        storageUrl,
+        mobileBaseApi,
+        gMapsKey,
+        hereMapsKey,
+        iosGeniusScanSDKKey,
+        androidGeniusScanSDKKey,
+        azureTelemetryKey,
+        hubName,
+        connectionString,
+        appcenterIOS,
+        appcenterAndroid);
     return _instance!;
   }
 
@@ -65,6 +70,8 @@ class FlavorConfig {
     this.azureTelemetryKey,
     this.hubName,
     this.connectionString,
+    this.appcenterIOS,
+    this.appcenterAndroid,
   );
 
   static FlavorConfig? get instance => _instance;
