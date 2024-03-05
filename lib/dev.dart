@@ -18,6 +18,8 @@ void main() {
     hereMapsKey: Env.hereMapsKey,
     hubName: Env.hubNameDEV,
     connectionString: Env.connectionStringDev,
+    appcenterIOS: Env.appcenterIOSDev,
+    appcenterAndroid: Env.appcenterIOSDev,
   );
 
   mainCommon();
