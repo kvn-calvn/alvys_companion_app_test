@@ -37,6 +37,8 @@ Future<void> mainCommon() async {
   var container = ProviderContainer();
   runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
+
+    PlatformChannel.passApiKeys();
     if (FlavorConfig.instance!.flavor == Flavor.prod) {
       FlutterGeniusScan.setLicenseKey(
           Platform.isAndroid

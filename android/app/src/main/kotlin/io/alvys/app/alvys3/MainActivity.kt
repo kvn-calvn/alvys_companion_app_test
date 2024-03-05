@@ -5,13 +5,15 @@ import android.graphics.Point
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
+import com.microsoft.appcenter.AppCenter
+import com.microsoft.appcenter.analytics.Analytics
+import com.microsoft.appcenter.crashes.Crashes
 import com.microsoft.windowsazure.messaging.notificationhubs.NotificationHub
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import org.json.JSONObject
 import kotlin.math.hypot
-import kotlin.math.sqrt
 
 
 @Suppress("UNCHECKED_CAST")
@@ -69,6 +71,15 @@ class MainActivity : FlutterActivity() {
                         if (startString != null) {
                             result.success(startString)
                         }
+                    }
+                    "nativeApiKeys" -> {
+                        val appCenterKey = call.argument<String>("appcenterKey")
+                        //Log.e("MSG1", appCenterKey.toString())
+
+                        AppCenter.start(
+                            application, appCenterKey,
+                            Analytics::class.java, Crashes::class.java
+                        )
                     }
                     "isTablet" ->{
                         val (width, height) = windowManager.currentDeviceRealSize()
