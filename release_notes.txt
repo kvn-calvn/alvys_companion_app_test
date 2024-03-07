@@ -1,1 +1,1 @@
-Hello from Azure Pipeline..
+Update App Center keys.
