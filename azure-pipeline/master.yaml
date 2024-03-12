@@ -50,7 +50,7 @@ stages:
             $(flutterToolPath)/flutter pub get && $(flutterToolPath)/flutter pub run build_runner build --delete-conflicting-outputs
           displayName: Build Runner     
         - script: |
-            $(flutterToolPath)/flutter build ios --no-codesign --target=lib/dev.dart --flavor=dev --release --no-codesign      
+            $(flutterToolPath)/flutter build ios --flavor=${{variables.environment}} --target=lib/${{variables.environment}}.dart --release --no-codesign      
           displayName: "Build iOS"  
         - task: Xcode@5
           inputs:
