@@ -1,5 +1,5 @@
 trigger:
-  - dev
+  - qa
   
 pool: 
   vmImage: "macos-13"
