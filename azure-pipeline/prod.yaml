@@ -1,0 +1,8 @@
+trigger:
+  - main
+  
+pool: 
+  vmImage: "macos-13"
+
+extends:
+ template: master.yaml

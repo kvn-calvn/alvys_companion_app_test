@@ -149,7 +149,7 @@ stages:
             $(flutterToolPath)/flutter pub get && $(flutterToolPath)/flutter pub run build_runner build --delete-conflicting-outputs
           displayName: Build Runner 
         - script: |
-            $(flutterToolPath)/flutter build appbundle --flavor=dev --target=lib/dev.dart   
+            $(flutterToolPath)/flutter build appbundle --flavor=${{variables.environment}} --target=lib/${{variables.environment}}.dart   
           displayName: "Build Android"      
         - script: |
             java -jar $(Agent.ToolsDirectory)/bundletool.jar build-apks --mode=universal \
