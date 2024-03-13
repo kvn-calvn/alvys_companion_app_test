@@ -1,1 +1,1 @@
-Update App Center keys.
+Testing parallel stage and release pipeline.
