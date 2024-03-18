@@ -1,0 +1,189 @@
+variables: 
+  - template: vars.yaml
+  
+stages:
+- stage: iOS
+  jobs:
+  - job: 
+    steps:
+        - task: DownloadSecureFile@1
+          name: env
+          displayName: Download .env file
+          inputs:
+            secureFile: 'env'     
+        - task: InstallAppleCertificate@2
+          enabled: true
+          inputs:
+            certSecureFile: 'apple_distribution.p12'
+            certPwd: '$(P12_PWD)'
+            keychain: 'temp'
+        - task: InstallAppleProvisioningProfile@1
+          inputs:
+            provisioningProfileLocation: 'secureFiles'
+            provProfileSecureFile: '${{variables.provisionProfile}}'
+        - task: Bash@3
+          displayName: 'Build export.plist file'
+          inputs:
+            targetType: 'inline'
+            script:
+              /usr/libexec/PlistBuddy -c "Add :method string ${{variables.iosDistribMethodString}}" $(Build.SourcesDirectory)/export.plist &&
+              /usr/libexec/PlistBuddy -c "Add :provisioningProfiles dict" $(Build.SourcesDirectory)/export.plist &&
+              /usr/libexec/PlistBuddy -c "Add :provisioningProfiles:$(appIdentifier) string $(APPLE_PROV_PROFILE_UUID)" $(Build.SourcesDirectory)/export.plist &&
+              /usr/libexec/PlistBuddy -c "Add :signingCertificate string $(APPLE_CERTIFICATE_SIGNING_IDENTITY)" $(Build.SourcesDirectory)/export.plist &&
+              /usr/libexec/PlistBuddy -c "Add :signingStyle string manual" $(Build.SourcesDirectory)/export.plist &&
+              /usr/libexec/PlistBuddy -c "Add :teamID string $(teamId)" $(Build.SourcesDirectory)/export.plist &&
+              /usr/libexec/PlistBuddy -c "Add :iCloudContainerEnvironment string Production" $(Build.SourcesDirectory)/export.plist &&
+              /usr/libexec/PlistBuddy -c "Add :stripSwiftSymbols bool true" $(Build.SourcesDirectory)/export.plist &&
+              /usr/libexec/PlistBuddy -c "Add :compileBitcode bool false" $(Build.SourcesDirectory)/export.plist &&
+              cat $(Build.SourcesDirectory)/export.plist
+        - task: Bash@3
+          displayName: Copy .env file
+          inputs:
+            targetType: 'inline'
+            script: |
+              cp $(env.secureFilePath) $(Build.SourcesDirectory)/.env
+        - task: FlutterInstall@0
+          inputs:
+            mode: 'custom'
+            customUrl: 'https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_$(flutterVersion)-stable.zip'   
+        - script: |
+            $(flutterToolPath)/flutter pub get && $(flutterToolPath)/flutter pub run build_runner build --delete-conflicting-outputs
+          displayName: Build Runner     
+        - script: |
+            $(flutterToolPath)/flutter build ios --flavor=${{variables.environment}} --target=lib/${{variables.environment}}.dart --release --no-codesign      
+          displayName: "Build iOS"  
+        - task: Xcode@5
+          inputs:
+            actions: 'clean'
+            configuration: 'Release-${{variables.environment}}'
+            sdk: 'iphoneos'
+            xcWorkspacePath: 'ios/Runner.xcworkspace'
+            scheme: ${{variables.environment}}
+            packageApp: true
+            archivePath: '.'
+            exportPath: '.'
+            exportOptions: 'plist'
+            exportOptionsPlist: '$(Build.SourcesDirectory)/export.plist'
+            signingOption: 'manual'
+            signingIdentity: '$(APPLE_CERTIFICATE_SIGNING_IDENTITY)'
+            provisioningProfileUuid: '$(APPLE_PROV_PROFILE_UUID)'
+            provisioningProfileName: "iPhone Distribution: Alvys, Inc (S788DWS7T2)"
+            args: '-destination generic/platform=iOS -verbose CODE_SIGNING_REQUIRED=Yes CODE_SIGNING_ALLOWED=No'
+            useXcpretty: false
+        - task: CopyFiles@2
+          displayName: "Copy release notes staging directory"
+          inputs:
+            sourceFolder: '.'
+            contents: 'release_notes.txt'
+            targetFolder: '$(Build.ArtifactStagingDirectory)'
+            flattenFolders: true
+        - task: CopyFiles@2
+          displayName: "Copy ipa to staging directory"
+          inputs:
+            sourceFolder: '.'
+            contents: '*.ipa'
+            targetFolder: '$(Build.ArtifactStagingDirectory)' 
+        - task: PublishBuildArtifacts@1
+          displayName: "Publish ipa file"
+          inputs:
+            PathtoPublish: '$(Build.ArtifactStagingDirectory)/alvys3.ipa'
+            ArtifactName: 'ipa'
+            publishLocation: 'Container'
+        - task: PublishBuildArtifacts@1
+          displayName: "Publish release notes"
+          inputs:
+            PathtoPublish: '$(Build.ArtifactStagingDirectory)/release_notes.txt'
+            ArtifactName: 'release_notes'
+            publishLocation: 'Container'
+- stage: Android
+  dependsOn: []
+  jobs:
+  - job:
+    steps:
+        - task: JavaToolInstaller@0
+          enabled: false
+          displayName:  "Setup Java Environment"
+          inputs:
+            versionSpec: '11'
+            jdkArchitectureOption: 'x64'
+            jdkSourceOption: 'PreInstalled'
+        - task: DownloadSecureFile@1
+          name: env
+          displayName: Download .env file
+          inputs:
+            secureFile: 'env'
+        - task: Bash@3
+          displayName: Copy .env file
+          inputs:
+            targetType: 'inline'
+            script: |
+              cp $(env.secureFilePath) $(Build.SourcesDirectory)/.env     
+        - task: DownloadSecureFile@1
+          name: key
+          displayName: Download .jks file
+          inputs:
+            secureFile: 'Alvys.jks'
+        - script: |
+            curl --output $(Agent.ToolsDirectory)/bundletool.jar --location 'https://github.com/google/bundletool/releases/download/$(bundlToolVersion)/bundletool-all-$(bundlToolVersion).jar'
+          displayName: "Download Google bundletool"    
+        - script: |
+            chmod +x $(Agent.ToolsDirectory)/bundletool.jar 
+          displayName: "Update bundletool permission"        
+        - task: Bash@3
+          displayName: Copy android signing key
+          inputs:
+            targetType: 'inline'
+            script: |
+              cp $(key.secureFilePath) $(Build.SourcesDirectory)/android/app/key.jks
+        - script: |
+            echo "storeFile=$(Build.SourcesDirectory)/android/app/key.jks" >> $(keyPropertiesPath)
+            echo "storePassword=$(openssl enc -base64 -d <<< $(STORE_PWD))" >> $(keyPropertiesPath)
+            echo "keyAlias=$(KEY_ALIAS)" >> $(keyPropertiesPath)
+            echo "keyPassword=$(openssl enc -base64 -d <<< $(KEY_PWD))" >> $(keyPropertiesPath)
+          displayName: 'Generate key.properties file'
+        - task: FlutterInstall@0
+          inputs:
+            mode: 'custom'
+            customUrl: 'https://storage.googleapis.com/flutter_infra_release/releases/stable/macos/flutter_macos_$(flutterVersion)-stable.zip'   
+        - script: |
+            $(flutterToolPath)/flutter pub get && $(flutterToolPath)/flutter pub run build_runner build --delete-conflicting-outputs
+          displayName: Build Runner 
+        - script: |
+            $(flutterToolPath)/flutter build appbundle --flavor=${{variables.environment}} --target=lib/${{variables.environment}}.dart   
+          displayName: "Build Android"      
+        - script: |
+            java -jar $(Agent.ToolsDirectory)/bundletool.jar build-apks --mode=universal \
+            --bundle app-${{variables.environment}}-release.aab \
+            --output app-${{variables.environment}}-release.apks \
+            --ks $(Build.SourcesDirectory)/android/app/key.jks \
+            --ks-pass=pass:$(openssl enc -base64 -d <<< $(STORE_PWD)) \
+            --ks-key-alias $(KEY_ALIAS) \
+            --key-pass=pass:$(openssl enc -base64 -d <<< $(KEY_PWD)) \
+            && unzip -p app-${{variables.environment}}-release.apks universal.apk > app-${{variables.environment}}-release-universal.apk
+          workingDirectory: '$(Build.SourcesDirectory)/build/app/outputs/bundle/${{variables.environment}}Release'
+          displayName: "Generate universal apk"
+        - task: CopyFiles@2
+          displayName: "Copy apk and aab to staging directory"
+          inputs:
+            sourceFolder: '$(Agent.BuildDirectory)'
+            contents: '**/bundle/**'
+            targetFolder: '$(Build.ArtifactStagingDirectory)'
+            flattenFolders: true
+        - task: PublishBuildArtifacts@1
+          displayName: "Publish aab file"
+          inputs:
+            PathtoPublish: '$(Build.ArtifactStagingDirectory)/app-${{variables.environment}}-release.aab'
+            ArtifactName: 'aab'
+            publishLocation: 'Container'
+        - task: PublishBuildArtifacts@1
+          displayName: "Publish apk file"
+          inputs:
+            PathtoPublish: '$(Build.ArtifactStagingDirectory)/app-${{variables.environment}}-release-universal.apk'
+            ArtifactName: 'apk'
+            publishLocation: 'Container'
+        - task: PublishBuildArtifacts@1
+          displayName: "Publish ipa file"
+          inputs:
+            PathtoPublish: '$(Build.ArtifactStagingDirectory)'
+            ArtifactName: 'ipa'
+            publishLocation: 'Container'
