@@ -36,7 +36,8 @@ class RequestNotification extends ConsumerWidget {
             padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
             child: Container(
               constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.longestSide * (TabletUtils.instance.isTablet ? 0.5 : 1)),
+                  maxWidth: MediaQuery.of(context).size.longestSide *
+                      (TabletUtils.instance.isTablet ? 0.5 : 1)),
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -58,11 +59,13 @@ class RequestNotification extends ConsumerWidget {
                       height: 30,
                     ),
                     ButtonStyle1(
+                      key: const Key("notificationPermContinueBtn"),
                       title: "Continue",
                       isLoading: false,
                       isDisable: false,
                       onPressAction: () async {
-                        var requestNotificationResult = await Permission.notification.request();
+                        var requestNotificationResult =
+                            await Permission.notification.request();
 
                         if (requestNotificationResult.isPermanentlyDenied) {
                           if (context.mounted) {
@@ -75,7 +78,9 @@ class RequestNotification extends ConsumerWidget {
                                     actions: [
                                       TextButton(
                                           onPressed: () {
-                                            Navigator.of(context, rootNavigator: true).pop();
+                                            Navigator.of(context,
+                                                    rootNavigator: true)
+                                                .pop();
                                           },
                                           child: const Text('Open Settings'))
                                     ],
@@ -83,16 +88,20 @@ class RequestNotification extends ConsumerWidget {
                                 });
                           }
 
-                          AppSettings.openAppSettings(type: AppSettingsType.notification);
+                          AppSettings.openAppSettings(
+                              type: AppSettingsType.notification);
                         }
 
                         if (requestNotificationResult.isGranted) {
                           if (!context.mounted) return;
 
-                          debugPrint("PHONE_NUMBER: ${userState.value!.driver!.phone!}");
+                          debugPrint(
+                              "PHONE_NUMBER: ${userState.value!.driver!.phone!}");
 
-                          PlatformChannel.getNotification(userState.value!.driver!.phone!,
-                              FlavorConfig.instance!.hubName, FlavorConfig.instance!.connectionString);
+                          PlatformChannel.getNotification(
+                              userState.value!.driver!.phone!,
+                              FlavorConfig.instance!.hubName,
+                              FlavorConfig.instance!.connectionString);
 
                           context.goNamed(RouteName.trips.name);
                         }
@@ -102,6 +111,7 @@ class RequestNotification extends ConsumerWidget {
                       height: 10,
                     ),
                     TextButton(
+                      key: const Key("notificationPermNotNowBtn"),
                       onPressed: () {
                         if (!mounted) return;
                         context.goNamed(RouteName.trips.name);
