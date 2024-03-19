@@ -181,9 +181,4 @@ stages:
             PathtoPublish: '$(Build.ArtifactStagingDirectory)/app-${{variables.environment}}-release-universal.apk'
             ArtifactName: 'apk'
             publishLocation: 'Container'
-        - task: PublishBuildArtifacts@1
-          displayName: "Publish ipa file"
-          inputs:
-            PathtoPublish: '$(Build.ArtifactStagingDirectory)'
-            ArtifactName: 'ipa'
-            publishLocation: 'Container'
+       
