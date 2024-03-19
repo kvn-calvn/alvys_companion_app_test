@@ -66,6 +66,7 @@ class _RequestLocationState extends ConsumerState<RequestLocation> {
                       height: 30,
                     ),
                     ButtonStyle1(
+                      key: const Key("locationPermContinueBtn"),
                       title: "Continue",
                       isLoading: false,
                       isDisable: false,
@@ -115,6 +116,7 @@ class _RequestLocationState extends ConsumerState<RequestLocation> {
                       height: 10,
                     ),
                     TextButton(
+                      key: const Key("locationPermNotNowBtn'"),
                       onPressed: () async {
                         var notificationPermStatus =
                             await Permission.notification.status;

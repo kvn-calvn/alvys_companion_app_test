@@ -29,22 +29,19 @@ class UpdaterController {
                   onPopInvoked: (didPop) => Future.value(false),
                   child: AppDialog(
                     title: 'Update Available',
-                    description:
-                        'Version ${Upgrader.sharedInstance.currentAppStoreVersion()} of the app is available.',
+                    description: 'Version ${Upgrader.sharedInstance.currentAppStoreVersion} of the app is available.',
                     actions: [
                       AppDialogAction(
                         action: () {
-                          Upgrader.sharedInstance.onUserUpdated(context, false);
                           Navigator.of(context, rootNavigator: true).pop();
+                          Upgrader.sharedInstance.sendUserToAppStore();
                         },
                         label: 'Update',
                         primary: true,
                       ),
-                      if (Upgrader.sharedInstance.showLater)
+                      if (!Upgrader.sharedInstance.blocked())
                         AppDialogAction(
                             action: () {
-                              Upgrader.sharedInstance
-                                  .onUserLater(context, false);
                               Navigator.of(context, rootNavigator: true).pop();
                             },
                             label: 'Later')

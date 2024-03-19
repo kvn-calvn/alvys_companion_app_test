@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
-
+import 'package:flutter_driver/driver_extension.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -37,7 +37,7 @@ Future<void> mainCommon() async {
   var container = ProviderContainer();
   runZonedGuarded(() async {
     WidgetsFlutterBinding.ensureInitialized();
-
+    //enableFlutterDriverExtension();
     PlatformChannel.passApiKeys();
     if (FlavorConfig.instance!.flavor == Flavor.prod) {
       FlutterGeniusScan.setLicenseKey(
@@ -127,6 +127,7 @@ Future<void> mainCommon() async {
       FirebaseCrashlytics.instance.recordError(error, stack, fatal: true);
       return true;
     };
+
     runApp(UncontrolledProviderScope(
       container: container,
       child: App(isTablet),
