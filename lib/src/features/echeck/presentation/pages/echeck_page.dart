@@ -28,7 +28,7 @@ class _EcheckPageState extends ConsumerState<EcheckPage> {
   @override
   void initState() {
     super.initState();
-    FirebaseAnalytics.instance.setCurrentScreen(screenName: "echecks_page");
+    FirebaseAnalytics.instance.logScreenView(screenName: "echecks_page");
   }
 
   EcheckPageController get notifier =>
