@@ -101,7 +101,6 @@ stages:
   - job:
     steps:
         - task: JavaToolInstaller@0
-          enabled: false
           displayName:  "Setup Java Environment"
           inputs:
             versionSpec: '11'
