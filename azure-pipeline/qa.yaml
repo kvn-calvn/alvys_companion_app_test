@@ -2,7 +2,7 @@ trigger:
   - qa
   
 pool: 
-  vmImage: "macos-13"
+  vmImage: "macos-latest"
 
 extends:
  template: master.yaml
