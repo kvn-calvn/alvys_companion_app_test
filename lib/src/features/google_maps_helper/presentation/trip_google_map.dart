@@ -1,3 +1,5 @@
+import 'package:alvys3/src/utils/map_styles.dart';
+
 import '../../../common_widgets/shimmers/shimmer_widget.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
@@ -16,26 +18,7 @@ class TripGoogleMap extends ConsumerStatefulWidget {
   ConsumerState<ConsumerStatefulWidget> createState() => _TripGoogleMapState();
 }
 
-class _TripGoogleMapState extends ConsumerState<TripGoogleMap> with WidgetsBindingObserver {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addObserver(this);
-  }
-
-  @override
-  void dispose() {
-    WidgetsBinding.instance.removeObserver(this);
-    super.dispose();
-  }
-
-  @override
-  void didChangePlatformBrightness() {
-    super.didChangePlatformBrightness();
-    var mapNotifier = ref.read(mapProvider.call(widget.tripId).notifier);
-    mapNotifier.setMapStyle().then((value) => mapNotifier.setMiniMapStyle());
-  }
-
+class _TripGoogleMapState extends ConsumerState<TripGoogleMap> {
   @override
   Widget build(BuildContext context) {
     var mapState = ref.watch(mapProvider.call(widget.tripId));
@@ -78,6 +61,7 @@ class _TripGoogleMapState extends ConsumerState<TripGoogleMap> with WidgetsBindi
                 zoomControlsEnabled: false,
                 compassEnabled: false,
                 mapType: MapType.normal,
+                style: getMapStyle(context),
               ),
               if (mapState.isLoading)
                 AlvysSingleChildShimmer(

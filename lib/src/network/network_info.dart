@@ -22,8 +22,8 @@ class NetworkNotifier extends Notifier<bool> {
   late OverlayEntry noInternetOverlay;
   late InternetConnectionChecker checker;
   Stream<bool>? internetUpdate;
-  Stream<ConnectivityResult>? connectionUpdate;
-  late StreamSubscription<ConnectivityResult>? connectionSubscription;
+  Stream<List<ConnectivityResult>>? connectionUpdate;
+  late StreamSubscription<List<ConnectivityResult>>? connectionSubscription;
   late StreamSubscription<bool>? internetSubscription;
   NetworkNotifier([this.initConnection]) {
     checker = InternetConnectionChecker.createInstance(
