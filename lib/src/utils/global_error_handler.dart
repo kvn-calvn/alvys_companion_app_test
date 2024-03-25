@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:azure_application_insights/azure_application_insights.dart';
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -70,7 +71,7 @@ class GlobalErrorHandler {
   }
 
   void _handleError(Object error, Function handleDefault) {
-    Function? onError;
+    void Function()? onError;
     List<ExceptionAction> optionalOptions = [];
     String message = '';
     String title = '';
@@ -116,6 +117,12 @@ class GlobalErrorHandler {
         message = e.message;
         title = e.title;
         onError = e.onError;
+        break;
+      case const (AppException):
+        var e = error as AppException;
+        message = e.message;
+        title = e.title;
+        onError = e.callback;
         break;
       default:
         hasError = false;

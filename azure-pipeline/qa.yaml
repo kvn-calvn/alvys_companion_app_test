@@ -1,0 +1,8 @@
+trigger:
+  - qa
+  
+pool: 
+  vmImage: "macos-latest"
+
+extends:
+ template: master.yaml

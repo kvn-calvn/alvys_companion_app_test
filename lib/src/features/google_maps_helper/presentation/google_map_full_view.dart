@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../../../utils/map_styles.dart';
 import '../../../utils/tablet_utils.dart';
 import '../../trips/domain/app_trip/stop.dart';
 import 'full_map_stop_card.dart';
@@ -25,6 +26,7 @@ class FullScreenMap extends ConsumerWidget {
             mapType: mapState.value!.mapType,
             markers: mapState.value?.markers ?? {},
             polylines: mapState.value?.polyLines ?? {},
+            style: getMapStyle(context),
             initialCameraPosition: const CameraPosition(
               target: LatLng(37.0902, -95.7129),
             ),

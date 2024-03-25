@@ -1,4 +1,7 @@
 {
     "java.configuration.updateBuildConfiguration": "interactive",
-    "dart.flutterSdkPath": "/Users/codermatthews/Documents/FlutterSDK/flutter"
+    "dart.flutterSdkPath": "/Users/codermatthews/Documents/FlutterSDK/flutter",
+    "yaml.schemas": {
+        "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/vars.json": "file:///Users/kcalvin/Documents/Flutter/Projects/AlvysMobileAppV3/azure-pipeline/vars.yaml"
+    }
 }
