@@ -60,8 +60,7 @@ class MapNotifier extends AutoDisposeFamilyAsyncNotifier<MapState, String> {
             miniController
                 .animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: markers.first.position)));
           }
-          // ignore: empty_catches
-        } on PlatformException {}
+        } on PlatformException catch (_) {}
       });
       var polylines = await repo.getPolyLines(trip.stopLocations.map((e) => e.value).toList());
       state = AsyncData(MapState(markers: markers, polyLines: polylines.values.toSet()));

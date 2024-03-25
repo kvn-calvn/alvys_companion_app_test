@@ -14,7 +14,7 @@ class GeniusScanConfig with _$GeniusScanConfig {
     String? defaultFilter,
     @Default('letter') String pdfPageSize,
     String? pdfMaxScanDimension,
-    String? jpegQuality,
+    int? jpegQuality,
     List<String>? postProcessingActions,
     @Default(false) bool flashButtonHidden,
     String? defaultFlashMode,
@@ -31,13 +31,13 @@ class GeniusScanConfig with _$GeniusScanConfig {
         defaultFilter: "blackAndWhite",
         pdfPageSize: "letter",
         defaultFlashMode: "auto",
-        jpegQuality: '40',
+        jpegQuality: 40,
       );
   factory GeniusScanConfig.gallery(String path) => GeniusScanConfig(
         source: 'image',
         defaultFilter: 'photo',
         sourceImageUrl: 'file://$path',
-        jpegQuality: '40',
+        jpegQuality: 40,
       );
 
   @override
