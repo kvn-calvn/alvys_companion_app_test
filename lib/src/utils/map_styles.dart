@@ -1,3 +1,6 @@
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
+import 'package:flutter/material.dart';
+
 const String darkMapStyle = '''[
   {
     "elementType": "geometry",
@@ -160,3 +163,4 @@ const String darkMapStyle = '''[
   }
 ]''';
 const String liteMapStyle = '''[]''';
+String getMapStyle(BuildContext context) => Theme.of(context).brightness.isDark ? darkMapStyle : liteMapStyle;

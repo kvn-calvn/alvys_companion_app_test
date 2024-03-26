@@ -3,7 +3,7 @@ description: Alvys mobile driver app.
 
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
-version: 3.0.15+258
+version: 3.0.15+262
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -35,7 +35,7 @@ dependencies:
   pdf_viewer_plugin: ^2.0.1
   flutter_gen: ^5.1.0+1
   mask_text_input_formatter: ^2.4.0
-  share_plus: ^7.0.2
+  share_plus: ^8.0.2
   path_provider: ^2.0.11
   cross_file: ^0.3.3+2
   fade_shimmer: ^2.2.0
@@ -66,8 +66,8 @@ dependencies:
       url: https://github.com/heremaps/flexible-polyline.git
       path: dart
   shared_preferences: ^2.2.1
-  connectivity_plus: ^5.0.1
-  upgrader: ^9.0.0
+  connectivity_plus: ^6.0.1
+  upgrader: ^10.0.0
   app_tracking_transparency: ^2.0.4
 dev_dependencies:
   flutter_test:
