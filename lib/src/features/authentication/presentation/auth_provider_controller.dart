@@ -131,6 +131,7 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IErrorHan
       debugPrint("isGranted");
       PlatformChannel.stopLocationTracking();
     }
+    unRegisterForNotification();
     //PlatformChannel.stopLocationTracking();
 
     await ref.read(websocketProvider).stopWebsocketConnection();
@@ -154,6 +155,10 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IErrorHan
       PlatformChannel.getNotification(
           state.value!.driver!.phone!, FlavorConfig.instance!.hubName, FlavorConfig.instance!.connectionString);
     }
+  }
+
+  Future<void> unRegisterForNotification() async {
+    PlatformChannel.unregisterNotification();
   }
 
   void updateUser(DriverUser user) {
