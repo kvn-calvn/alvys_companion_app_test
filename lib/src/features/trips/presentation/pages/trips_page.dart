@@ -1,3 +1,5 @@
+import 'package:alvys3/src/features/authentication/presentation/auth_provider_controller.dart';
+
 import '../../../../common_widgets/tab_text.dart';
 
 import '../../../../network/firebase_remote_config_service.dart';
@@ -30,8 +32,7 @@ class LoadListPage extends ConsumerStatefulWidget {
   ConsumerState<LoadListPage> createState() => _LoadListPageState();
 }
 
-class _LoadListPageState extends ConsumerState<LoadListPage>
-    with TickerProviderStateMixin {
+class _LoadListPageState extends ConsumerState<LoadListPage> with TickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -40,37 +41,31 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
     _tabController = TabController(length: 3, vsync: this);
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-      ref.read(tutorialProvider).startTutorial(
-          context,
-          () async => ref
-              .read(tripControllerProvider.notifier)
-              .handleAfterTutorial(context));
+      ref
+          .read(tutorialProvider)
+          .startTutorial(context, () async => ref.read(tripControllerProvider.notifier).handleAfterTutorial(context));
       //checkLocationPermission(context);
     });
   }
 
   Future<void> checkLocationPermission(BuildContext context) async {
-    if (await Permission.location.isPermanentlyDenied ||
-        await Permission.location.isDenied) {
+    if (await Permission.location.isPermanentlyDenied || await Permission.location.isDenied) {
       if (context.mounted) {
         await showDialog(
           context: context,
           builder: (BuildContext context) {
             return AppDialog(
               title: "Alvys wants to use your location.",
-              description:
-                  "Alvys uses your location data to track the movement of loads you have been assigned.",
+              description: "Alvys uses your location data to track the movement of loads you have been assigned.",
               actions: [
                 AppDialogAction(
                     label: 'Allow',
                     action: () {
-                      AppSettings.openAppSettings(
-                              type: AppSettingsType.location)
+                      AppSettings.openAppSettings(type: AppSettingsType.location)
                           .then((value) => GoRouter.of(context).pop());
                     },
                     primary: true),
-                AppDialogAction(
-                    label: 'Not Now', action: GoRouter.of(context).pop),
+                AppDialogAction(label: 'Not Now', action: GoRouter.of(context).pop),
               ],
             );
           },
@@ -80,9 +75,14 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    ref.read(authProvider.notifier).registerForNotification();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    var showTutBtn =
-        ref.watch(firebaseRemoteConfigServiceProvider).showTutorialBtn();
+    var showTutBtn = ref.watch(firebaseRemoteConfigServiceProvider).showTutorialBtn();
     return Scaffold(
       appBar: AppBar(
         leading: const Padding(
@@ -104,19 +104,10 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
                 if (_tabController.index != 0) {
                   _tabController.animateTo(0);
                 }
-                Future.delayed(isNotAtActive
-                        ? _tabController.animationDuration
-                        : Duration.zero)
-                    .then((value) async {
-                  await ref
-                      .read(tripControllerProvider.notifier)
-                      .showTripListPreview(context, 0, 0);
-                  ref
-                      .read(httpClientProvider)
-                      .telemetryClient
-                      .trackEvent(name: "trip_list_tour_button_tapped");
-                  await FirebaseAnalytics.instance
-                      .logEvent(name: "trip_list_tour_button_tapped");
+                Future.delayed(isNotAtActive ? _tabController.animationDuration : Duration.zero).then((value) async {
+                  await ref.read(tripControllerProvider.notifier).showTripListPreview(context, 0, 0);
+                  ref.read(httpClientProvider).telemetryClient.trackEvent(name: "trip_list_tour_button_tapped");
+                  await FirebaseAnalytics.instance.logEvent(name: "trip_list_tour_button_tapped");
                 });
               },
               icon: const Icon(Icons.info),
@@ -127,17 +118,11 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
             constraints: const BoxConstraints(),
             key: ref.read(tutorialProvider).refresh,
             onPressed: () async {
-              await ref
-                  .read(tripControllerProvider.notifier)
-                  .refreshTrips(true);
+              await ref.read(tripControllerProvider.notifier).refreshTrips(true);
               if (context.mounted) {
                 ref.read(websocketProvider).restartConnection();
-                ref
-                    .read(httpClientProvider)
-                    .telemetryClient
-                    .trackEvent(name: "refresh_button_tapped");
-                await FirebaseAnalytics.instance
-                    .logEvent(name: "refresh_button_tapped");
+                ref.read(httpClientProvider).telemetryClient.trackEvent(name: "refresh_button_tapped");
+                await FirebaseAnalytics.instance.logEvent(name: "refresh_button_tapped");
               }
             },
             icon: const Icon(Icons.refresh),
@@ -201,9 +186,7 @@ class TripList extends ConsumerWidget {
               child: tripsState.value!.activeTrips.isNotEmpty
                   ? ListView(
                       padding: const EdgeInsets.fromLTRB(16, 8, 16, 0),
-                      children: tripsState.value!.activeTrips
-                          .map((trip) => TripCard(trip: trip))
-                          .toList(),
+                      children: tripsState.value!.activeTrips.map((trip) => TripCard(trip: trip)).toList(),
                     )
                   : const EmptyView(
                       title: "No Trips",

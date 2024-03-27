@@ -11,6 +11,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../../../../flavor_config.dart';
 import '../../../../common_widgets/snack_bar.dart';
 import '../../../../constants/api_routes.dart';
 import '../../../../network/firebase_remote_config_service.dart';
@@ -134,7 +135,7 @@ class TripController extends _$TripController implements IErrorHandler {
     final result = await tripRepo.getTrips<TripController>();
     if (!ref.exists(tripControllerProvider)) return;
     state = AsyncValue.data(state.value!.copyWith(trips: result));
-    //await startLocationTracking();
+    await startLocationTracking();
   }
 
   Future<void> endTutorial() async {
