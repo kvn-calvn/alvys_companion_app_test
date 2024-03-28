@@ -144,6 +144,7 @@ class TripController extends _$TripController implements IErrorHandler {
   }
 
   Future<void> startTracking(AppTrip trip) async {
+    if (!trip.isTrackable()) return;
     var authToken = pref.getString(SharedPreferencesKey.driverToken.name);
     var userState = ref.read(authProvider);
     var res = await PermissionHelper.getPermission(Permission.location);

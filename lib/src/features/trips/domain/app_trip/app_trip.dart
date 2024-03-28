@@ -101,4 +101,5 @@ class AppTrip with _$AppTrip {
       .toList();
   List<ECheck> get sortedEchecks => eChecks.orderBy((element) => element.dateGenerated, OrderDirection.desc).toList();
   //  List.from(eChecks) ..sort((a, b) => b.dateGenerated?.compareTo(a.dateGenerated ?? DateTime.now()) ?? 0);
+  bool isTrackable() => status.inIgnoreCase([TripStatus.dispatched, TripStatus.inTransit]);
 }
