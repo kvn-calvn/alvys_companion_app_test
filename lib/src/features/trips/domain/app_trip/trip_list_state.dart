@@ -51,4 +51,9 @@ class TripListState with _$TripListState {
   Stop getStop(String tripId, String stopId) => getTrip(tripId).stops.firstWhere((element) => element.stopId == stopId);
   Stop? tryGetStop(String tripId, String stopId) =>
       tryGetTrip(tripId)?.stops.firstWhereOrNull((element) => element.stopId == stopId);
+
+  AppTrip get trackingTrip =>
+      activeTrips.firstWhereOrNull((e) => e.status.equalsIgnoreCase(TripStatus.inTransit)) ??
+      activeTrips.firstWhereOrNull((e) => e.status.equalsIgnoreCase(TripStatus.inTransit)) ??
+      activeTrips.first;
 }

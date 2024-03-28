@@ -107,8 +107,7 @@ class TripController extends _$TripController implements IErrorHandler {
     if (tutorial.firstInstall.currentState) return;
     var status = newStatus ?? pref.getString(SharedPreferencesKey.driverStatus.name);
     if (state.value!.activeTrips.isNotEmpty && (status.equalsIgnoreCase(DriverStatus.online) || status == null)) {
-      var trackingTrip = state.value!.activeTrips.firstWhereOrNull((e) => e.status == TripStatus.inTransit) ??
-          state.value!.activeTrips.first;
+      var trackingTrip = state.value!.trackingTrip;
       if (await Permission.location.isGranted) {
         startTracking(trackingTrip);
       }
@@ -235,7 +234,7 @@ class TripController extends _$TripController implements IErrorHandler {
     var dto = UpdateStopTimeRecord(latitude: location.latitude, longitude: location.longitude, timeIn: DateTime.now());
     var newStop = await tripRepo.updateStopTimeRecord(trip.companyCode!, tripId, stopId, dto);
     updateStop(tripId, newStop);
-    startTracking(trip);
+    startLocationTracking();
     state = AsyncValue.data(state.value!.copyWith(loadingStopId: null, checkIn: true));
     ref.read(httpClientProvider).telemetryClient.trackEvent(name: "checked_in", additionalProperties: {
       "location": '${location.latitude}, ${location.longitude}',
@@ -256,7 +255,7 @@ class TripController extends _$TripController implements IErrorHandler {
     var dto = UpdateStopTimeRecord(latitude: location.latitude, longitude: location.longitude, timeOut: DateTime.now());
     var stop = await tripRepo.updateStopTimeRecord(trip.companyCode!, tripId, stopId, dto);
     updateStop(tripId, stop);
-    startTracking(trip);
+    startLocationTracking();
     state = AsyncValue.data(state.value!.copyWith(loadingStopId: null, checkIn: false));
     ref.read(httpClientProvider).telemetryClient.trackEvent(name: "checked_out", additionalProperties: {
       "location": '${location.latitude}, ${location.longitude}',
