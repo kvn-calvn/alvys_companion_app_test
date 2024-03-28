@@ -182,6 +182,7 @@ class TripController extends _$TripController implements IErrorHandler {
         if (trip.drivers.removeNulls.contains(user?.phone)) {
           trips.add(trip);
           state = AsyncValue.data(state.value!.copyWith(trips: trips));
+          startLocationTracking();
         }
       }
     }
@@ -220,14 +221,13 @@ class TripController extends _$TripController implements IErrorHandler {
       await FirebaseAnalytics.instance.logEvent(
           name: "distance_too_far",
           parameters: {"location": '${location.latitude}, ${location.longitude}', "distance": '$distance miles'});
-      // ignore: non_constant_identifier_names
-      String Distance =
+      String distanceMessage =
           '''You are ${NumberFormat.decimalPattern().format(double.parse((distance).toStringAsFixed(2)))}mi away from the stop location to check in.
       Move closer and try again.''';
 
-      String noDistance = ''' You are too far from the stop location to check in.
+      String noDistanceMessage = ''' You are too far from the stop location to check in.
       MoveMove closer and try again.''';
-      throw AlvysException(showDistance ? Distance : noDistance, 'Too Far', () {
+      throw AlvysException(showDistance ? distanceMessage : noDistanceMessage, 'Too Far', () {
         state = AsyncValue.data(state.value!.copyWith(loadingStopId: null));
       });
     }

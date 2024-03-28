@@ -188,7 +188,9 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IErrorHan
   }
 
   Future<void> initDriverStatus(String status) async {
-    var location = await Helpers.getUserPosition(() {});
+    var location = await Helpers.getUserPosition(() {
+      state = AsyncValue.data(state.value!.copyWith(driverStatus: status));
+    });
     var dto = UpdateDriverStatusDTO(
         status: status.toUpperCase(), id: '', latitude: location.latitude, longitude: location.longitude);
     await authRepo.updateDriverStatus(getCompanyOwned.companyCode!, dto);
