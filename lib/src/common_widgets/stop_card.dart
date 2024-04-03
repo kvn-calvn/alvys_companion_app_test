@@ -146,7 +146,7 @@ class StopCard extends ConsumerWidget {
                               onPressAction: stop.canCheckIn(canCheckInOutStopId)
                                   ? () async => await tripNotifier.checkIn(tripId, stop.stopId!)
                                   : null,
-                              title: stop.timeRecord?.driver?.timeIn == null ? "Check In" : "Checked In",
+                              title: stop.notCheckedIn ? "Check In" : "Checked In",
                               isLoading: false,
                             ),
                       // const SizedBox(width: 5),
@@ -156,7 +156,7 @@ class StopCard extends ConsumerWidget {
                               onPressAction: stop.canCheckOut(canCheckInOutStopId)
                                   ? () async => await tripNotifier.checkOut(tripId, stop.stopId!)
                                   : null,
-                              title: stop.timeRecord?.driver?.timeOut == null ? "Check Out" : 'Checked Out',
+                              title: stop.notCheckedOut ? "Check Out" : 'Checked Out',
                               isLoading: false,
                             ),
                       // const SizedBox(width: 5),
