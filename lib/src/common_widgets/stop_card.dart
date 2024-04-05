@@ -140,7 +140,7 @@ class StopCard extends ConsumerWidget {
                     spacing: 5,
                     alignment: WrapAlignment.spaceBetween,
                     children: [
-                      tripState.value!.checkIn && tripState.value!.loadingStopId == stop.stopId!
+                      tripState.value!.loadingStopId == stop.stopId!
                           ? const ButtonLoading()
                           : ButtonStyle2(
                               onPressAction: stop.canCheckIn(canCheckInOutStopId)
@@ -150,7 +150,7 @@ class StopCard extends ConsumerWidget {
                               isLoading: false,
                             ),
                       // const SizedBox(width: 5),
-                      !tripState.value!.checkIn && tripState.value!.loadingStopId == stop.stopId!
+                      tripState.value!.loadingStopId == stop.stopId!
                           ? const ButtonLoading()
                           : ButtonStyle2(
                               onPressAction: stop.canCheckOut(canCheckInOutStopId)

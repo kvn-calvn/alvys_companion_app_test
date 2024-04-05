@@ -67,10 +67,8 @@ class AppTrip with _$AppTrip {
 
   AppTrip._();
 
-  String? get canCheckInOutStopId => stops
-      .firstWhereOrNull(
-          (element) => element.timeRecord?.driver?.timeIn == null || element.timeRecord?.driver?.timeOut == null)
-      ?.stopId;
+  String? get canCheckInOutStopId =>
+      stops.firstWhereOrNull((element) => element.notCheckedIn || element.notCheckedIn)?.stopId;
   double? driverPayable(String? driverId) =>
       payableDriverAmounts.firstWhereOrNull((element) => element.id?.toLowerCase() == driverId?.toLowerCase())?.amount;
 

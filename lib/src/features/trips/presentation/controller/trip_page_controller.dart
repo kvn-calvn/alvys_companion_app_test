@@ -231,7 +231,7 @@ class TripController extends _$TripController implements IErrorHandler {
       });
     }
     var dto = UpdateStopTimeRecord(latitude: location.latitude, longitude: location.longitude, timeIn: DateTime.now());
-    var newStop = await tripRepo.updateStopTimeRecord(trip.companyCode!, tripId, stopId, dto);
+    var newStop = await tripRepo.updateStopTimeRecord<TripController>(trip.companyCode!, tripId, stopId, dto);
     updateStop(tripId, newStop);
     startLocationTracking();
     state = AsyncValue.data(state.value!.copyWith(loadingStopId: null, checkIn: true));
@@ -252,7 +252,7 @@ class TripController extends _$TripController implements IErrorHandler {
       state = AsyncValue.data(state.value!.copyWith(loadingStopId: null));
     });
     var dto = UpdateStopTimeRecord(latitude: location.latitude, longitude: location.longitude, timeOut: DateTime.now());
-    var stop = await tripRepo.updateStopTimeRecord(trip.companyCode!, tripId, stopId, dto);
+    var stop = await tripRepo.updateStopTimeRecord<TripController>(trip.companyCode!, tripId, stopId, dto);
     updateStop(tripId, stop);
     startLocationTracking();
     state = AsyncValue.data(state.value!.copyWith(loadingStopId: null, checkIn: false));
