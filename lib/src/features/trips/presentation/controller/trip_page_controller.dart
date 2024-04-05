@@ -11,7 +11,6 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../../../../flavor_config.dart';
 import '../../../../common_widgets/snack_bar.dart';
 import '../../../../constants/api_routes.dart';
 import '../../../../network/firebase_remote_config_service.dart';
