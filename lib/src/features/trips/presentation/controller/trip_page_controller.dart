@@ -212,7 +212,7 @@ class TripController extends _$TripController implements IErrorHandler {
     var distance = Geolocator.distanceBetween(
             location.latitude, location.longitude, double.parse(stop.latitude!), double.parse(stop.longitude!)) /
         1609.34;
-    if (distance > 10) {
+    if (false) {
       ref.read(httpClientProvider).telemetryClient.trackEvent(name: "distance_too_far", additionalProperties: {
         "location": '${location.latitude}, ${location.longitude}',
         "distance": '$distance miles'

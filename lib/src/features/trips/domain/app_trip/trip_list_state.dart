@@ -56,4 +56,8 @@ class TripListState with _$TripListState {
       activeTrips.firstWhereOrNull((e) => e.status.equalsIgnoreCase(TripStatus.inTransit)) ??
       activeTrips.firstWhereOrNull((e) => e.status.equalsIgnoreCase(TripStatus.inTransit)) ??
       activeTrips.first;
+  bool checkInLoading(Stop stop) =>
+      loadingStopId != null ? stop.stopId.equalsIgnoreCase(loadingStopId!) && checkIn : false;
+  bool checkOutLoading(Stop stop) =>
+      loadingStopId != null ? stop.stopId.equalsIgnoreCase(loadingStopId!) && !checkIn : false;
 }

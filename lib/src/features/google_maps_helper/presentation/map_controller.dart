@@ -62,7 +62,7 @@ class MapNotifier extends AutoDisposeFamilyAsyncNotifier<MapState, String> {
           }
         } on PlatformException catch (_) {}
       });
-      var polylines = await repo.getPolyLines(trip.stopLocations.map((e) => e.value).toList());
+      var polylines = await repo.getPolyLines(arg, trip.stopLocations.map((e) => e.value).toList());
       state = AsyncData(MapState(markers: markers, polyLines: polylines.values.toSet()));
     } else {
       state = AsyncData(MapState());
