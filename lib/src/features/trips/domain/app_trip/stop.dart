@@ -49,13 +49,16 @@ class Stop with _$Stop {
 
   DateFormat get stopTimeFormat => DateFormat('MMM d, yyyy @ HH:mm');
   DateFormat get oldStopDateFormat => DateFormat(appointment.isNullOrEmpty ? 'MMM d, yyyy' : 'MMM d, yyyy @ HH:mm');
-  bool canCheckIn(String? checkInStopId) => checkInStopId == stopId && arrived == null;
+  bool canCheckIn(String? checkInStopId) => checkInStopId == stopId && (arrived ?? timeRecord?.driver?.timeIn) == null;
 
-  bool canCheckOut(String? checkOutStopId) => checkOutStopId == stopId && arrived != null && departed == null;
+  bool canCheckOut(String? checkOutStopId) =>
+      checkOutStopId == stopId &&
+      (arrived ?? timeRecord?.driver?.timeIn) != null &&
+      (departed ?? timeRecord?.driver?.timeOut) == null;
 
   bool canCheckInNew(String? checkInStopId) => checkInStopId == stopId && arrived == null;
-  bool get notCheckedIn => arrived == null;
-  bool get notCheckedOut => departed == null;
+  bool get notCheckedIn => (arrived ?? timeRecord?.driver?.timeIn) == null;
+  bool get notCheckedOut => (departed ?? timeRecord?.driver?.timeOut) == null;
   bool canCheckOutNew(String? checkOutStopId) => checkOutStopId == stopId && arrived != null && departed == null;
   StopTimeArgs get formattedStopDate {
     return switch (scheduleType?.toUpperCase()) {
