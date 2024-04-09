@@ -1,0 +1,45 @@
+default_platform(:ios)
+
+platform :ios do
+
+  desc "Description of what the lane does"
+  lane :build do |options|
+
+    flavor = options[:flavor]
+    appId = options[:appId]
+    profile = options[:profile]
+    
+    #sh "flutter build ios --flavor=#{flavor} --target=lib/#{flavor}.dart --release --no-codesign"
+ 
+    build_app(
+      configuration: "Release-#{flavor}",
+      workspace: "Runner.xcworkspace",
+      scheme: "#{flavor}",
+      export_method: "#{flavor}" == "prod" ? "app-store" : "ad-hoc",
+      export_options: {
+        provisioningProfiles: { 
+          "#{appId}" => "#{profile}",
+        }
+      },
+      output_name:"alvys-#{flavor}.ipa"
+    )
+    
+  end
+
+  # Define lanes for each flavor
+
+  desc "Build the Development"
+  lane :build_dev do
+    build(flavor: 'dev', appId: 'io.alvys.app.dev', profile: '0f3179eb-316c-44b7-a9c2-4a8506a997a1' )
+  end
+
+  desc "Build for QA"
+  lane :build_qa do
+    build(flavor: 'qa', appId: 'io.alvys.app.qa', profile: 'af1649c9-5dd4-4063-b973-5fddcf1d54f7')
+  end
+
+  desc "Build the Production"
+  lane :build_prod do
+    build(flavor: 'prod', appId: 'io.alvys.app', profile: '1bf4fc6a-deb5-48f4-888d-0cb189357627')
+  end
+end

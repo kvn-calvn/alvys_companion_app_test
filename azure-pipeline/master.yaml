@@ -51,8 +51,15 @@ stages:
           displayName: Build Runner     
         - script: |
             $(flutterToolPath)/flutter build ios --flavor=${{variables.environment}} --target=lib/${{variables.environment}}.dart --release --no-codesign      
-          displayName: "Build iOS"  
+          displayName: "Flutter Build iOS"  
+
+        - script: | 
+            fastlane ios build_${{variables.environment}}
+          workingDirectory: '$(Build.SourcesDirectory)/ios'
+          displayName: Xcode Archive and Sign
+
         - task: Xcode@5
+          enabled: false
           inputs:
             actions: 'clean'
             configuration: 'Release-${{variables.environment}}'
@@ -80,13 +87,13 @@ stages:
         - task: CopyFiles@2
           displayName: "Copy ipa to staging directory"
           inputs:
-            sourceFolder: '.'
+            sourceFolder: '$(Build.SourcesDirectory)/ios'
             contents: '*.ipa'
             targetFolder: '$(Build.ArtifactStagingDirectory)' 
         - task: PublishBuildArtifacts@1
           displayName: "Publish ipa file"
           inputs:
-            PathtoPublish: '$(Build.ArtifactStagingDirectory)/alvys3.ipa'
+            PathtoPublish: '$(Build.ArtifactStagingDirectory)/alvys-${{variables.environment}}.ipa'
             ArtifactName: 'ipa'
             publishLocation: 'Container'
         - task: PublishBuildArtifacts@1
