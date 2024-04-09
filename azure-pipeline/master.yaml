@@ -110,7 +110,7 @@ stages:
         - task: JavaToolInstaller@0
           displayName:  "Setup Java Environment"
           inputs:
-            versionSpec: '11'
+            versionSpec: '17'
             jdkArchitectureOption: 'x64'
             jdkSourceOption: 'PreInstalled'
         - task: DownloadSecureFile@1
