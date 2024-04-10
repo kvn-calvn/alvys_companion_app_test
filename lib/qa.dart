@@ -15,7 +15,7 @@ void main() {
       iosGeniusScanSDKKey: Env.iOSGeniusScanSDKKeyQA,
       azureTelemetryKey: Env.azureTelemetryKeyQA,
       gMapsKey: Env.gMapsKey,
-      hereMapsKey: Env.hereMapsKey,
+      hereMapsKey: Env.hereMapsKeyDEV,
       hubName: Env.hubNameQA,
       connectionString: Env.connectionStringQA,
       appcenterAndroid: Env.appcenterAndroidQa,

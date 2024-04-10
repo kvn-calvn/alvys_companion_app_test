@@ -251,7 +251,16 @@ class TripController extends _$TripController implements IErrorHandler {
     var location = await Helpers.getUserPosition(() {
       state = AsyncValue.data(state.value!.copyWith(loadingStopId: null));
     });
-    var dto = UpdateStopTimeRecord(latitude: location.latitude, longitude: location.longitude, timeOut: DateTime.now());
+    var oldStop = state.value!.tryGetStop(tripId, stopId);
+    ValidationContract.requireNotNullWithCallback(
+        oldStop?.arrived, 'Error', "There was an issue checking out, refresh and try again", () {
+      onError(Exception());
+    });
+    var dto = UpdateStopTimeRecord(
+        latitude: location.latitude,
+        longitude: location.longitude,
+        timeIn: oldStop!.arrived!.localDate,
+        timeOut: DateTime.now());
     var stop = await tripRepo.updateStopTimeRecord<TripController>(trip.companyCode!, tripId, stopId, dto);
     updateStop(tripId, stop);
     startLocationTracking();
