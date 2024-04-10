@@ -67,6 +67,10 @@ class MainActivity : FlutterActivity() {
                         context.stopService(locationTrackingServiceIntent)
                         result.success(1)
                     }
+                    "unregisterNotification" -> {
+                        NotificationHub.clearTags()
+                        NotificationHub.setEnabled(false)
+                    }
                     "initialLink" -> {
                         if (startString != null) {
                             result.success(startString)

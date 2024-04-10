@@ -1,3 +1,4 @@
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -35,6 +36,11 @@ class PermissionHelper {
       case PermissionStatus.provisional:
         return true;
     }
+  }
+
+  static Future<void> requestPermissionAndThrow(Permission permission, [String action = 'proceed']) async {
+    ValidationContract.requires(await getPermission(permission), "Permission required.",
+        "The ${permission.toString().replaceAll('Permission.', '').splitCamelCaseWord().sentenceCase} permission is reuired to $action.");
   }
 
   static Future<Permission> androidGalleryPermission() async {
