@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,6 +8,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 import '../../../../custom_icons/alvys3_icons.dart';
 import '../../../../flavor_config.dart';
+import '../../../common_widgets/app_dialog.dart';
 import '../../../common_widgets/buttons.dart';
 import '../../../constants/color.dart';
 import '../../../utils/magic_strings.dart';
@@ -70,26 +73,51 @@ class RequestNotification extends ConsumerWidget {
                         if (requestNotificationResult.isPermanentlyDenied) {
                           if (context.mounted) {
                             await showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    content: const Text(
-                                        'You have this app\'s notification permession to permanently denied. Open notification settings to change it.'),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context,
-                                                    rootNavigator: true)
-                                                .pop();
-                                          },
-                                          child: const Text('Open Settings'))
-                                    ],
-                                  );
-                                });
+                              context: context,
+                              builder: (context) {
+                                return AppDialog(
+                                  title: "Allow Alvys Notifications",
+                                  description:
+                                      "Alvys notification permission is permanently denied. Open notification settings to change it.",
+                                  actions: [
+                                    AppDialogAction(
+                                        label: 'Allow',
+                                        action: () {
+                                          AppSettings.openAppSettings(
+                                                  type: AppSettingsType
+                                                      .notification)
+                                              .then((value) =>
+                                                  GoRouter.of(context).pop());
+                                        },
+                                        primary: true),
+                                    AppDialogAction(
+                                        label: 'Not Now',
+                                        action: () {
+                                          context.goNamed(RouteName.trips.name);
+                                        })
+                                  ],
+                                );
+                              },
+                            );
+                            // await showDialog(
+                            //     context: context,
+                            //     builder: (context) {
+                            //       return AlertDialog(
+                            //         content: const Text(
+                            //             'You have this app\'s notification permession to permanently denied. Open notification settings to change it.'),
+                            //         actions: [
+                            //           TextButton(
+                            //               onPressed: () {
+                            //                 Navigator.of(context, rootNavigator: true).pop();
+                            //               },
+                            //               child: const Text('Open Settings'))
+                            //         ],
+                            //       );
+                            //     });
                           }
 
-                          AppSettings.openAppSettings(
-                              type: AppSettingsType.notification);
+                          // AppSettings.openAppSettings(
+                          //     type: AppSettingsType.notification);
                         }
 
                         if (requestNotificationResult.isGranted) {
@@ -107,19 +135,21 @@ class RequestNotification extends ConsumerWidget {
                         }
                       },
                     ),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    TextButton(
-                      key: const Key("notificationPermNotNowBtn"),
-                      onPressed: () {
-                        if (!mounted) return;
-                        context.goNamed(RouteName.trips.name);
-                      },
-                      child: const Text(
-                        'Not now',
+                    if (Platform.isAndroid) ...[
+                      const SizedBox(
+                        height: 10,
                       ),
-                    ),
+                      TextButton(
+                        key: const Key("notificationPermNotNowBtn"),
+                        onPressed: () {
+                          if (!mounted) return;
+                          context.goNamed(RouteName.trips.name);
+                        },
+                        child: const Text(
+                          'Not now',
+                        ),
+                      ),
+                    ]
                   ],
                 ),
               ),

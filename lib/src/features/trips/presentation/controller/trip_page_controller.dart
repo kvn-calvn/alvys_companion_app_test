@@ -106,8 +106,7 @@ class TripController extends _$TripController implements IErrorHandler {
     if (tutorial.firstInstall.currentState) return;
     var status = newStatus ?? pref.getString(SharedPreferencesKey.driverStatus.name);
     if (state.value!.activeTrips.isNotEmpty && (status.equalsIgnoreCase(DriverStatus.online) || status == null)) {
-      var trackingTrip = state.value!.activeTrips.firstWhereOrNull((e) => e.status == TripStatus.inTransit) ??
-          state.value!.activeTrips.first;
+      var trackingTrip = state.value!.trackingTrip;
       if (await Permission.location.isGranted) {
         startTracking(trackingTrip);
       }
@@ -134,7 +133,7 @@ class TripController extends _$TripController implements IErrorHandler {
     final result = await tripRepo.getTrips<TripController>();
     if (!ref.exists(tripControllerProvider)) return;
     state = AsyncValue.data(state.value!.copyWith(trips: result));
-    //await startLocationTracking();
+    await startLocationTracking();
   }
 
   Future<void> endTutorial() async {
@@ -143,6 +142,7 @@ class TripController extends _$TripController implements IErrorHandler {
   }
 
   Future<void> startTracking(AppTrip trip) async {
+    if (!trip.isTrackable()) return;
     var authToken = pref.getString(SharedPreferencesKey.driverToken.name);
     var userState = ref.read(authProvider);
     var res = await PermissionHelper.getPermission(Permission.location);
@@ -181,6 +181,7 @@ class TripController extends _$TripController implements IErrorHandler {
         if (trip.drivers.removeNulls.contains(user?.phone)) {
           trips.add(trip);
           state = AsyncValue.data(state.value!.copyWith(trips: trips));
+          startLocationTracking();
         }
       }
     }
@@ -219,21 +220,20 @@ class TripController extends _$TripController implements IErrorHandler {
       await FirebaseAnalytics.instance.logEvent(
           name: "distance_too_far",
           parameters: {"location": '${location.latitude}, ${location.longitude}', "distance": '$distance miles'});
-      // ignore: non_constant_identifier_names
-      String Distance =
+      String distanceMessage =
           '''You are ${NumberFormat.decimalPattern().format(double.parse((distance).toStringAsFixed(2)))}mi away from the stop location to check in.
       Move closer and try again.''';
 
-      String noDistance = ''' You are too far from the stop location to check in.
+      String noDistanceMessage = ''' You are too far from the stop location to check in.
       MoveMove closer and try again.''';
-      throw AlvysException(showDistance ? Distance : noDistance, 'Too Far', () {
+      throw AlvysException(showDistance ? distanceMessage : noDistanceMessage, 'Too Far', () {
         state = AsyncValue.data(state.value!.copyWith(loadingStopId: null));
       });
     }
     var dto = UpdateStopTimeRecord(latitude: location.latitude, longitude: location.longitude, timeIn: DateTime.now());
-    var newStop = await tripRepo.updateStopTimeRecord(trip.companyCode!, tripId, stopId, dto);
+    var newStop = await tripRepo.updateStopTimeRecord<TripController>(trip.companyCode!, tripId, stopId, dto);
     updateStop(tripId, newStop);
-    startTracking(trip);
+    startLocationTracking();
     state = AsyncValue.data(state.value!.copyWith(loadingStopId: null, checkIn: true));
     ref.read(httpClientProvider).telemetryClient.trackEvent(name: "checked_in", additionalProperties: {
       "location": '${location.latitude}, ${location.longitude}',
@@ -251,10 +251,19 @@ class TripController extends _$TripController implements IErrorHandler {
     var location = await Helpers.getUserPosition(() {
       state = AsyncValue.data(state.value!.copyWith(loadingStopId: null));
     });
-    var dto = UpdateStopTimeRecord(latitude: location.latitude, longitude: location.longitude, timeOut: DateTime.now());
-    var stop = await tripRepo.updateStopTimeRecord(trip.companyCode!, tripId, stopId, dto);
+    var oldStop = state.value!.tryGetStop(tripId, stopId);
+    ValidationContract.requireNotNullWithCallback(
+        oldStop?.arrived, 'Error', "There was an issue checking out, refresh and try again", () {
+      onError(Exception());
+    });
+    var dto = UpdateStopTimeRecord(
+        latitude: location.latitude,
+        longitude: location.longitude,
+        timeIn: oldStop!.arrived!.localDate,
+        timeOut: DateTime.now());
+    var stop = await tripRepo.updateStopTimeRecord<TripController>(trip.companyCode!, tripId, stopId, dto);
     updateStop(tripId, stop);
-    startTracking(trip);
+    startLocationTracking();
     state = AsyncValue.data(state.value!.copyWith(loadingStopId: null, checkIn: false));
     ref.read(httpClientProvider).telemetryClient.trackEvent(name: "checked_out", additionalProperties: {
       "location": '${location.latitude}, ${location.longitude}',

@@ -67,10 +67,8 @@ class AppTrip with _$AppTrip {
 
   AppTrip._();
 
-  String? get canCheckInOutStopId => stops
-      .firstWhereOrNull(
-          (element) => element.timeRecord?.driver?.timeIn == null || element.timeRecord?.driver?.timeOut == null)
-      ?.stopId;
+  String? get canCheckInOutStopId =>
+      stops.firstWhereOrNull((element) => element.notCheckedIn || element.notCheckedOut)?.stopId;
   double? driverPayable(String? driverId) =>
       payableDriverAmounts.firstWhereOrNull((element) => element.id?.toLowerCase() == driverId?.toLowerCase())?.amount;
 
@@ -101,4 +99,5 @@ class AppTrip with _$AppTrip {
       .toList();
   List<ECheck> get sortedEchecks => eChecks.orderBy((element) => element.dateGenerated, OrderDirection.desc).toList();
   //  List.from(eChecks) ..sort((a, b) => b.dateGenerated?.compareTo(a.dateGenerated ?? DateTime.now()) ?? 0);
+  bool isTrackable() => status.inIgnoreCase([TripStatus.dispatched, TripStatus.inTransit]);
 }

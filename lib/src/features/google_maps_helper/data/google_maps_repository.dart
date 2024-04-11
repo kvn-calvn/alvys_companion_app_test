@@ -39,7 +39,12 @@ class GoogleMapsRepo {
     return GooglePlacesDetailsResult.fromJson(res.body.toDecodedJson);
   }
 
-  Future<Map<PolylineId, Polyline>> getPolyLines(List<LatLng> coordinates, [String overview = 'simplified']) async {
+  (String tripId, Map<PolylineId, Polyline> lines, List<LatLng> coords)? cachedLines;
+  Future<Map<PolylineId, Polyline>> getPolyLines(String tripId, List<LatLng> coordinates,
+      [String overview = 'simplified']) async {
+    if (cachedLines?.$1 == tripId && _sameCoords(coordinates)) {
+      return cachedLines!.$2;
+    }
     var res = <PolylineId, Polyline>{};
     for (int i = 0; i < coordinates.length - 1; i++) {
       var response = await get(
@@ -67,8 +72,17 @@ class GoogleMapsRepo {
         res[id] = polyline;
       }
     }
-
+    cachedLines = (tripId, res, coordinates);
     return res;
+  }
+
+  bool _sameCoords(List<LatLng> coords) {
+    if (cachedLines == null) return false;
+    if (cachedLines!.$3.length != coords.length) return false;
+    return cachedLines!.$3
+        .mapWithIndex((element, index) =>
+            element.latitude == coords[index].latitude && element.longitude == coords[index].longitude)
+        .every((element) => element);
   }
 
   LatLngBounds boundsFromLatLngList(List<LatLng> list) {

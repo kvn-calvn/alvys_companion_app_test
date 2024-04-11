@@ -9,14 +9,10 @@ import 'dummy_data.dart';
 
 class PlatformChannel {
   static const platform = MethodChannel('PLATFORM_CHANNEL');
-  static void getNotification(
-      String driverPhone, String hubName, String connectionString) async {
+  static void getNotification(String driverPhone, String hubName, String connectionString) async {
     try {
-      await platform.invokeMethod('registerForNotification', <String, String>{
-        'driverPhone': driverPhone,
-        'hubName': hubName,
-        'connectionString': connectionString
-      });
+      await platform.invokeMethod('registerForNotification',
+          <String, String>{'driverPhone': driverPhone, 'hubName': hubName, 'connectionString': connectionString});
     } on PlatformException catch (e) {
       debugPrint(
         "Invoke registerForNotification unsuccessful $e",
@@ -72,13 +68,21 @@ class PlatformChannel {
   static Future<void> passApiKeys() async {
     try {
       platform.invokeMethod("nativeApiKeys", <String, String>{
-        'appcenterKey': Platform.isIOS
-            ? FlavorConfig.instance!.appcenterIOS
-            : FlavorConfig.instance!.appcenterAndroid
+        'appcenterKey': Platform.isIOS ? FlavorConfig.instance!.appcenterIOS : FlavorConfig.instance!.appcenterAndroid
       });
     } on Exception catch (e) {
       debugPrint(
         "Sending api keys unsuccessful: \n $e",
+      );
+    }
+  }
+
+  static void unregisterNotification() async {
+    try {
+      platform.invokeMethod("unregisterNotification", <String, String>{});
+    } on Exception catch (e) {
+      debugPrint(
+        "unregister notification unsuccessful: \n $e",
       );
     }
   }

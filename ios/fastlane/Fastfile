@@ -1,0 +1,49 @@
+default_platform(:ios)
+
+platform :ios do
+
+  desc "Description of what the lane does"
+  lane :build do |options|
+
+    flavor = options[:flavor]
+    appId = options[:appId]
+    profile = options[:profile]
+    
+    update_code_signing_settings(
+      use_automatic_signing: false,
+      path: "Runner.xcodeproj"
+    )
+ 
+    build_app(
+      configuration: "Release-#{flavor}",
+      workspace: "Runner.xcworkspace",
+      scheme: "#{flavor}",
+      export_method: "#{flavor}" == "prod" ? "app-store" : "ad-hoc",
+      export_options: {
+        provisioningProfiles: { 
+          "#{appId}" => "#{profile}",
+        }
+      },
+      output_name:"alvys-#{flavor}.ipa"
+    )
+    
+  end
+
+  # Define lanes for each flavor
+
+  desc "Build for Development"
+  lane :build_dev do
+    build(flavor: 'dev', appId: 'io.alvys.app.dev', profile: 'Alvys Dev Adhoc' )
+  end
+
+  desc "Build for QA"
+  lane :build_qa do
+    build(flavor: 'qa', appId: 'io.alvys.app.qa', profile: 'alvys_qa_adhoc')
+  end
+
+  desc "Build for Production"
+  lane :build_prod do
+    build(flavor: 'prod', appId: 'io.alvys.app', profile: 'alvys_prod_appstore')
+  end
+
+end
