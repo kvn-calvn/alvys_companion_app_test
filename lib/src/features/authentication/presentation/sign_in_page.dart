@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -131,12 +133,14 @@ class _SignInPageState extends ConsumerState<SignInPage> {
                                   }),
                               const SizedBox(height: 70),
                               Wrap(children: <Widget>[
-                                RedirectCard(
-                                  title: 'Not an Alvys customer?',
-                                  buttonTitle: 'Contact sales',
-                                  url: salesUrl,
-                                  copyText: salesUrl,
-                                ),
+                                if (Platform.isAndroid) ...[
+                                  RedirectCard(
+                                    title: 'Not an Alvys customer?',
+                                    buttonTitle: 'Contact sales',
+                                    url: salesUrl,
+                                    copyText: salesUrl,
+                                  )
+                                ],
                                 RedirectCard(
                                   title: 'Need customer support?',
                                   buttonTitle: 'Contact support',
