@@ -8,6 +8,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 import '../../../../custom_icons/alvys3_icons.dart';
 import '../../../../flavor_config.dart';
+import '../../../common_widgets/app_dialog.dart';
 import '../../../common_widgets/buttons.dart';
 import '../../../constants/color.dart';
 import '../../../utils/magic_strings.dart';
@@ -38,7 +39,8 @@ class RequestNotification extends ConsumerWidget {
             padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
             child: Container(
               constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.longestSide * (TabletUtils.instance.isTablet ? 0.5 : 1)),
+                  maxWidth: MediaQuery.of(context).size.longestSide *
+                      (TabletUtils.instance.isTablet ? 0.5 : 1)),
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -65,37 +67,69 @@ class RequestNotification extends ConsumerWidget {
                       isLoading: false,
                       isDisable: false,
                       onPressAction: () async {
-                        var requestNotificationResult = await Permission.notification.request();
+                        var requestNotificationResult =
+                            await Permission.notification.request();
 
                         if (requestNotificationResult.isPermanentlyDenied) {
                           if (context.mounted) {
                             await showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return AlertDialog(
-                                    content: const Text(
-                                        'You have this app\'s notification permession to permanently denied. Open notification settings to change it.'),
-                                    actions: [
-                                      TextButton(
-                                          onPressed: () {
-                                            Navigator.of(context, rootNavigator: true).pop();
-                                          },
-                                          child: const Text('Open Settings'))
-                                    ],
-                                  );
-                                });
+                              context: context,
+                              builder: (context) {
+                                return AppDialog(
+                                  title: "Allow Alvys Notifications",
+                                  description:
+                                      "Alvys notification permission is permanently denied. Open notification settings to change it.",
+                                  actions: [
+                                    AppDialogAction(
+                                        label: 'Allow',
+                                        action: () {
+                                          AppSettings.openAppSettings(
+                                                  type: AppSettingsType
+                                                      .notification)
+                                              .then((value) =>
+                                                  GoRouter.of(context).pop());
+                                        },
+                                        primary: true),
+                                    AppDialogAction(
+                                        label: 'Not Now',
+                                        action: () {
+                                          context.goNamed(RouteName.trips.name);
+                                        })
+                                  ],
+                                );
+                              },
+                            );
+                            // await showDialog(
+                            //     context: context,
+                            //     builder: (context) {
+                            //       return AlertDialog(
+                            //         content: const Text(
+                            //             'You have this app\'s notification permession to permanently denied. Open notification settings to change it.'),
+                            //         actions: [
+                            //           TextButton(
+                            //               onPressed: () {
+                            //                 Navigator.of(context, rootNavigator: true).pop();
+                            //               },
+                            //               child: const Text('Open Settings'))
+                            //         ],
+                            //       );
+                            //     });
                           }
 
-                          AppSettings.openAppSettings(type: AppSettingsType.notification);
+                          // AppSettings.openAppSettings(
+                          //     type: AppSettingsType.notification);
                         }
 
                         if (requestNotificationResult.isGranted) {
                           if (!context.mounted) return;
 
-                          debugPrint("PHONE_NUMBER: ${userState.value!.driver!.phone!}");
+                          debugPrint(
+                              "PHONE_NUMBER: ${userState.value!.driver!.phone!}");
 
-                          PlatformChannel.getNotification(userState.value!.driver!.phone!,
-                              FlavorConfig.instance!.hubName, FlavorConfig.instance!.connectionString);
+                          PlatformChannel.getNotification(
+                              userState.value!.driver!.phone!,
+                              FlavorConfig.instance!.hubName,
+                              FlavorConfig.instance!.connectionString);
 
                           context.goNamed(RouteName.trips.name);
                         }
