@@ -640,10 +640,10 @@ packages:
     dependency: "direct main"
     description:
       name: flutter_genius_scan
-      sha256: "74dd02d4725583f054082babdc77b6cee248f4fe243d72b0f18fc2dc16ea3a6f"
+      sha256: "32ac88e37d2eaafeae18c87ba7c056532bd126febddf80167cc51e9d7c62c692"
       url: "https://pub.dev"
     source: hosted
-    version: "4.21.1"
+    version: "5.0.2"
   flutter_launcher_icons:
     dependency: "direct dev"
     description:
