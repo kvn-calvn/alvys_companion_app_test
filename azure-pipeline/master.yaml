@@ -22,21 +22,6 @@ stages:
             provisioningProfileLocation: 'secureFiles'
             provProfileSecureFile: '${{variables.provisionProfile}}'
         - task: Bash@3
-          displayName: 'Build export.plist file'
-          inputs:
-            targetType: 'inline'
-            script:
-              /usr/libexec/PlistBuddy -c "Add :method string ${{variables.iosDistribMethodString}}" $(Build.SourcesDirectory)/export.plist &&
-              /usr/libexec/PlistBuddy -c "Add :provisioningProfiles dict" $(Build.SourcesDirectory)/export.plist &&
-              /usr/libexec/PlistBuddy -c "Add :provisioningProfiles:$(appIdentifier) string $(APPLE_PROV_PROFILE_UUID)" $(Build.SourcesDirectory)/export.plist &&
-              /usr/libexec/PlistBuddy -c "Add :signingCertificate string $(APPLE_CERTIFICATE_SIGNING_IDENTITY)" $(Build.SourcesDirectory)/export.plist &&
-              /usr/libexec/PlistBuddy -c "Add :signingStyle string manual" $(Build.SourcesDirectory)/export.plist &&
-              /usr/libexec/PlistBuddy -c "Add :teamID string $(teamId)" $(Build.SourcesDirectory)/export.plist &&
-              /usr/libexec/PlistBuddy -c "Add :iCloudContainerEnvironment string Production" $(Build.SourcesDirectory)/export.plist &&
-              /usr/libexec/PlistBuddy -c "Add :stripSwiftSymbols bool true" $(Build.SourcesDirectory)/export.plist &&
-              /usr/libexec/PlistBuddy -c "Add :compileBitcode bool false" $(Build.SourcesDirectory)/export.plist &&
-              cat $(Build.SourcesDirectory)/export.plist
-        - task: Bash@3
           displayName: Copy .env file
           inputs:
             targetType: 'inline'
@@ -57,26 +42,6 @@ stages:
             fastlane ios build_${{variables.environment}}
           workingDirectory: '$(Build.SourcesDirectory)/ios'
           displayName: Xcode Archive and Sign
-
-        - task: Xcode@5
-          enabled: false
-          inputs:
-            actions: 'clean'
-            configuration: 'Release-${{variables.environment}}'
-            sdk: 'iphoneos'
-            xcWorkspacePath: 'ios/Runner.xcworkspace'
-            scheme: ${{variables.environment}}
-            packageApp: true
-            archivePath: '.'
-            exportPath: '.'
-            exportOptions: 'plist'
-            exportOptionsPlist: '$(Build.SourcesDirectory)/export.plist'
-            signingOption: 'manual'
-            signingIdentity: '$(APPLE_CERTIFICATE_SIGNING_IDENTITY)'
-            provisioningProfileUuid: '$(APPLE_PROV_PROFILE_UUID)'
-            provisioningProfileName: "iPhone Distribution: Alvys, Inc (S788DWS7T2)"
-            args: '-destination generic/platform=iOS -verbose CODE_SIGNING_REQUIRED=Yes CODE_SIGNING_ALLOWED=No'
-            useXcpretty: false
         - task: CopyFiles@2
           displayName: "Copy release notes staging directory"
           inputs:
