@@ -171,10 +171,7 @@ class StopDetails extends ConsumerWidget {
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         Text(
-                          DateFormat.yMMMd()
-                              .addPattern('@')
-                              .add_Hm()
-                              .formatNullDate(currentStop.timeRecord?.driver?.timeIn),
+                          DateFormat.yMMMd().addPattern('@').add_Hm().formatNullDate(currentStop.arrived?.localDate),
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
@@ -187,10 +184,7 @@ class StopDetails extends ConsumerWidget {
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         Text(
-                          DateFormat.yMMMd()
-                              .addPattern('@')
-                              .add_Hm()
-                              .formatNullDate(currentStop.timeRecord?.driver?.timeOut),
+                          DateFormat.yMMMd().addPattern('@').add_Hm().formatNullDate(currentStop.departed?.localDate),
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
