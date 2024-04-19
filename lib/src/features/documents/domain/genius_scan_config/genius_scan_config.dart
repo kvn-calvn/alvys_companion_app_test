@@ -31,13 +31,13 @@ class GeniusScanConfig with _$GeniusScanConfig {
         defaultFilter: "blackAndWhite",
         pdfPageSize: "letter",
         defaultFlashMode: "auto",
-        jpegQuality: 40,
+        jpegQuality: 10,
       );
   factory GeniusScanConfig.gallery(String path) => GeniusScanConfig(
         source: 'image',
         defaultFilter: 'photo',
         sourceImageUrl: 'file://$path',
-        jpegQuality: 40,
+        jpegQuality: 10,
       );
 
   @override
@@ -49,7 +49,7 @@ class GeniusScanConfig with _$GeniusScanConfig {
 @freezed
 class GeniusScanResults with _$GeniusScanResults {
   factory GeniusScanResults({
-    String? pdfUrl,
+    String? multiPageDocumentUrl,
     @Default(<Scan>[]) List<Scan> scans,
   }) = _GeniusScanResults;
 
