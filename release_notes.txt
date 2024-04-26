@@ -1,1 +1,1 @@
-Bug fixes and minor improvements.
+Increase file upload limit to 12mb
