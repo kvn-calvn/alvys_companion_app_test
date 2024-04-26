@@ -31,13 +31,13 @@ class GeniusScanConfig with _$GeniusScanConfig {
         defaultFilter: "blackAndWhite",
         pdfPageSize: "letter",
         defaultFlashMode: "auto",
-        jpegQuality: 10,
+        jpegQuality: 30,
       );
   factory GeniusScanConfig.gallery(String path) => GeniusScanConfig(
         source: 'image',
         defaultFilter: 'photo',
         sourceImageUrl: 'file://$path',
-        jpegQuality: 10,
+        jpegQuality: 30,
       );
 
   @override
