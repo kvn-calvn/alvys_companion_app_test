@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_genius_scan/flutter_genius_scan.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -24,9 +23,11 @@ import '../domain/genius_scan_config/genius_scan_generate_document_config.dart';
 import '../domain/upload_documents_state/upload_documents_state.dart';
 import 'docs_controller.dart';
 
-class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocumentsState, UploadDocumentArgs>
+class UploadDocumentsController
+    extends AutoDisposeFamilyNotifier<UploadDocumentsState, UploadDocumentArgs>
     implements IErrorHandler {
-  late AppDocumentRepository<DocumentsNotifier, UploadDocumentsController> docRepo;
+  late AppDocumentRepository<DocumentsNotifier, UploadDocumentsController>
+      docRepo;
   late TripController trips;
   late DocumentsNotifier docList;
   late ScanningNotifier isScanning;
@@ -40,7 +41,8 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
     userData = ref.read(authProvider.notifier);
     isScanning = ref.read(scanningProvider.notifier);
     router = ref.read(getRouter);
-    docList = ref.read(documentsProvider.call(DocumentsArgs(arg.documentType, null)).notifier);
+    docList = ref.read(
+        documentsProvider.call(DocumentsArgs(arg.documentType, null)).notifier);
     state = UploadDocumentsState(documentType: dropDownOptions.first);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       startScan();
@@ -61,13 +63,16 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
         break;
     }
     try {
-      var res = await FlutterGeniusScan.scanWithConfiguration(config.toJson().removeNulls);
+      var res = await FlutterGeniusScan.scanWithConfiguration(
+          config.toJson().removeNulls);
       var results = GeniusScanResults.fromJson(jsonDecode(jsonEncode(res)));
       if (firstScan && results.scans.isEmpty) {
         router.pop();
       }
-      state = state
-          .copyWith(pages: [...state.pages, ...results.scans.map<String>((e) => Scan.toPathString(e.enhancedUrl!))]);
+      state = state.copyWith(pages: [
+        ...state.pages,
+        ...results.scans.map<String>((e) => Scan.toPathString(e.enhancedUrl!))
+      ]);
       firstScan = false;
     } catch (e) {
       if (firstScan) {
@@ -84,8 +89,11 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
     if (state.pages.isEmpty) return;
     var pages = List<String>.from(state.pages);
     pages.removeAt(state.pageNumber);
-    var indexToResetTo = state.pageNumber >= state.pages.length - 1 ? state.pageNumber - 1 : state.pageNumber;
-    state = state.copyWith(pages: pages, pageNumber: indexToResetTo.clamp(0, pages.length + 1));
+    var indexToResetTo = state.pageNumber >= state.pages.length - 1
+        ? state.pageNumber - 1
+        : state.pageNumber;
+    state = state.copyWith(
+        pages: pages, pageNumber: indexToResetTo.clamp(0, pages.length + 1));
   }
 
   void updatePageNumber(int index) {
@@ -103,7 +111,10 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
 
     await FlutterGeniusScan.generateDocument(
         GeniusScanGeneratePDFConfig(
-                pages: state.pages.map((e) => GeneratePDFPage(imageUrl: GeneratePDFPage.toPathString(e))).toList())
+                pages: state.pages
+                    .map((e) => GeneratePDFPage(
+                        imageUrl: GeneratePDFPage.toPathString(e)))
+                    .toList())
             .toJson(),
         {'outputFileUrl': GeneratePDFPage.toPathString(path)});
     var pdfFile = File(path);
@@ -121,7 +132,9 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
       Navigator.of(context, rootNavigator: true).pop();
       context.pop();
       if (arg.documentType == DisplayDocumentType.tripDocuments) {
-        ref.read(tripControllerProvider.notifier).refreshCurrentTrip(arg.tripId!);
+        ref
+            .read(tripControllerProvider.notifier)
+            .refreshCurrentTrip(arg.tripId!);
       }
     }
   }
@@ -132,15 +145,20 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
     switch (arg.documentType) {
       case DisplayDocumentType.tripDocuments:
         var trip = trips.getTrip(arg.tripId!);
-        await docRepo.uploadTripDocuments(userData.driver!, state.documentType!, pdfFile, trip!);
+        await docRepo.uploadTripDocuments(
+            userData.driver!, state.documentType!, pdfFile, trip!);
         await trips.refreshCurrentTrip(arg.tripId!);
       case DisplayDocumentType.personalDocuments:
-        await docRepo.uploadPersonalDocuments(userData.getCompanyOwned.companyCode!, state.documentType!, pdfFile);
+        await docRepo.uploadPersonalDocuments(
+            userData.getCompanyOwned.companyCode!,
+            state.documentType!,
+            pdfFile);
         await docList.getDocuments();
       case DisplayDocumentType.paystubs:
         await Future.value(null);
       case DisplayDocumentType.tripReport:
-        await docRepo.uploadTripReport(userData.getCompanyOwned.companyCode!, state.documentType!, pdfFile);
+        await docRepo.uploadTripReport(userData.getCompanyOwned.companyCode!,
+            state.documentType!, pdfFile);
         await docList.getDocuments();
     }
   }
@@ -164,21 +182,25 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
         ], trip?.companyCode);
 
       case DisplayDocumentType.personalDocuments:
-        return UploadDocumentOptions.getOptionsList(
-            [(title: "Driver License", data: "Driver License"), (title: "Medical", data: "Medical")],
-            userData.getCompanyOwned.companyCode!);
+        return UploadDocumentOptions.getOptionsList([
+          (title: "Driver License", data: "Driver License"),
+          (title: "Medical", data: "Medical")
+        ], userData.getCompanyOwned.companyCode!);
       case DisplayDocumentType.paystubs:
         return [];
       case DisplayDocumentType.tripReport:
         return UploadDocumentOptions.getOptionsList(
-            [(title: 'Trip Report', data: 'Trip Report')], userData.getCompanyOwned.companyCode!);
+            [(title: 'Trip Report', data: 'Trip Report')],
+            userData.getCompanyOwned.companyCode!);
     }
   }
 
   @override
   FutureOr<void> onError(Exception ex) {
     if (router.routerDelegate.navigatorKey.currentContext?.mounted ?? false) {
-      Navigator.of(router.routerDelegate.navigatorKey.currentContext!, rootNavigator: true).pop();
+      Navigator.of(router.routerDelegate.navigatorKey.currentContext!,
+              rootNavigator: true)
+          .pop();
     }
   }
 
@@ -186,11 +208,13 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
   FutureOr<void> refreshPage(String page) {}
 }
 
-final uploadDocumentsController =
-    AutoDisposeNotifierProviderFamily<UploadDocumentsController, UploadDocumentsState, UploadDocumentArgs>(
-        UploadDocumentsController.new);
+final uploadDocumentsController = AutoDisposeNotifierProviderFamily<
+    UploadDocumentsController,
+    UploadDocumentsState,
+    UploadDocumentArgs>(UploadDocumentsController.new);
 
-final scanningProvider = NotifierProvider<ScanningNotifier, bool>(ScanningNotifier.new);
+final scanningProvider =
+    NotifierProvider<ScanningNotifier, bool>(ScanningNotifier.new);
 
 class ScanningNotifier extends Notifier<bool> {
   @override
@@ -205,14 +229,20 @@ class UploadDocumentArgs {
   final UploadType uploadType;
   final DisplayDocumentType documentType;
   final String? tripId;
-  UploadDocumentArgs({this.tripId, required this.uploadType, required this.documentType});
+  UploadDocumentArgs(
+      {this.tripId, required this.uploadType, required this.documentType});
 }
 
 class UploadDocumentOptions {
   final String companyCode, title, value;
 
-  UploadDocumentOptions({required this.companyCode, required this.title, required this.value});
+  UploadDocumentOptions(
+      {required this.companyCode, required this.title, required this.value});
 
-  static List<UploadDocumentOptions> getOptionsList(List<({String title, String data})> titles, String? companyCode) =>
-      titles.map((e) => UploadDocumentOptions(companyCode: companyCode ?? "", title: e.title, value: e.data)).toList();
+  static List<UploadDocumentOptions> getOptionsList(
+          List<({String title, String data})> titles, String? companyCode) =>
+      titles
+          .map((e) => UploadDocumentOptions(
+              companyCode: companyCode ?? "", title: e.title, value: e.data))
+          .toList();
 }
