@@ -81,13 +81,13 @@ class AppDialog extends StatelessWidget {
                         child: TextButton(
                           onPressed: action.action,
                           style: ButtonStyle(
-                            minimumSize: MaterialStateProperty.all(
+                            minimumSize: WidgetStateProperty.all(
                               const Size.fromHeight(60),
                             ),
-                            padding: MaterialStateProperty.all<EdgeInsets>(
+                            padding: WidgetStateProperty.all<EdgeInsets>(
                                 const EdgeInsets.all(15)),
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(
+                            shape:
+                                WidgetStateProperty.all<RoundedRectangleBorder>(
                               RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(10),
                                 side: BorderSide(

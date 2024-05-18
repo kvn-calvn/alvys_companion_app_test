@@ -4,7 +4,11 @@ import '../constants/color.dart';
 
 class ButtonStyle1 extends StatelessWidget {
   const ButtonStyle1(
-      {super.key, required this.onPressAction, required this.title, this.isLoading = false, this.isDisable = false});
+      {super.key,
+      required this.onPressAction,
+      required this.title,
+      this.isLoading = false,
+      this.isDisable = false});
 
   final Function onPressAction;
   final bool isLoading;
@@ -26,14 +30,21 @@ class ButtonStyle1 extends StatelessWidget {
       ),
       child: Text(
         isLoading ? "Loading.." : title,
-        style: Theme.of(context).textTheme.labelLarge!.copyWith(color: Colors.white),
+        style: Theme.of(context)
+            .textTheme
+            .labelLarge!
+            .copyWith(color: Colors.white),
       ),
     );
   }
 }
 
 class ButtonStyle2 extends StatelessWidget {
-  const ButtonStyle2({super.key, required this.onPressAction, required this.title, required this.isLoading});
+  const ButtonStyle2(
+      {super.key,
+      required this.onPressAction,
+      required this.title,
+      required this.isLoading});
 
   final Function()? onPressAction;
   final bool isLoading;
@@ -44,12 +55,13 @@ class ButtonStyle2 extends StatelessWidget {
     return ElevatedButton(
       onPressed: onPressAction,
       style: ButtonStyle(
-        elevation: MaterialStateProperty.all(0),
+        elevation: WidgetStateProperty.all(0),
         backgroundColor: onPressAction == null
-            ? MaterialStateProperty.all<Color>(
-                ColorManager.secondaryButtonDisabled(Theme.of(context).brightness),
+            ? WidgetStateProperty.all<Color>(
+                ColorManager.secondaryButtonDisabled(
+                    Theme.of(context).brightness),
               )
-            : MaterialStateProperty.all<Color>(
+            : WidgetStateProperty.all<Color>(
                 ColorManager.secondaryButton(Theme.of(context).brightness),
               ),
       ),
@@ -57,7 +69,10 @@ class ButtonStyle2 extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 10.0),
         child: Text(
           title,
-          style: TextStyle(color: onPressAction == null ? ColorManager.greyColorScheme2 : ColorManager.white),
+          style: TextStyle(
+              color: onPressAction == null
+                  ? ColorManager.greyColorScheme2
+                  : ColorManager.white),
         ),
       ),
     );
