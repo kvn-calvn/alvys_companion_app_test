@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_genius_scan/flutter_genius_scan.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -119,14 +118,14 @@ class UploadDocumentsController
             .toJson(),
         {'outputFileUrl': GeneratePDFPage.toPathString(path)});
     var pdfFile = File(path);
-    int fileLimit = 12;
-    ValidationContract.requiresWithCallback(
-        await pdfFile.sizeInMb <= fileLimit,
-        'File Limit Exceeded',
-        'File is over ${fileLimit}mb. Remove some pages if possible and try again',
-        () {
-      onError(Exception());
-    });
+    // int fileLimit = 12;
+    // ValidationContract.requiresWithCallback(
+    //     await pdfFile.sizeInMb <= fileLimit,
+    //     'File Limit Exceeded',
+    //     'File is over ${fileLimit}mb. Remove some pages if possible and try again',
+    //     () {
+    //   onError(Exception());
+    // });
     await _doUpload(pdfFile);
 
     if (context.mounted) {

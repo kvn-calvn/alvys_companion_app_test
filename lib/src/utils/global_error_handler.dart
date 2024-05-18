@@ -122,7 +122,7 @@ class GlobalErrorHandler {
         var e = error as AppException;
         message = e.message;
         title = e.title;
-        onError = e.callback;
+        onError = e.actions.firstOrNull?.op;
         break;
       default:
         hasError = false;
