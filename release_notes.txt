@@ -1,1 +1,1 @@
-Increase file upload limit to 12mb
+Remove file upload limit.
