@@ -165,7 +165,7 @@ class TripController extends _$TripController implements IErrorHandler {
     if (addLoading) state = const AsyncLoading();
     final result = await tripRepo.getTrips<TripController>();
     await auth.refreshDriverUser();
-    var dataToGet = result.toListNotNull();
+    var dataToGet = result.toList();
     state = AsyncValue.data(state.value!.copyWith(trips: dataToGet, loadingStopId: null));
   }
 
@@ -252,10 +252,15 @@ class TripController extends _$TripController implements IErrorHandler {
       state = AsyncValue.data(state.value!.copyWith(loadingStopId: null));
     });
     var oldStop = state.value!.tryGetStop(tripId, stopId);
-    ValidationContract.requireNotNullWithCallback(
-        oldStop?.arrived, 'Error', "There was an issue checking out, refresh and try again", () {
-      onError(Exception());
-    });
+    ValidationContract.requireNotNull(
+        oldStop?.arrived, 'Error', "There was an issue checking out, refresh and try again",
+        actions: [
+          ErrorDataAction(
+              title: "",
+              op: () {
+                onError(Exception());
+              })
+        ]);
     var dto = UpdateStopTimeRecord(
         latitude: location.latitude,
         longitude: location.longitude,
