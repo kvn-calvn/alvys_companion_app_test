@@ -23,7 +23,8 @@ import com.google.firebase.messaging.RemoteMessage
 class NHNotificationListener : NotificationListener {
 
     override fun onPushNotificationReceived(context: Context, message: RemoteMessage) {
-        if (message.data.isNotEmpty()) {
+        Log.d("NH_NOTIFICATION", "Title: $message")
+        if (message.notification?.title?.isNotEmpty() == true) {
             Log.d("NH_NOTIFICATION", "Message data payload: ${message.data}")
             showNotification(context, message)
         }
@@ -59,7 +60,7 @@ class NHNotificationListener : NotificationListener {
         notificationManager.createNotificationChannel(notificationChannel)
 
         val clickIntent = Intent(
-            Intent.ACTION_VIEW, uriString!!.toUri(), context, MainActivity::class.java
+            Intent.ACTION_VIEW, uriString?.toUri(), context, MainActivity::class.java
         )
 
         val clickPendingIntent: PendingIntent = TaskStackBuilder.create(context).run {
@@ -71,7 +72,7 @@ class NHNotificationListener : NotificationListener {
             NOTIFICATION_CHANNEL_ID
         )
             .setContentTitle(message.notification?.title ?: "")
-            .setContentTitle(message.notification?.body ?: "")
+            .setContentText(message.notification?.body ?: "")
             .setSmallIcon(R.mipmap.ic_notification)
             .setContentIntent(clickPendingIntent)
             .setAutoCancel(true)
@@ -79,4 +80,6 @@ class NHNotificationListener : NotificationListener {
 
         notificationManager.notify(Random().nextInt(), notification)
     }
+
+
 }
