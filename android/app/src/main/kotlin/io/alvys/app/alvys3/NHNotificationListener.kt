@@ -13,24 +13,28 @@ import android.os.Build
 import android.util.Log
 import androidx.core.net.toUri
 import com.microsoft.windowsazure.messaging.notificationhubs.NotificationListener
-import com.microsoft.windowsazure.messaging.notificationhubs.NotificationMessage
+//import com.microsoft.windowsazure.messaging.notificationhubs.NotificationMessage
 import java.util.Random
+
+import com.google.firebase.messaging.FirebaseMessagingService
+import com.google.firebase.messaging.RemoteMessage
 
 
 class NHNotificationListener : NotificationListener {
 
-    override fun onPushNotificationReceived(context: Context, message: NotificationMessage) {
-        if (message.data.isNotEmpty()) {
+    override fun onPushNotificationReceived(context: Context, message: RemoteMessage) {
+        Log.d("NH_NOTIFICATION", "Title: $message")
+        if (message.notification?.title?.isNotEmpty() == true) {
             Log.d("NH_NOTIFICATION", "Message data payload: ${message.data}")
             showNotification(context, message)
         }
 
 
-        Log.d("NH_NOTIFICATION", "Title: ${message.title}")
-        Log.d("NH_NOTIFICATION", "Body: ${message.body}")
+        Log.d("NH_NOTIFICATION", "Title: ${message.notification!!.title}")
+        Log.d("NH_NOTIFICATION", "Body: ${message.notification!!.body}")
     }
 
-    private fun showNotification(context: Context, message: NotificationMessage) {
+    private fun showNotification(context: Context, message: RemoteMessage) {
 
         val notificationManager =
             context.getSystemService(NOTIFICATION_SERVICE) as NotificationManager
@@ -56,7 +60,7 @@ class NHNotificationListener : NotificationListener {
         notificationManager.createNotificationChannel(notificationChannel)
 
         val clickIntent = Intent(
-            Intent.ACTION_VIEW, uriString!!.toUri(), context, MainActivity::class.java
+            Intent.ACTION_VIEW, uriString?.toUri(), context, MainActivity::class.java
         )
 
         val clickPendingIntent: PendingIntent = TaskStackBuilder.create(context).run {
@@ -67,8 +71,8 @@ class NHNotificationListener : NotificationListener {
         val notification: Notification = Notification.Builder(context,
             NOTIFICATION_CHANNEL_ID
         )
-            .setContentTitle(message.title)
-            .setContentTitle(message.body)
+            .setContentTitle(message.notification?.title ?: "")
+            .setContentText(message.notification?.body ?: "")
             .setSmallIcon(R.mipmap.ic_notification)
             .setContentIntent(clickPendingIntent)
             .setAutoCancel(true)
@@ -76,4 +80,6 @@ class NHNotificationListener : NotificationListener {
 
         notificationManager.notify(Random().nextInt(), notification)
     }
+
+
 }
