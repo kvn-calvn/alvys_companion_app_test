@@ -201,12 +201,7 @@ class _RedirectCardState extends State<RedirectCard> {
               InkWell(
                   key: currentKey,
                   onTap: () async {
-                    ref.read(httpClientProvider).telemetryClient.trackEvent(
-                        name:
-                            "${widget.buttonTitle.replaceAll(' ', '')}_button_tapped");
-                    FirebaseAnalytics.instance.logEvent(
-                        name:
-                            "${widget.buttonTitle.replaceAll(' ', '')}_button_tapped");
+      
                     launchUrlString(widget.url);
                   },
                   onLongPress: () {
