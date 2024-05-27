@@ -193,12 +193,6 @@ class _RedirectCardState extends State<RedirectCard> {
     return Padding(
         padding: const EdgeInsets.all(8.0),
         child: Consumer(builder: (context, ref, child) {
-          ref
-              .read(httpClientProvider)
-              .telemetryClient
-              .trackEvent(name: "${widget.buttonTitle}_button_tapped");
-          FirebaseAnalytics.instance
-              .logEvent(name: "${widget.buttonTitle}_button_tapped");
           return Column(
             mainAxisSize: MainAxisSize.min,
             children: [
@@ -207,6 +201,12 @@ class _RedirectCardState extends State<RedirectCard> {
               InkWell(
                   key: currentKey,
                   onTap: () async {
+                    ref.read(httpClientProvider).telemetryClient.trackEvent(
+                        name:
+                            "${widget.buttonTitle.replaceAll(' ', '')}_button_tapped");
+                    FirebaseAnalytics.instance.logEvent(
+                        name:
+                            "${widget.buttonTitle.replaceAll(' ', '')}_button_tapped");
                     launchUrlString(widget.url);
                   },
                   onLongPress: () {
