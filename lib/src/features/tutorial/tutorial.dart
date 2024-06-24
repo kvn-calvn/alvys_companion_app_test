@@ -1,7 +1,7 @@
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../utils/extensions.dart';
 import 'tutorial_controller.dart';
 
 enum WidgetShape { circle, square }
@@ -32,9 +32,9 @@ class _TutorialState extends ConsumerState<Tutorial> with SingleTickerProviderSt
     clipAnimation = widget.data
         .map((e) => RectTween(
                 begin: Rect.fromCenter(
-                    center: e.position.localToGlobal(Offset(e.position.size.width / 2, e.position.size.height / 2)),
-                    width: 0,
-                    height: 0),
+                    center: e.position.localToGlobal(Offset(e.position.size.width, e.position.size.height) / 2),
+                    width: 1,
+                    height: 1),
                 end: (e.position.localToGlobal(Offset.zero) & e.position.size))
             .animate(controller))
         .toList();
@@ -53,6 +53,7 @@ class _TutorialState extends ConsumerState<Tutorial> with SingleTickerProviderSt
 
     await controller.fling(velocity: -2);
     ref.read(tutorialProvider).entry?.remove();
+    ref.read(tutorialProvider).entry?.dispose();
     isCleaningUp = false;
   }
 
@@ -68,7 +69,7 @@ class _TutorialState extends ConsumerState<Tutorial> with SingleTickerProviderSt
             return Stack(
               children: [
                 ClipPath(
-                  clipper: TutorialClipper(widget.data, clipAnimation.map((e) => e.value ?? Rect.zero).toList()),
+                  clipper: TutorialClipper(widget.data, clipAnimation.map((e) => e.value).removeNulls.toList()),
                   child: Container(
                     decoration: BoxDecoration(
                       color: !Theme.of(context).brightness.isLight

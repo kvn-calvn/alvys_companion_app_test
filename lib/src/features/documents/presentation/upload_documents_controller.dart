@@ -2,7 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
-import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_genius_scan/flutter_genius_scan.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,6 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 
 import '../../../common_widgets/file_upload_progress_dialog.dart';
+import '../../../network/http_client.dart';
 import '../../../routing/app_router.dart';
 import '../../../utils/exceptions.dart';
 import '../../../utils/extensions.dart';
@@ -119,14 +120,30 @@ class UploadDocumentsController
             .toJson(),
         {'outputFileUrl': GeneratePDFPage.toPathString(path)});
     var pdfFile = File(path);
-    int fileLimit = 12;
-    ValidationContract.requiresWithCallback(
-        await pdfFile.sizeInMb <= fileLimit,
-        'File Limit Exceeded',
-        'File is over ${fileLimit}mb. Remove some pages if possible and try again',
-        () {
-      onError(Exception());
+
+    debugPrint("UPLOAD_DOC_CALLED");
+    ref
+        .read(httpClientProvider)
+        .telemetryClient
+        .trackEvent(name: "file_properties", additionalProperties: {
+      "file_size": '${await pdfFile.sizeInMb} Mb',
+      "file_type": '${state.documentType?.title}'
     });
+
+    await FirebaseAnalytics.instance
+        .logEvent(name: "file_properties", parameters: {
+      "file_size": '${await pdfFile.sizeInMb} Mb',
+      "file_type": '${state.documentType?.title}'
+    });
+
+    // int fileLimit = 12;
+    // ValidationContract.requiresWithCallback(
+    //     await pdfFile.sizeInMb <= fileLimit,
+    //     'File Limit Exceeded',
+    //     'File is over ${fileLimit}mb. Remove some pages if possible and try again',
+    //     () {
+    //   onError(Exception());
+    // });
     await _doUpload(pdfFile);
 
     if (context.mounted) {
