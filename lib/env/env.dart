@@ -9,10 +9,10 @@ abstract class Env {
   @EnviedField(varName: 'GMAPSKEY', obfuscate: true)
   static final String gMapsKey = _Env.gMapsKey;
 
-  @EnviedField(varName: 'HEREMAPSKEY_DEV', obfuscate: true)
+  @EnviedField(varName: 'HEREMAPSKEYDEV', obfuscate: true)
   static final String hereMapsKeyDEV = _Env.hereMapsKeyDEV;
 
-  @EnviedField(varName: 'HEREMAPSKEY_PROD', obfuscate: true)
+  @EnviedField(varName: 'HEREMAPSKEYPROD', obfuscate: true)
   static final String hereMapsKeyPROD = _Env.hereMapsKeyPROD;
 
   @EnviedField(varName: 'IOS_GENIUSSCANSDKKEY', obfuscate: true)
