@@ -101,7 +101,7 @@ class GoogleMapsRepo {
     return LatLngBounds(northeast: LatLng(x1!, y1!), southwest: LatLng(x0!, y0!));
   }
 
-  Future<Uint8List?> getMapMarkerBytesFromAsset(String path, [int width = 24]) async {
+  Future<Uint8List?> getMapMarkerBytesFromAsset(String path, [int width = 8]) async {
     var w = (WidgetsBinding.instance.platformDispatcher.implicitView!.devicePixelRatio * width).toInt();
     ByteData data = await rootBundle.load(path);
     var codec = await instantiateImageCodec(data.buffer.asUint8List(), targetWidth: w);
