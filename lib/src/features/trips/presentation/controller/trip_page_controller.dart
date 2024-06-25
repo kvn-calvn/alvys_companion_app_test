@@ -271,7 +271,7 @@ class TripController extends _$TripController implements IErrorHandler {
     });
     await FirebaseAnalytics.instance.logEvent(name: "checked_in", parameters: {
       "location": '${location.latitude}, ${location.longitude}',
-      "stop": stop.companyName
+      "stop": stop.companyName ?? "-"
     });
   }
 
@@ -313,7 +313,7 @@ class TripController extends _$TripController implements IErrorHandler {
     });
     await FirebaseAnalytics.instance.logEvent(name: "checked_out", parameters: {
       "location": '${location.latitude}, ${location.longitude}',
-      "stop": stop.companyName
+      "stop": stop.companyName ?? "-"
     });
   }
 

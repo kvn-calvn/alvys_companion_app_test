@@ -33,9 +33,9 @@ class MapNotifier extends AutoDisposeFamilyAsyncNotifier<MapState, String> {
       var pickupBytes = await repo.getMapMarkerBytesFromAsset('assets/pickup-1.png');
       var delivery = deliveryBytes == null
               ? BitmapDescriptor.defaultMarkerWithHue(199)
-              : BitmapDescriptor.fromBytes(deliveryBytes),
+              : BitmapDescriptor.bytes(deliveryBytes),
           pickup =
-              pickupBytes == null ? BitmapDescriptor.defaultMarkerWithHue(0) : BitmapDescriptor.fromBytes(pickupBytes);
+              pickupBytes == null ? BitmapDescriptor.defaultMarkerWithHue(0) : BitmapDescriptor.bytes(pickupBytes);
 
       var markers = trip.stopLocations
           .map((e) => Marker(
