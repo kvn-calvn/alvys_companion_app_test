@@ -69,7 +69,6 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
     try {
       var res = await FlutterGeniusScan.scanWithConfiguration(config.toJson().removeNulls);
       var results = GeniusScanResults.fromJson(jsonDecode(jsonEncode(res)));
-      print(results);
       if (firstScan && results.scans.isEmpty) {
         router.pop();
       }
