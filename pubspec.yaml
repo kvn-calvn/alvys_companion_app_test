@@ -45,7 +45,7 @@ dependencies:
   package_info_plus: ^8.0.0
   permission_handler: ^11.0.0
   app_settings: ^5.0.0
-  flutter_genius_scan: ^5.0.2
+  flutter_genius_scan: ^5.1.0
   image_picker: ^1.0.1
   material_symbols_icons: ^4.2668.0
   google_maps_flutter: ^2.6.1
@@ -69,6 +69,7 @@ dependencies:
   connectivity_plus: ^6.0.1
   upgrader: ^10.0.0
   app_tracking_transparency: ^2.0.4
+  flutter_image_compress: ^2.3.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

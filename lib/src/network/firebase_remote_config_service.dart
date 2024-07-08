@@ -41,7 +41,8 @@ class FirebaseRemoteConfigService {
         "login_error_message": "Please ask the office to add your phone number in Alvys.",
         "sales_url": "https://alvys.com/try-for-free-landing-page/",
         "support_url": "mailto:support@alvys.com?subject=Login%20Help",
-        "copy_support_email": "support@alvys.com"
+        "copy_support_email": "support@alvys.com",
+        "pdf_page_size": 350,
       });
       await firebaseRemoteConfig.fetchAndActivate();
     } catch (exception) {
@@ -64,4 +65,5 @@ class FirebaseRemoteConfigService {
   String supportUrl() => firebaseRemoteConfig.getString('support_url');
   String copySupportEmail() => firebaseRemoteConfig.getString('copy_support_email');
   String loginErrorMessage() => firebaseRemoteConfig.getString('login_error_message');
+  double get pdsPageSize => firebaseRemoteConfig.getDouble('pdf_page_size');
 }
