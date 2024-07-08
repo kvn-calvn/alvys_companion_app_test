@@ -15,28 +15,23 @@ class FlavorConfig {
   final String azureTelemetryKey;
   final String hubName;
   final String connectionString;
-  final String appcenterIOS;
-  final String appcenterAndroid;
 
   static FlavorConfig? _instance;
 
-  factory FlavorConfig({
-    required Flavor flavor,
-    required String env,
-    required String rawApiBase,
-    required String baseUrl,
-    required String storageUrl,
-    required String mobileBaseApi,
-    required String gMapsKey,
-    required String hereMapsKey,
-    required String iosGeniusScanSDKKey,
-    required String androidGeniusScanSDKKey,
-    required String azureTelemetryKey,
-    required String hubName,
-    required String connectionString,
-    required String appcenterIOS,
-    required String appcenterAndroid,
-  }) {
+  factory FlavorConfig(
+      {required Flavor flavor,
+      required String env,
+      required String rawApiBase,
+      required String baseUrl,
+      required String storageUrl,
+      required String mobileBaseApi,
+      required String gMapsKey,
+      required String hereMapsKey,
+      required String iosGeniusScanSDKKey,
+      required String androidGeniusScanSDKKey,
+      required String azureTelemetryKey,
+      required String hubName,
+      required String connectionString}) {
     _instance ??= FlavorConfig._internal(
         flavor,
         env,
@@ -50,29 +45,24 @@ class FlavorConfig {
         androidGeniusScanSDKKey,
         azureTelemetryKey,
         hubName,
-        connectionString,
-        appcenterIOS,
-        appcenterAndroid);
+        connectionString);
     return _instance!;
   }
 
   FlavorConfig._internal(
-    this.flavor,
-    this.env,
-    this.rawApiBase,
-    this.baseUrl,
-    this.storageUrl,
-    this.mobileBaseApi,
-    this.gMapsKey,
-    this.hereMapsKey,
-    this.iosGeniusScanSDKKey,
-    this.androidGeniusScanSDKKey,
-    this.azureTelemetryKey,
-    this.hubName,
-    this.connectionString,
-    this.appcenterIOS,
-    this.appcenterAndroid,
-  );
+      this.flavor,
+      this.env,
+      this.rawApiBase,
+      this.baseUrl,
+      this.storageUrl,
+      this.mobileBaseApi,
+      this.gMapsKey,
+      this.hereMapsKey,
+      this.iosGeniusScanSDKKey,
+      this.androidGeniusScanSDKKey,
+      this.azureTelemetryKey,
+      this.hubName,
+      this.connectionString);
 
   static FlavorConfig? get instance => _instance;
 

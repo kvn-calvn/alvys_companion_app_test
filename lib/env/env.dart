@@ -9,10 +9,10 @@ abstract class Env {
   @EnviedField(varName: 'GMAPSKEY', obfuscate: true)
   static final String gMapsKey = _Env.gMapsKey;
 
-  @EnviedField(varName: 'HEREMAPSKEY_DEV', obfuscate: true)
+  @EnviedField(varName: 'HEREMAPSKEYDEV', obfuscate: true)
   static final String hereMapsKeyDEV = _Env.hereMapsKeyDEV;
 
-  @EnviedField(varName: 'HEREMAPSKEY_PROD', obfuscate: true)
+  @EnviedField(varName: 'HEREMAPSKEYPROD', obfuscate: true)
   static final String hereMapsKeyPROD = _Env.hereMapsKeyPROD;
 
   @EnviedField(varName: 'IOS_GENIUSSCANSDKKEY', obfuscate: true)
@@ -28,10 +28,12 @@ abstract class Env {
   static final String androidGeniusScanSDKKey = _Env.androidGeniusScanSDKKey;
 
   @EnviedField(varName: 'ANDROID_GENIUSSCANSDKKEY_DEV', obfuscate: true)
-  static final String androidGeniusScanSDKKeyDEV = _Env.androidGeniusScanSDKKeyDEV;
+  static final String androidGeniusScanSDKKeyDEV =
+      _Env.androidGeniusScanSDKKeyDEV;
 
   @EnviedField(varName: 'ANDROID_GENIUSSCANSDKKEY_QA', obfuscate: true)
-  static final String androidGeniusScanSDKKeyQA = _Env.androidGeniusScanSDKKeyQA;
+  static final String androidGeniusScanSDKKeyQA =
+      _Env.androidGeniusScanSDKKeyQA;
 
   @EnviedField(varName: 'AZURETELEMETRYKEY_DEV', obfuscate: true)
   static final String azureTelemetryKeyDEV = _Env.azureTelemetryKeyDEV;
@@ -60,23 +62,6 @@ abstract class Env {
   @EnviedField(varName: 'CONNECTION_STRING_DEV', obfuscate: true)
   static final String connectionStringDev = _Env.connectionStringDev;
 
-  @EnviedField(varName: 'APPCENTER_ANDROID_DEV', obfuscate: true)
-  static final String appcenterAndroidDev = _Env.appcenterAndroidDev;
-
-  @EnviedField(varName: 'APPCENTER_IOS_DEV', obfuscate: true)
-  static final String appcenterIOSDev = _Env.appcenterIOSDev;
-
-  @EnviedField(varName: 'APPCENTER_ANDROID_PROD', obfuscate: true)
-  static final String appcenterAndroidProd = _Env.appcenterAndroidProd;
-
-  @EnviedField(varName: 'APPCENTER_IOS_PROD', obfuscate: true)
-  static final String appcenterIOSProd = _Env.appcenterIOSProd;
-
-  @EnviedField(varName: 'APPCENTER_ANDROID_QA', obfuscate: true)
-  static final String appcenterAndroidQa = _Env.appcenterAndroidQa;
-
-  @EnviedField(varName: 'APPCENTER_IOS_QA', obfuscate: true)
-  static final String appcenterIOSQa = _Env.appcenterIOSQa;
-
-  static String get geniusScanKey => Platform.isAndroid ? androidGeniusScanSDKKey : iOSGeniusScanSDKKey;
+  static String get geniusScanKey =>
+      Platform.isAndroid ? androidGeniusScanSDKKey : iOSGeniusScanSDKKey;
 }
