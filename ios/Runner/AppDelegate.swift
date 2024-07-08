@@ -58,13 +58,13 @@ import GoogleMaps
                 
             case "isTablet":
                 result(UIDevice.current.userInterfaceIdiom == .pad)
-            case "nativeApiKeys":
-                guard let args = call.arguments as? Dictionary<String, Any> else {return}
-                let AppCenterKey = (args["appcenterKey"] as? String)
-                  AppCenter.start(withAppSecret: AppCenterKey, services:[
-                    Analytics.self,
-                    Crashes.self
-                  ])
+            // case "nativeApiKeys":
+            //     guard let args = call.arguments as? Dictionary<String, Any> else {return}
+            //     let AppCenterKey = (args["appcenterKey"] as? String)
+            //       AppCenter.start(withAppSecret: AppCenterKey, services:[
+            //         Analytics.self,
+            //         Crashes.self
+            //       ])
             default:
                 result(FlutterMethodNotImplemented)
             }

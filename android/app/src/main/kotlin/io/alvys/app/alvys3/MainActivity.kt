@@ -76,15 +76,15 @@ class MainActivity : FlutterActivity() {
                             result.success(startString)
                         }
                     }
-                    "nativeApiKeys" -> {
-                        val appCenterKey = call.argument<String>("appcenterKey")
-                        //Log.e("MSG1", appCenterKey.toString())
+                    // "nativeApiKeys" -> {
+                    //     val appCenterKey = call.argument<String>("appcenterKey")
+                    //     //Log.e("MSG1", appCenterKey.toString())
 
-                        AppCenter.start(
-                            application, appCenterKey,
-                            Analytics::class.java, Crashes::class.java
-                        )
-                    }
+                    //     AppCenter.start(
+                    //         application, appCenterKey,
+                    //         Analytics::class.java, Crashes::class.java
+                    //     )
+                    // }
                     "isTablet" ->{
                         val (width, height) = windowManager.currentDeviceRealSize()
                         val widthInInches: Double = (width / resources.displayMetrics.xdpi).toDouble()
