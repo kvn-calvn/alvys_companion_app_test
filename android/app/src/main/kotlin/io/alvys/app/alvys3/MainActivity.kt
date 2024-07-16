@@ -5,9 +5,6 @@ import android.graphics.Point
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
-import com.microsoft.appcenter.AppCenter
-import com.microsoft.appcenter.analytics.Analytics
-import com.microsoft.appcenter.crashes.Crashes
 import com.microsoft.windowsazure.messaging.notificationhubs.NotificationHub
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine

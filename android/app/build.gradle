@@ -138,10 +138,6 @@ dependencies {
     implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-android:1.6.4'
     // Gson to convert raw JSON to pretty JSON
     implementation 'com.google.code.gson:gson:2.8.9'
-    def appCenterSdkVersion = '4.4.5'
-    implementation "com.microsoft.appcenter:appcenter-analytics:${appCenterSdkVersion}"
-    implementation "com.microsoft.appcenter:appcenter-crashes:${appCenterSdkVersion}"
-
 
 
 }

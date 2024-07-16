@@ -1,5 +1,5 @@
 variables:
-  flutterVersion: "3.22.0"
+  flutterVersion: "3.22.2"
   flutterToolPath: "$(Agent.ToolsDirectory)/Flutter/${flutterVersion}/macos/flutter/bin"
   keyPropertiesPath: "$(Build.SourcesDirectory)/android/key.properties"
   bundlToolVersion: "1.15.6"
@@ -7,26 +7,14 @@ variables:
     appIdentifier: 'io.alvys.app.dev'
     environment: 'dev'
     iosDistribMethodString: 'ad-hoc'
-    appcenterAndroidSlug: 'Alvys/DevAndroid'
-    appcenterIosSlug: 'Alvys/DevIOS'
-    appcenterIosServerEndpoint: 'DevIOS_AppCenter'
-    appcenterAndroidServerEndpoint: 'DevAndroid_AppCenter'
     provisionProfile: 'alvys_dev_adhoc.mobileprovision'
   ${{ if eq(variables['Build.SourceBranchName'], 'qa') }}:
     appIdentifier: 'io.alvys.app.qa'
     environment: 'qa'
     iosDistribMethodString: 'ad-hoc'
-    appcenterAndroidSlug: 'Alvys/QaAndroid'
-    appcenterIosSlug: 'Alvys/QaIOS'
     provisionProfile: 'alvys_qa_adhoc.mobileprovision'
-    appcenterIosServerEndpoint: 'QaIOS_AppCenter'
-    appcenterAndroidServerEndpoint: 'QaAndroid_AppCenter'
   ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
     appIdentifier: 'io.alvys.app'
     environment: 'prod'
     iosDistribMethodString: 'app-store'
-    appcenterAndroidSlug: 'Alvys/ProdAndroid'
-    appcenterIosSlug: 'Alvys/ProdIOS'
     provisionProfile: 'alvys_prod_appstore.mobileprovision'
-    appcenterIosServerEndpoint: 'ProdIOS_AppCenter'
-    appcenterAndroidServerEndpoint: 'ProdAndroid_AppCenter'

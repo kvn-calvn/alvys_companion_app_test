@@ -3,10 +3,6 @@ import Flutter
 import FirebaseCore
 import WindowsAzureMessaging
 import UserNotifications
-import AppCenter
-import AppCenterAnalytics
-import AppCenterCrashes
-
 import GoogleMaps
 
 
