@@ -17,9 +17,7 @@ void main() {
       gMapsKey: Env.gMapsKey,
       hereMapsKey: Env.hereMapsKeyPROD,
       hubName: Env.hubNameProd,
-      connectionString: Env.connectionStringProd,
-      appcenterIOS: Env.appcenterIOSProd,
-      appcenterAndroid: Env.appcenterAndroidProd);
+      connectionString: Env.connectionStringProd);
 
   mainCommon();
 }

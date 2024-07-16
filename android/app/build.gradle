@@ -64,7 +64,7 @@ android {
         multiDexEnabled true
         applicationId "io.alvys.alvys"
         minSdkVersion 26
-        targetSdkVersion 33
+        targetSdkVersion 34
         compileSdkVersion 34
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
