@@ -33,12 +33,12 @@ class GeniusScanConfig with _$GeniusScanConfig {
         defaultFilter: "blackAndWhite",
         pdfPageSize: "letter",
         defaultFlashMode: "auto",
-        jpegQuality: 30,
+        jpegQuality: 100,
       );
   factory GeniusScanConfig.gallery() => GeniusScanConfig(
         source: 'library',
         defaultFilter: 'blackAndWhite',
-        // jpegQuality: 1,
+        jpegQuality: 100,
       );
 
   @override

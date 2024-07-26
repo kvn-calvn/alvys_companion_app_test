@@ -3,7 +3,7 @@ description: Alvys mobile driver app.
 
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
-version: 3.0.23+276
+version: 3.0.23+279
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -45,7 +45,7 @@ dependencies:
   package_info_plus: ^8.0.0
   permission_handler: ^11.0.0
   app_settings: ^5.0.0
-  flutter_genius_scan: ^5.1.1
+  flutter_genius_scan: ^5.1.3
   image_picker: ^1.0.1
   material_symbols_icons: ^4.2668.0
   google_maps_flutter: ^2.6.1
