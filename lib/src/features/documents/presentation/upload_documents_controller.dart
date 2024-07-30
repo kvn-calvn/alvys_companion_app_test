@@ -180,6 +180,7 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
         return UploadDocumentOptions.getOptionsList([
           (title: 'Unclassified', data: 'Unclassified'),
           (title: 'Receipt', data: 'Receipt'),
+          (title: 'Scale Ticket', data: 'Scale Ticket'),
           (title: 'Bill of Lading', data: 'Bill of Lading'),
           (title: 'Proof of Delivery', data: 'Proof of Delivery'),
           (title: 'Load Securement', data: 'Load Securement'),
