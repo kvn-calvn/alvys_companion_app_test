@@ -60,13 +60,13 @@ class AlvysHttpClient {
 
   Map<String, String> getBaseHeaders(String? companyCode) {
     var token = pref.getString(SharedPreferencesKey.driverToken.name);
-    return token == null
-        ? {HttpHeaders.contentTypeHeader: ContentType.json.value}
-        : {
-            HttpHeaders.contentTypeHeader: ContentType.json.value,
-            HttpHeaders.authorizationHeader: 'Basic $token',
-            if (companyCode != null) 'CompanyCode': companyCode
-          };
+    var userAgent = pref.getString(SharedPreferencesKey.userAgent.name);
+    return {
+      HttpHeaders.contentTypeHeader: ContentType.json.value,
+      if (userAgent.isNotNullOrEmpty) HttpHeaders.userAgentHeader: userAgent!,
+      if (token != null) HttpHeaders.authorizationHeader: 'Basic $token',
+      if (companyCode != null) AlvysHttpHeaders.companyCode: companyCode
+    };
   }
 
   Map<String, String> getHeaders(String? companyCode, Map<String, String>? headers) {
@@ -251,4 +251,8 @@ class AlvysHttpClient {
           Map.fromEntries(user.userTenants.map((e) => MapEntry(e.companyCode, e.contractorType))).toJsonEncodedString;
     }
   }
+}
+
+class AlvysHttpHeaders {
+  static String companyCode = 'CompanyCode';
 }
