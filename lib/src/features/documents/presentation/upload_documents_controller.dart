@@ -70,6 +70,7 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
     }
     try {
       var res = await FlutterGeniusScan.scanWithConfiguration(config.toJson().removeNulls);
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge, overlays: [SystemUiOverlay.top]);
       var results = GeniusScanResults.fromJson(jsonDecode(jsonEncode(res)));
       if (firstScan && results.scans.isEmpty) {
         router.pop();
@@ -86,7 +87,6 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
       debugPrint('$e');
       state = state;
     }
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge, overlays: [SystemUiOverlay.top]);
     isScanning.setState(false);
   }
 
