@@ -7,6 +7,7 @@ import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_genius_scan/flutter_genius_scan.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -58,6 +59,7 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
     isScanning.setState(true);
     GeniusScanConfig config;
     ProviderArgsSaver.instance.uploadArgs = arg;
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive, overlays: [SystemUiOverlay.top]);
     switch (arg.uploadType) {
       case UploadType.camera:
         config = GeniusScanConfig.camera();
@@ -68,6 +70,7 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
     }
     try {
       var res = await FlutterGeniusScan.scanWithConfiguration(config.toJson().removeNulls);
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge, overlays: [SystemUiOverlay.top]);
       var results = GeniusScanResults.fromJson(jsonDecode(jsonEncode(res)));
       if (firstScan && results.scans.isEmpty) {
         router.pop();
