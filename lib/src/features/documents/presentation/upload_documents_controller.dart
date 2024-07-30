@@ -80,6 +80,7 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
           .copyWith(pages: [...state.pages, ...results.scans.map<String>((e) => Scan.toPathString(e.enhancedUrl!))]);
       firstScan = false;
     } catch (e) {
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge, overlays: [SystemUiOverlay.top]);
       if (firstScan) {
         isScanning.setState(false);
         router.pop();
