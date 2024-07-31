@@ -57,6 +57,7 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
 
   Future<void> startScan([bool firstScan = true]) async {
     isScanning.setState(true);
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive, overlays: [SystemUiOverlay.top]);
     GeniusScanConfig config;
     ProviderArgsSaver.instance.uploadArgs = arg;
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive, overlays: [SystemUiOverlay.top]);
@@ -80,6 +81,7 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
           .copyWith(pages: [...state.pages, ...results.scans.map<String>((e) => Scan.toPathString(e.enhancedUrl!))]);
       firstScan = false;
     } catch (e) {
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge, overlays: [SystemUiOverlay.top]);
       if (firstScan) {
         isScanning.setState(false);
         router.pop();
