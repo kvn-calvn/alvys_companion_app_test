@@ -60,6 +60,7 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive, overlays: [SystemUiOverlay.top]);
     GeniusScanConfig config;
     ProviderArgsSaver.instance.uploadArgs = arg;
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersive, overlays: [SystemUiOverlay.top]);
     switch (arg.uploadType) {
       case UploadType.camera:
         config = GeniusScanConfig.camera();
@@ -184,6 +185,7 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
         return UploadDocumentOptions.getOptionsList([
           (title: 'Unclassified', data: 'Unclassified'),
           (title: 'Receipt', data: 'Receipt'),
+          (title: 'Scale Ticket', data: 'Scale Ticket'),
           (title: 'Bill of Lading', data: 'Bill of Lading'),
           (title: 'Proof of Delivery', data: 'Proof of Delivery'),
           (title: 'Load Securement', data: 'Load Securement'),
