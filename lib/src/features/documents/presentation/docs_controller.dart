@@ -59,7 +59,7 @@ class DocumentsNotifier extends AutoDisposeFamilyAsyncNotifier<DocumentState, Do
   }
 
   Future<void> getPaystubs() async {
-    if (auth.state.value!.canViewPaystubs) {
+    if (auth.state.value!.canViewPaystubsAll) {
       var res = await docRepo.getPaystubs(
         auth.driver!,
         top = top,
@@ -87,7 +87,7 @@ class DocumentsNotifier extends AutoDisposeFamilyAsyncNotifier<DocumentState, Do
   Future<void> loadMorePaystubs() async {
     if (arg.documentType == DisplayDocumentType.paystubs &&
         state.value!.canLoadMore &&
-        auth.state.value!.canViewPaystubs) {
+        auth.state.value!.canViewPaystubsAll) {
       top += 10;
       await getPaystubs();
       if (state.value!.documentList.length < top) {

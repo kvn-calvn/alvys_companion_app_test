@@ -16,10 +16,11 @@ class DocumentState with _$DocumentState {
     @Default('') String title,
   }) = _DocumentState;
   DocumentState._();
-  List<AppDocument> displayPaystubs(bool shouldDisplay) =>
-      shouldDisplay ? documentList.where((element) => element.date.isNullOrAfterNowOnlyDate).toList() : [];
-  List<AppDocument> documents(DisplayDocumentType type, [bool shouldDisplay = true]) =>
-      List.from(type == DisplayDocumentType.paystubs ? displayPaystubs(shouldDisplay) : documentList)
+  List<AppDocument> displayPaystubs(bool Function(String companyCode) shouldDisplay) => documentList
+      .where((element) => element.date.isNullOrAfterNowOnlyDate && shouldDisplay(element.companyCode))
+      .toList();
+  List<AppDocument> documents(DisplayDocumentType type, [bool Function(String companyCode)? shouldDisplay]) =>
+      List.from(type == DisplayDocumentType.paystubs ? displayPaystubs(shouldDisplay ?? (data) => false) : documentList)
         ..sort((a, b) => a.date.isAfterNull(b.date) ? -1 : 1);
   factory DocumentState.fromJson(Map<String, dynamic> json) => _$DocumentStateFromJson(json);
 }
