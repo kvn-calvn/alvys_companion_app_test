@@ -27,7 +27,11 @@ class NetworkNotifier extends Notifier<bool> {
   late StreamSubscription<bool>? internetSubscription;
   NetworkNotifier([this.initConnection]) {
     checker = InternetConnectionChecker.createInstance(
-        checkTimeout: const Duration(minutes: 2), checkInterval: const Duration(seconds: 45));
+      customCheckOptions: [
+              AddressCheckOption(uri: Uri.parse('https://1.1.1.1')),
+      ],
+      checkInterval: const Duration(seconds: 45),
+    );
   }
   @override
   bool build() {
@@ -69,7 +73,8 @@ class NetworkNotifier extends Notifier<bool> {
 
   void setInternetState(bool internetState) => state = internetState;
   Stream<bool> get internetConnectionStream {
-    return checker.onStatusChange.map((event) => event == InternetConnectionStatus.connected);
+    return checker.onStatusChange
+        .map((event) => event == InternetConnectionStatus.connected);
   }
 
   void updateOverlay(bool oldState) {
@@ -77,7 +82,8 @@ class NetworkNotifier extends Notifier<bool> {
       if (state == oldState) return;
       if (!state) {
         if (!_hasInsert) {
-          noInternetOverlay = OverlayEntry(builder: (context) => NoInternetWidget(noInternetOverlay.remove));
+          noInternetOverlay = OverlayEntry(
+              builder: (context) => NoInternetWidget(noInternetOverlay.remove));
           errorHandler.navKey.currentState!.overlay!.insert(noInternetOverlay);
           _hasInsert = true;
         }
@@ -92,7 +98,8 @@ class NetworkNotifier extends Notifier<bool> {
   bool get hasInternet => state;
 }
 
-final internetConnectionCheckerProvider = NotifierProvider<NetworkNotifier, bool>(NetworkNotifier.new);
+final internetConnectionCheckerProvider =
+    NotifierProvider<NetworkNotifier, bool>(NetworkNotifier.new);
 
 class NoInternetWidget extends ConsumerStatefulWidget {
   final void Function() removeBanner;
@@ -102,13 +109,15 @@ class NoInternetWidget extends ConsumerStatefulWidget {
   ConsumerState<NoInternetWidget> createState() => _NoInternetWidgetState();
 }
 
-class _NoInternetWidgetState extends ConsumerState<NoInternetWidget> with SingleTickerProviderStateMixin {
+class _NoInternetWidgetState extends ConsumerState<NoInternetWidget>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
   @override
   void initState() {
     super.initState();
-    _controller = AnimationController(vsync: this, duration: const Duration(milliseconds: 250));
+    _controller = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 250));
     _controller.forward();
   }
 
@@ -148,7 +157,10 @@ class _NoInternetWidgetState extends ConsumerState<NoInternetWidget> with Single
                           bottom: false,
                           child: Text(
                             'No internet',
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white),
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.copyWith(color: Colors.white),
                           ),
                         ),
                       ),
