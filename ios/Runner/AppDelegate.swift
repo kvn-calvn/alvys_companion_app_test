@@ -6,7 +6,7 @@ import UserNotifications
 import GoogleMaps
 
 
-@UIApplicationMain
+@main
 @objc class AppDelegate: FlutterAppDelegate,MSNotificationHubDelegate {
     
     private var notificationPresentationCompletionHandler: Any?
