@@ -1,1 +1,1 @@
-You can now upload a Scale Ticket document to your trip.
+Bug fixes and performance improvements
