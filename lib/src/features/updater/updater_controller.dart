@@ -26,10 +26,12 @@ class UpdaterController {
             barrierDismissible: false,
             builder: (context) => PopScope(
                   canPop: true,
-                  onPopInvoked: (didPop) => Future.value(false),
+                  onPopInvokedWithResult: (didPop, result) =>
+                      (didPop) => Future.value(false),
                   child: AppDialog(
                     title: 'Update Available',
-                    description: 'Version ${Upgrader.sharedInstance.currentAppStoreVersion} of the app is available.',
+                    description:
+                        'Version ${Upgrader.sharedInstance.currentAppStoreVersion} of the app is available.',
                     actions: [
                       AppDialogAction(
                         action: () {
