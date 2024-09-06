@@ -49,7 +49,7 @@ class AuthState with _$AuthState {
       false;
 
   bool get canViewPaystubsAll => driver!.userTenants
-      // .where((element) => element.companyOwnedAsset ?? false)
+      .where((element) => element.companyOwnedAsset ?? false)
       .expand((element) => element.permissions)
       .containsIgnoreCase(UserPermissions.viewPaystubs);
   bool canViewPaystubs(String companyCode) =>
