@@ -1,20 +1,20 @@
 variables:
-  flutterVersion: "3.22.3"
+  flutterVersion: "3.24.2"
   flutterToolPath: "$(Agent.ToolsDirectory)/Flutter/${flutterVersion}/macos/flutter/bin"
   keyPropertiesPath: "$(Build.SourcesDirectory)/android/key.properties"
   bundlToolVersion: "1.15.6"
   ${{ if eq(variables['Build.SourceBranchName'], 'dev') }}:
-    appIdentifier: 'io.alvys.app.dev'
-    environment: 'dev'
-    iosDistribMethodString: 'ad-hoc'
-    provisionProfile: 'alvys_dev_adhoc.mobileprovision'
+    appIdentifier: "io.alvys.app.dev"
+    environment: "dev"
+    iosDistribMethodString: "ad-hoc"
+    provisionProfile: "alvys_dev_adhoc.mobileprovision"
   ${{ if eq(variables['Build.SourceBranchName'], 'qa') }}:
-    appIdentifier: 'io.alvys.app.qa'
-    environment: 'qa'
-    iosDistribMethodString: 'ad-hoc'
-    provisionProfile: 'alvys_qa_adhoc.mobileprovision'
+    appIdentifier: "io.alvys.app.qa"
+    environment: "qa"
+    iosDistribMethodString: "ad-hoc"
+    provisionProfile: "alvys_qa_adhoc.mobileprovision"
   ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
-    appIdentifier: 'io.alvys.app'
-    environment: 'prod'
-    iosDistribMethodString: 'app-store'
-    provisionProfile: 'alvys_prod_appstore.mobileprovision'
+    appIdentifier: "io.alvys.app"
+    environment: "prod"
+    iosDistribMethodString: "app-store"
+    provisionProfile: "alvys_prod_appstore.mobileprovision"
