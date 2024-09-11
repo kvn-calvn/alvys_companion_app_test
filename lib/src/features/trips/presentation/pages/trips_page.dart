@@ -24,6 +24,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:posthog_flutter/posthog_flutter.dart';
 
 class LoadListPage extends ConsumerStatefulWidget {
   const LoadListPage({super.key});
@@ -36,12 +37,24 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
     with TickerProviderStateMixin {
   late TabController _tabController;
 
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
 
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+                var userState = ref.watch(authProvider);
+
+      await Posthog().identify(
+          userId: userState.value?.driver?.id ?? '',
+          userProperties: {
+            'Phone': userState.value?.driver?.phone ?? '',
+            'Email': userState.value?.driver?.email ?? '',
+            'Name:': userState.value?.driver?.name ?? '',
+            'Tenant': userState.value?.driver?.companyCodesWithSpace ?? ''
+          });
       ref.read(tutorialProvider).startTutorial(
           context,
           () async => ref
@@ -49,6 +62,13 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
               .handleAfterTutorial(context));
       //checkLocationPermission(context);
     });
+    postHogScreenView();
+  }
+
+  Future<void> postHogScreenView() async {
+    await Posthog().screen(
+      screenName: 'Test: Trips Page',
+    );
   }
 
   Future<void> checkLocationPermission(BuildContext context) async {
