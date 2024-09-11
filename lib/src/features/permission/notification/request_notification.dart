@@ -86,8 +86,11 @@ class RequestNotification extends ConsumerWidget {
                                           AppSettings.openAppSettings(
                                                   type: AppSettingsType
                                                       .notification)
-                                              .then((value) =>
-                                                  GoRouter.of(context).pop());
+                                              .then((value) => {
+                                                    if (context.mounted)
+                                                      GoRouter.of(context)
+                                                          .pop(),
+                                                  });
                                         },
                                         primary: true),
                                     AppDialogAction(
