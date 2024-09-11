@@ -27,7 +27,8 @@ class NetworkNotifier extends Notifier<bool> {
   late StreamSubscription<bool>? internetSubscription;
   NetworkNotifier([this.initConnection]) {
     checker = InternetConnectionChecker.createInstance(
-        checkTimeout: const Duration(minutes: 2), checkInterval: const Duration(seconds: 45));
+      checkInterval: const Duration(seconds: 45),
+    );
   }
   @override
   bool build() {
