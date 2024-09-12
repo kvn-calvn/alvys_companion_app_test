@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:flutter_pdfview/flutter_pdfview.dart';
+
 import '../../../network/http_client.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,7 +13,7 @@ import 'package:dio/dio.dart';
 import 'package:go_router/go_router.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:flutter/material.dart';
-import 'package:pdf_viewer_plugin/pdf_viewer_plugin.dart';
+//import 'package:pdf_viewer_plugin/pdf_viewer_plugin.dart';
 import 'package:share_plus/share_plus.dart';
 
 class PDFViewer extends StatefulWidget {
@@ -113,7 +115,8 @@ class _PDFViewerState extends State<PDFViewer> {
                 ? Center(
                     child: Text(errorMessage),
                   )
-                : PdfView(path: path),
+                : //PdfView(path: path),
+                PDFView(filePath: path,)
       ),
     );
   }
