@@ -65,7 +65,7 @@ class ProfileList extends ConsumerWidget {
               context.goNamed(RouteName.personalDocumentsList.name);
             },
           ),
-          if (userState.value!.canViewPaystubs)
+          if (userState.value!.canViewPaystubsAll)
             LargeNavButton(
               title: "Paystubs",
               onPressed: () {

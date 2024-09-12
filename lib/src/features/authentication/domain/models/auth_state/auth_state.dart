@@ -48,8 +48,14 @@ class AuthState with _$AuthState {
       tryGetUserTenant(companyCode)?.permissions.containsIgnoreCase(UserPermissions.viewCustomerRateConfirmation) ??
       false;
 
-  bool get canViewPaystubs => driver!.userTenants
-      // .where((element) => element.companyOwnedAsset ?? false)
+  bool get canViewPaystubsAll => driver!.userTenants
+      .where((element) => element.companyOwnedAsset ?? false)
       .expand((element) => element.permissions)
       .containsIgnoreCase(UserPermissions.viewPaystubs);
+  bool canViewPaystubs(String companyCode) =>
+      tryGetUserTenant(companyCode)
+          ?.permissions
+          // .where((element) => element.companyOwnedAsset ?? false)
+          .containsIgnoreCase(UserPermissions.viewPaystubs) ??
+      false;
 }
