@@ -63,7 +63,11 @@
            android:name=".LocationTrackingService"
            android:foregroundServiceType="location"
            android:exported="false" />
-           
+        <meta-data android:name="com.posthog.posthog.API_KEY" android:value="phc_DbyIP2PQMkz6O1hI2JIv75Ya5exKZgE6EXFFFyqgsNE" />
+        <meta-data android:name="com.posthog.posthog.POSTHOG_HOST" android:value="https://us.i.posthog.com" />
+        <meta-data android:name="com.posthog.posthog.TRACK_APPLICATION_LIFECYCLE_EVENTS" android:value="true" />
+        <meta-data android:name="com.posthog.posthog.DEBUG" android:value="true" />
+
     </application>
 
 

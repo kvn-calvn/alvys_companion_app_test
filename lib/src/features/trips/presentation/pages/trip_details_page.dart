@@ -1,6 +1,7 @@
 import '../../../../common_widgets/chip.dart';
 
 import '../../../../common_widgets/tab_text.dart';
+import '../../../../network/posthog/posthog_provider.dart';
 import '../../../../utils/alvys_websocket.dart';
 
 import '../../../../network/firebase_remote_config_service.dart';
@@ -55,6 +56,9 @@ class _LoadDetailsPageState extends ConsumerState<LoadDetailsPage> with TickerPr
   Widget build(BuildContext context) {
     var trip = ref.watch(tripControllerProvider).value!.getTrip(widget.tripId);
     var showTutBtn = ref.watch(firebaseRemoteConfigServiceProvider).showTutorialBtn();
+    ref.read(postHogProvider).postHogScreen('Trip Details - ${trip.loadNumber ?? ''}',
+        {'load_number': trip.loadNumber ?? '', 'trip_id': trip.id ?? ''});
+
     return Scaffold(
       appBar: AppBar(
         automaticallyImplyLeading: false,
@@ -154,6 +158,7 @@ class TripDetails extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
     final authState = ref.watch(authProvider);
     final tripDetailsState = ref.watch(tripControllerProvider);
     var trip = tripDetailsState.value!.tryGetTrip(tripId);

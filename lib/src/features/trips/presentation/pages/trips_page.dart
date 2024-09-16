@@ -7,6 +7,7 @@ import '../../../../network/firebase_remote_config_service.dart';
 import '../../../../network/http_client.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
+import '../../../../network/posthog/posthog_provider.dart';
 import '../../../../utils/alvys_websocket.dart';
 import '../../../authentication/presentation/driver_status_dropdown.dart';
 import '../../../tutorial/tutorial_controller.dart';
@@ -36,12 +37,27 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
     with TickerProviderStateMixin {
   late TabController _tabController;
 
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
 
+
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      var userState = ref.watch(authProvider);
+      final postHogService = ref.read(postHogProvider);
+      postHogService.postHogScreen('Trips', null);
+      postHogService.postHogIdentify(
+          userState.value?.driver?.id ?? '',
+          {
+            'Phone': userState.value?.driver?.phone ?? '',
+            'Email': userState.value?.driver?.email ?? '',
+            'Name:': userState.value?.driver?.name ?? '',
+            'Tenant': userState.value?.driver?.companyCodesWithSpace ?? ''
+          },
+          null);
+
       ref.read(tutorialProvider).startTutorial(
           context,
           () async => ref
@@ -50,6 +66,7 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
       //checkLocationPermission(context);
     });
   }
+
 
   Future<void> checkLocationPermission(BuildContext context) async {
     if (await Permission.location.isPermanentlyDenied ||
@@ -91,7 +108,8 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {   
+
     var showTutBtn =
         ref.watch(firebaseRemoteConfigServiceProvider).showTutorialBtn();
     return Scaffold(
