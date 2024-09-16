@@ -15,6 +15,7 @@ import '../../../../common_widgets/snack_bar.dart';
 import '../../../../constants/api_routes.dart';
 import '../../../../network/firebase_remote_config_service.dart';
 import '../../../../network/http_client.dart';
+import '../../../../network/posthog/posthog_provider.dart';
 import '../../../../utils/dummy_data.dart';
 import '../../../../utils/exceptions.dart';
 import '../../../../utils/helpers.dart';
@@ -197,6 +198,7 @@ class TripController extends _$TripController implements IErrorHandler {
 
   Future<void> checkIn(String tripId, String stopId) async {
     var showDistance = ref.watch(firebaseRemoteConfigServiceProvider).showTooFarDistance();
+    final postHogService = ref.read(postHogProvider);
     state = AsyncValue.data(state.value!.copyWith(loadingStopId: stopId, checkIn: true));
     var trip = state.value!.tryGetTrip(tripId);
     if (trip == null) return;
@@ -212,6 +214,13 @@ class TripController extends _$TripController implements IErrorHandler {
             location.latitude, location.longitude, double.parse(stop.latitude!), double.parse(stop.longitude!)) /
         1609.34;
     if (distance > 10) {
+      postHogService.postHogTrackEvent("user_checked_in", {
+        "trip_id": tripId,
+        "stop_id": stopId,
+        "location": '${location.latitude}, ${location.longitude}',
+        "distance": '$distance miles',
+        "success": false
+      });
       ref.read(httpClientProvider).telemetryClient.trackEvent(name: "distance_too_far", additionalProperties: {
         "location": '${location.latitude}, ${location.longitude}',
         "distance": '$distance miles'
@@ -234,6 +243,13 @@ class TripController extends _$TripController implements IErrorHandler {
     updateStop(tripId, newStop);
     startLocationTracking();
     state = AsyncValue.data(state.value!.copyWith(loadingStopId: null, checkIn: true));
+     postHogService.postHogTrackEvent("user_checked_in", {
+        "trip_id": tripId,
+        "stop_id": stopId,
+        "location": '${location.latitude}, ${location.longitude}',
+        "distance": '$distance miles',
+        "success": true
+      });
     ref.read(httpClientProvider).telemetryClient.trackEvent(name: "checked_in", additionalProperties: {
       "location": '${location.latitude}, ${location.longitude}',
       "stop": stop.companyName ?? "-"
