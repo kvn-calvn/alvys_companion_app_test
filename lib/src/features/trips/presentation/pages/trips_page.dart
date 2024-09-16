@@ -7,6 +7,7 @@ import '../../../../network/firebase_remote_config_service.dart';
 import '../../../../network/http_client.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
+import '../../../../network/posthog/posthog_provider.dart';
 import '../../../../utils/alvys_websocket.dart';
 import '../../../authentication/presentation/driver_status_dropdown.dart';
 import '../../../tutorial/tutorial_controller.dart';
@@ -24,7 +25,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'package:posthog_flutter/posthog_flutter.dart';
 
 class LoadListPage extends ConsumerStatefulWidget {
   const LoadListPage({super.key});
@@ -45,16 +45,19 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
 
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
-                var userState = ref.watch(authProvider);
-
-      await Posthog().identify(
-          userId: userState.value?.driver?.id ?? '',
-          userProperties: {
+      var userState = ref.watch(authProvider);
+      final postHogService = ref.read(postHogProvider);
+      postHogService.postHogScreen('Trips', null);
+      postHogService.postHogIdentify(
+          userState.value?.driver?.id ?? '',
+          {
             'Phone': userState.value?.driver?.phone ?? '',
             'Email': userState.value?.driver?.email ?? '',
             'Name:': userState.value?.driver?.name ?? '',
             'Tenant': userState.value?.driver?.companyCodesWithSpace ?? ''
-          });
+          },
+          null);
+
       ref.read(tutorialProvider).startTutorial(
           context,
           () async => ref
@@ -62,14 +65,8 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
               .handleAfterTutorial(context));
       //checkLocationPermission(context);
     });
-    postHogScreenView();
   }
 
-  Future<void> postHogScreenView() async {
-    await Posthog().screen(
-      screenName: 'Test: Trips Page',
-    );
-  }
 
   Future<void> checkLocationPermission(BuildContext context) async {
     if (await Permission.location.isPermanentlyDenied ||
@@ -111,7 +108,8 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context) {   
+
     var showTutBtn =
         ref.watch(firebaseRemoteConfigServiceProvider).showTutorialBtn();
     return Scaffold(

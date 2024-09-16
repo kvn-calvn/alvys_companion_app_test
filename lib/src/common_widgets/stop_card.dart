@@ -11,6 +11,7 @@ import '../features/trips/presentation/controller/trip_page_controller.dart';
 import '../features/trips/presentation/pages/stop_details_page.dart';
 import '../features/tutorial/tutorial_controller.dart';
 import '../network/http_client.dart';
+import '../network/posthog/posthog_provider.dart';
 import '../utils/dummy_data.dart';
 import '../utils/magic_strings.dart';
 import 'buttons.dart';
@@ -33,6 +34,8 @@ class StopCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var tripNotifier = ref.read(tripControllerProvider.notifier);
     var tripState = ref.read(tripControllerProvider);
+    final postHogService = ref.read(postHogProvider);
+
     return LayoutBuilder(builder: (context, constraints) {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -119,9 +122,16 @@ class StopCard extends ConsumerWidget {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(content: Text('Address Coppied')),
                             );
+                            postHogService
+                                .postHogTrackEvent("user_copied_stop_address", {
+                              "address": stop.address?.formattedAddress ?? "",
+                              "trip_id": tripId,
+                              "stop_id": stop.stopId ?? "",
+                            });
                             ref.read(httpClientProvider).telemetryClient.trackEvent(
                                 name: "copied_stop_address",
                                 additionalProperties: {"address": stop.address?.formattedAddress ?? ""});
+
                             await FirebaseAnalytics.instance.logEvent(
                                 name: "copied_stop_address",
                                 parameters: {"address": stop.address?.formattedAddress ?? ""});
