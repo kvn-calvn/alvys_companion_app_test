@@ -56,7 +56,7 @@ class _LoadDetailsPageState extends ConsumerState<LoadDetailsPage> with TickerPr
   Widget build(BuildContext context) {
     var trip = ref.watch(tripControllerProvider).value!.getTrip(widget.tripId);
     var showTutBtn = ref.watch(firebaseRemoteConfigServiceProvider).showTutorialBtn();
-    ref.read(postHogProvider).postHogScreen('Trip Details',
+    ref.read(postHogProvider).postHogScreen('Trip Details - ${trip.loadNumber ?? ''}',
         {'load_number': trip.loadNumber ?? '', 'trip_id': trip.id ?? ''});
 
     return Scaffold(

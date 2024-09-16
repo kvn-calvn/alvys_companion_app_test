@@ -9,6 +9,10 @@ class PostHogService {
     );
   }
 
+  Future<void> reset() async {
+    await Posthog().reset();
+  }
+
   Future<void> postHogIdentify(
       String userId,
       Map<String, Object> userProperties,

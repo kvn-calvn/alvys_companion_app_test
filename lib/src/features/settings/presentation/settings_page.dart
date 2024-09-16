@@ -1,3 +1,5 @@
+import 'package:alvys3/src/network/posthog/posthog_provider.dart';
+
 import '../../trips/presentation/controller/trip_page_controller.dart';
 import '../../../utils/tablet_utils.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -103,6 +105,7 @@ class SettingsList extends ConsumerWidget {
             if (context.mounted) {
               ref.read(authProvider.notifier).signOut(context);
             }
+            ref.read(postHogProvider).reset();
             ref
                 .read(httpClientProvider)
                 .telemetryClient
