@@ -1,3 +1,4 @@
+import 'package:alvys3/src/network/posthog/posthog_provider.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
@@ -74,6 +75,9 @@ class StopDetails extends ConsumerWidget {
     if (stopDetailsState.isLoading) return const StopDetailsShimmer();
     var currentStop = stopDetailsState.value!.tryGetStop(tripId, stopId);
     var trip = stopDetailsState.value!.tryGetTrip(tripId);
+    ref.read(postHogProvider).postHogScreen('Stop Details - ${trip?.loadNumber ?? ''} }', {
+      "stop_id": stopId,
+    });
     if (trip == null) {
       return const EmptyView(title: 'Trip Not found', description: 'Return to the previous page.');
     }
