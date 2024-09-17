@@ -75,7 +75,7 @@ class StopDetails extends ConsumerWidget {
     if (stopDetailsState.isLoading) return const StopDetailsShimmer();
     var currentStop = stopDetailsState.value!.tryGetStop(tripId, stopId);
     var trip = stopDetailsState.value!.tryGetTrip(tripId);
-    ref.read(postHogProvider).postHogScreen('Stop Details - ${trip?.loadNumber ?? ''} }', {
+    ref.read(postHogProvider).postHogScreen('Stop Details - ${trip?.loadNumber ?? ''}', {
       "stop_id": stopId,
     });
     if (trip == null) {

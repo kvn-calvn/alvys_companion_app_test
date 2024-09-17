@@ -69,6 +69,7 @@ class SettingsList extends ConsumerWidget {
         ),
         Consumer(
           builder: (context, ref, child) {
+            ref.read(postHogProvider).postHogScreen("help", null);
             var alvysHelp =
                 ref.watch(firebaseRemoteConfigServiceProvider).alvysHelpUrl();
             return UrlNavButton(title: "Help", url: alvysHelp);
@@ -91,6 +92,7 @@ class SettingsList extends ConsumerWidget {
             } else {
               context.goNamed(RouteName.trips.name);
             }
+            ref.read(postHogProvider).postHogScreen("tutorial", null);
 
             ref
                 .read(httpClientProvider)
@@ -102,6 +104,7 @@ class SettingsList extends ConsumerWidget {
         LargeNavButton(
           title: "Sign Out",
           onPressed: () async {
+            ref.read(postHogProvider).postHogTrackEvent("user_signed_out", null);
             if (context.mounted) {
               ref.read(authProvider.notifier).signOut(context);
             }
