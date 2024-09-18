@@ -69,7 +69,6 @@ class SettingsList extends ConsumerWidget {
         ),
         Consumer(
           builder: (context, ref, child) {
-            ref.read(postHogProvider).postHogScreen("help", null);
             var alvysHelp =
                 ref.watch(firebaseRemoteConfigServiceProvider).alvysHelpUrl();
             return UrlNavButton(title: "Help", url: alvysHelp);
