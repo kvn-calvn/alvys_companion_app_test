@@ -3,6 +3,15 @@
 # Output:
 # - the results of security scanning in the `Advanced Security` tab of the repo
 
+schedules:
+  - cron: "0 3 * * *" # Schedule to run every day at 3:00 AM UTC
+    displayName: Nightly
+    branches:
+      include:
+        - prod
+    batch: true
+    always: true
+
 trigger: none
   
 pool: 
