@@ -4,26 +4,29 @@ import 'package:posthog_flutter/posthog_flutter.dart';
 class PostHogRouteObserver extends NavigatorObserver {
   @override
   void didPop(Route route, Route? previousRoute) {
-    _sendPageView(previousRoute?.settings.name);
+    _sendPageView(previousRoute);
     super.didPop(route, previousRoute);
   }
 
   @override
   void didPush(Route route, Route? previousRoute) {
-    _sendPageView(route.settings.name);
+    _sendPageView(route);
     super.didPush(route, previousRoute);
   }
 
   @override
   void didReplace({Route? newRoute, Route? oldRoute}) {
-    _sendPageView(newRoute?.settings.name);
+    _sendPageView(newRoute);
     super.didReplace(newRoute: newRoute, oldRoute: oldRoute);
   }
 
-  void _sendPageView(String? pageName) {
-    // Capture the pageview event with the custom page name
-    if (pageName != null) {
-      Posthog().screen(screenName: pageName);
+  void _sendPageView(Route? route) {
+    if (route?.settings.name != null) {
+      // Extract additional properties from route's settings
+      final extraData = route?.settings.arguments as Map<String, Object>?;
+      Posthog()
+          .screen(screenName: route!.settings.name!, properties: extraData);
+      debugPrint('Screen: ${route.settings.name!}, Extra Data: $extraData');
     }
   }
 }
