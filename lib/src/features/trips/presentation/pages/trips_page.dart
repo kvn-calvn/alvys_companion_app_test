@@ -37,17 +37,15 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
     with TickerProviderStateMixin {
   late TabController _tabController;
 
-
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
 
-
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       var userState = ref.watch(authProvider);
       final postHogService = ref.read(postHogProvider);
-      postHogService.postHogScreen('Trips', null);
+      //postHogService.postHogScreen('Trips', null);
       postHogService.postHogIdentify(
           userState.value?.driver?.id ?? '',
           {
@@ -66,7 +64,6 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
       //checkLocationPermission(context);
     });
   }
-
 
   Future<void> checkLocationPermission(BuildContext context) async {
     if (await Permission.location.isPermanentlyDenied ||
@@ -108,8 +105,7 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
   }
 
   @override
-  Widget build(BuildContext context) {   
-
+  Widget build(BuildContext context) {
     var showTutBtn =
         ref.watch(firebaseRemoteConfigServiceProvider).showTutorialBtn();
     return Scaffold(
