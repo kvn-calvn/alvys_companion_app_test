@@ -362,6 +362,6 @@ class TripController extends _$TripController implements IErrorHandler {
   }
 
   String tabName(int index) {
-    return switch (index) { 1 => "Trip details", 2 => "Echekcs", _ => 'Trip documents' };
+    return switch (index) { 0 => "Trip details", 1 => "Echecks", _ => 'Trip documents' };
   }
 }
