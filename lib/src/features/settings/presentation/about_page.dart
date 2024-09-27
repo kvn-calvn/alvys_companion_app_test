@@ -17,7 +17,7 @@ class AboutPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    ref.read(postHogProvider).postHogScreen("About", null);
+    //ref.read(postHogProvider).postHogScreen("About", null);
 
     return Scaffold(
       appBar: AppBar(

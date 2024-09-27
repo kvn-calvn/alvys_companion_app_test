@@ -1,8 +1,9 @@
+import 'package:alvys3/src/routing/posthog_route_observer.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-
+import 'package:posthog_flutter/posthog_flutter.dart';
 import '../common_widgets/empty_view.dart';
 import '../common_widgets/main_bottom_nav.dart';
 import '../common_widgets/tablet_view.dart';
@@ -34,12 +35,20 @@ import 'custom_observer.dart';
 import 'error_page.dart';
 import 'landing.dart';
 
-Provider<GoRouter> get getRouter => TabletUtils.instance.isTablet ? tabletRouteProvider : routerProvider;
+Provider<GoRouter> get getRouter =>
+    TabletUtils.instance.isTablet ? tabletRouteProvider : routerProvider;
 Provider<GoRouter> routerProvider = Provider(
   (ref) => GoRouter(
-    observers: [FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance), CustomObserver.instance],
+    observers: [
+      PosthogObserver(),
+      PostHogRouteObserver(),
+      FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance),
+      CustomObserver.instance
+    ],
     navigatorKey: ref.read(globalErrorHandlerProvider).navKey,
-    initialLocation: ref.read(authProvider).value!.driver == null ? RouteName.signIn.toRoute : RouteName.trips.toRoute,
+    initialLocation: ref.read(authProvider).value!.driver == null
+        ? RouteName.signIn.toRoute
+        : RouteName.trips.toRoute,
     debugLogDiagnostics: false,
     routes: [
       GoRoute(
@@ -85,7 +94,8 @@ Provider<GoRouter> routerProvider = Provider(
                 name: state.name,
                 child: navigationShell,
               ),
-          navigatorContainerBuilder: (context, navigationShell, children) => MainBottomNav(
+          navigatorContainerBuilder: (context, navigationShell, children) =>
+              MainBottomNav(
                 navShell: navigationShell,
                 children: children,
               ),
@@ -100,7 +110,8 @@ Provider<GoRouter> routerProvider = Provider(
                   name: RouteName.trips.name,
                   child: const LoadListPage(),
                   transitionDuration: Duration.zero,
-                  transitionsBuilder: (context, animation, secondaryAnimation, child) => child,
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) => child,
                 ),
                 redirect: (context, state) {
                   if (ref.read(authProvider).value!.driver == null) {
@@ -113,8 +124,11 @@ Provider<GoRouter> routerProvider = Provider(
                     name: RouteName.tripDetails.name,
                     path: ':tripId',
                     builder: (context, state) {
-                      return LoadDetailsPage(state.pathParameters[ParamType.tripId.name]!,
-                          int.parse(state.uri.queryParameters[ParamType.tabIndex.name] ?? '0'));
+                      return LoadDetailsPage(
+                          state.pathParameters[ParamType.tripId.name]!,
+                          int.parse(state.uri
+                                  .queryParameters[ParamType.tabIndex.name] ??
+                              '0'));
                     },
                     routes: <GoRoute>[
                       GoRoute(
@@ -134,9 +148,11 @@ Provider<GoRouter> routerProvider = Provider(
                           final args = state.extra! as UploadType;
                           return UploadDocuments(
                             args: UploadDocumentArgs(
-                                tripId: state.pathParameters[ParamType.tripId.name]!,
+                                tripId: state
+                                    .pathParameters[ParamType.tripId.name]!,
                                 uploadType: args,
-                                documentType: DisplayDocumentType.tripDocuments),
+                                documentType:
+                                    DisplayDocumentType.tripDocuments),
                           );
                         },
                       ),
@@ -144,14 +160,16 @@ Provider<GoRouter> routerProvider = Provider(
                         name: RouteName.eCheck.name,
                         path: RouteName.eCheck.name,
                         builder: (context, state) {
-                          return EcheckPage(state.pathParameters[ParamType.tripId.name]!);
+                          return EcheckPage(
+                              state.pathParameters[ParamType.tripId.name]!);
                         },
                       ),
                       GoRoute(
                         name: RouteName.stopDetails.name,
                         path: ':stopId',
                         builder: (context, state) {
-                          return StopDetailsPage(state.pathParameters[ParamType.tripId.name]!,
+                          return StopDetailsPage(
+                              state.pathParameters[ParamType.tripId.name]!,
                               state.pathParameters[ParamType.stopId.name]!);
                         },
                       ),
@@ -169,7 +187,8 @@ Provider<GoRouter> routerProvider = Provider(
                 pageBuilder: (context, state) => CustomTransitionPage(
                   child: const ProfilePage(),
                   transitionDuration: Duration.zero,
-                  transitionsBuilder: (context, animation, secondaryAnimation, child) => child,
+                  transitionsBuilder:
+                      (context, animation, secondaryAnimation, child) => child,
                 ),
                 redirect: (context, state) {
                   if (ref.read(authProvider).value!.driver == null) {
@@ -182,7 +201,8 @@ Provider<GoRouter> routerProvider = Provider(
                     name: RouteName.paystubs.name,
                     path: RouteName.paystubs.name,
                     builder: (context, state) {
-                      return DocumentsPage(DocumentsArgs(DisplayDocumentType.paystubs, null));
+                      return DocumentsPage(
+                          DocumentsArgs(DisplayDocumentType.paystubs, null));
                     },
                     // routes: [],
                   ),
@@ -190,7 +210,8 @@ Provider<GoRouter> routerProvider = Provider(
                     name: RouteName.personalDocumentsList.name,
                     path: RouteName.personalDocumentsList.name,
                     builder: (context, state) {
-                      return DocumentsPage(DocumentsArgs(DisplayDocumentType.personalDocuments, null));
+                      return DocumentsPage(DocumentsArgs(
+                          DisplayDocumentType.personalDocuments, null));
                     },
                     routes: [
                       GoRoute(
@@ -202,7 +223,8 @@ Provider<GoRouter> routerProvider = Provider(
                           return UploadDocuments(
                             args: UploadDocumentArgs(
                               uploadType: args,
-                              documentType: DisplayDocumentType.personalDocuments,
+                              documentType:
+                                  DisplayDocumentType.personalDocuments,
                             ),
                           );
                         },
@@ -213,7 +235,8 @@ Provider<GoRouter> routerProvider = Provider(
                     name: RouteName.tripReportDocumentList.name,
                     path: RouteName.tripReportDocumentList.name,
                     builder: (context, state) {
-                      return DocumentsPage(DocumentsArgs(DisplayDocumentType.tripReport, null));
+                      return DocumentsPage(
+                          DocumentsArgs(DisplayDocumentType.tripReport, null));
                     },
                     routes: [
                       GoRoute(
@@ -257,7 +280,9 @@ Provider<GoRouter> routerProvider = Provider(
                   pageBuilder: (context, state) => CustomTransitionPage(
                         child: const SettingsPage(),
                         transitionDuration: Duration.zero,
-                        transitionsBuilder: (context, animation, secondaryAnimation, child) => child,
+                        transitionsBuilder:
+                            (context, animation, secondaryAnimation, child) =>
+                                child,
                       ),
                   redirect: (context, state) {
                     if (ref.read(authProvider).value!.driver == null) {
@@ -300,10 +325,12 @@ Provider<GoRouter> routerProvider = Provider(
 Provider<GoRouter> tabletRouteProvider = Provider((ref) {
   return GoRouter(
       navigatorKey: ref.read(globalErrorHandlerProvider).navKey,
-      initialLocation:
-          ref.read(authProvider).value!.driver == null ? RouteName.signIn.toRoute : RouteName.emptyView.toRoute,
-      debugLogDiagnostics: false,
+      initialLocation: ref.read(authProvider).value!.driver == null
+          ? RouteName.signIn.toRoute
+          : RouteName.emptyView.toRoute,
+      debugLogDiagnostics: true,
       observers: [
+        PosthogObserver(),
         FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance),
         CustomObserver.instance
       ],
@@ -346,8 +373,10 @@ Provider<GoRouter> tabletRouteProvider = Provider((ref) {
         ),
         StatefulShellRoute(
             parentNavigatorKey: ref.read(globalErrorHandlerProvider).navKey,
-            pageBuilder: (context, state, navigationShell) => NoTransitionPage(child: navigationShell),
-            navigatorContainerBuilder: (context, navigationShell, children) => TabletView(
+            pageBuilder: (context, state, navigationShell) =>
+                NoTransitionPage(child: navigationShell),
+            navigatorContainerBuilder: (context, navigationShell, children) =>
+                TabletView(
                   navigationShell,
                   children,
                 ),
@@ -358,7 +387,10 @@ Provider<GoRouter> tabletRouteProvider = Provider((ref) {
                     name: RouteName.emptyView.name,
                     path: RouteName.emptyView.toRoute,
                     builder: (context, state) => const Scaffold(
-                      body: EmptyView(title: '', description: 'Tap a trip on the left to see the details'),
+                      body: EmptyView(
+                          title: '',
+                          description:
+                              'Tap a trip on the left to see the details'),
                     ),
                   )
                 ],
@@ -375,8 +407,11 @@ Provider<GoRouter> tabletRouteProvider = Provider((ref) {
                         name: RouteName.tripDetails.name,
                         path: ':tripId',
                         builder: (context, state) {
-                          return LoadDetailsPage(state.pathParameters[ParamType.tripId.name]!,
-                              int.parse(state.uri.queryParameters[ParamType.tabIndex.name] ?? '0'));
+                          return LoadDetailsPage(
+                              state.pathParameters[ParamType.tripId.name]!,
+                              int.parse(state.uri.queryParameters[
+                                      ParamType.tabIndex.name] ??
+                                  '0'));
                         },
                         routes: <GoRoute>[
                           GoRoute(
@@ -396,9 +431,11 @@ Provider<GoRouter> tabletRouteProvider = Provider((ref) {
                               final args = state.extra! as UploadType;
                               return UploadDocuments(
                                 args: UploadDocumentArgs(
-                                    tripId: state.pathParameters[ParamType.tripId.name]!,
+                                    tripId: state
+                                        .pathParameters[ParamType.tripId.name]!,
                                     uploadType: args,
-                                    documentType: DisplayDocumentType.tripDocuments),
+                                    documentType:
+                                        DisplayDocumentType.tripDocuments),
                               );
                             },
                           ),
@@ -406,14 +443,16 @@ Provider<GoRouter> tabletRouteProvider = Provider((ref) {
                             name: RouteName.eCheck.name,
                             path: RouteName.eCheck.name,
                             builder: (context, state) {
-                              return EcheckPage(state.pathParameters[ParamType.tripId.name]!);
+                              return EcheckPage(
+                                  state.pathParameters[ParamType.tripId.name]!);
                             },
                           ),
                           GoRoute(
                             name: RouteName.stopDetails.name,
                             path: ':stopId',
                             builder: (context, state) {
-                              return StopDetailsPage(state.pathParameters[ParamType.tripId.name]!,
+                              return StopDetailsPage(
+                                  state.pathParameters[ParamType.tripId.name]!,
                                   state.pathParameters[ParamType.stopId.name]!);
                             },
                           ),
@@ -428,7 +467,8 @@ Provider<GoRouter> tabletRouteProvider = Provider((ref) {
                   name: RouteName.paystubs.name,
                   path: RouteName.paystubs.toRoute,
                   builder: (context, state) {
-                    return DocumentsPage(DocumentsArgs(DisplayDocumentType.paystubs, null));
+                    return DocumentsPage(
+                        DocumentsArgs(DisplayDocumentType.paystubs, null));
                   },
                   // routes: [],
                 ),
@@ -436,7 +476,8 @@ Provider<GoRouter> tabletRouteProvider = Provider((ref) {
                   name: RouteName.personalDocumentsList.name,
                   path: RouteName.personalDocumentsList.toRoute,
                   builder: (context, state) {
-                    return DocumentsPage(DocumentsArgs(DisplayDocumentType.personalDocuments, null));
+                    return DocumentsPage(DocumentsArgs(
+                        DisplayDocumentType.personalDocuments, null));
                   },
                   routes: [
                     GoRoute(
@@ -459,7 +500,8 @@ Provider<GoRouter> tabletRouteProvider = Provider((ref) {
                   name: RouteName.tripReportDocumentList.name,
                   path: RouteName.tripReportDocumentList.toRoute,
                   builder: (context, state) {
-                    return DocumentsPage(DocumentsArgs(DisplayDocumentType.tripReport, null));
+                    return DocumentsPage(
+                        DocumentsArgs(DisplayDocumentType.tripReport, null));
                   },
                   routes: [
                     GoRoute(
