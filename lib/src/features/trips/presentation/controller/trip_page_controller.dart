@@ -243,13 +243,13 @@ class TripController extends _$TripController implements IErrorHandler {
     updateStop(tripId, newStop);
     startLocationTracking();
     state = AsyncValue.data(state.value!.copyWith(loadingStopId: null, checkIn: true));
-     postHogService.postHogTrackEvent("user_checked_in", {
-        "trip_id": tripId,
-        "stop_id": stopId,
-        "location": '${location.latitude}, ${location.longitude}',
-        "distance": '$distance miles',
-        "success": true
-      });
+    postHogService.postHogTrackEvent("user_checked_in", {
+      "trip_id": tripId,
+      "stop_id": stopId,
+      "location": '${location.latitude}, ${location.longitude}',
+      "distance": '$distance miles',
+      "success": true
+    });
     ref.read(httpClientProvider).telemetryClient.trackEvent(name: "checked_in", additionalProperties: {
       "location": '${location.latitude}, ${location.longitude}',
       "stop": stop.companyName ?? "-"
@@ -359,5 +359,9 @@ class TripController extends _$TripController implements IErrorHandler {
   @override
   FutureOr<void> refreshPage(String page) async {
     await getTrips();
+  }
+
+  String tabName(int index) {
+    return switch (index) { 1 => "Trip details", 2 => "Echekcs", _ => 'Trip documents' };
   }
 }
