@@ -30,10 +30,7 @@ class PostHogService {
         .identify(userId: userId, userProperties: userProperties, userPropertiesSetOnce: userPropertiesSetOnce);
   }
 
-  Future<void> postHogScreen(
-    String screenName,
-    Map<String, Object>? properties,
-  ) async {
+  Future<void> postHogScreen(String screenName, [Map<String, Object>? properties]) async {
     await Posthog().screen(screenName: screenName, properties: properties);
   }
 }
