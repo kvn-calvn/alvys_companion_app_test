@@ -282,6 +282,7 @@ class TripDetails extends ConsumerWidget {
                                 stop: stop,
                                 tripId: trip.id!,
                                 tabIndex: tabIndex,
+                                loadNumber: trip.loadNumber!,
                                 canCheckInOutStopId: trip.canCheckInOutStopId,
                               ))
                         ],

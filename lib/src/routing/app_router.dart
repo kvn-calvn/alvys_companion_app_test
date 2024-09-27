@@ -40,7 +40,7 @@ Provider<GoRouter> get getRouter =>
 Provider<GoRouter> routerProvider = Provider(
   (ref) => GoRouter(
     observers: [
-      PosthogObserver(),
+      //PosthogObserver(),
       PostHogRouteObserver(),
       FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance),
       CustomObserver.instance
@@ -101,7 +101,9 @@ Provider<GoRouter> routerProvider = Provider(
               ),
           branches: [
             StatefulShellBranch(observers: [
-              CustomObserver.instance
+              CustomObserver.instance,
+              //PosthogObserver(),
+              PostHogRouteObserver()
             ], routes: [
               GoRoute(
                 name: RouteName.trips.name,
@@ -170,7 +172,8 @@ Provider<GoRouter> routerProvider = Provider(
                         builder: (context, state) {
                           return StopDetailsPage(
                               state.pathParameters[ParamType.tripId.name]!,
-                              state.pathParameters[ParamType.stopId.name]!);
+                              state.pathParameters[ParamType.stopId.name]!
+                              );
                         },
                       ),
                     ],
@@ -179,7 +182,9 @@ Provider<GoRouter> routerProvider = Provider(
               ),
             ]),
             StatefulShellBranch(observers: [
-              CustomObserver.instance
+              CustomObserver.instance,
+              //PosthogObserver()
+              PostHogRouteObserver()
             ], routes: [
               GoRoute(
                 name: RouteName.profile.name,
@@ -273,7 +278,10 @@ Provider<GoRouter> routerProvider = Provider(
                 ],
               ),
             ]),
-            StatefulShellBranch(routes: [
+            StatefulShellBranch(observers: [
+              //PosthogObserver(),
+              PostHogRouteObserver()
+            ], routes: [
               GoRoute(
                   name: RouteName.settings.name,
                   path: RouteName.settings.toRoute,
@@ -328,9 +336,10 @@ Provider<GoRouter> tabletRouteProvider = Provider((ref) {
       initialLocation: ref.read(authProvider).value!.driver == null
           ? RouteName.signIn.toRoute
           : RouteName.emptyView.toRoute,
-      debugLogDiagnostics: true,
+      debugLogDiagnostics: false,
       observers: [
         PosthogObserver(),
+        PostHogRouteObserver(),
         FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance),
         CustomObserver.instance
       ],
@@ -382,6 +391,7 @@ Provider<GoRouter> tabletRouteProvider = Provider((ref) {
                 ),
             branches: [
               StatefulShellBranch(
+                observers: [PosthogObserver(), PostHogRouteObserver()],
                 routes: [
                   GoRoute(
                     name: RouteName.emptyView.name,
@@ -396,7 +406,9 @@ Provider<GoRouter> tabletRouteProvider = Provider((ref) {
                 ],
               ),
               StatefulShellBranch(observers: [
-                CustomObserver.instance
+                CustomObserver.instance,
+                PosthogObserver(),
+                PostHogRouteObserver()
               ], routes: [
                 GoRoute(
                     path: RouteName.trips.toRoute,
@@ -461,7 +473,9 @@ Provider<GoRouter> tabletRouteProvider = Provider((ref) {
                     ])
               ]),
               StatefulShellBranch(observers: [
-                CustomObserver.instance
+                CustomObserver.instance,
+                PosthogObserver(),
+                PostHogRouteObserver()
               ], routes: [
                 GoRoute(
                   name: RouteName.paystubs.name,
@@ -536,7 +550,10 @@ Provider<GoRouter> tabletRouteProvider = Provider((ref) {
                       )
                     ]),
               ]),
-              StatefulShellBranch(routes: [
+              StatefulShellBranch(observers: [
+                PosthogObserver(),
+                PostHogRouteObserver()
+              ], routes: [
                 GoRoute(
                   name: RouteName.about.name,
                   path: RouteName.about.toRoute,
