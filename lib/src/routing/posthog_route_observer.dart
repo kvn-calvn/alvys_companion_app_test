@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:posthog_flutter/posthog_flutter.dart';
 
+import '../utils/helpers.dart';
+
 class PostHogRouteObserver extends NavigatorObserver {
   @override
   void didPop(Route route, Route? previousRoute) {
@@ -24,8 +26,11 @@ class PostHogRouteObserver extends NavigatorObserver {
     if (route?.settings.name != null) {
       // Extract additional properties from route's settings
       final extraData = route?.settings.arguments as Map<String, Object>?;
-      Posthog()
-          .screen(screenName: route!.settings.name!, properties: extraData);
+
+      Posthog().screen(
+          screenName:
+              Helpers().toSnakeCase(route!.settings.name!.trim()).toLowerCase(),
+          properties: extraData);
       debugPrint('Screen: ${route.settings.name!}, Extra Data: $extraData');
     }
   }
