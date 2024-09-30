@@ -1,4 +1,3 @@
-import 'package:alvys3/src/network/posthog/posthog_provider.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
