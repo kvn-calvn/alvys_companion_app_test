@@ -10,7 +10,6 @@ import 'package:go_router/go_router.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import '../../../network/firebase_remote_config_service.dart';
-import '../../../network/posthog/posthog_provider.dart';
 
 class AboutPage extends ConsumerWidget {
   const AboutPage({super.key});

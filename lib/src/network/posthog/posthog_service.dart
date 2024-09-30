@@ -1,8 +1,5 @@
 import 'package:alvys3/src/features/authentication/domain/models/driver_user/driver_user.dart';
-import 'package:alvys3/src/network/http_client.dart';
 import 'package:alvys3/src/utils/permission_helper.dart';
-import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
-import 'package:flutter/material.dart';
 import 'package:posthog_flutter/posthog_flutter.dart';
 
 import '../../utils/helpers.dart';
