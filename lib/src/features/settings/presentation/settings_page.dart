@@ -91,7 +91,9 @@ class SettingsList extends ConsumerWidget {
             } else {
               context.goNamed(RouteName.trips.name);
             }
-            //ref.read(postHogProvider).postHogScreen("tutorial", null);
+            ref
+                .read(postHogProvider)
+                .postHogTrackEvent("tutorial_button_tapped", null);
 
             ref
                 .read(httpClientProvider)

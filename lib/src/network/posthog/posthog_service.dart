@@ -1,5 +1,7 @@
 import 'package:alvys3/src/features/authentication/domain/models/driver_user/driver_user.dart';
 import 'package:alvys3/src/utils/permission_helper.dart';
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:posthog_flutter/posthog_flutter.dart';
 
 import '../../utils/helpers.dart';
@@ -30,13 +32,17 @@ class PostHogService {
             'Email': driver?.email ?? '',
             'Name': driver?.name ?? '',
             'Tenant': driver?.companyCodesWithSpace ?? "",
+            ...appPermissions.map(
+                (key, value) => MapEntry(key.sentenceCase, value as Object))
           }
         : {};
+
     await Posthog().capture(
       eventName: 'user_app_permissions',
-      properties:
-          appPermissions.map((key, value) => MapEntry(key, value as Object)),
+      properties: appPermissions
+          .map((key, value) => MapEntry(key.sentenceCase, value as Object)),
     );
+    debugPrint("Extra $userProperties");
     await Posthog().identify(
         userId: userId,
         userProperties: userProperties,

@@ -9,6 +9,7 @@ import '../../../../common_widgets/empty_view.dart';
 import '../../../../common_widgets/shimmers/stop_details_shimmer.dart';
 import '../../../../common_widgets/stop_card.dart';
 import '../../../../network/http_client.dart';
+import '../../../../network/posthog/posthog_provider.dart';
 import '../../../../utils/app_theme.dart';
 import '../../domain/app_trip/m_comodity.dart';
 import '../../domain/app_trip/reference.dart';
@@ -45,6 +46,9 @@ class _StopDetailsPageState extends ConsumerState<StopDetailsPage> {
                   .read(tripControllerProvider.notifier)
                   .refreshCurrentTrip(widget.tripId);
               if (mounted) {
+                ref
+                    .read(postHogProvider)
+                    .postHogTrackEvent('user_refresh_stopdetails', null);
                 ref
                     .read(httpClientProvider)
                     .telemetryClient
