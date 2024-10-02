@@ -1,3 +1,4 @@
+import 'package:alvys3/src/network/posthog/posthog_provider.dart';
 import 'package:alvys3/src/utils/map_styles.dart';
 
 import '../../../common_widgets/shimmers/shimmer_widget.dart';
@@ -37,7 +38,7 @@ class _TripGoogleMapState extends ConsumerState<TripGoogleMap> {
                     Navigator.of(context, rootNavigator: true).push(
                       MaterialPageRoute(builder: (context) => FullScreenMap(widget.tripId)),
                     );
-
+                    ref.read(postHogProvider).postHogTrackEvent("user_opened_map",null);
                     ref.read(httpClientProvider).telemetryClient.trackEvent(name: "open_map");
                     await FirebaseAnalytics.instance.logEvent(name: "open_map");
                   }

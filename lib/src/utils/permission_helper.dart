@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -38,6 +40,17 @@ class PermissionHelper {
     }
   }
 
+  static Future<List<Permission>> get appUserPermissions async => [
+        Permission.location,
+        Permission.locationAlways,
+        Permission.locationWhenInUse,
+        Permission.notification,
+        Platform.isAndroid ? await PermissionHelper.androidGalleryPermission() : Permission.photos,
+        Permission.camera
+      ];
+  static Future<Map<String, dynamic>> getAllUserPermissions(List<Permission> permissions) async =>
+      Map.fromEntries(await permissions.mapAsync(
+          (element) async => MapEntry(element.toString().replaceAll('Permission.', ''), (await element.status).name)));
   static Future<void> requestPermissionAndThrow(Permission permission, [String action = 'proceed']) async {
     ValidationContract.requires(await getPermission(permission), "Permission required.",
         "The ${permission.toString().replaceAll('Permission.', '').splitCamelCaseWord().sentenceCase} permission is reuired to $action.");

@@ -7,6 +7,7 @@ import '../../../../network/firebase_remote_config_service.dart';
 import '../../../../network/http_client.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
+import '../../../../network/posthog/posthog_provider.dart';
 import '../../../../utils/alvys_websocket.dart';
 import '../../../authentication/presentation/driver_status_dropdown.dart';
 import '../../../tutorial/tutorial_controller.dart';
@@ -42,6 +43,11 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
     _tabController = TabController(length: 3, vsync: this);
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      var userState = ref.watch(authProvider);
+      final postHogService = ref.read(postHogProvider);
+      //postHogService.postHogScreen('Trips', null);
+      postHogService.postHogIdentify(userState.value?.driver?.id ?? '');
+
       ref.read(tutorialProvider).startTutorial(
           context,
           () async => ref
@@ -145,6 +151,9 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
                   .refreshTrips(true);
               if (context.mounted) {
                 ref.read(websocketProvider).restartConnection();
+                ref
+                    .read(postHogProvider)
+                    .postHogTrackEvent('user_refresh_trips', null);
                 ref
                     .read(httpClientProvider)
                     .telemetryClient

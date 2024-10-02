@@ -4,6 +4,7 @@ import '../../../../common_widgets/snack_bar.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
 import '../../../../network/http_client.dart';
+import '../../../../network/posthog/posthog_provider.dart';
 import '../../../../utils/provider_args_saver.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -70,6 +71,7 @@ class EcheckPageController extends AutoDisposeFamilyAsyncNotifier<ECheckState, S
 
   Future<void> generateEcheck(GlobalKey<FormState> formKey, BuildContext context, String tripId) async {
     if (formKey.currentState?.validate() ?? false) {
+      final postHogService = ref.read(postHogProvider);
       state = const AsyncLoading();
       var firstName = auth.driver!.name!.split(' ').first;
       var lastName = auth.driver!.name!.split(' ').elementAtOrNull(1) ?? '';
@@ -84,6 +86,27 @@ class EcheckPageController extends AutoDisposeFamilyAsyncNotifier<ECheckState, S
           driverId: trip.driver1Id!,
           amount: state.value!.amount);
       var res = await repo.generateEcheck<EcheckPageController>(trip.companyCode!, req);
+
+      if (res.expressCheckNumber != null && res.expressCheckNumber!.trim().isNotEmpty) {
+        postHogService.postHogTrackEvent("user_generated_echeck", {
+          "trip_id": req.tripId,
+          "reason": req.reason,
+          "note": req.note,
+          "amount": req.amount,
+          "stop_id": req.stopId ?? "",
+          "success": true
+        });
+      } else {
+        postHogService.postHogTrackEvent("user_generated_echeck", {
+          "trip_id": req.tripId,
+          "reason": req.reason,
+          "note": req.note,
+          "amount": req.amount,
+          "stop_id": req.stopId ?? "",
+          "success": false
+        });
+      }
+
       ref.read(httpClientProvider).telemetryClient.trackEvent(name: "generate_echeck", additionalProperties: {
         "tripId": req.tripId,
         "reason": req.reason,
