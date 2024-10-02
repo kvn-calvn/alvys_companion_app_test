@@ -37,26 +37,16 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
     with TickerProviderStateMixin {
   late TabController _tabController;
 
-
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 3, vsync: this);
 
-
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       var userState = ref.watch(authProvider);
       final postHogService = ref.read(postHogProvider);
-      postHogService.postHogScreen('Trips', null);
-      postHogService.postHogIdentify(
-          userState.value?.driver?.id ?? '',
-          {
-            'Phone': userState.value?.driver?.phone ?? '',
-            'Email': userState.value?.driver?.email ?? '',
-            'Name:': userState.value?.driver?.name ?? '',
-            'Tenant': userState.value?.driver?.companyCodesWithSpace ?? ''
-          },
-          null);
+      //postHogService.postHogScreen('Trips', null);
+      postHogService.postHogIdentify(userState.value?.driver?.id ?? '');
 
       ref.read(tutorialProvider).startTutorial(
           context,
@@ -66,7 +56,6 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
       //checkLocationPermission(context);
     });
   }
-
 
   Future<void> checkLocationPermission(BuildContext context) async {
     if (await Permission.location.isPermanentlyDenied ||
@@ -108,8 +97,7 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
   }
 
   @override
-  Widget build(BuildContext context) {   
-
+  Widget build(BuildContext context) {
     var showTutBtn =
         ref.watch(firebaseRemoteConfigServiceProvider).showTutorialBtn();
     return Scaffold(
@@ -163,6 +151,9 @@ class _LoadListPageState extends ConsumerState<LoadListPage>
                   .refreshTrips(true);
               if (context.mounted) {
                 ref.read(websocketProvider).restartConnection();
+                ref
+                    .read(postHogProvider)
+                    .postHogTrackEvent('user_refresh_trips', null);
                 ref
                     .read(httpClientProvider)
                     .telemetryClient

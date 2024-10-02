@@ -33,11 +33,23 @@ enum RouteName {
 
 enum TripFilterType { processing, delivered }
 
-enum DisplayDocumentType { tripDocuments, personalDocuments, paystubs, tripReport }
+enum DisplayDocumentType {
+  tripDocuments,
+  personalDocuments,
+  paystubs,
+  tripReport
+}
 
 enum Environment { dev, qa, sandbox }
 
-enum SharedPreferencesKey { driverData, themeMode, driverToken, driverStatus, firstInstall, userAgent }
+enum SharedPreferencesKey {
+  driverData,
+  themeMode,
+  driverToken,
+  driverStatus,
+  firstInstall,
+  userAgent
+}
 
 class DriverStatus {
   static const String sleeping = 'Sleeping',
@@ -72,9 +84,15 @@ enum EcheckOption { copy, cancel }
 
 enum UploadType { camera, gallery }
 
-enum ParamType { tripId, stopId, tabIndex }
+enum ParamType { tripId, stopId, tabIndex, loadNumber }
 
-enum EcheckReason { advance, trailerWash, extraLaborDelivery, lumper, palletFee }
+enum EcheckReason {
+  advance,
+  trailerWash,
+  extraLaborDelivery,
+  lumper,
+  palletFee
+}
 
 class DocumentTypes {
   static const String medical = 'Medical',

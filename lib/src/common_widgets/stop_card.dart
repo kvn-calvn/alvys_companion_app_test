@@ -24,11 +24,13 @@ class StopCard extends ConsumerWidget {
     this.canCheckInOutStopId,
     required this.index,
     required this.tabIndex,
+    required this.loadNumber,
   });
   final int index;
   final Stop stop;
   final String tripId;
   final int tabIndex;
+  final String loadNumber;
   final String? canCheckInOutStopId;
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -40,7 +42,9 @@ class StopCard extends ConsumerWidget {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
         child: Material(
-          key: tripId == testTrip.id! && index == 0 ? ref.read(tutorialProvider).stopCard : null,
+          key: tripId == testTrip.id! && index == 0
+              ? ref.read(tutorialProvider).stopCard
+              : null,
           elevation: 0,
           color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(10),
@@ -64,10 +68,13 @@ class StopCard extends ConsumerWidget {
                     children: [
                       //Color strip
                       Padding(
-                        padding: const EdgeInsetsDirectional.fromSTEB(0, 6, 8, 0),
+                        padding:
+                            const EdgeInsetsDirectional.fromSTEB(0, 6, 8, 0),
                         child: Container(
                           decoration: BoxDecoration(
-                              color: stop.stopType == 'Pickup' ? ColorManager.pickupColor : ColorManager.deliveryColor,
+                              color: stop.stopType == 'Pickup'
+                                  ? ColorManager.pickupColor
+                                  : ColorManager.deliveryColor,
                               borderRadius: BorderRadius.circular(10)),
                           width: 8,
                           height: 77,
@@ -75,7 +82,8 @@ class StopCard extends ConsumerWidget {
                       ),
                       //Stop name and adress
                       ConstrainedBox(
-                        constraints: BoxConstraints(maxWidth: constraints.maxWidth * 0.75),
+                        constraints: BoxConstraints(
+                            maxWidth: constraints.maxWidth * 0.75),
                         child: //Row(
                             //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             //crossAxisAlignment: CrossAxisAlignment.end,
@@ -93,9 +101,12 @@ class StopCard extends ConsumerWidget {
                                 text: stop.address?.street ?? "",
                                 style: Theme.of(context).textTheme.bodyMedium,
                                 children: [
-                                  if (stop.address?.apartmentNumber.isNotNullOrEmpty ?? false)
+                                  if (stop.address?.apartmentNumber
+                                          .isNotNullOrEmpty ??
+                                      false)
                                     TextSpan(
-                                      text: '\n${stop.address?.apartmentNumber ?? ''}',
+                                      text:
+                                          '\n${stop.address?.apartmentNumber ?? ''}',
                                     ),
                                   TextSpan(
                                     text:
@@ -104,7 +115,9 @@ class StopCard extends ConsumerWidget {
                                 ],
                               ),
                             ),
-                            StopDateDetails(args: stop.formattedStopDate, style: Theme.of(context).textTheme.bodySmall),
+                            StopDateDetails(
+                                args: stop.formattedStopDate,
+                                style: Theme.of(context).textTheme.bodySmall),
                             const SizedBox(height: 6),
                             StopLoadingTypeWidget(stop),
                           ],
@@ -118,7 +131,8 @@ class StopCard extends ConsumerWidget {
                         opacity: 0.5,
                         child: IconButton(
                           onPressed: () async {
-                            Clipboard.setData(ClipboardData(text: stop.address?.formattedAddress ?? ""));
+                            Clipboard.setData(ClipboardData(
+                                text: stop.address?.formattedAddress ?? ""));
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(content: Text('Address Coppied')),
                             );
@@ -128,13 +142,22 @@ class StopCard extends ConsumerWidget {
                               "trip_id": tripId,
                               "stop_id": stop.stopId ?? "",
                             });
-                            ref.read(httpClientProvider).telemetryClient.trackEvent(
-                                name: "copied_stop_address",
-                                additionalProperties: {"address": stop.address?.formattedAddress ?? ""});
+                            ref
+                                .read(httpClientProvider)
+                                .telemetryClient
+                                .trackEvent(
+                                    name: "copied_stop_address",
+                                    additionalProperties: {
+                                  "address":
+                                      stop.address?.formattedAddress ?? ""
+                                });
 
                             await FirebaseAnalytics.instance.logEvent(
                                 name: "copied_stop_address",
-                                parameters: {"address": stop.address?.formattedAddress ?? ""});
+                                parameters: {
+                                  "address":
+                                      stop.address?.formattedAddress ?? ""
+                                });
                           },
                           icon: const Icon(Icons.copy),
                         ),
@@ -153,28 +176,38 @@ class StopCard extends ConsumerWidget {
                       tripState.value!.checkInLoading(stop)
                           ? const ButtonLoading()
                           : ButtonStyle2(
-                              onPressAction: stop.canCheckIn(canCheckInOutStopId)
-                                  ? () async => await tripNotifier.checkIn(tripId, stop.stopId!)
-                                  : null,
-                              title: stop.notCheckedIn ? "Check In" : "Checked In",
+                              onPressAction:
+                                  stop.canCheckIn(canCheckInOutStopId)
+                                      ? () async => await tripNotifier.checkIn(
+                                          tripId, stop.stopId!)
+                                      : null,
+                              title:
+                                  stop.notCheckedIn ? "Check In" : "Checked In",
                               isLoading: false,
                             ),
                       // const SizedBox(width: 5),
                       tripState.value!.checkOutLoading(stop)
                           ? const ButtonLoading()
                           : ButtonStyle2(
-                              onPressAction: stop.canCheckOut(canCheckInOutStopId)
-                                  ? () async => await tripNotifier.checkOut(tripId, stop.stopId!)
-                                  : null,
-                              title: stop.notCheckedOut ? "Check Out" : 'Checked Out',
+                              onPressAction:
+                                  stop.canCheckOut(canCheckInOutStopId)
+                                      ? () async => await tripNotifier.checkOut(
+                                          tripId, stop.stopId!)
+                                      : null,
+                              title: stop.notCheckedOut
+                                  ? "Check Out"
+                                  : 'Checked Out',
                               isLoading: false,
                             ),
                       // const SizedBox(width: 5),
                       ButtonStyle2(
-                        onPressAction: ref.watch(tripControllerProvider.notifier).shouldShowEcheckButton(tripId)
+                        onPressAction: ref
+                                .watch(tripControllerProvider.notifier)
+                                .shouldShowEcheckButton(tripId)
                             ? () => ref
                                 .read(tripControllerProvider.notifier)
-                                .generateEcheckDialog(context, tripId, stop.stopId!)
+                                .generateEcheckDialog(
+                                    context, tripId, stop.stopId!)
                             : null,
                         title: "E-Check",
                         isLoading: false,
@@ -200,7 +233,10 @@ class ButtonLoading extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialButton(
         onPressed: null,
-        child: SizedBox(width: height, height: height, child: const CircularProgressIndicator.adaptive()));
+        child: SizedBox(
+            width: height,
+            height: height,
+            child: const CircularProgressIndicator.adaptive()));
   }
 }
 
@@ -217,7 +253,10 @@ class StopLoadingTypeWidget extends StatelessWidget {
         padding: const EdgeInsets.symmetric(vertical: 1.0, horizontal: 6.0),
         child: Text(
           stop.loadingType!,
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
+          style: Theme.of(context)
+              .textTheme
+              .bodySmall
+              ?.copyWith(color: Colors.white, fontWeight: FontWeight.bold),
         ),
       ),
     );

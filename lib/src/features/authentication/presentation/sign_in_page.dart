@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:alvys3/src/network/posthog/posthog_provider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -200,8 +201,10 @@ class _RedirectCardState extends State<RedirectCard> {
               InkWell(
                   key: currentKey,
                   onTap: () async {
-      
                     launchUrlString(widget.url);
+                    ref.read(postHogProvider).postHogTrackEvent(
+                        "${widget.buttonTitle.replaceAll(' ', '_').toLowerCase()}_clicked",
+                        null);
                   },
                   onLongPress: () {
                     showCustomPopup(
@@ -212,6 +215,9 @@ class _RedirectCardState extends State<RedirectCard> {
                             .read(httpClientProvider)
                             .telemetryClient
                             .trackEvent(name: "${widget.copyText}_copied");
+                        ref.read(postHogProvider).postHogTrackEvent(
+                            "${widget.buttonTitle.replaceAll(' ', '_').toLowerCase()}_address_copied",
+                            {'address': widget.copyText});
                       },
                       items: (context) => [
                         const AlvysPopupItem(value: "", child: Text('Copy'))

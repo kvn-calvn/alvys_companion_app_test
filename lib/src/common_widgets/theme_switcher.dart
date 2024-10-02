@@ -1,3 +1,4 @@
+import 'package:alvys3/src/network/posthog/posthog_provider.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -25,6 +26,7 @@ class _ThemeSwitcherState extends ConsumerState<ThemeSwitcher> {
           onChanged: (value) async {
             ref.watch(themeHandlerProvider.notifier).setThemeMode(value!);
             Navigator.of(context, rootNavigator: true).pop();
+            ref.read(postHogProvider).postHogTrackEvent("user_changed_theme", {"theme": value.name});
             ref
                 .read(httpClientProvider)
                 .telemetryClient

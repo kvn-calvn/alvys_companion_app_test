@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../../../network/posthog/posthog_provider.dart';
 import '../../../utils/map_styles.dart';
 import '../../../utils/tablet_utils.dart';
 import '../../trips/domain/app_trip/stop.dart';
@@ -16,6 +17,11 @@ class FullScreenMap extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var mapState = ref.watch(mapProvider.call(tripId));
     var mapNotifier = ref.read(mapProvider.call(tripId).notifier);
+    ref.read(postHogProvider).postHogScreen("full_screen_map", {
+      'trip_id': tripId,
+      'load_number': mapNotifier.trips.value?.getTrip(tripId).loadNumber ?? ''
+    });
+
     return Scaffold(
       body: Stack(
         children: [
@@ -37,7 +43,9 @@ class FullScreenMap extends ConsumerWidget {
             child: SafeArea(
               child: Column(
                 children: [
-                  MapButton(icon: Icons.adaptive.arrow_back, onTap: Navigator.of(context).pop),
+                  MapButton(
+                      icon: Icons.adaptive.arrow_back,
+                      onTap: Navigator.of(context).pop),
                   MapButton(icon: Icons.map, onTap: mapNotifier.setMapType),
                 ],
               ),
@@ -49,7 +57,8 @@ class FullScreenMap extends ConsumerWidget {
             right: 0,
             child: SizedBox(
               height: MediaQuery.of(context).size.longestSide * 0.2,
-              child: MapStopsView(mapNotifier.trips.value!.getTrip(tripId).stops, tripId),
+              child: MapStopsView(
+                  mapNotifier.trips.value!.getTrip(tripId).stops, tripId),
             ),
           )
         ],
@@ -71,7 +80,8 @@ class _MapStopsViewState extends ConsumerState<MapStopsView> {
 
   @override
   void initState() {
-    pageController = PageController(viewportFraction: TabletUtils.instance.isTablet ? 0.55 : 0.7);
+    pageController = PageController(
+        viewportFraction: TabletUtils.instance.isTablet ? 0.55 : 0.7);
     super.initState();
   }
 
@@ -80,7 +90,8 @@ class _MapStopsViewState extends ConsumerState<MapStopsView> {
     return PageView.builder(
         controller: pageController,
         itemCount: widget.stops?.length ?? 0,
-        onPageChanged: ref.read(mapProvider.call(widget.tripId).notifier).onStopChanged,
+        onPageChanged:
+            ref.read(mapProvider.call(widget.tripId).notifier).onStopChanged,
         itemBuilder: (context, index) {
           var stop = widget.stops![index];
           return FullMapStopCard(stop);

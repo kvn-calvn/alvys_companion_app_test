@@ -91,6 +91,9 @@ class SettingsList extends ConsumerWidget {
             } else {
               context.goNamed(RouteName.trips.name);
             }
+            ref
+                .read(postHogProvider)
+                .postHogTrackEvent("tutorial_button_tapped", null);
 
             ref
                 .read(httpClientProvider)
@@ -102,6 +105,9 @@ class SettingsList extends ConsumerWidget {
         LargeNavButton(
           title: "Sign Out",
           onPressed: () async {
+            ref
+                .read(postHogProvider)
+                .postHogTrackEvent("user_signed_out", null);
             if (context.mounted) {
               ref.read(authProvider.notifier).signOut(context);
             }
