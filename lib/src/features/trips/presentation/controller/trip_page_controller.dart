@@ -236,6 +236,8 @@ class TripController extends _$TripController implements IErrorHandler {
       postHogService.postHogTrackEvent("user_checked_in", {
         "trip_id": tripId,
         "stop_id": stopId,
+        "load_number": trip.loadNumber ?? "-",
+        "tenant": trip.companyCode ?? "-",
         "location": '${location.latitude}, ${location.longitude}',
         "distance": '$distance miles',
         "success": false
@@ -277,6 +279,8 @@ class TripController extends _$TripController implements IErrorHandler {
     postHogService.postHogTrackEvent("user_checked_in", {
       "trip_id": tripId,
       "stop_id": stopId,
+      "load_number": trip.loadNumber ?? "-",
+      "tenant": trip.companyCode ?? "-",
       "location": '${location.latitude}, ${location.longitude}',
       "distance": '$distance miles',
       "success": true
@@ -323,6 +327,20 @@ class TripController extends _$TripController implements IErrorHandler {
     startLocationTracking();
     state = AsyncValue.data(
         state.value!.copyWith(loadingStopId: null, checkIn: false));
+    var distance = Geolocator.distanceBetween(
+            location.latitude,
+            location.longitude,
+            double.parse(stop.latitude!),
+            double.parse(stop.longitude!)) /
+        1609.34;
+    ref.read(postHogProvider).postHogTrackEvent("user_checked_out", {
+      "trip_id": tripId,
+      "stop_id": stopId,
+      "load_number": trip.loadNumber ?? "-",
+      "tenant": trip.companyCode ?? "-",
+      "location": '${location.latitude}, ${location.longitude}',
+      "distance": '$distance miles',
+    });
     ref
         .read(httpClientProvider)
         .telemetryClient
