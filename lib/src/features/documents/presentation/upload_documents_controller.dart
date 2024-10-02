@@ -17,6 +17,7 @@ import 'package:path_provider/path_provider.dart';
 
 import '../../../common_widgets/file_upload_progress_dialog.dart';
 import '../../../network/http_client.dart';
+import '../../../network/posthog/posthog_provider.dart';
 import '../../../routing/app_router.dart';
 import '../../../utils/exceptions.dart';
 import '../../../utils/magic_strings.dart';
@@ -39,6 +40,7 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
   late AuthProviderNotifier userData;
   ImagePicker picker = ImagePicker();
   late GoRouter router;
+  
   @override
   UploadDocumentsState build(UploadDocumentArgs arg) {
     docRepo = ref.read(documentsRepositoryProvider);
@@ -129,6 +131,8 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
         {'outputFileUrl': GeneratePDFPage.toPathString(path)});
     var pdfFile = File(path);
     debugPrint("UPLOAD_DOC_CALLED");
+     
+
     ref.read(httpClientProvider).telemetryClient.trackEvent(name: "file_properties", additionalProperties: {
       "file_size": '${await pdfFile.sizeInMb} Mb',
       "file_type": '${state.documentType?.title}'
@@ -160,18 +164,39 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
   void setShowHud(bool show) => state = state.copyWith(showHud: show);
 
   Future<void> _doUpload(File pdfFile) async {
+    final postHogService = ref.read(postHogProvider);
+
     switch (arg.documentType) {
       case DisplayDocumentType.tripDocuments:
         var trip = trips.getTrip(arg.tripId!);
-        await docRepo.uploadTripDocuments(userData.driver!, state.documentType!, pdfFile, trip!);
+        await docRepo.uploadTripDocuments(
+            userData.driver!, state.documentType!, pdfFile, trip!);
+
+        postHogService.postHogTrackEvent("user_uploaded_document", {
+          "document_type": '${state.documentType?.title}',
+          "file_size": '${await pdfFile.sizeInMb} Mb',
+          "trip_id": arg.tripId!
+        });
         await trips.refreshCurrentTrip(arg.tripId!);
       case DisplayDocumentType.personalDocuments:
-        await docRepo.uploadPersonalDocuments(userData.getCompanyOwned.companyCode!, state.documentType!, pdfFile);
+        await docRepo.uploadPersonalDocuments(
+            userData.getCompanyOwned.companyCode!,
+            state.documentType!,
+            pdfFile);
+        postHogService.postHogTrackEvent("user_uploaded_document", {
+          "document_type": '${state.documentType?.title}',
+          "file_size": '${await pdfFile.sizeInMb} Mb',
+        });
         await docList.getDocuments();
       case DisplayDocumentType.paystubs:
         await Future.value(null);
       case DisplayDocumentType.tripReport:
-        await docRepo.uploadTripReport(userData.getCompanyOwned.companyCode!, state.documentType!, pdfFile);
+        await docRepo.uploadTripReport(userData.getCompanyOwned.companyCode!,
+            state.documentType!, pdfFile);
+        postHogService.postHogTrackEvent("user_uploaded_document", {
+          "document_type": '${state.documentType?.title}',
+          "file_size": '${await pdfFile.sizeInMb} Mb',
+        });
         await docList.getDocuments();
     }
   }
