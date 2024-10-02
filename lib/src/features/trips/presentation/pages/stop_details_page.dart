@@ -268,15 +268,18 @@ class ReferencesWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: references
           .map(
-            (reference) => RichText(
-              text: TextSpan(
-                text: reference.name,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
-                children: [
-                  TextSpan(text: reference.getValue, style: Theme.of(context).textTheme.bodyMedium),
-                ],
-              ),
-            ),
+            (reference) => reference.access.equalsIgnoreCase(StopReferenceAccessType.public)
+                ? Row(
+                    children: [
+                      Text(
+                        reference.name ?? '',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+                      ),
+                      const SizedBox(width: 6),
+                      Text(reference.getValue, style: Theme.of(context).textTheme.bodyMedium),
+                    ],
+                  )
+                : const SizedBox.shrink(),
           )
           .toList(),
     );
