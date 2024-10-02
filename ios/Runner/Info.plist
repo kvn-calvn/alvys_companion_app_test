@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
@@ -64,7 +66,7 @@
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>NSUserTrackingUsageDescription</key>
-    <string>This allows the Alvys app to provide you with the most relevant content.</string>
+	<string>This allows the Alvys app to provide you with the most relevant content.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
