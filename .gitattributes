@@ -1,2 +1,13 @@
-# Auto detect text files and perform LF normalization
+# Set default behavior to automatically normalize line endings.
 * text=auto
+
+# LF line endings
+*.sh text eol=lf
+
+# binaries files
+*.xlsx -text
+*.png -text
+*.ico -text
+*.ttf -text
+
+# committed as binaries
