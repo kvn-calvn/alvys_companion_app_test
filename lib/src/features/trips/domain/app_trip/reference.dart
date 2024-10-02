@@ -12,10 +12,11 @@ class Reference with _$Reference {
     @JsonKey(name: 'Value') String? value,
   }) = _Reference;
 
-  factory Reference.fromJson(Map<String, dynamic> json) => _$ReferenceFromJson(json);
+  factory Reference.fromJson(Map<String, dynamic> json) =>
+      _$ReferenceFromJson(json);
   Reference._();
   dynamic get getValue {
     var newValue = DateTime.tryParse(value ?? '');
-    return DateFormat('MM/dd/YYYY').formatNullDate(newValue, value ?? '-');
+    return DateFormat('MM/dd/yyyy').formatNullDate(newValue, value ?? '-');
   }
 }
