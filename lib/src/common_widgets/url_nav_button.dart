@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../network/http_client.dart';
+import '../network/posthog/posthog_provider.dart';
 
 class UrlNavButton extends StatelessWidget {
   const UrlNavButton({
@@ -31,6 +32,9 @@ class UrlNavButton extends StatelessWidget {
                 if (!await launchUrl(_url)) {
                   throw 'Could not launch $_url';
                 }
+                ref.read(postHogProvider).postHogTrackEvent(
+                    "${title.replaceAll(' ', '').toLowerCase()}_button_tapped",
+                    null);
                 ref.read(httpClientProvider).telemetryClient.trackEvent(
                     name: "${title.replaceAll(' ', '')}_button_tapped");
                 await FirebaseAnalytics.instance.logEvent(

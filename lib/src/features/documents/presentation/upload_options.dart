@@ -7,6 +7,7 @@ import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../../custom_icons/alvys3_icons.dart';
+import '../../../network/posthog/posthog_provider.dart';
 import '../../../utils/exceptions.dart';
 import '../../../utils/magic_strings.dart';
 import '../../../utils/permission_helper.dart';
@@ -33,6 +34,8 @@ class UploadOptions extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+        final postHogService = ref.read(postHogProvider);
+
     return Padding(
       padding: const EdgeInsets.all(8),
       child: Column(
@@ -50,6 +53,7 @@ class UploadOptions extends ConsumerWidget {
                       title: 'Open Settings', action: () => AppSettings.openAppSettings(type: AppSettingsType.settings))
                 ]);
               }
+              postHogService.postHogTrackEvent("user_opened_camera", null);
               if (context.mounted) {
                 Navigator.of(context, rootNavigator: true).pop();
                 context.goNamed(route,
@@ -73,6 +77,7 @@ class UploadOptions extends ConsumerWidget {
                       title: 'Open Settings', action: () => AppSettings.openAppSettings(type: AppSettingsType.settings))
                 ]);
               }
+              postHogService.postHogTrackEvent("user_opened_gallery", null);
               if (context.mounted) {
                 Navigator.of(context, rootNavigator: true).pop();
                 context.goNamed(

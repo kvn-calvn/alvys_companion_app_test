@@ -16,6 +16,9 @@ class EcheckRepository {
   Future<ECheck> generateEcheck<T>(String companyCode, GenerateECheckRequest request) async {
     var res =
         await httpClient.postData<T>(ApiRoutes.generateEcheck, companyCode, body: request.toJson().toJsonEncodedString);
+
+        
+  
     return ECheck.fromJson(res.body.toDecodedJson);
   }
 

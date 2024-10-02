@@ -9,6 +9,7 @@ import '../../../../common_widgets/empty_view.dart';
 import '../../../../common_widgets/shimmers/stop_details_shimmer.dart';
 import '../../../../common_widgets/stop_card.dart';
 import '../../../../network/http_client.dart';
+import '../../../../network/posthog/posthog_provider.dart';
 import '../../../../utils/app_theme.dart';
 import '../../domain/app_trip/m_comodity.dart';
 import '../../domain/app_trip/reference.dart';
@@ -43,6 +44,7 @@ class _StopDetailsPageState extends ConsumerState<StopDetailsPage> {
             onPressed: () async {
               await ref.read(tripControllerProvider.notifier).refreshCurrentTrip(widget.tripId);
               if (mounted) {
+                ref.read(postHogProvider).postHogTrackEvent('user_refresh_stopdetails', null);
                 ref.read(httpClientProvider).telemetryClient.trackEvent(name: "stop_refresh_button_tapped");
                 await FirebaseAnalytics.instance.logEvent(name: "stop_refresh_button_tapped");
               }
@@ -74,6 +76,9 @@ class StopDetails extends ConsumerWidget {
     if (stopDetailsState.isLoading) return const StopDetailsShimmer();
     var currentStop = stopDetailsState.value!.tryGetStop(tripId, stopId);
     var trip = stopDetailsState.value!.tryGetTrip(tripId);
+    // ref.read(postHogProvider).postHogScreen('Stop Details - ${trip?.loadNumber ?? ''}', {
+    //   "stop_id": stopId,
+    // });
     if (trip == null) {
       return const EmptyView(title: 'Trip Not found', description: 'Return to the previous page.');
     }
@@ -262,10 +267,17 @@ class ReferencesWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: references
-          .map((reference) => Text(
-                '${reference.name} ${reference.value}',
-                style: Theme.of(context).textTheme.bodyMedium,
-              ))
+          .map(
+            (reference) => RichText(
+              text: TextSpan(
+                text: reference.name,
+                style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+                children: [
+                  TextSpan(text: reference.getValue, style: Theme.of(context).textTheme.bodyMedium),
+                ],
+              ),
+            ),
+          )
           .toList(),
     );
   }
