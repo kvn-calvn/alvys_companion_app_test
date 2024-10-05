@@ -42,11 +42,19 @@ class _StopDetailsPageState extends ConsumerState<StopDetailsPage> {
             padding: const EdgeInsets.only(right: 18.0, left: 5.0),
             constraints: const BoxConstraints(),
             onPressed: () async {
-              await ref.read(tripControllerProvider.notifier).refreshCurrentTrip(widget.tripId);
+              await ref
+                  .read(tripControllerProvider.notifier)
+                  .refreshCurrentTrip(widget.tripId);
               if (mounted) {
-                ref.read(postHogProvider).postHogTrackEvent('user_refresh_stopdetails', null);
-                ref.read(httpClientProvider).telemetryClient.trackEvent(name: "stop_refresh_button_tapped");
-                await FirebaseAnalytics.instance.logEvent(name: "stop_refresh_button_tapped");
+                ref
+                    .read(postHogProvider)
+                    .postHogTrackEvent('user_refresh_stopdetails', null);
+                ref
+                    .read(httpClientProvider)
+                    .telemetryClient
+                    .trackEvent(name: "stop_refresh_button_tapped");
+                await FirebaseAnalytics.instance
+                    .logEvent(name: "stop_refresh_button_tapped");
               }
             },
             icon: const Icon(Icons.refresh),
@@ -80,20 +88,28 @@ class StopDetails extends ConsumerWidget {
     //   "stop_id": stopId,
     // });
     if (trip == null) {
-      return const EmptyView(title: 'Trip Not found', description: 'Return to the previous page.');
+      return const EmptyView(
+          title: 'Trip Not found', description: 'Return to the previous page.');
     }
     return RefreshIndicator(
       onRefresh: () async {
-        await ref.read(tripControllerProvider.notifier).refreshCurrentTrip(tripId);
+        await ref
+            .read(tripControllerProvider.notifier)
+            .refreshCurrentTrip(tripId);
         if (context.mounted) {
-          ref.read(httpClientProvider).telemetryClient.trackEvent(name: "stop_refresh_button_tapped");
-          await FirebaseAnalytics.instance.logEvent(name: "stop_refresh_button_tapped");
+          ref
+              .read(httpClientProvider)
+              .telemetryClient
+              .trackEvent(name: "stop_refresh_button_tapped");
+          await FirebaseAnalytics.instance
+              .logEvent(name: "stop_refresh_button_tapped");
         }
       },
       child: currentStop == null
           ? const EmptyView(
               title: 'Stop Unavailable',
-              description: 'Stop details not found. Try refreshing this page or the trip list page')
+              description:
+                  'Stop details not found. Try refreshing this page or the trip list page')
           : ListView(
               children: [
                 Column(
@@ -112,9 +128,12 @@ class StopDetails extends ConsumerWidget {
                           text: currentStop.address?.street ?? "",
                           style: Theme.of(context).textTheme.bodyMedium,
                           children: [
-                            if (currentStop.address?.apartmentNumber.isNotNullOrEmpty ?? false)
+                            if (currentStop.address?.apartmentNumber
+                                    .isNotNullOrEmpty ??
+                                false)
                               TextSpan(
-                                text: '\n${currentStop.address?.apartmentNumber}',
+                                text:
+                                    '\n${currentStop.address?.apartmentNumber}',
                                 style: Theme.of(context).textTheme.bodyMedium,
                               ),
                             TextSpan(
@@ -176,7 +195,10 @@ class StopDetails extends ConsumerWidget {
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         Text(
-                          DateFormat.yMMMd().addPattern('@').add_Hm().formatNullDate(currentStop.arrived?.localDate),
+                          DateFormat.yMMMd()
+                              .addPattern('@')
+                              .add_Hm()
+                              .formatNullDate(currentStop.arrived?.localDate),
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
@@ -189,7 +211,10 @@ class StopDetails extends ConsumerWidget {
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         Text(
-                          DateFormat.yMMMd().addPattern('@').add_Hm().formatNullDate(currentStop.departed?.localDate),
+                          DateFormat.yMMMd()
+                              .addPattern('@')
+                              .add_Hm()
+                              .formatNullDate(currentStop.departed?.localDate),
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
@@ -202,7 +227,8 @@ class StopDetails extends ConsumerWidget {
                   style: Theme.of(context).textTheme.bodyLarge,
                 ),
                 const SizedBox(height: 5),
-                ItemsWidget(commodities: currentStop.comodities ?? <MComodity>[]),
+                ItemsWidget(
+                    commodities: currentStop.comodities ?? <MComodity>[]),
                 const SizedBox(height: 20),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -212,7 +238,9 @@ class StopDetails extends ConsumerWidget {
                       style: Theme.of(context).textTheme.bodyLarge,
                     ),
                     HtmlWidget(
-                      currentStop.genInstructions.isNullOrEmpty ? '-' : currentStop.genInstructions!,
+                      currentStop.genInstructions.isNullOrEmpty
+                          ? '-'
+                          : currentStop.genInstructions!,
                     ),
                     /*Text(
                       currentStop.genInstructions.isNullOrEmpty
@@ -244,7 +272,8 @@ class StopDetails extends ConsumerWidget {
                       'References',
                       style: Theme.of(context).textTheme.bodyLarge,
                     ),
-                    ReferencesWidget(references: currentStop.references ?? <Reference>[])
+                    ReferencesWidget(
+                        references: currentStop.references ?? <Reference>[])
                   ],
                 ),
               ],
@@ -268,15 +297,26 @@ class ReferencesWidget extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: references
           .map(
-            (reference) => reference.access.equalsIgnoreCase(StopReferenceAccessType.public)
+            (reference) => reference.access
+                    .equalsIgnoreCase(StopReferenceAccessType.public)
                 ? Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
                         reference.name ?? '',
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+                        style: Theme.of(context)
+                            .textTheme
+                            .bodyMedium
+                            ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       const SizedBox(width: 6),
-                      Text(reference.getValue, style: Theme.of(context).textTheme.bodyMedium),
+                      Flexible(
+                        child: Text(reference.getValue,
+                            style: Theme.of(context).textTheme.bodyMedium,
+                            overflow: TextOverflow.ellipsis,
+                            maxLines: 10,
+                            softWrap: true),
+                      ),
                     ],
                   )
                 : const SizedBox.shrink(),
@@ -346,7 +386,10 @@ class ItemsWidget extends StatelessWidget {
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                             Text(
-                              item.numPieces.isNull ? '-' : NumberFormat.decimalPattern().format(item.numPieces ?? 0),
+                              item.numPieces.isNull
+                                  ? '-'
+                                  : NumberFormat.decimalPattern()
+                                      .format(item.numPieces ?? 0),
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           ],
@@ -384,7 +427,8 @@ class StopDateDetails extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTextStyle(
-        style: (style ?? Theme.of(context).textTheme.bodyMedium!).copyWith(height: 1.2),
+        style: (style ?? Theme.of(context).textTheme.bodyMedium!)
+            .copyWith(height: 1.2),
         child: args?.isEmpty ?? true
             ? const Text('-')
             : Row(
