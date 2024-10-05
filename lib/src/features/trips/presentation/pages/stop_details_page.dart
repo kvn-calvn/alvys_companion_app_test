@@ -1,4 +1,3 @@
-import 'package:alvys3/src/features/tutorial/tutorial.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
@@ -315,7 +314,7 @@ class ReferencesWidget extends StatelessWidget {
                         child: Text(reference.getValue,
                             style: Theme.of(context).textTheme.bodyMedium,
                             overflow: TextOverflow.ellipsis,
-                            maxLines: 3,
+                            maxLines: 10,
                             softWrap: true),
                       ),
                     ],
