@@ -10,8 +10,9 @@ import 'package:http/http.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:uuid/data.dart';
+import 'package:uuid/rng.dart';
 import 'package:uuid/uuid.dart';
-import 'package:uuid/uuid_util.dart';
 
 import '../../flavor_config.dart';
 import '../features/authentication/domain/models/driver_user/driver_user.dart';
@@ -35,7 +36,7 @@ class AlvysHttpClient {
     final client = Client();
 
     final processor = TransmissionProcessor(
-      instrumentationKey: FlavorConfig.instance!.azureTelemetryKey,
+      connectionString: FlavorConfig.instance!.azureConnectionString,
       httpClient: client,
       timeout: const Duration(seconds: 100),
     );
@@ -146,7 +147,7 @@ class AlvysHttpClient {
       telemetryClient.context.properties['tenantId'] = companyCode;
     }
     await addPermissionDetails();
-    telemetryClient.context.operation.id = const Uuid().v4(options: {'rng': UuidUtil.cryptoRNG});
+    telemetryClient.context.operation.id = const Uuid().v4(config: V4Options(null, CryptoRNG()));
     var res = await _tryRequest<T, Response>(op);
     return _handleResponse<T>(res);
   }

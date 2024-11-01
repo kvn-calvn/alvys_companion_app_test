@@ -13,7 +13,7 @@ void main() {
       storageUrl: "https://files.alvys.com/",
       androidGeniusScanSDKKey: Env.androidGeniusScanSDKKey,
       iosGeniusScanSDKKey: Env.iOSGeniusScanSDKKey,
-      azureTelemetryKey: Env.azureTelemetryKeyPROD,
+      azureTelemetryKey: Env.azureTelemetryConnectionStringPROD,
       gMapsKey: Env.gMapsKey,
       hereMapsKey: Env.hereMapsKeyPROD,
       hubName: Env.hubNameProd,
