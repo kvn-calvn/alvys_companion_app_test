@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -34,7 +32,7 @@ class UploadOptions extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-        final postHogService = ref.read(postHogProvider);
+    final postHogService = ref.read(postHogProvider);
 
     return Padding(
       padding: const EdgeInsets.all(8),
@@ -67,16 +65,6 @@ class UploadOptions extends ConsumerWidget {
             leading: const Icon(Icons.photo),
             title: const Text('Gallery'),
             onTap: () async {
-              var hasPermission = await PermissionHelper.getPermission(
-                  Platform.isAndroid ? await PermissionHelper.androidGalleryPermission() : Permission.photos);
-              if (!hasPermission) {
-                throw PermissionException("Please enable gallery permission", () {
-                  Navigator.of(context, rootNavigator: false).pop();
-                }, [
-                  ExceptionAction(
-                      title: 'Open Settings', action: () => AppSettings.openAppSettings(type: AppSettingsType.settings))
-                ]);
-              }
               postHogService.postHogTrackEvent("user_opened_gallery", null);
               if (context.mounted) {
                 Navigator.of(context, rootNavigator: true).pop();
