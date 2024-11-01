@@ -14,7 +14,8 @@ import '../features/trips/presentation/controller/trip_page_controller.dart';
 import 'magic_strings.dart';
 import 'provider_args_saver.dart';
 
-final websocketProvider = Provider<AlvysWebsocket>((ref) => AlvysWebsocket(ref: ref));
+final websocketProvider =
+    Provider<AlvysWebsocket>((ref) => AlvysWebsocket(ref: ref));
 
 class AlvysWebsocket {
   HubConnection get getWebSocketConnection {
@@ -23,7 +24,8 @@ class AlvysWebsocket {
     //   //  debugPrint('${rec.level.name}: ${rec.time}: ${rec.message}');
     // });
     var headers = MessageHeaders();
-    headers.setHeaderValue('CompanyCode', ref.read(authProvider.notifier).tenantCompanyCodes.join(','));
+    headers.setHeaderValue('CompanyCode',
+        ref.read(authProvider.notifier).tenantCompanyCodes.join(','));
     // headers.setHeaderValue('Authorization', 'Basic ${await getToken()}');
     return HubConnectionBuilder()
         .withUrl(
@@ -52,7 +54,7 @@ class AlvysWebsocket {
     return res ?? '';
   }
 
-  final ProviderRef ref;
+  final Ref ref;
   HubConnection? connection;
   AlvysWebsocket({required this.ref});
   Future<void> restartConnection() async {
@@ -96,7 +98,9 @@ class AlvysWebsocket {
       (args) {
         try {
           var trip = AppTrip.fromJson(jsonDecode(jsonEncode(args))[0]);
-          if (trip.stops.isNullOrEmpty || !ref.exists(tripControllerProvider)) return;
+          if (trip.stops.isNullOrEmpty || !ref.exists(tripControllerProvider)) {
+            return;
+          }
           ref.read(tripControllerProvider.notifier).updateTrip(trip);
         } catch (_) {}
       },
