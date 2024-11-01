@@ -1,3 +1,4 @@
+import 'package:alvys3/src/features/trips/domain/app_trip/reference.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -60,7 +61,8 @@ class AppTrip with _$AppTrip {
     @JsonKey(name: 'Continuous') bool? continuous,
     @JsonKey(name: 'IsTripActive') bool? isTripActive,
     @JsonKey(name: 'PaidMiles') double? paidMiles,
-    @JsonKey(name: 'Attachments') @Default([]) List<AppDocument> attachments,
+    @JsonKey(name: 'Attachments') @Default(<AppDocument>[]) List<AppDocument> attachments,
+    @JsonKey(name: 'LoadReferences') @Default(<Reference>[]) List<Reference> loadReferences,
   }) = _AppTrip;
 
   factory AppTrip.fromJson(Map<String, dynamic> json) => _$AppTripFromJson(json);

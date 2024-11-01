@@ -3,8 +3,9 @@ import 'dart:convert';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:signalr_netcore2/ihub_protocol.dart';
-import 'package:signalr_netcore2/signalr_client.dart';
+import 'package:logging/logging.dart';
+import 'package:signalr_netcore/ihub_protocol.dart';
+import 'package:signalr_netcore/signalr_client.dart';
 
 import '../constants/api_routes.dart';
 import '../features/authentication/domain/models/user_details/user_details.dart';
@@ -21,7 +22,7 @@ class AlvysWebsocket {
   HubConnection get getWebSocketConnection {
     // Logger.root.level = Level.ALL;
     // Logger.root.onRecord.listen((LogRecord rec) {
-    //   //  debugPrint('${rec.level.name}: ${rec.time}: ${rec.message}');
+    //   debugPrint('${rec.level.name}: ${rec.time}: ${rec.message}');
     // });
     var headers = MessageHeaders();
     headers.setHeaderValue('CompanyCode',
@@ -32,11 +33,11 @@ class AlvysWebsocket {
       ApiRoutes.webSocket,
       options: HttpConnectionOptions(
           requestTimeout: 10000,
-          // logger: Logger("SignalR - transport"),
+          //  logger: Logger("SignalR - transport"),
           accessTokenFactory: getToken,
           headers: headers),
     )
-//        .configureLogging(Logger("SignalR - hub"))
+        // .configureLogging(Logger("SignalR - hub"))
         .withAutomaticReconnect(retryDelays: [
       0,
       2000,
@@ -96,6 +97,7 @@ class AlvysWebsocket {
     connection?.on(
       'TripUpdated',
       (args) {
+        debugPrint("from signalr: $args");
         try {
           var trip = AppTrip.fromJson(jsonDecode(jsonEncode(args))[0]);
           if (trip.stops.isNullOrEmpty || !ref.exists(tripControllerProvider)) {
