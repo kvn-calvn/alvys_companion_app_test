@@ -40,7 +40,7 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
   late AuthProviderNotifier userData;
   ImagePicker picker = ImagePicker();
   late GoRouter router;
-  
+
   @override
   UploadDocumentsState build(UploadDocumentArgs arg) {
     docRepo = ref.read(documentsRepositoryProvider);
@@ -68,7 +68,12 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
         config = GeniusScanConfig.camera();
         break;
       case UploadType.gallery:
-        config = GeniusScanConfig.gallery();
+        String? image;
+        try {
+          var gallaryRes = await ImagePicker().pickImage(source: ImageSource.gallery);
+          image = gallaryRes?.path;
+        } catch (_) {}
+        config = GeniusScanConfig.gallery(image);
         break;
     }
     try {
@@ -131,7 +136,6 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
         {'outputFileUrl': GeneratePDFPage.toPathString(path)});
     var pdfFile = File(path);
     debugPrint("UPLOAD_DOC_CALLED");
-     
 
     ref.read(httpClientProvider).telemetryClient.trackEvent(name: "file_properties", additionalProperties: {
       "file_size": '${await pdfFile.sizeInMb} Mb',
@@ -169,8 +173,7 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
     switch (arg.documentType) {
       case DisplayDocumentType.tripDocuments:
         var trip = trips.getTrip(arg.tripId!);
-        await docRepo.uploadTripDocuments(
-            userData.driver!, state.documentType!, pdfFile, trip!);
+        await docRepo.uploadTripDocuments(userData.driver!, state.documentType!, pdfFile, trip!);
 
         postHogService.postHogTrackEvent("user_uploaded_document", {
           "document_type": '${state.documentType?.title}',
@@ -179,10 +182,7 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
         });
         await trips.refreshCurrentTrip(arg.tripId!);
       case DisplayDocumentType.personalDocuments:
-        await docRepo.uploadPersonalDocuments(
-            userData.getCompanyOwned.companyCode!,
-            state.documentType!,
-            pdfFile);
+        await docRepo.uploadPersonalDocuments(userData.getCompanyOwned.companyCode!, state.documentType!, pdfFile);
         postHogService.postHogTrackEvent("user_uploaded_document", {
           "document_type": '${state.documentType?.title}',
           "file_size": '${await pdfFile.sizeInMb} Mb',
@@ -191,8 +191,7 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
       case DisplayDocumentType.paystubs:
         await Future.value(null);
       case DisplayDocumentType.tripReport:
-        await docRepo.uploadTripReport(userData.getCompanyOwned.companyCode!,
-            state.documentType!, pdfFile);
+        await docRepo.uploadTripReport(userData.getCompanyOwned.companyCode!, state.documentType!, pdfFile);
         postHogService.postHogTrackEvent("user_uploaded_document", {
           "document_type": '${state.documentType?.title}',
           "file_size": '${await pdfFile.sizeInMb} Mb',

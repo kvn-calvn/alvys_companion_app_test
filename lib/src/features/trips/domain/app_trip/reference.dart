@@ -32,7 +32,7 @@ class Reference with _$Reference {
 }
 
 class StopReferenceType {
-  static const String text = 'TEXT', bool = 'BOOL', date = 'DATE';
+  static const String text = 'TEXT', bool = 'BOOL', date = 'DATE', list = 'LIST';
 }
 
 class StopReferenceAccessType {
