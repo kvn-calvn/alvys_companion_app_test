@@ -15,8 +15,7 @@ class GeniusScanConfig with _$GeniusScanConfig {
     @Default('letter') String pdfPageSize,
     String? pdfMaxScanDimension,
     int? jpegQuality,
-    @Default(['rotate', 'editFilter', 'correctDistortion'])
-    List<String> postProcessingActions,
+    @Default(['rotate', 'editFilter', 'correctDistortion']) List<String> postProcessingActions,
     @Default(false) bool flashButtonHidden,
     String? defaultFlashMode,
     String? foregroundColor,
@@ -25,8 +24,7 @@ class GeniusScanConfig with _$GeniusScanConfig {
     String? menuColor,
   }) = _GeniusScanConfig;
 
-  factory GeniusScanConfig.fromJson(Map<String, dynamic> json) =>
-      _$GeniusScanConfigFromJson(json);
+  factory GeniusScanConfig.fromJson(Map<String, dynamic> json) => _$GeniusScanConfigFromJson(json);
 
   factory GeniusScanConfig.camera() => GeniusScanConfig(
         source: 'camera',
@@ -35,10 +33,11 @@ class GeniusScanConfig with _$GeniusScanConfig {
         defaultFlashMode: "auto",
         jpegQuality: 100,
       );
-  factory GeniusScanConfig.gallery() => GeniusScanConfig(
-        source: 'library',
+  factory GeniusScanConfig.gallery(String? url) => GeniusScanConfig(
+        source: 'image',
         defaultFilter: 'blackAndWhite',
         jpegQuality: 100,
+        sourceImageUrl: url,
       );
 
   @override
@@ -54,8 +53,7 @@ class GeniusScanResults with _$GeniusScanResults {
     @Default(<Scan>[]) List<Scan> scans,
   }) = _GeniusScanResults;
 
-  factory GeniusScanResults.fromJson(Map<String, dynamic> json) =>
-      _$GeniusScanResultsFromJson(json);
+  factory GeniusScanResults.fromJson(Map<String, dynamic> json) => _$GeniusScanResultsFromJson(json);
 }
 
 @freezed
