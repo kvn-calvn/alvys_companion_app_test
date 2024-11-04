@@ -24,6 +24,8 @@ class Reference with _$Reference {
       case StopReferenceType.bool:
         var val = bool.tryParse(value ?? '') ?? false;
         return val ? 'Yes' : 'No';
+      case StopReferenceType.list:
+        return value ?? '-';
       case StopReferenceType.text:
       default:
         return value ?? '-';
