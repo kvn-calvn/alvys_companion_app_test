@@ -38,7 +38,7 @@ class AlvysHttpClient {
     final client = Client();
 
     final processor = TransmissionProcessor(
-      connectionString: FlavorConfig.instance!.azureConnectionString,
+      instrumentationKey: FlavorConfig.instance!.azureConnectionString,
       httpClient: client,
       timeout: const Duration(seconds: 100),
     );
