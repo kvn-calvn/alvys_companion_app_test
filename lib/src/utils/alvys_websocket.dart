@@ -14,8 +14,7 @@ import '../features/trips/presentation/controller/trip_page_controller.dart';
 import 'magic_strings.dart';
 import 'provider_args_saver.dart';
 
-final websocketProvider =
-    Provider<AlvysWebsocket>((ref) => AlvysWebsocket(ref: ref));
+final websocketProvider = Provider<AlvysWebsocket>((ref) => AlvysWebsocket(ref: ref));
 
 class AlvysWebsocket {
   HubConnection get getWebSocketConnection {
@@ -24,8 +23,7 @@ class AlvysWebsocket {
     //   debugPrint('${rec.level.name}: ${rec.time}: ${rec.message}');
     // });
     var headers = MessageHeaders();
-    headers.setHeaderValue('CompanyCode',
-        ref.read(authProvider.notifier).tenantCompanyCodes.join(','));
+    headers.setHeaderValue('CompanyCode', ref.read(authProvider.notifier).tenantCompanyCodes.join(','));
     // headers.setHeaderValue('Authorization', 'Basic ${await getToken()}');
     return HubConnectionBuilder()
         .withUrl(
@@ -96,7 +94,7 @@ class AlvysWebsocket {
     connection?.on(
       'TripUpdated',
       (args) {
-        debugPrint("from signalr: $args");
+        debugPrint("from signalr: $args", wrapWidth: 200);
         try {
           var trip = AppTrip.fromJson(jsonDecode(jsonEncode(args))[0]);
           if (trip.stops.isNullOrEmpty || !ref.exists(tripControllerProvider)) {
