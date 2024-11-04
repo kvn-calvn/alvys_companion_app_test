@@ -12,7 +12,7 @@ class FlavorConfig {
   final String hereMapsKey;
   final String iosGeniusScanSDKKey;
   final String androidGeniusScanSDKKey;
-  final String azureTelemetryKey;
+  final String azureConnectionString;
   final String hubName;
   final String connectionString;
 
@@ -32,20 +32,8 @@ class FlavorConfig {
       required String azureTelemetryKey,
       required String hubName,
       required String connectionString}) {
-    _instance ??= FlavorConfig._internal(
-        flavor,
-        env,
-        rawApiBase,
-        baseUrl,
-        storageUrl,
-        mobileBaseApi,
-        gMapsKey,
-        hereMapsKey,
-        iosGeniusScanSDKKey,
-        androidGeniusScanSDKKey,
-        azureTelemetryKey,
-        hubName,
-        connectionString);
+    _instance ??= FlavorConfig._internal(flavor, env, rawApiBase, baseUrl, storageUrl, mobileBaseApi, gMapsKey,
+        hereMapsKey, iosGeniusScanSDKKey, androidGeniusScanSDKKey, azureTelemetryKey, hubName, connectionString);
     return _instance!;
   }
 
@@ -60,7 +48,7 @@ class FlavorConfig {
       this.hereMapsKey,
       this.iosGeniusScanSDKKey,
       this.androidGeniusScanSDKKey,
-      this.azureTelemetryKey,
+      this.azureConnectionString,
       this.hubName,
       this.connectionString);
 

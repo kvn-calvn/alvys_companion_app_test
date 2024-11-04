@@ -33,14 +33,14 @@ abstract class Env {
   @EnviedField(varName: 'ANDROID_GENIUSSCANSDKKEY_QA', obfuscate: true)
   static final String androidGeniusScanSDKKeyQA = _Env.androidGeniusScanSDKKeyQA;
 
-  @EnviedField(varName: 'AZURETELEMETRYKEY_DEV', obfuscate: true)
-  static final String azureTelemetryKeyDEV = _Env.azureTelemetryKeyDEV;
+  @EnviedField(varName: 'AZURETELEMETRY_CONNECTION_STRING_DEV', obfuscate: true)
+  static final String azureTelemetryConnectionStringDEV = _Env.azureTelemetryConnectionStringDEV;
 
-  @EnviedField(varName: 'AZURETELEMETRYKEY_PROD', obfuscate: true)
-  static final String azureTelemetryKeyPROD = _Env.azureTelemetryKeyPROD;
+  @EnviedField(varName: 'AZURETELEMETRY_CONNECTION_STRING_PROD', obfuscate: true)
+  static final String azureTelemetryConnectionStringPROD = _Env.azureTelemetryConnectionStringPROD;
 
-  @EnviedField(varName: 'AZURETELEMETRYKEY_QA', obfuscate: true)
-  static final String azureTelemetryKeyQA = _Env.azureTelemetryKeyQA;
+  @EnviedField(varName: 'AZURETELEMETRY_CONNECTION_STRING_QA', obfuscate: true)
+  static final String azureTelemetryConnectionStringQA = _Env.azureTelemetryConnectionStringQA;
 
   @EnviedField(varName: 'HUB_NAME_QA', obfuscate: false)
   static const String hubNameQA = _Env.hubNameQA;

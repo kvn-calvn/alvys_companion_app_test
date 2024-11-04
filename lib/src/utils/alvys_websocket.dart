@@ -3,8 +3,8 @@ import 'dart:convert';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:signalr_netcore2/ihub_protocol.dart';
-import 'package:signalr_netcore2/signalr_client.dart';
+import 'package:signalr_netcore/ihub_protocol.dart';
+import 'package:signalr_netcore/signalr_client.dart';
 
 import '../constants/api_routes.dart';
 import '../features/authentication/domain/models/user_details/user_details.dart';
@@ -14,27 +14,29 @@ import '../features/trips/presentation/controller/trip_page_controller.dart';
 import 'magic_strings.dart';
 import 'provider_args_saver.dart';
 
-final websocketProvider = Provider<AlvysWebsocket>((ref) => AlvysWebsocket(ref: ref));
+final websocketProvider =
+    Provider<AlvysWebsocket>((ref) => AlvysWebsocket(ref: ref));
 
 class AlvysWebsocket {
   HubConnection get getWebSocketConnection {
     // Logger.root.level = Level.ALL;
     // Logger.root.onRecord.listen((LogRecord rec) {
-    //   //  debugPrint('${rec.level.name}: ${rec.time}: ${rec.message}');
+    //   debugPrint('${rec.level.name}: ${rec.time}: ${rec.message}');
     // });
     var headers = MessageHeaders();
-    headers.setHeaderValue('CompanyCode', ref.read(authProvider.notifier).tenantCompanyCodes.join(','));
+    headers.setHeaderValue('CompanyCode',
+        ref.read(authProvider.notifier).tenantCompanyCodes.join(','));
     // headers.setHeaderValue('Authorization', 'Basic ${await getToken()}');
     return HubConnectionBuilder()
         .withUrl(
       ApiRoutes.webSocket,
       options: HttpConnectionOptions(
           requestTimeout: 10000,
-          // logger: Logger("SignalR - transport"),
+          //  logger: Logger("SignalR - transport"),
           accessTokenFactory: getToken,
           headers: headers),
     )
-//        .configureLogging(Logger("SignalR - hub"))
+        // .configureLogging(Logger("SignalR - hub"))
         .withAutomaticReconnect(retryDelays: [
       0,
       2000,
@@ -52,7 +54,7 @@ class AlvysWebsocket {
     return res ?? '';
   }
 
-  final ProviderRef ref;
+  final Ref ref;
   HubConnection? connection;
   AlvysWebsocket({required this.ref});
   Future<void> restartConnection() async {
@@ -94,9 +96,12 @@ class AlvysWebsocket {
     connection?.on(
       'TripUpdated',
       (args) {
+        debugPrint("from signalr: $args");
         try {
           var trip = AppTrip.fromJson(jsonDecode(jsonEncode(args))[0]);
-          if (trip.stops.isNullOrEmpty || !ref.exists(tripControllerProvider)) return;
+          if (trip.stops.isNullOrEmpty || !ref.exists(tripControllerProvider)) {
+            return;
+          }
           ref.read(tripControllerProvider.notifier).updateTrip(trip);
         } catch (_) {}
       },
