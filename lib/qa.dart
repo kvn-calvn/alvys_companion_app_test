@@ -13,7 +13,7 @@ void main() {
     storageUrl: "https://qafiles.alvys.net/",
     androidGeniusScanSDKKey: Env.androidGeniusScanSDKKeyQA,
     iosGeniusScanSDKKey: Env.iOSGeniusScanSDKKeyQA,
-    azureTelemetryKey: Env.azureTelemetryKeyQA,
+    azureTelemetryKey: Env.azureTelemetryConnectionStringQA,
     gMapsKey: Env.gMapsKey,
     hereMapsKey: Env.hereMapsKeyDEV,
     hubName: Env.hubNameQA,
