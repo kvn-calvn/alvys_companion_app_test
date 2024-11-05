@@ -284,24 +284,30 @@ class ReferenceDetailsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
-        builder: (context, constraints) => Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  reference.name ?? '',
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+        builder: (context, constraints) => Column(
+          children: [
+            const SizedBox(height: 12),
+            Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      reference.name ?? '',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: constraints.maxWidth * 0.6),
+                      child: Text(reference.getValue,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                          textAlign: TextAlign.right,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 10,
+                          softWrap: true),
+                    )
+                  ],
                 ),
-                ConstrainedBox(
-                  constraints: BoxConstraints(maxWidth: constraints.maxWidth * 0.6),
-                  child: Text(reference.getValue,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 10,
-                      softWrap: true),
-                )
-              ],
-            ));
+          ],
+        ));
   }
 }
 
