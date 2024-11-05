@@ -1,5 +1,5 @@
-import 'package:alvys3/src/features/trips/presentation/pages/trip_references.dart';
-import 'package:alvys3/src/routing/posthog_route_observer.dart';
+import '../features/trips/presentation/pages/trip_references.dart';
+import 'posthog_route_observer.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

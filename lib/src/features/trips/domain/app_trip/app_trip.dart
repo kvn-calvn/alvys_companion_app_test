@@ -1,4 +1,4 @@
-import 'package:alvys3/src/features/trips/domain/app_trip/reference.dart';
+import 'reference.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
