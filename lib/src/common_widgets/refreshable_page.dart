@@ -1,4 +1,4 @@
-import 'package:alvys3/src/utils/app_theme.dart';
+import '../utils/app_theme.dart';
 import 'package:flutter/material.dart';
 
 class RefreshablePage extends StatelessWidget {

@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:alvys3/flavor_config.dart';
+import '../../../../flavor_config.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -87,8 +87,8 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IErrorHan
     await FirebaseAnalytics.instance.setUserProperty(name: 'driverId', value: driverRes.phone);
     await FirebaseCrashlytics.instance.setUserIdentifier(driverRes.phone.toString());
 
-    await Posthog().identify(userId: driverRes.phone?? '', userProperties: {'Email': driverRes.email?? '', 'Tenant': tenantCompanyCodes});
-    
+    await Posthog().identify(
+        userId: driverRes.phone ?? '', userProperties: {'Email': driverRes.email ?? '', 'Tenant': tenantCompanyCodes});
 
     var locationStatus = await Permission.location.status;
     var notificationStatus = await Permission.notification.status;

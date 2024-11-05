@@ -1,5 +1,5 @@
-import 'package:alvys3/src/features/trips/domain/app_trip/app_trip.dart';
-import 'package:alvys3/src/features/trips/presentation/pages/trip_references.dart';
+import '../../domain/app_trip/app_trip.dart';
+import 'trip_references.dart';
 
 import '../../../../common_widgets/chip.dart';
 
