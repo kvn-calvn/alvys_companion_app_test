@@ -436,6 +436,13 @@ Provider<GoRouter> tabletRouteProvider = Provider((ref) {
                             },
                           ),
                           GoRoute(
+                            name: RouteName.tripReferences.name,
+                            path: RouteName.tripReferences.name,
+                            builder: (context, state) {
+                              return TripReferencesPage(state.pathParameters[ParamType.tripId.name]!);
+                            },
+                          ),
+                          GoRoute(
                             name: RouteName.stopDetails.name,
                             path: ':stopId',
                             builder: (context, state) {
