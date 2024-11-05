@@ -9,7 +9,7 @@ class EchecksShimmer extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlvysShimmer(
       repeatAmount: 30,
-      repeatingChild: Padding(
+      repeatingChild: (index) => Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(8, 12, 8, 12),
         child: Container(
           height: MediaQuery.of(context).size.height * 0.13,

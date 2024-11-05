@@ -1,9 +1,10 @@
-import 'package:alvys3/src/common_widgets/empty_view.dart';
-import 'package:alvys3/src/common_widgets/refreshable_page.dart';
-import 'package:alvys3/src/features/trips/domain/app_trip/reference.dart';
-import 'package:alvys3/src/features/trips/presentation/controller/trip_page_controller.dart';
-import 'package:alvys3/src/features/trips/presentation/pages/stop_details_page.dart';
-import 'package:alvys3/src/utils/alvys_websocket.dart';
+import '../../../../common_widgets/empty_view.dart';
+import '../../../../common_widgets/refreshable_page.dart';
+import '../../../../common_widgets/shimmers/trip_references_shimmer.dart';
+import '../../domain/app_trip/reference.dart';
+import '../controller/trip_page_controller.dart';
+import 'stop_details_page.dart';
+import '../../../../utils/alvys_websocket.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 
 import 'package:flutter/material.dart';
@@ -89,7 +90,8 @@ class TripReferencesPage extends ConsumerWidget {
         },
         title: 'References',
         body: () {
-          var trip = ref.read(tripControllerProvider).value?.getTrip(tripId);
+          if (ref.watch(tripControllerProvider).isLoading) return TripReferencesShimer();
+          var trip = ref.watch(tripControllerProvider).value?.getTrip(tripId);
           return trip == null
               ? const EmptyView(title: 'Trip Not found', description: 'Return to the previous page.')
               : ListView(

@@ -4,7 +4,7 @@ import 'package:flutter/rendering.dart';
 import '../../constants/color.dart';
 
 class AlvysShimmer extends StatelessWidget {
-  final Widget repeatingChild;
+  final Widget Function(int index) repeatingChild;
   final int repeatAmount;
   const AlvysShimmer({super.key, required this.repeatingChild, required this.repeatAmount});
 
@@ -20,7 +20,7 @@ class AlvysShimmer extends StatelessWidget {
         physics: const NeverScrollableScrollPhysics(),
         itemCount: repeatAmount,
         itemBuilder: (context, index) {
-          return repeatingChild;
+          return repeatingChild(index);
         },
       ),
     );
@@ -122,7 +122,7 @@ class Shimmer extends StatefulWidget {
     this.direction = ShimmerDirection.ltr,
     this.loop = 0,
     this.enabled = true,
-  })  : gradient = LinearGradient(
+  }) : gradient = LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.centerRight,
             colors: <Color>[baseColor, baseColor, highlightColor, baseColor, baseColor],

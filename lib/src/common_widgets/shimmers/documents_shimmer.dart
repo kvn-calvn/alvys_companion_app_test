@@ -10,7 +10,7 @@ class DocumentsShimmer extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlvysShimmer(
       repeatAmount: 30,
-      repeatingChild: Padding(
+      repeatingChild: (index) => Padding(
         padding: const EdgeInsets.symmetric(vertical: 4),
         child: Container(
           height: MediaQuery.of(context).size.height * 0.065,
