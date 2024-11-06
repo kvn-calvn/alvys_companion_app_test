@@ -1,4 +1,4 @@
-import 'package:alvys3/src/network/posthog/posthog_provider.dart';
+import '../network/posthog/posthog_provider.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';

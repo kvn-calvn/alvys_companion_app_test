@@ -236,7 +236,7 @@ class TripController extends _$TripController implements IErrorHandler {
       Move closer and try again.''';
 
       String noDistanceMessage = ''' You are too far from the stop location to check in.
-      MoveMove closer and try again.''';
+      Move closer and try again.''';
       throw AlvysException(showDistance ? distanceMessage : noDistanceMessage, 'Too Far', () {
         state = AsyncValue.data(state.value!.copyWith(loadingStopId: null));
       });

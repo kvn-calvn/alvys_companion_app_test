@@ -1,4 +1,4 @@
-import 'package:alvys3/src/features/authentication/presentation/auth_provider_controller.dart';
+import '../../features/authentication/presentation/auth_provider_controller.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'posthog_service.dart';
 

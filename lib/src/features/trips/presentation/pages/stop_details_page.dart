@@ -264,35 +264,50 @@ class ReferencesWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     if (references.isEmpty) return const Text('-');
-    return LayoutBuilder(builder: (context, constaints) {
-      return Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: references
-            .map(
-              (reference) => reference.access.equalsIgnoreCase(StopReferenceAccessType.public)
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          reference.name ?? '',
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
-                        ),
-                        ConstrainedBox(
-                          constraints: BoxConstraints(maxWidth: constaints.maxWidth * 0.6),
-                          child: Text(reference.getValue,
-                              style: Theme.of(context).textTheme.bodyMedium,
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 10,
-                              softWrap: true),
-                        ),
-                      ],
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: references
+          .map(
+            (reference) => reference.access.equalsIgnoreCase(StopReferenceAccessType.public)
+                ? ReferenceDetailsWidget(reference)
+                : const SizedBox.shrink(),
+          )
+          .toList(),
+    );
+  }
+}
+
+class ReferenceDetailsWidget extends StatelessWidget {
+  final Reference reference;
+  const ReferenceDetailsWidget(this.reference, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(
+        builder: (context, constraints) => Column(
+          children: [
+            const SizedBox(height: 12),
+            Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      reference.name ?? '',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+                    ),
+                    ConstrainedBox(
+                      constraints: BoxConstraints(maxWidth: constraints.maxWidth * 0.6),
+                      child: Text(reference.getValue,
+                          style: Theme.of(context).textTheme.bodyMedium,
+                          textAlign: TextAlign.right,
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 10,
+                          softWrap: true),
                     )
-                  : const SizedBox.shrink(),
-            )
-            .toList(),
-      );
-    });
+                  ],
+                ),
+          ],
+        ));
   }
 }
 
