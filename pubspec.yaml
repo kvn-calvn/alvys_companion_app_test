@@ -3,7 +3,7 @@ description: Alvys mobile driver app.
 
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
-version: 3.0.29+286
+version: 3.0.29+287
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -21,7 +21,7 @@ dependencies:
   equatable: ^2.0.3
   flutter_riverpod: ^2.4.0
   riverpod_annotation: ^2.0.2
-  json_serializable: ^6.7.1
+  json_serializable: ^6.8.0
   json_annotation: ^4.8.1
   dio: ^5.1.1
   internet_connection_checker: ^1.0.0+1
