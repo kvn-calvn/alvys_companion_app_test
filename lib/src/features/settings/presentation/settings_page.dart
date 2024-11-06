@@ -1,4 +1,4 @@
-import 'package:alvys3/src/network/posthog/posthog_provider.dart';
+import '../../../network/posthog/posthog_provider.dart';
 
 import '../../trips/presentation/controller/trip_page_controller.dart';
 import '../../../utils/tablet_utils.dart';
@@ -69,8 +69,7 @@ class SettingsList extends ConsumerWidget {
         ),
         Consumer(
           builder: (context, ref, child) {
-            var alvysHelp =
-                ref.watch(firebaseRemoteConfigServiceProvider).alvysHelpUrl();
+            var alvysHelp = ref.watch(firebaseRemoteConfigServiceProvider).alvysHelpUrl();
             return UrlNavButton(title: "Help", url: alvysHelp);
           },
         ),
@@ -91,31 +90,21 @@ class SettingsList extends ConsumerWidget {
             } else {
               context.goNamed(RouteName.trips.name);
             }
-            ref
-                .read(postHogProvider)
-                .postHogTrackEvent("tutorial_button_tapped", null);
+            ref.read(postHogProvider).postHogTrackEvent("tutorial_button_tapped", null);
 
-            ref
-                .read(httpClientProvider)
-                .telemetryClient
-                .trackEvent(name: "watch_tutorial");
+            ref.read(httpClientProvider).telemetryClient.trackEvent(name: "watch_tutorial");
             await FirebaseAnalytics.instance.logEvent(name: "watch_tutorial");
           },
         ),
         LargeNavButton(
           title: "Sign Out",
           onPressed: () async {
-            ref
-                .read(postHogProvider)
-                .postHogTrackEvent("user_signed_out", null);
+            ref.read(postHogProvider).postHogTrackEvent("user_signed_out", null);
             if (context.mounted) {
               ref.read(authProvider.notifier).signOut(context);
             }
             ref.read(postHogProvider).reset();
-            ref
-                .read(httpClientProvider)
-                .telemetryClient
-                .trackEvent(name: "signed_out");
+            ref.read(httpClientProvider).telemetryClient.trackEvent(name: "signed_out");
             await FirebaseAnalytics.instance.logEvent(name: "signed_out");
           },
         ),

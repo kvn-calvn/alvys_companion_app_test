@@ -12,7 +12,7 @@ class StopDetailsShimmer extends StatelessWidget {
     return LayoutBuilder(builder: (context, constraints) {
       return AlvysShimmer(
         repeatAmount: 1,
-        repeatingChild: Column(
+        repeatingChild: (index) => Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             FadeShimmer(
