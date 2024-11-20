@@ -237,8 +237,9 @@ class TripDetails extends ConsumerWidget {
                     //     ),
                     //   ],
                     // ),
-                    const SizedBox(height: 10),
+                    const SizedBox(height: 16),
                     TripDetailsInfo(trip),
+                    const SizedBox(height: 8),
                     TripReferencesCard(tripReferences: trip.loadReferences, tripId: tripId, tabIndex: tabIndex),
                     if (trip.stops.isNullOrEmpty) ...{
                       Center(
