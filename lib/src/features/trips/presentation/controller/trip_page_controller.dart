@@ -204,6 +204,7 @@ class TripController extends _$TripController implements IErrorHandler {
     int index = state.value!.trips.indexWhere((element) => element.id == result.id!);
     var trips = List<AppTrip>.from(state.value!.trips);
     trips[index] = result;
+    await auth.refreshDriverUser();
     state = AsyncValue.data(state.value!.copyWith(trips: trips, loadingStopId: null));
   }
 
