@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import '../../../../network/posthog/domain/posthog_objects.dart';
+import '../../../trailers/domain/trailer_request/trailer_request.dart';
 import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
@@ -129,6 +131,13 @@ class TripController extends _$TripController implements IErrorHandler {
     }
   }
 
+  void updateTrailerNumber(SetTrailerDto dto) {
+    var trip = getTrip(dto.tripId);
+    if (trip == null && dto.isValid) return;
+    var updatedTrip = trip!.copyWith(trailerNum: dto.trailerNumber, trailerId: dto.trailerId);
+    updateTrip(updatedTrip);
+  }
+
   Future<void> getTrips() async {
     state = const AsyncValue.loading();
     final result = await tripRepo.getTrips<TripController>();
@@ -143,7 +152,7 @@ class TripController extends _$TripController implements IErrorHandler {
   }
 
   Future<void> startTracking(AppTrip trip) async {
-    if (!trip.isTrackable()) return;
+    if (!trip.isTrackable) return;
     var authToken = pref.getString(SharedPreferencesKey.driverToken.name);
     var userState = ref.read(authProvider);
     var res = await PermissionHelper.getPermission(Permission.location);
@@ -160,7 +169,8 @@ class TripController extends _$TripController implements IErrorHandler {
     }
   }
 
-  AppTrip? getTrip(String tripID) => state.value!.getTrip(tripID);
+  AppTrip? getTrip(String tripID) => state.value!.tryGetTrip(tripID);
+  Stop? getStop(String tripID, String? stopId) => state.value!.tryGetStop(tripID, stopId);
 
   Future<void> refreshTrips([bool addLoading = false]) async {
     if (addLoading) state = const AsyncLoading();
@@ -214,16 +224,17 @@ class TripController extends _$TripController implements IErrorHandler {
     var distance = Geolocator.distanceBetween(
             location.latitude, location.longitude, double.parse(stop.latitude!), double.parse(stop.longitude!)) /
         1609.34;
+    var event = PosthogTimeRecordLog(
+        tenant: trip.companyCode!,
+        tripNumber: trip.tripNumber!,
+        tripId: tripId,
+        loadNumber: trip.loadNumber!,
+        success: true,
+        distance: '$distance miles',
+        location: '${location.latitude}, ${location.longitude}');
     if (distance > 10) {
-      postHogService.postHogTrackEvent("user_checked_in", {
-        "trip_id": tripId,
-        "stop_id": stopId,
-        "load_number": trip.loadNumber ?? "-",
-        "tenant": trip.companyCode ?? "-",
-        "location": '${location.latitude}, ${location.longitude}',
-        "distance": '$distance miles',
-        "success": false
-      });
+      postHogService
+          .postHogTrackEvent(PosthogTag.userCheckedIn.toSnakeCase, {...event.copyWith(success: false).toJson()});
       ref.read(httpClientProvider).telemetryClient.trackEvent(name: "distance_too_far", additionalProperties: {
         "location": '${location.latitude}, ${location.longitude}',
         "distance": '$distance miles'
@@ -246,15 +257,7 @@ class TripController extends _$TripController implements IErrorHandler {
     updateStop(tripId, newStop);
     startLocationTracking();
     state = AsyncValue.data(state.value!.copyWith(loadingStopId: null, checkIn: true));
-    postHogService.postHogTrackEvent("user_checked_in", {
-      "trip_id": tripId,
-      "stop_id": stopId,
-      "load_number": trip.loadNumber ?? "-",
-      "tenant": trip.companyCode ?? "-",
-      "location": '${location.latitude}, ${location.longitude}',
-      "distance": '$distance miles',
-      "success": true
-    });
+    postHogService.postHogTrackEvent(PosthogTag.userCheckedIn.toSnakeCase, {...event.copyWith(success: true).toJson()});
     ref.read(httpClientProvider).telemetryClient.trackEvent(name: "checked_in", additionalProperties: {
       "location": '${location.latitude}, ${location.longitude}',
       "stop": stop.companyName ?? "-"
@@ -281,11 +284,12 @@ class TripController extends _$TripController implements IErrorHandler {
                 onError(Exception());
               })
         ]);
+
     var dto = UpdateStopTimeRecord(
         latitude: location.latitude,
         longitude: location.longitude,
         timeIn: oldStop!.arrived!.localDate,
-        timeOut: DateTime.now());
+        timeOut: DateTime.now().toUtc());
     var stop = await tripRepo.updateStopTimeRecord<TripController>(trip.companyCode!, tripId, stopId, dto);
     updateStop(tripId, stop);
     startLocationTracking();
@@ -293,14 +297,16 @@ class TripController extends _$TripController implements IErrorHandler {
     var distance = Geolocator.distanceBetween(
             location.latitude, location.longitude, double.parse(stop.latitude!), double.parse(stop.longitude!)) /
         1609.34;
-    ref.read(postHogProvider).postHogTrackEvent("user_checked_out", {
-      "trip_id": tripId,
-      "stop_id": stopId,
-      "load_number": trip.loadNumber ?? "-",
-      "tenant": trip.companyCode ?? "-",
-      "location": '${location.latitude}, ${location.longitude}',
-      "distance": '$distance miles',
-    });
+    var event = PosthogTimeRecordLog(
+        tenant: trip.companyCode!,
+        tripNumber: trip.tripNumber!,
+        tripId: tripId,
+        loadNumber: trip.loadNumber!,
+        success: null,
+        distance: '$distance miles',
+        location: '${location.latitude}, ${location.longitude}');
+    //2024-10-22T14:00:00-04:00
+    ref.read(postHogProvider).postHogTrackEvent(PosthogTag.userCheckedOut.toSnakeCase, {...event.toJson()});
     ref.read(httpClientProvider).telemetryClient.trackEvent(name: "checked_out", additionalProperties: {
       "location": '${location.latitude}, ${location.longitude}',
       "stop": stop.companyName ?? "-"

@@ -1,27 +1,25 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 
-import '../../../../utils/extensions.dart';
-
 part 'genius_scan_config.freezed.dart';
 part 'genius_scan_config.g.dart';
 
 @freezed
 class GeniusScanConfig with _$GeniusScanConfig {
   factory GeniusScanConfig({
-    String? source,
-    String? sourceImageUrl,
+    @JsonKey(includeIfNull: false) String? source,
+    @JsonKey(includeIfNull: false) String? sourceImageUrl,
     @Default(true) bool multiPage,
-    String? defaultFilter,
+    @JsonKey(includeIfNull: false) String? defaultFilter,
     @Default('letter') String pdfPageSize,
-    String? pdfMaxScanDimension,
-    int? jpegQuality,
+    @JsonKey(includeIfNull: false) String? pdfMaxScanDimension,
+    @JsonKey(includeIfNull: false) int? jpegQuality,
     @Default(['rotate', 'editFilter', 'correctDistortion']) List<String> postProcessingActions,
     @Default(false) bool flashButtonHidden,
-    String? defaultFlashMode,
-    String? foregroundColor,
-    String? backgroundColor,
-    String? highlightColor,
-    String? menuColor,
+    @JsonKey(includeIfNull: false) String? defaultFlashMode,
+    @JsonKey(includeIfNull: false) String? foregroundColor,
+    @JsonKey(includeIfNull: false) String? backgroundColor,
+    @JsonKey(includeIfNull: false) String? highlightColor,
+    @JsonKey(includeIfNull: false) String? menuColor,
   }) = _GeniusScanConfig;
 
   factory GeniusScanConfig.fromJson(Map<String, dynamic> json) => _$GeniusScanConfigFromJson(json);
@@ -39,11 +37,6 @@ class GeniusScanConfig with _$GeniusScanConfig {
         jpegQuality: 100,
         sourceImageUrl: url,
       );
-
-  @override
-  Map<String, dynamic> toJson() {
-    return toJson().removeNulls;
-  }
 }
 
 @freezed

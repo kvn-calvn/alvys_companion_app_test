@@ -1,8 +1,9 @@
+import '../../../../utils/magic_strings.dart';
+
+import 'trip_details_info.dart';
+
 import '../../domain/app_trip/app_trip.dart';
 import 'trip_references.dart';
-
-import '../../../../common_widgets/chip.dart';
-
 import '../../../../common_widgets/tab_text.dart';
 import '../../../../network/posthog/posthog_provider.dart';
 import '../../../../utils/alvys_websocket.dart';
@@ -14,11 +15,9 @@ import 'package:firebase_analytics/firebase_analytics.dart';
 import '../../../../utils/extensions.dart';
 import '../../../../utils/tablet_utils.dart';
 
-import '../../../authentication/presentation/auth_provider_controller.dart';
 import '../../../google_maps_helper/presentation/trip_google_map.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -120,7 +119,7 @@ class _LoadDetailsPageState extends ConsumerState<LoadDetailsPage> with TickerPr
               await ref.read(tripControllerProvider.notifier).refreshCurrentTrip(widget.tripId);
               if (mounted) {
                 ref.read(websocketProvider).restartConnection();
-                ref.read(postHogProvider).postHogTrackEvent('user_refresh_tripdetails', null);
+                ref.read(postHogProvider).postHogTrackEvent(PosthogTag.userRefreshTripdetails.toSnakeCase, null);
                 ref.read(httpClientProvider).telemetryClient.trackEvent(name: "trip_refresh_button_tapped");
                 await FirebaseAnalytics.instance.logEvent(name: "trip_refresh_button_tapped");
               }
@@ -173,16 +172,12 @@ class TripDetails extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final authState = ref.watch(authProvider);
     final tripDetailsState = ref.watch(tripControllerProvider);
     var trip = tripDetailsState.value!.tryGetTrip(tripId);
-    // return TripDetailsShimmer();
     if (tripDetailsState.isLoading) return const TripDetailsShimmer();
     if (trip == null) {
       return const EmptyView(title: 'Trip Not found', description: 'Return to the previous page');
     }
-
-    var equipment = "${trip.equipment} ${trip.equipmentLength}".trim();
 
     return RefreshIndicator(
       onRefresh: () async {
@@ -203,45 +198,47 @@ class TripDetails extends ConsumerWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     TripGoogleMap(key: ValueKey(trip.id!), trip.id!),
-                    Column(
-                      mainAxisSize: MainAxisSize.max,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 15, 0),
-                          child: Wrap(
-                            direction: Axis.horizontal,
-                            children: [
-                              if (equipment.isNotNullOrEmpty) ...[
-                                ChipCard(text: equipment),
-                              ],
-                              if (trip.temperature != null) ...[
-                                ChipCard(
-                                    text:
-                                        '${trip.temperature!.toStringAsFixed(1)} °f ${(trip.continuous ?? false) ? '(cont.)' : ''}')
-                              ],
-                              if (trip.trailerNum.isNotNullOrEmpty) ...[
-                                ChipCard(text: 'Trailer ${trip.trailerNum}'),
-                              ],
-                              if (trip.totalWeight != null && trip.totalWeight != 0) ...[
-                                ChipCard(text: '${NumberFormat.decimalPattern().format(trip.totalWeight)} lbs'),
-                              ],
-                              if (trip.totalMiles != null) ...[
-                                ChipCard(text: '${NumberFormat.decimalPattern().format(trip.totalMiles)} mi'),
-                              ],
-                              if (trip.driverPayable(authState.value!.tryGetUserTenant(trip.companyCode!)?.assetId) !=
-                                      null &&
-                                  authState.value!.shouldShowPayableAmount(trip.companyCode!)) ...[
-                                ChipCard(
-                                  text:
-                                      'Driver Payable ${NumberFormat.simpleCurrency().format(trip.driverPayable(authState.value!.tryGetUserTenant(trip.companyCode!)!.assetId!))}',
-                                ),
-                              ],
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                    // Column(
+                    //   mainAxisSize: MainAxisSize.max,
+                    //   mainAxisAlignment: MainAxisAlignment.center,
+                    //   children: [
+                    //     Padding(
+                    //       padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 15, 0),
+                    //       child: Wrap(
+                    //         direction: Axis.horizontal,
+                    //         children: [
+                    //           if (equipment.isNotNullOrEmpty) ...[
+                    //             ChipCard(text: equipment),
+                    //           ],
+                    //           if (trip.temperature != null) ...[
+                    //             ChipCard(
+                    //                 text:
+                    //                     '${trip.temperature!.toStringAsFixed(1)} °f ${(trip.continuous ?? false) ? '(cont.)' : ''}')
+                    //           ],
+                    //           if (trip.trailerNum.isNotNullOrEmpty) ...[
+                    //             ChipCard(text: 'Trailer ${trip.trailerNum}'),
+                    //           ],
+                    //           if (trip.totalWeight != null && trip.totalWeight != 0) ...[
+                    //             ChipCard(text: '${NumberFormat.decimalPattern().format(trip.totalWeight)} lbs'),
+                    //           ],
+                    //           if (trip.totalMiles != null) ...[
+                    //             ChipCard(text: '${NumberFormat.decimalPattern().format(trip.totalMiles)} mi'),
+                    //           ],
+                    //           if (trip.driverPayable(authState.value!.tryGetUserTenant(trip.companyCode!)?.assetId) !=
+                    //                   null &&
+                    //               authState.value!.shouldShowPayableAmount(trip.companyCode!)) ...[
+                    //             ChipCard(
+                    //               text:
+                    //                   'Driver Payable ${NumberFormat.simpleCurrency().format(trip.driverPayable(authState.value!.tryGetUserTenant(trip.companyCode!)!.assetId!))}',
+                    //             ),
+                    //           ],
+                    //         ],
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
+                    const SizedBox(height: 10),
+                    TripDetailsInfo(trip),
                     TripReferencesCard(tripReferences: trip.loadReferences, tripId: tripId, tabIndex: tabIndex),
                     if (trip.stops.isNullOrEmpty) ...{
                       Center(
@@ -268,7 +265,7 @@ class TripDetails extends ConsumerWidget {
                                 stop: stop,
                                 tripId: trip.id!,
                                 tabIndex: tabIndex,
-                                loadNumber: trip.loadNumber!,
+                                tripNumber: trip.tripNumber!,
                                 canCheckInOutStopId: trip.canCheckInOutStopId,
                               ))
                         ],

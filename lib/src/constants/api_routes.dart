@@ -28,4 +28,6 @@ class ApiRoutes {
   static String tripDocument(String tripId) => '$mobileBaseApi$tripId/trip/documents';
   static Uri get driverInfo => Uri.parse('${mobileBaseApi}driver/info');
   static Uri driverAsset(String id) => Uri.parse('${baseUrl}drivers/$id');
+  static Uri get suggestTrailers => Uri.parse('$baseUrl/search/SuggestTrailer');
+  static Uri get assignTrailer => Uri.parse('$baseUrl/newloads/AssignTrailer3');
 }
