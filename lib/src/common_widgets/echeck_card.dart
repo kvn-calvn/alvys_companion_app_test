@@ -1,3 +1,5 @@
+import '../network/posthog/domain/posthog_objects.dart';
+
 import '../network/posthog/posthog_provider.dart';
 import '../network/posthog/posthog_service.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
@@ -19,13 +21,14 @@ import 'snack_bar.dart';
 
 class EcheckCard extends ConsumerWidget {
   final ECheck eCheck;
-  final String tripId, companyCode;
+  final String tripId, companyCode, tripNumber;
   final int index;
-  final void Function(String echeckNumber) cancelECheck;
+  final Future<void> Function(String echeckNumber) cancelECheck;
   const EcheckCard(
       {required this.companyCode,
       required this.index,
       super.key,
+      required this.tripNumber,
       required this.eCheck,
       required this.cancelECheck,
       required this.tripId});
@@ -35,20 +38,23 @@ class EcheckCard extends ConsumerWidget {
     if (checkNumber != null) return;
     showCustomPopup<EcheckOption>(
       context: context,
-      onSelected: (value) {
+      onSelected: (value) async {
+        var event = PosthogEcheckLog(
+                echeckNumber: eCheck.expressCheckNumber!.trim(),
+                tripNumber: tripNumber,
+                tripId: tripId,
+                tenant: companyCode)
+            .toJson();
         switch (value) {
           case EcheckOption.copy:
             Clipboard.setData(ClipboardData(text: eCheck.expressCheckNumber!.trim()));
             SnackBar snackBar = SnackBarWrapper.getSnackBar('E-Check number copied');
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
-            postHogService.postHogTrackEvent(
-                "user_copied_echeck", {"trip_id": tripId, "echeck_number": eCheck.expressCheckNumber!.trim()});
+            postHogService.postHogTrackEvent(PosthogTag.userCopiedEcheck.toSnakeCase, {...event});
             break;
           case EcheckOption.cancel:
-            cancelECheck(eCheck.expressCheckNumber!);
-            postHogService.postHogTrackEvent(
-                "user_cancelled_echeck", {"trip_id": tripId, "echeck_number": eCheck.expressCheckNumber!.trim()});
+            await cancelECheck(eCheck.expressCheckNumber!);
+            postHogService.postHogTrackEvent(PosthogTag.userCancelledEcheck.toSnakeCase, {...event});
             break;
         }
       },

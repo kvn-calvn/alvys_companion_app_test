@@ -1,3 +1,6 @@
+import '../../../utils/magic_strings.dart';
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
+
 import '../../../network/posthog/posthog_provider.dart';
 import '../../../utils/map_styles.dart';
 
@@ -38,7 +41,7 @@ class _TripGoogleMapState extends ConsumerState<TripGoogleMap> {
                     Navigator.of(context, rootNavigator: true).push(
                       MaterialPageRoute(builder: (context) => FullScreenMap(widget.tripId)),
                     );
-                    ref.read(postHogProvider).postHogTrackEvent("user_opened_map", null);
+                    ref.read(postHogProvider).postHogTrackEvent(PosthogTag.userOpenedMap.toSnakeCase, null);
                     ref.read(httpClientProvider).telemetryClient.trackEvent(name: "open_map");
                     await FirebaseAnalytics.instance.logEvent(name: "open_map");
                   }
