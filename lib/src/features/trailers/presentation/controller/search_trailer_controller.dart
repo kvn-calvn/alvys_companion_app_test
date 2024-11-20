@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 
+import '../../../../network/http_client.dart';
 import '../../../../network/posthog/domain/posthog_objects.dart';
 import '../../../../utils/magic_strings.dart';
 import '../../data/trailer_repository.dart';
@@ -57,6 +58,9 @@ class SearchTrailerController extends _$SearchTrailerController implements IErro
       PosthogTag.trailerAssignment.toSnakeCase,
       {...PostHogTrailerLog.fromSetTrailerDto(updatedDto).toJson()},
     );
+    ref.read(httpClientProvider).telemetryClient.trackEvent(name: "trailer_assignment", additionalProperties: {
+      ...PostHogTrailerLog.fromSetTrailerDto(updatedDto).toJson()
+    });
     await callback(updatedDto);
     if (context.mounted) {
       Navigator.of(context, rootNavigator: true).pop();
