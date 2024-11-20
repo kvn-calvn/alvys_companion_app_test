@@ -1,3 +1,6 @@
+import '../utils/magic_strings.dart';
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
+
 import '../network/posthog/posthog_provider.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
@@ -26,7 +29,7 @@ class _ThemeSwitcherState extends ConsumerState<ThemeSwitcher> {
           onChanged: (value) async {
             ref.watch(themeHandlerProvider.notifier).setThemeMode(value!);
             Navigator.of(context, rootNavigator: true).pop();
-            ref.read(postHogProvider).postHogTrackEvent("user_changed_theme", {"theme": value.name});
+            ref.read(postHogProvider).postHogTrackEvent(PosthogTag.userChangedTheme.toSnakeCase, {"theme": value.name});
             ref
                 .read(httpClientProvider)
                 .telemetryClient

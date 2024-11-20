@@ -1,3 +1,4 @@
+import '../../../../utils/magic_strings.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +45,7 @@ class _StopDetailsPageState extends ConsumerState<StopDetailsPage> {
             onPressed: () async {
               await ref.read(tripControllerProvider.notifier).refreshCurrentTrip(widget.tripId);
               if (mounted) {
-                ref.read(postHogProvider).postHogTrackEvent('user_refresh_stopdetails', null);
+                ref.read(postHogProvider).postHogTrackEvent(PosthogTag.userRefreshStopdetails.toSnakeCase, null);
                 ref.read(httpClientProvider).telemetryClient.trackEvent(name: "stop_refresh_button_tapped");
                 await FirebaseAnalytics.instance.logEvent(name: "stop_refresh_button_tapped");
               }
@@ -285,9 +286,9 @@ class ReferenceDetailsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
         builder: (context, constraints) => Column(
-          children: [
-            const SizedBox(height: 12),
-            Row(
+              children: [
+                const SizedBox(height: 12),
+                Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -306,8 +307,8 @@ class ReferenceDetailsWidget extends StatelessWidget {
                     )
                   ],
                 ),
-          ],
-        ));
+              ],
+            ));
   }
 }
 
