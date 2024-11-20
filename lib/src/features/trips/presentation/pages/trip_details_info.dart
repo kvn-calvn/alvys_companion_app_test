@@ -104,7 +104,7 @@ class DetailsInfoCard extends StatelessWidget {
                   SizedBox(width: 10),
                   Text(title!,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
+                          fontWeight: FontWeight.normal,
                           color: dim ? Colors.grey : Theme.of(context).textTheme.bodyMedium?.color)),
                 ],
               ),
