@@ -55,7 +55,7 @@ class SearchTrailerController extends _$SearchTrailerController implements IErro
     var updatedDto = dto.copyWith(trailerNumber: text, trailerId: trailerId);
     postHog.postHogTrackEvent(
       PosthogTag.trailerAssignment.toSnakeCase,
-      {...PostHogTrailerLog.fromSetTrailerDto(dto).toJson()},
+      {...PostHogTrailerLog.fromSetTrailerDto(updatedDto).toJson()},
     );
     await callback(updatedDto);
     if (context.mounted) {
