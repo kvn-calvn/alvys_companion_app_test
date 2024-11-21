@@ -66,7 +66,7 @@ class SettingsList extends ConsumerWidget {
         LargeNavButton(
           title: "Theme",
           onPressed: () {
-            showCustomBottomSheet(context, const ThemeSwitcher(), constrain: true);
+            showCustomBottomSheet(context, const ThemeSwitcher());
           },
         ),
         Consumer(
