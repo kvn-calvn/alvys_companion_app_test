@@ -20,23 +20,27 @@ class ThemeSwitcher extends ConsumerStatefulWidget {
 class _ThemeSwitcherState extends ConsumerState<ThemeSwitcher> {
   @override
   Widget build(BuildContext context) {
-    return Column(children: [
-      for (var themeMode in ThemeMode.values)
-        RadioListTile<ThemeMode>(
-          value: themeMode,
-          groupValue: ref.watch(themeHandlerProvider),
-          title: Text("${themeMode.toTitleCase} Mode"),
-          onChanged: (value) async {
-            ref.watch(themeHandlerProvider.notifier).setThemeMode(value!);
-            Navigator.of(context, rootNavigator: true).pop();
-            ref.read(postHogProvider).postHogTrackEvent(PosthogTag.userChangedTheme.toSnakeCase, {"theme": value.name});
-            ref
-                .read(httpClientProvider)
-                .telemetryClient
-                .trackEvent(name: "app_theme_changed", additionalProperties: {"theme": value.name});
-            await FirebaseAnalytics.instance.logEvent(name: "app_theme_changed", parameters: {"theme": value.name});
-          },
-        )
-    ]);
+    return SafeArea(
+      child: Column(mainAxisSize: MainAxisSize.min, children: [
+        for (var themeMode in ThemeMode.values)
+          RadioListTile<ThemeMode>(
+            value: themeMode,
+            groupValue: ref.watch(themeHandlerProvider),
+            title: Text("${themeMode.toTitleCase} Mode"),
+            onChanged: (value) async {
+              ref.watch(themeHandlerProvider.notifier).setThemeMode(value!);
+              Navigator.of(context, rootNavigator: true).pop();
+              ref
+                  .read(postHogProvider)
+                  .postHogTrackEvent(PosthogTag.userChangedTheme.toSnakeCase, {"theme": value.name});
+              ref
+                  .read(httpClientProvider)
+                  .telemetryClient
+                  .trackEvent(name: "app_theme_changed", additionalProperties: {"theme": value.name});
+              await FirebaseAnalytics.instance.logEvent(name: "app_theme_changed", parameters: {"theme": value.name});
+            },
+          )
+      ]),
+    );
   }
 }
