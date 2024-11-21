@@ -1,3 +1,5 @@
+import 'package:alvys3/custom_icons/alvys_mobile_icons.dart';
+
 import '../../constants/color.dart';
 import 'package:fade_shimmer/fade_shimmer.dart';
 import 'package:flutter/material.dart';
@@ -32,26 +34,25 @@ class TripDetailsShimmer extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsetsDirectional.fromSTEB(0, 10, 15, 0),
-                        child: Wrap(
-                          spacing: 5,
-                          runSpacing: 5,
-                          children: [
-                            ChipShimmer(delay: delay),
-                            ChipShimmer(delay: delay),
-                            ChipShimmer(delay: delay),
-                            ChipShimmer(delay: delay),
-                            ChipShimmer(delay: delay),
-                            ChipShimmer(delay: delay),
-                          ],
-                        ),
+                  const SizedBox(height: 20),
+                  Material(
+                    borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                    clipBehavior: Clip.antiAlias,
+                    color: Theme.of(context).cardColor.withAlpha(100),
+                    child: Padding(
+                      padding: const EdgeInsetsDirectional.all(15),
+                      child: Wrap(
+                        runSpacing: 14,
+                        children: [
+                          DetailsShimmer(iconData: AlvysMobileIcons.trip, delay: delay),
+                          DetailsShimmer(iconData: AlvysMobileIcons.truckBox, delay: delay),
+                          DetailsShimmer(iconData: AlvysMobileIcons.trailer, delay: delay),
+                          DetailsShimmer(iconData: AlvysMobileIcons.temperature, delay: delay),
+                          DetailsShimmer(iconData: AlvysMobileIcons.weight, delay: delay),
+                          DetailsShimmer(iconData: AlvysMobileIcons.invoice, delay: delay),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                   const SizedBox(height: 20),
                   // references shimmer
@@ -66,18 +67,25 @@ class TripDetailsShimmer extends StatelessWidget {
   }
 }
 
-class ChipShimmer extends StatelessWidget {
-  const ChipShimmer({super.key, required this.delay});
+class DetailsShimmer extends StatelessWidget {
+  const DetailsShimmer({super.key, required this.delay, required this.iconData});
   final int delay;
+  final IconData iconData;
   @override
   Widget build(BuildContext context) {
-    return FadeShimmer(
-      millisecondsDelay: delay,
-      height: 30,
-      width: 60,
-      radius: 20,
-      highlightColor: const Color(0xffF9F9FB),
-      baseColor: const Color(0xffE6E8EB),
+    return Row(
+      children: [
+        Icon(iconData),
+        const SizedBox(width: 10),
+        FadeShimmer(
+          millisecondsDelay: delay,
+          height: 20,
+          width: 70,
+          radius: 6,
+          highlightColor: const Color(0xffF9F9FB),
+          baseColor: const Color(0xffE6E8EB),
+        ),
+      ],
     );
   }
 }
