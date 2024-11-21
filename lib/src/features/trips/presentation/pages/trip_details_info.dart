@@ -101,7 +101,7 @@ class DetailsInfoCard extends StatelessWidget {
               Row(
                 children: [
                   Icon(icon, size: 22),
-                  SizedBox(width: 10),
+                  const SizedBox(width: 10),
                   Text(title!,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                           fontWeight: FontWeight.normal,
