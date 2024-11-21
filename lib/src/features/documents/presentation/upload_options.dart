@@ -38,6 +38,7 @@ class UploadOptions extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.all(8),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           ListTile(
             leading: const Icon(Icons.camera_alt),
