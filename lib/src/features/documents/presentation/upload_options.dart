@@ -1,4 +1,5 @@
 import 'package:app_settings/app_settings.dart';
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -37,6 +38,7 @@ class UploadOptions extends ConsumerWidget {
     return Padding(
       padding: const EdgeInsets.all(8),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           ListTile(
             leading: const Icon(Icons.camera_alt),
@@ -51,7 +53,7 @@ class UploadOptions extends ConsumerWidget {
                       title: 'Open Settings', action: () => AppSettings.openAppSettings(type: AppSettingsType.settings))
                 ]);
               }
-              postHogService.postHogTrackEvent("user_opened_camera", null);
+              postHogService.postHogTrackEvent(PosthogTag.userOpenedCamera.toSnakeCase, null);
               if (context.mounted) {
                 Navigator.of(context, rootNavigator: true).pop();
                 context.goNamed(route,
@@ -65,7 +67,7 @@ class UploadOptions extends ConsumerWidget {
             leading: const Icon(Icons.photo),
             title: const Text('Gallery'),
             onTap: () async {
-              postHogService.postHogTrackEvent("user_opened_gallery", null);
+              postHogService.postHogTrackEvent(PosthogTag.userOpenedGallery.toSnakeCase, null);
               if (context.mounted) {
                 Navigator.of(context, rootNavigator: true).pop();
                 context.goNamed(

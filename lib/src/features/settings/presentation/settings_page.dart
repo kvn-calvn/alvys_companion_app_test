@@ -1,3 +1,5 @@
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
+
 import '../../../network/posthog/posthog_provider.dart';
 
 import '../../trips/presentation/controller/trip_page_controller.dart';
@@ -90,7 +92,7 @@ class SettingsList extends ConsumerWidget {
             } else {
               context.goNamed(RouteName.trips.name);
             }
-            ref.read(postHogProvider).postHogTrackEvent("tutorial_button_tapped", null);
+            ref.read(postHogProvider).postHogTrackEvent(PosthogTag.tutorialButtonTapped.toSnakeCase, null);
 
             ref.read(httpClientProvider).telemetryClient.trackEvent(name: "watch_tutorial");
             await FirebaseAnalytics.instance.logEvent(name: "watch_tutorial");
@@ -99,7 +101,7 @@ class SettingsList extends ConsumerWidget {
         LargeNavButton(
           title: "Sign Out",
           onPressed: () async {
-            ref.read(postHogProvider).postHogTrackEvent("user_signed_out", null);
+            ref.read(postHogProvider).postHogTrackEvent(PosthogTag.userSignedOut.toSnakeCase, null);
             if (context.mounted) {
               ref.read(authProvider.notifier).signOut(context);
             }

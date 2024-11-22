@@ -1,3 +1,5 @@
+import '../../../trailers/domain/trailer_request/trailer_request.dart';
+
 import 'reference.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
@@ -30,6 +32,7 @@ class AppTrip with _$AppTrip {
     @JsonKey(name: 'LoadNumber') String? loadNumber,
     @JsonKey(name: 'TripNumber') String? tripNumber,
     @JsonKey(name: 'Status') String? status,
+    @JsonKey(name: 'TripType') String? tripType,
     @JsonKey(name: 'Rate') double? rate,
     @JsonKey(name: 'TripValue') double? tripValue,
     @JsonKey(name: 'LoadRate') double? loadRate,
@@ -101,5 +104,11 @@ class AppTrip with _$AppTrip {
       .toList();
   List<ECheck> get sortedEchecks => eChecks.orderBy((element) => element.dateGenerated, OrderDirection.desc).toList();
   //  List.from(eChecks) ..sort((a, b) => b.dateGenerated?.compareTo(a.dateGenerated ?? DateTime.now()) ?? 0);
-  bool isTrackable() => status.inIgnoreCase([TripStatus.dispatched, TripStatus.inTransit]);
+  bool get isTrackable => status.inIgnoreCase([TripStatus.dispatched, TripStatus.inTransit]);
+
+  SetTrailerDto get assignTrailerDto =>
+      SetTrailerDto(companyCode: companyCode!, tripId: id!, tripNumber: tripNumber!, trailerId: '', trailerNumber: '');
+  bool get canAssignTrailer => isTrackable && tripType.equalsIgnoreCase(TripTypes.carrier);
 }
+
+// const jk = ;

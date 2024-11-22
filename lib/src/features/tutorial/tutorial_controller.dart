@@ -43,6 +43,7 @@ class TutorialElementGroup {
 }
 
 class TutorialController {
+  final ScrollController tripInfoScrollController = ScrollController();
   final LabeledGlobalKey refresh = LabeledGlobalKey('refresh'),
       tripCard = LabeledGlobalKey('tripCard'),
       sleepDropdown = LabeledGlobalKey('sleepDropdown'),
@@ -55,7 +56,8 @@ class TutorialController {
       echeckButton = LabeledGlobalKey('echeckButton'),
       documentTab = LabeledGlobalKey('documentTab'),
       documentCard = LabeledGlobalKey('documentCard'),
-      documentButton = LabeledGlobalKey('documentButton');
+      documentButton = LabeledGlobalKey('documentButton'),
+      tripReferencesCard = LabeledGlobalKey('tripReferencesCard');
   List<TutorialElementGroup> get tutorials => [
         TutorialElementGroup(
           elements: [
@@ -88,6 +90,10 @@ class TutorialController {
               pathParameters: {ParamType.tripId.name: testTrip.id!},
               queryParameters: {ParamType.tabIndex.name: 0.toString()},
             );
+            await Future.delayed(Duration(milliseconds: 110), () async {
+              await tripInfoScrollController.animateTo(tripInfoScrollController.position.maxScrollExtent * 0.45,
+                  duration: Duration(milliseconds: 100), curve: Curves.easeIn);
+            });
           },
         ),
         TutorialElementGroup(
@@ -95,6 +101,13 @@ class TutorialController {
             TutorialElement(
               globalKey: infoTab,
               content: (pos, box) => TripDetailsTabTutorial(
+                position: pos,
+                box: box,
+              ),
+            ),
+            TutorialElement(
+              globalKey: tripReferencesCard,
+              content: (pos, box) => TripReferenceCardTutorial(
                 position: pos,
                 box: box,
               ),
