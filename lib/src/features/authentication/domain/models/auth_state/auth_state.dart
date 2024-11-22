@@ -54,4 +54,6 @@ class AuthState with _$AuthState {
       .containsIgnoreCase(UserPermissions.viewPaystubs);
   bool canViewPaystubs(String companyCode) =>
       tryGetUserTenant(companyCode)?.permissions.containsIgnoreCase(UserPermissions.viewPaystubs) ?? false;
+  bool canEditTrailer(String companyCode) =>
+      tryGetUserTenant(companyCode)?.permissions.containsIgnoreCase(UserPermissions.editTrailerNumber) ?? false;
 }

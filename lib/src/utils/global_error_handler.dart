@@ -11,6 +11,7 @@ import '../features/authentication/presentation/edit_profile_controller.dart';
 import '../features/documents/presentation/docs_controller.dart';
 import '../features/documents/presentation/upload_documents_controller.dart';
 import '../features/echeck/presentation/controller/echeck_page_controller.dart';
+import '../features/trailers/presentation/controller/search_trailer_controller.dart';
 import '../features/trips/presentation/controller/trip_page_controller.dart';
 import '../network/http_client.dart';
 import '../routing/custom_observer.dart';
@@ -29,7 +30,9 @@ final globalErrorHandlerProvider = Provider<GlobalErrorHandler>((ref) {
             EditProfileNotifier: () => ref.read(editProfileProvider.notifier),
             TripController: () => ref.read(tripControllerProvider.notifier),
             EcheckPageController: () =>
-                ref.read(echeckPageControllerProvider.call(ProviderArgsSaver.instance.echeckArgs).notifier)
+                ref.read(echeckPageControllerProvider.call(ProviderArgsSaver.instance.echeckArgs).notifier),
+            SearchTrailerController: () =>
+                ref.read(searchTrailerControllerProvider.call(ProviderArgsSaver.instance.assignTrailerDto!).notifier)
           },
       telemetry: ref.read(httpClientProvider));
 });

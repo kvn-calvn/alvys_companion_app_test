@@ -1,3 +1,5 @@
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
+
 import '../../../authentication/presentation/auth_provider_controller.dart';
 
 import '../../../../common_widgets/tab_text.dart';
@@ -130,7 +132,7 @@ class _LoadListPageState extends ConsumerState<LoadListPage> with TickerProvider
               await ref.read(tripControllerProvider.notifier).refreshTrips(true);
               if (context.mounted) {
                 ref.read(websocketProvider).restartConnection();
-                ref.read(postHogProvider).postHogTrackEvent('user_refresh_trips', null);
+                ref.read(postHogProvider).postHogTrackEvent(PosthogTag.userRefreshTrips.toSnakeCase, null);
                 ref.read(httpClientProvider).telemetryClient.trackEvent(name: "refresh_button_tapped");
                 await FirebaseAnalytics.instance.logEvent(name: "refresh_button_tapped");
               }

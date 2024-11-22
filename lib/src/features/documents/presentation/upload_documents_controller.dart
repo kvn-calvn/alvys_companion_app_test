@@ -17,6 +17,7 @@ import 'package:path_provider/path_provider.dart';
 
 import '../../../common_widgets/file_upload_progress_dialog.dart';
 import '../../../network/http_client.dart';
+import '../../../network/posthog/domain/posthog_objects.dart';
 import '../../../network/posthog/posthog_provider.dart';
 import '../../../routing/app_router.dart';
 import '../../../utils/exceptions.dart';
@@ -77,7 +78,7 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
         break;
     }
     try {
-      var res = await FlutterGeniusScan.scanWithConfiguration(config.toJson().removeNulls);
+      var res = await FlutterGeniusScan.scanWithConfiguration(config.toJson());
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge, overlays: [SystemUiOverlay.top]);
       var results = GeniusScanResults.fromJson(jsonDecode(jsonEncode(res)));
       if (firstScan && results.scans.isEmpty) {
@@ -169,35 +170,28 @@ class UploadDocumentsController extends AutoDisposeFamilyNotifier<UploadDocument
 
   Future<void> _doUpload(File pdfFile) async {
     final postHogService = ref.read(postHogProvider);
-
+    var event = PosthogDocumentUploadLog(
+        fileSize: '${await pdfFile.sizeInMb} Mb', documentType: '${state.documentType?.title}');
     switch (arg.documentType) {
       case DisplayDocumentType.tripDocuments:
         var trip = trips.getTrip(arg.tripId!);
         await docRepo.uploadTripDocuments(userData.driver!, state.documentType!, pdfFile, trip!);
-
-        postHogService.postHogTrackEvent("user_uploaded_document", {
-          "document_type": '${state.documentType?.title}',
-          "file_size": '${await pdfFile.sizeInMb} Mb',
-          "trip_id": arg.tripId!
-        });
+        event = event.copyWith(tripNumber: trip.tripNumber!, tenant: trip.companyCode!, tripId: trip.id!);
         await trips.refreshCurrentTrip(arg.tripId!);
+        break;
       case DisplayDocumentType.personalDocuments:
         await docRepo.uploadPersonalDocuments(userData.getCompanyOwned.companyCode!, state.documentType!, pdfFile);
-        postHogService.postHogTrackEvent("user_uploaded_document", {
-          "document_type": '${state.documentType?.title}',
-          "file_size": '${await pdfFile.sizeInMb} Mb',
-        });
         await docList.getDocuments();
+        break;
       case DisplayDocumentType.paystubs:
         await Future.value(null);
+        break;
       case DisplayDocumentType.tripReport:
         await docRepo.uploadTripReport(userData.getCompanyOwned.companyCode!, state.documentType!, pdfFile);
-        postHogService.postHogTrackEvent("user_uploaded_document", {
-          "document_type": '${state.documentType?.title}',
-          "file_size": '${await pdfFile.sizeInMb} Mb',
-        });
         await docList.getDocuments();
+        break;
     }
+    postHogService.postHogTrackEvent(PosthogTag.userUploadedDocument.toSnakeCase, {...event.toJson()});
   }
 
   bool get shouldShowDeleteAndUploadButton => state.pages.isNotEmpty;

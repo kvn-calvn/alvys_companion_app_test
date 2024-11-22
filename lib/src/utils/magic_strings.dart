@@ -66,7 +66,8 @@ class UserPermissions {
       viewOOPRate = 'OOPRate',
       viewPayableAmount = 'ViewPayableAmount',
       viewCarrierRateConfirmation = 'ViewCarrierRateConfirmation',
-      viewCustomerRateConfirmation = 'ViewCustomerRateConfirmation';
+      viewCustomerRateConfirmation = 'ViewCustomerRateConfirmation',
+      editTrailerNumber = 'EditTrailerNumber';
 }
 
 enum EcheckOption { copy, cancel }
@@ -112,6 +113,11 @@ class TripStatus {
   static const String inReview = "In Review";
 }
 
+class TripTypes {
+  static const String brokerage = 'Brokerage';
+  static const String carrier = 'Carrier';
+}
+
 class ContractorType {
   static const String ownerOperator = "Owner Operator";
   static const String companyDriver = "Company Driver";
@@ -120,4 +126,24 @@ class ContractorType {
 
 class ScheduleType {
   static const String firstComeFirstServe = 'FCFS', appointment = 'APPT';
+}
+
+enum PosthogTag {
+  trailerAssignment,
+  userCopiedEcheck,
+  userCancelledEcheck,
+  userCopiedStopAddress,
+  userChangedTheme,
+  userUploadedDocument,
+  userRefreshStopdetails,
+  userRefreshTripdetails,
+  userRefreshTrips,
+  userOpenedCamera,
+  userOpenedGallery,
+  userGeneratedEcheck,
+  userOpenedMap,
+  tutorialButtonTapped,
+  userSignedOut,
+  userCheckedIn,
+  userCheckedOut,
 }

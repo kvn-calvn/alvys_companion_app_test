@@ -56,27 +56,27 @@ class AlvysWebsocket {
   HubConnection? connection;
   AlvysWebsocket({required this.ref});
   Future<void> restartConnection() async {
-    if ((await getToken()).isNotEmpty) {
-      await Future.delayed(const Duration(seconds: 1), () async {
-        if (connection.isNotNull) {
-          if (connection!.state == HubConnectionState.Disconnected) {
-            try {
-              await stopWebsocketConnection();
-              await startWebsocketConnection();
-            } catch (e) {
-              debugPrint('$e');
-            }
-          }
-        } else {
-          await startWebsocketConnection();
-        }
-      });
-    }
+    // if ((await getToken()).isNotEmpty) {
+    //   await Future.delayed(const Duration(seconds: 1), () async {
+    //     if (connection.isNotNull) {
+    //       if (connection!.state == HubConnectionState.Disconnected) {
+    //         try {
+    //           await stopWebsocketConnection();
+    //           await startWebsocketConnection();
+    //         } catch (e) {
+    //           debugPrint('$e');
+    //         }
+    //       }
+    //     } else {
+    //       await startWebsocketConnection();
+    //     }
+    //   });
+    // }
   }
 
   Future<void> startWebsocketConnection() async {
     connection ??= getWebSocketConnection;
-    await connection?.start();
+    // await connection?.start();
     updateHandler();
   }
 

@@ -1,3 +1,4 @@
+import 'package:alvys3/src/features/trips/domain/app_trip/reference.dart';
 import 'package:intl/intl.dart';
 
 import '../features/documents/domain/app_document/app_document.dart';
@@ -43,6 +44,13 @@ final AppTrip testTrip = AppTrip(
         reason: 'Lumpar',
         isCanceled: false,
         dateGenerated: DateTime.now().subtract(const Duration(days: 2)))
+  ],
+  loadReferences: [
+    Reference(
+        name: 'Test ref',
+        value: 'Testing a reference',
+        referenceType: StopReferenceType.text,
+        access: StopReferenceAccessType.public),
   ],
   emptyMiles: 325,
   equipment: 'Lumber',
