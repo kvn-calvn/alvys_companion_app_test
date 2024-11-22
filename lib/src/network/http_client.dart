@@ -175,11 +175,6 @@ class AlvysHttpClient {
   }
 
   Future<TResponse> _tryRequest<TSource, TResponse>(Future<TResponse> Function(TelemetryHttpClient client) op) async {
-    // if (!networkInfo.hasInternet) {
-    //   networkInfo.setInternetState(false);
-    //   throw AlvysSocketException(TSource);
-    // }
-
     try {
       return await op(telemetryHttpClient).timeout(
         const Duration(minutes: 2),
