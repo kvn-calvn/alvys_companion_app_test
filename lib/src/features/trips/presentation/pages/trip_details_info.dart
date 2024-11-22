@@ -43,7 +43,7 @@ class TripDetailsInfo extends ConsumerWidget {
               actionTitle: (trip.canAssignTrailer && authState.value!.canEditTrailer(trip.companyCode!))
                   ? trip.trailerNum.isNullOrEmpty
                       ? 'Add'
-                      : 'Change'
+                      : 'Edit'
                   : null,
               onTap: () async {
                 await showSearchTruckSheet(
