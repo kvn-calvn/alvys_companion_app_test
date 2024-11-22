@@ -1,5 +1,10 @@
 import 'dart:async';
 
+import '../../../../network/posthog/domain/posthog_objects.dart';
+import '../../../../network/posthog/posthog_service.dart';
+import '../../../../utils/magic_strings.dart';
+import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
+
 import '../../../../common_widgets/snack_bar.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 
@@ -21,7 +26,7 @@ class EcheckPageController extends AutoDisposeFamilyAsyncNotifier<ECheckState, S
   late TripController tripController;
   late EcheckRepository repo;
   late AuthProviderNotifier auth;
-
+  late PostHogService postHogService;
   //   'Late Fee',
   //   'Extra Labor Delivery',
   //   'Lumper',
@@ -32,6 +37,7 @@ class EcheckPageController extends AutoDisposeFamilyAsyncNotifier<ECheckState, S
     tripController = ref.read(tripControllerProvider.notifier);
     repo = ref.read(eCheckRepoProvider);
     auth = ref.read(authProvider.notifier);
+    postHogService = ref.read(postHogProvider);
     ProviderArgsSaver.instance.echeckArgs = arg;
     return ECheckState(stopId: arg);
   }
@@ -71,60 +77,41 @@ class EcheckPageController extends AutoDisposeFamilyAsyncNotifier<ECheckState, S
 
   Future<void> generateEcheck(GlobalKey<FormState> formKey, BuildContext context, String tripId) async {
     if (formKey.currentState?.validate() ?? false) {
-      final postHogService = ref.read(postHogProvider);
       state = const AsyncLoading();
       var firstName = auth.driver!.name!.split(' ').first;
       var lastName = auth.driver!.name!.split(' ').elementAtOrNull(1) ?? '';
       var trip = tripController.getTrip(tripId)!;
+      var stopId = state.value!.showStopDropdown ? state.value!.stopId : null;
+      var stop = tripController.getStop(tripId, stopId);
       var req = GenerateECheckRequest(
-          tripId: trip.id!,
-          reason: state.value!.reason!,
-          note: state.value!.note,
-          firstName: firstName,
-          lastName: lastName,
-          stopId: state.value!.showStopDropdown ? state.value!.stopId : null,
-          driverId: trip.driver1Id!,
-          amount: state.value!.amount);
+        tripId: trip.id!,
+        reason: state.value!.reason!,
+        note: state.value!.note,
+        firstName: firstName,
+        lastName: lastName,
+        stopId: stopId,
+        driverId: trip.driver1Id!,
+        amount: state.value!.amount,
+      );
       var res = await repo.generateEcheck<EcheckPageController>(trip.companyCode!, req);
+      var event = PosthotEcheckGeneratedLog(
+        tenant: trip.companyCode!,
+        tripNumber: trip.tripNumber!,
+        tripId: tripId,
+        stopName: stop?.companyName,
+        stopId: stopId,
+        reason: req.reason,
+        success: res.expressCheckNumber != null && res.expressCheckNumber!.trim().isNotEmpty,
+        note: req.note,
+        amount: req.amount,
+      );
+      postHogService.postHogTrackEvent(PosthogTag.userGeneratedEcheck.toSnakeCase, {...event.toJson()});
 
-      if (res.expressCheckNumber != null && res.expressCheckNumber!.trim().isNotEmpty) {
-        postHogService.postHogTrackEvent("user_generated_echeck", {
-          "trip_id": req.tripId,
-          "reason": req.reason,
-          "note": req.note,
-          "amount": req.amount,
-          "stop_id": req.stopId ?? "",
-          "success": true
-        });
-      } else {
-        postHogService.postHogTrackEvent("user_generated_echeck", {
-          "trip_id": req.tripId,
-          "reason": req.reason,
-          "note": req.note,
-          "amount": req.amount,
-          "stop_id": req.stopId ?? "",
-          "success": false
-        });
-      }
-
-      ref.read(httpClientProvider).telemetryClient.trackEvent(name: "generate_echeck", additionalProperties: {
-        "tripId": req.tripId,
-        "reason": req.reason,
-        "note": req.note,
-        "amount": req.amount,
-        "stopId": req.stopId ?? "",
-        "first_name": req.firstName,
-        "last_name": req.lastName
-      });
-      await FirebaseAnalytics.instance.logEvent(name: "generate_echeck", parameters: <String, String>{
-        "tripId": req.tripId,
-        "reason": req.reason,
-        "note": req.note,
-        "amount": req.amount.toString(),
-        "stopId": req.stopId.toString(),
-        "first_name": req.firstName,
-        "last_name": req.lastName
-      });
+      ref
+          .read(httpClientProvider)
+          .telemetryClient
+          .trackEvent(name: "generate_echeck", additionalProperties: {...event.toJson()});
+      await FirebaseAnalytics.instance.logEvent(name: "generate_echeck", parameters: {...event.toJson()});
 
       tripController.addEcheck(trip.id!, res);
       state = AsyncData(state.value!);
