@@ -109,6 +109,26 @@ class TripCardTutorial extends StatelessWidget {
   }
 }
 
+class TripReferenceCardTutorial extends StatelessWidget {
+  const TripReferenceCardTutorial({super.key, required this.position, required this.box});
+  final RelativeRect position;
+  final RenderBox box;
+  @override
+  Widget build(BuildContext context) {
+    return Positioned(
+      bottom: position.bottom + box.size.height + 10,
+      left: position.left + 10,
+      child: SizedBox(
+        width: 250,
+        child: Text(
+          'Trip references can be found here, tapping on this card will show you the details.',
+          style: Theme.of(context).textTheme.titleSmall!.copyWith(fontWeight: FontWeight.w900),
+        ),
+      ),
+    );
+  }
+}
+
 class StopCardTutorial extends StatelessWidget {
   const StopCardTutorial({super.key, required this.position, required this.box});
   final RelativeRect position;
@@ -116,7 +136,7 @@ class StopCardTutorial extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      bottom: position.bottom + box.size.height + 10,
+      top: position.top + box.size.height + 10,
       left: position.left + 10,
       child: SizedBox(
         width: 250,
