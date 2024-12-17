@@ -3,7 +3,7 @@ description: Alvys mobile driver app.
 
 publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
-version: 3.0.30+290
+version: 3.0.31+291
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -57,10 +57,10 @@ dependencies:
   geolocator: ^13.0.1
   azure_application_insights: ^4.0.1
   uuid: ^4.5.1
-  firebase_core: ^3.1.0
-  firebase_analytics: ^11.0.1
-  firebase_crashlytics: ^4.0.1
-  firebase_remote_config: ^5.0.1
+  firebase_core: ^3.8.1
+  firebase_analytics: ^11.3.6
+  firebase_crashlytics: ^4.2.0
+  firebase_remote_config: ^5.2.0
   flexible_polyline:
     git:
       url: https://github.com/heremaps/flexible-polyline.git
