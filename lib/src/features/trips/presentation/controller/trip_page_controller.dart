@@ -184,14 +184,18 @@ class TripController extends _$TripController implements IErrorHandler {
     if (!state.isLoading && state.value.isNotNull) {
       int index = state.value!.trips.indexWhere((element) => element.id == trip.id!);
       var trips = List<AppTrip>.from(state.value!.trips);
+      var user = auth.driver;
       if (index > -1) {
-        trips[index] = trip;
-        state = AsyncValue.data(state.value!.copyWith(trips: trips));
-      } else {
-        var user = auth.driver;
         if (trip.drivers.removeNulls.contains(user?.phone)) {
-          trips.add(trip);
+          trips[index] = trip;
           state = AsyncValue.data(state.value!.copyWith(trips: trips));
+        } else {
+          // remove trip if driver has trip in list but is removed from the trip
+          state = AsyncValue.data(state.value!.copyWith(trips: trips.where((x) => x.id != trip.id!).toList()));
+        }
+      } else {
+        if (trip.drivers.removeNulls.contains(user?.phone)) {
+          state = AsyncValue.data(state.value!.copyWith(trips: [...trips, trip]));
           startLocationTracking();
         }
       }

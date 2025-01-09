@@ -222,10 +222,15 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IErrorHan
 
   UserTenant? getCurrentUserTenant(String companyCode) =>
       state.value!.driver!.userTenants.firstWhereOrNull((element) => element.companyCode == companyCode);
-  UserTenant get getCompanyOwned =>
-      state.value!.driver!.userTenants
-          .firstWhereOrNull((element) => (element.companyOwnedAsset ?? false) && !(element.isDisabled ?? true)) ??
-      state.value!.driver!.userTenants.first;
+  UserTenant get getCompanyOwned {
+    var tenant = state.value!.driver!.userTenants
+            .firstWhereOrNull((element) => (element.companyOwnedAsset ?? false) && !(element.isDisabled ?? true)) ??
+        state.value!.driver!.userTenants.first;
+    if (tenant.isDisabled ?? true) {
+      throw AlvysUnauthorizedException(AuthProviderNotifier);
+    }
+    return tenant;
+  }
 
   Future<void> refreshDriverUser() async {
     var res = await authRepo.getDriverUser(getCompanyOwned.companyCode!, driver!.id!);
