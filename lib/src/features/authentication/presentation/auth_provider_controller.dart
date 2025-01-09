@@ -10,8 +10,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:posthog_flutter/posthog_flutter.dart';
 
+import '../../../network/posthog/posthog_provider.dart';
 import '../../../utils/alvys_websocket.dart';
 import '../../../utils/exceptions.dart';
 import '../../../utils/extensions.dart';
@@ -87,8 +87,8 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IErrorHan
     await FirebaseAnalytics.instance.setUserProperty(name: 'driverId', value: driverRes.phone);
     await FirebaseCrashlytics.instance.setUserIdentifier(driverRes.phone.toString());
 
-    await Posthog().identify(
-        userId: driverRes.phone ?? '', userProperties: {'Email': driverRes.email ?? '', 'Tenant': tenantCompanyCodes});
+    final postHogService = ref.read(postHogProvider);
+    await postHogService.postHogIdentify(driverRes.phone ?? '');
 
     var locationStatus = await Permission.location.status;
     var notificationStatus = await Permission.notification.status;
