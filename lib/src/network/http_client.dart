@@ -169,6 +169,8 @@ class AlvysHttpClient {
         }
       case 500:
         throw ApiServerException(T);
+      case 503:
+        throw AlvysServiceUnavailableException(T);
       default:
         return Future.value(response);
     }

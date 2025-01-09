@@ -44,7 +44,7 @@ class AlvysServiceUnavailableException implements AppControllerException {
   AlvysServiceUnavailableException(this.controllerType);
 
   @override
-  String get message => '''Service Unavailable''';
+  String get message => '''Please try your last action again.''';
 
   @override
   Type get source => controllerType;
