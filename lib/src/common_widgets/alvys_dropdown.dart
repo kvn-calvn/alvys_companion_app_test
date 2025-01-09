@@ -52,7 +52,7 @@ class _AlvysDropdownState<T> extends State<AlvysDropdown<T>> {
                     ? Theme.of(context)
                         .colorScheme
                         .primary
-                        .withValues(alpha: 0.2)
+                        .withAlpha((255.0 * 0.2).round())
                     : (widget.backgroundColor ?? Theme.of(context).cardColor),
                 border: Border(
                     bottom: last

@@ -139,7 +139,8 @@ class DocumentUploadButton extends ConsumerWidget {
           title: 'Delete');
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var backgroundColor = Theme.of(context).cardColor.withValues(alpha: 0.7);
+    var backgroundColor =
+        Theme.of(context).cardColor.withAlpha((255.0 * 0.7).round());
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [

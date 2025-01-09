@@ -33,8 +33,8 @@ class EcheckCard extends ConsumerWidget {
       required this.cancelECheck,
       required this.tripId});
 
-  void showEcheckMenu(
-      BuildContext context, bool canCancelEcheck, String? checkNumber, ECheck check, PostHogService postHogService) {
+  void showEcheckMenu(BuildContext context, bool canCancelEcheck,
+      String? checkNumber, ECheck check, PostHogService postHogService) {
     if (checkNumber != null) return;
     showCustomPopup<EcheckOption>(
       context: context,
@@ -47,21 +47,26 @@ class EcheckCard extends ConsumerWidget {
             .toJson();
         switch (value) {
           case EcheckOption.copy:
-            Clipboard.setData(ClipboardData(text: eCheck.expressCheckNumber!.trim()));
-            SnackBar snackBar = SnackBarWrapper.getSnackBar('E-Check number copied');
+            Clipboard.setData(
+                ClipboardData(text: eCheck.expressCheckNumber!.trim()));
+            SnackBar snackBar =
+                SnackBarWrapper.getSnackBar('E-Check number copied');
             ScaffoldMessenger.of(context).showSnackBar(snackBar);
-            postHogService.postHogTrackEvent(PosthogTag.userCopiedEcheck.toSnakeCase, {...event});
+            postHogService.postHogTrackEvent(
+                PosthogTag.userCopiedEcheck.toSnakeCase, {...event});
             break;
           case EcheckOption.cancel:
             await cancelECheck(eCheck.expressCheckNumber!);
-            postHogService.postHogTrackEvent(PosthogTag.userCancelledEcheck.toSnakeCase, {...event});
+            postHogService.postHogTrackEvent(
+                PosthogTag.userCancelledEcheck.toSnakeCase, {...event});
             break;
         }
       },
       items: (context) => EcheckOption.values
-          .map<AlvysPopupItem<EcheckOption>?>((e) => e == EcheckOption.copy || (canCancelEcheck && !check.isCanceled)
-              ? AlvysPopupItem(value: e, child: Text(e.name.titleCase))
-              : null)
+          .map<AlvysPopupItem<EcheckOption>?>((e) =>
+              e == EcheckOption.copy || (canCancelEcheck && !check.isCanceled)
+                  ? AlvysPopupItem(value: e, child: Text(e.name.titleCase))
+                  : null)
           .removeNulls
           .toList(),
     );
@@ -77,7 +82,9 @@ class EcheckCard extends ConsumerWidget {
       return Padding(
         padding: const EdgeInsetsDirectional.fromSTEB(0, 8, 0, 8),
         child: Material(
-          key: index == 0 && tripId == testTrip.id! ? ref.read(tutorialProvider).echeckCard : null,
+          key: index == 0 && tripId == testTrip.id!
+              ? ref.read(tutorialProvider).echeckCard
+              : null,
           elevation: 0,
           color: Theme.of(context).cardColor,
           borderRadius: BorderRadius.circular(10),
@@ -89,7 +96,8 @@ class EcheckCard extends ConsumerWidget {
                 onLongPress: () {
                   showEcheckMenu(
                     context,
-                    authState.value!.shouldShowCancelEcheckButton(companyCode, eCheck.userId),
+                    authState.value!.shouldShowCancelEcheckButton(
+                        companyCode, eCheck.userId),
                     state.value!.loadingEcheckNumber,
                     eCheck,
                     postHogService,
@@ -101,28 +109,36 @@ class EcheckCard extends ConsumerWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       ConstrainedBox(
-                        constraints: BoxConstraints(maxWidth: constraints.maxWidth * 0.8),
+                        constraints: BoxConstraints(
+                            maxWidth: constraints.maxWidth * 0.8),
                         child: Column(
                           mainAxisSize: MainAxisSize.max,
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Padding(
-                              padding: const EdgeInsetsDirectional.fromSTEB(0, 0, 0, 4),
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  0, 0, 0, 4),
                               child: Row(
                                 mainAxisSize: MainAxisSize.max,
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   ConstrainedBox(
-                                    constraints: BoxConstraints(maxWidth: constraints.maxWidth * 0.8),
+                                    constraints: BoxConstraints(
+                                        maxWidth: constraints.maxWidth * 0.8),
                                     child: Text(
                                       eCheck.expressCheckNumber!.trim(),
                                       style: GoogleFonts.oxygenMono(
                                         fontWeight: FontWeight.w800,
-                                        textStyle: Theme.of(context).textTheme.titleMedium!.copyWith(
+                                        textStyle: Theme.of(context)
+                                            .textTheme
+                                            .titleMedium!
+                                            .copyWith(
                                               letterSpacing: 2,
-                                              decoration:
-                                                  eCheck.isCanceled ? TextDecoration.lineThrough : TextDecoration.none,
+                                              decoration: eCheck.isCanceled
+                                                  ? TextDecoration.lineThrough
+                                                  : TextDecoration.none,
                                               decorationThickness: 2,
                                             ),
                                       ),
@@ -132,29 +148,49 @@ class EcheckCard extends ConsumerWidget {
                               ),
                             ),
                             Text('Funds Available',
-                                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                      decoration: eCheck.isCanceled ? TextDecoration.lineThrough : TextDecoration.none,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(
+                                      decoration: eCheck.isCanceled
+                                          ? TextDecoration.lineThrough
+                                          : TextDecoration.none,
                                       decorationThickness: 3,
                                     )),
                             Text('\$${eCheck.amount?.toStringAsFixed(2)}',
-                                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                                      decoration: eCheck.isCanceled ? TextDecoration.lineThrough : TextDecoration.none,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyLarge
+                                    ?.copyWith(
+                                      decoration: eCheck.isCanceled
+                                          ? TextDecoration.lineThrough
+                                          : TextDecoration.none,
                                       decorationThickness: 4,
                                     )),
                             Padding(
-                              padding: const EdgeInsetsDirectional.fromSTEB(0, 4, 0, 0),
+                              padding: const EdgeInsetsDirectional.fromSTEB(
+                                  0, 4, 0, 0),
                               child: Row(
                                 children: [
-                                  Text(eCheck.reason!.trim(), style: Theme.of(context).textTheme.bodySmall),
+                                  Text(eCheck.reason!.trim(),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall),
                                   const Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 6.0),
+                                    padding:
+                                        EdgeInsets.symmetric(horizontal: 6.0),
                                     child: Icon(
                                       Icons.circle,
                                       size: 4,
                                     ),
                                   ),
-                                  Text(DateFormat('MMM dd @ HH:mm').formatNullDate(eCheck.dateGenerated?.toLocal()),
-                                      style: Theme.of(context).textTheme.bodySmall),
+                                  Text(
+                                      DateFormat('MMM dd @ HH:mm')
+                                          .formatNullDate(
+                                              eCheck.dateGenerated?.toLocal()),
+                                      style: Theme.of(context)
+                                          .textTheme
+                                          .bodySmall),
                                 ],
                               ),
                             ),
@@ -167,7 +203,8 @@ class EcheckCard extends ConsumerWidget {
                         onPressed: () {
                           showEcheckMenu(
                             context,
-                            authState.value!.shouldShowCancelEcheckButton(companyCode, eCheck.userId),
+                            authState.value!.shouldShowCancelEcheckButton(
+                                companyCode, eCheck.userId),
                             state.value!.loadingEcheckNumber,
                             eCheck,
                             postHogService,
@@ -179,11 +216,15 @@ class EcheckCard extends ConsumerWidget {
                   ),
                 ),
               ),
-              if (state.value!.loadingEcheckNumber == eCheck.expressCheckNumber) ...[
+              if (state.value!.loadingEcheckNumber ==
+                  eCheck.expressCheckNumber) ...[
                 Positioned.fill(
                     child: AlvysSingleChildShimmer(
                         child: DecoratedBox(
-                  decoration: BoxDecoration(color: Theme.of(context).cardColor.withValues(alpha: 0.7)),
+                  decoration: BoxDecoration(
+                      color: Theme.of(context)
+                          .cardColor
+                          .withAlpha((255.0 * 0.7).round())),
                 ))),
                 const Positioned.fill(
                   child: Center(child: Text('Canceling...')),

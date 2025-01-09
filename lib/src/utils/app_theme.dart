@@ -87,7 +87,7 @@ class AlvysTheme {
           cursorColor: ColorManager.primary(brightness),
           selectionHandleColor: ColorManager.primary(brightness),
           selectionColor:
-              ColorManager.primary(brightness).withValues(alpha: 0.5),
+              ColorManager.primary(brightness).withAlpha((255.0 * 0.5).round()),
         ),
         radioTheme: RadioThemeData(
           fillColor: AlvysMaterialStateColor(brightness),
@@ -242,9 +242,9 @@ class AlvysOutlineBorder extends MaterialStateUnderlineInputBorder {
   const AlvysOutlineBorder(this.brightness);
   @override
   InputBorder resolve(Set<WidgetState> states) {
-    Color color = Colors.grey.withValues(alpha: 0.6);
+    Color color = Colors.grey.withAlpha((255.0 * 0.6).round());
     if (states.contains(WidgetState.focused)) {
-      color = ColorManager.primary(brightness).withValues(alpha: 0.8);
+      color = ColorManager.primary(brightness).withAlpha((255.0 * 0.8).round());
     }
     if (states.contains(WidgetState.error)) {
       color = ColorManager.cancelColor;
@@ -267,11 +267,11 @@ class AlvysMaterialStateColor extends WidgetStateColor {
       color = ColorManager.cancelColor;
     }
     if (states.contains(WidgetState.disabled)) {
-      color = Colors.grey.withValues(alpha: 0.5);
+      color = Colors.grey.withAlpha((255.0 * 0.5).round());
     }
     if (states.contains(WidgetState.focused) ||
         states.contains(WidgetState.selected)) {
-      color = ColorManager.primary(brightness).withValues(alpha: 0.8);
+      color = ColorManager.primary(brightness).withAlpha((255.0 * 0.8).round());
     }
     return color;
   }
@@ -285,7 +285,7 @@ class AlvysButtonMaterialStateColor extends WidgetStateColor {
   Color resolve(Set<WidgetState> states) {
     Color color = ColorManager.primary(brightness);
     if (states.contains(WidgetState.disabled)) {
-      color = Colors.grey.withValues(alpha: 0.5);
+      color = Colors.grey.withAlpha((255.0 * 0.5).round());
     }
     return color;
   }

@@ -110,7 +110,7 @@ class EditProfile extends ConsumerWidget {
                                 child: Container(
                                   color: Theme.of(context)
                                       .cardColor
-                                      .withValues(alpha: 0.7),
+                                      .withAlpha((255.0 * 0.7).round()),
                                   alignment: Alignment.center,
                                   child: const Text('Loading...'),
                                 ),
@@ -141,7 +141,8 @@ class EditProfile extends ConsumerWidget {
                           items: EditProfileNotifier.states,
                           coverDisplayText: false,
                           border: BorderSide(
-                              color: Colors.grey.withValues(alpha: 0.6),
+                              color:
+                                  Colors.grey.withAlpha((255.0 * 0.6).round()),
                               width: 1),
                           includeTrailing: false,
                           onItemTap: editNotifier().setLicenseIssueState,
@@ -245,7 +246,9 @@ class EditExpirationDate extends ConsumerWidget {
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
               border: Border.all(
-                  color: Colors.grey.withValues(alpha: 0.6), width: 1),
+                color: Colors.grey.withAlpha((255.0 * 0.6).round()),
+                width: 1,
+              ),
               borderRadius: BorderRadius.circular(10),
             ),
             child: Row(

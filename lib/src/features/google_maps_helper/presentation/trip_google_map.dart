@@ -39,15 +39,22 @@ class _TripGoogleMapState extends ConsumerState<TripGoogleMap> {
                 onTap: (argument) async {
                   if (!mapState.isLoading) {
                     Navigator.of(context, rootNavigator: true).push(
-                      MaterialPageRoute(builder: (context) => FullScreenMap(widget.tripId)),
+                      MaterialPageRoute(
+                          builder: (context) => FullScreenMap(widget.tripId)),
                     );
-                    ref.read(postHogProvider).postHogTrackEvent(PosthogTag.userOpenedMap.toSnakeCase, null);
-                    ref.read(httpClientProvider).telemetryClient.trackEvent(name: "open_map");
+                    ref.read(postHogProvider).postHogTrackEvent(
+                        PosthogTag.userOpenedMap.toSnakeCase, null);
+                    ref
+                        .read(httpClientProvider)
+                        .telemetryClient
+                        .trackEvent(name: "open_map");
                     await FirebaseAnalytics.instance.logEvent(name: "open_map");
                   }
                 },
                 onMapCreated: (controller) {
-                  ref.read(mapProvider.call(widget.tripId).notifier).onMapCreated(controller);
+                  ref
+                      .read(mapProvider.call(widget.tripId).notifier)
+                      .onMapCreated(controller);
                 },
                 initialCameraPosition: const CameraPosition(
                   tilt: 20,
@@ -72,7 +79,9 @@ class _TripGoogleMapState extends ConsumerState<TripGoogleMap> {
                     child: Container(
                   width: double.infinity,
                   height: double.infinity,
-                  color: Theme.of(context).cardColor.withValues(alpha: 0.4),
+                  color: Theme.of(context)
+                      .cardColor
+                      .withAlpha((255.0 * 0.4).round()),
                 ))
             ],
           ),
