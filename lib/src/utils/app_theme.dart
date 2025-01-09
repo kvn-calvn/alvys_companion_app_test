@@ -9,7 +9,10 @@ import 'tablet_utils.dart';
 class AlvysTheme {
   static ThemeData mainTheme(Brightness brightness) {
     final textTheme = appTextTheme(
-        MediaQueryData.fromView(WidgetsBinding.instance.platformDispatcher.implicitView!).size.shortestSide,
+        MediaQueryData.fromView(
+                WidgetsBinding.instance.platformDispatcher.implicitView!)
+            .size
+            .shortestSide,
         brightness);
     return ThemeData(
         useMaterial3: false,
@@ -23,7 +26,9 @@ class AlvysTheme {
         appBarTheme: AppBarTheme(
           centerTitle: true,
           iconTheme: IconThemeData(
-            color: brightness.isLight ? Colors.black : Colors.white, //change your color here
+            color: brightness.isLight
+                ? Colors.black
+                : Colors.white, //change your color here
           ),
           backgroundColor: Colors.transparent,
           elevation: 0,
@@ -31,7 +36,10 @@ class AlvysTheme {
             statusBarBrightness: brightness,
           ),
           titleTextStyle: appTextTheme(
-                  MediaQueryData.fromView(WidgetsBinding.instance.platformDispatcher.implicitView!).size.shortestSide,
+                  MediaQueryData.fromView(WidgetsBinding
+                          .instance.platformDispatcher.implicitView!)
+                      .size
+                      .shortestSide,
                   brightness)
               .bodyLarge!
               .copyWith(
@@ -48,7 +56,10 @@ class AlvysTheme {
               borderRadius: BorderRadius.circular(10.0),
             ),
             textStyle: appTextTheme(
-                    MediaQueryData.fromView(WidgetsBinding.instance.platformDispatcher.implicitView!).size.shortestSide,
+                    MediaQueryData.fromView(WidgetsBinding
+                            .instance.platformDispatcher.implicitView!)
+                        .size
+                        .shortestSide,
                     brightness)
                 .labelMedium!
                 .copyWith(
@@ -56,7 +67,8 @@ class AlvysTheme {
                 ),
           ),
         ),
-        chipTheme: ChipThemeData(backgroundColor: ColorManager.chipColor(brightness)),
+        chipTheme:
+            ChipThemeData(backgroundColor: ColorManager.chipColor(brightness)),
         cardColor: ColorManager.cardColor(brightness),
         bottomNavigationBarTheme: BottomNavigationBarThemeData(
           backgroundColor: Colors.transparent,
@@ -66,21 +78,24 @@ class AlvysTheme {
         ),
         inputDecorationTheme: InputDecorationTheme(
           isDense: true,
-          fillColor: brightness.isLight ? Colors.white : ColorManager.lightgrey2,
+          fillColor:
+              brightness.isLight ? Colors.white : ColorManager.lightgrey2,
           filled: true,
           border: AlvysOutlineBorder(brightness),
         ),
         textSelectionTheme: TextSelectionThemeData(
           cursorColor: ColorManager.primary(brightness),
           selectionHandleColor: ColorManager.primary(brightness),
-          selectionColor: ColorManager.primary(brightness).withOpacity(0.5),
+          selectionColor:
+              ColorManager.primary(brightness).withValues(alpha: 0.5),
         ),
         radioTheme: RadioThemeData(
           fillColor: AlvysMaterialStateColor(brightness),
         ),
         cardTheme: CardTheme(
           elevation: 0,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),
         progressIndicatorTheme: ProgressIndicatorThemeData(
           color: ColorManager.primary(brightness),
@@ -104,15 +119,20 @@ class AlvysTheme {
           surface: brightness.isLight ? Colors.white : Colors.black,
           onSurface: brightness.isLight ? Colors.black : Colors.white,
         ),
-        checkboxTheme: CheckboxThemeData(fillColor: AlvysMaterialStateColor(brightness)),
+        checkboxTheme:
+            CheckboxThemeData(fillColor: AlvysMaterialStateColor(brightness)),
         snackBarTheme: SnackBarThemeData(
-            backgroundColor: ColorManager.cardColor(brightness), contentTextStyle: textTheme.bodyMedium),
+            backgroundColor: ColorManager.cardColor(brightness),
+            contentTextStyle: textTheme.bodyMedium),
         dialogTheme: DialogTheme(contentTextStyle: textTheme.labelMedium));
   }
 
   static TextStyle appbarTextStyle(BuildContext context, bool small) {
     return small
-        ? Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w700)
+        ? Theme.of(context)
+            .textTheme
+            .titleMedium!
+            .copyWith(fontWeight: FontWeight.w700)
         : Theme.of(context).textTheme.headlineLarge!;
   }
 
@@ -210,7 +230,8 @@ class AlvysTheme {
       );
   static TextTheme appTextTheme(double width, Brightness brightness) {
     return GoogleFonts.poppinsTextTheme(defaultTextTheme(brightness).apply(
-      fontSizeFactor: (width / 1000) * 2.5 * (TabletUtils.instance.isTablet ? 0.4 : 1),
+      fontSizeFactor:
+          (width / 1000) * 2.5 * (TabletUtils.instance.isTablet ? 0.4 : 1),
     ));
   }
 }
@@ -221,9 +242,9 @@ class AlvysOutlineBorder extends MaterialStateUnderlineInputBorder {
   const AlvysOutlineBorder(this.brightness);
   @override
   InputBorder resolve(Set<WidgetState> states) {
-    Color color = Colors.grey.withOpacity(0.6);
+    Color color = Colors.grey.withValues(alpha: 0.6);
     if (states.contains(WidgetState.focused)) {
-      color = ColorManager.primary(brightness).withOpacity(0.8);
+      color = ColorManager.primary(brightness).withValues(alpha: 0.8);
     }
     if (states.contains(WidgetState.error)) {
       color = ColorManager.cancelColor;
@@ -246,10 +267,11 @@ class AlvysMaterialStateColor extends WidgetStateColor {
       color = ColorManager.cancelColor;
     }
     if (states.contains(WidgetState.disabled)) {
-      color = Colors.grey.withOpacity(0.5);
+      color = Colors.grey.withValues(alpha: 0.5);
     }
-    if (states.contains(WidgetState.focused) || states.contains(WidgetState.selected)) {
-      color = ColorManager.primary(brightness).withOpacity(0.8);
+    if (states.contains(WidgetState.focused) ||
+        states.contains(WidgetState.selected)) {
+      color = ColorManager.primary(brightness).withValues(alpha: 0.8);
     }
     return color;
   }
@@ -263,7 +285,7 @@ class AlvysButtonMaterialStateColor extends WidgetStateColor {
   Color resolve(Set<WidgetState> states) {
     Color color = ColorManager.primary(brightness);
     if (states.contains(WidgetState.disabled)) {
-      color = Colors.grey.withOpacity(0.5);
+      color = Colors.grey.withValues(alpha: 0.5);
     }
     return color;
   }

@@ -65,7 +65,7 @@ class _PhoneNumberVerificationPageState
             color: (Theme.of(context).brightness.isLight
                     ? Colors.black
                     : Colors.white)
-                .withOpacity(0.5),
+                .withValues(alpha: 0.5),
           ),
         ),
       );
@@ -161,7 +161,7 @@ class _PhoneNumberVerificationPageState
                                     border: Border.all(
                                       color: ColorManager.primary(
                                               Theme.of(context).brightness)
-                                          .withOpacity(0.8),
+                                          .withValues(alpha: 0.8),
                                     ),
                                   ),
                         ),

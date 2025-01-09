@@ -183,7 +183,7 @@ class EcheckCard extends ConsumerWidget {
                 Positioned.fill(
                     child: AlvysSingleChildShimmer(
                         child: DecoratedBox(
-                  decoration: BoxDecoration(color: Theme.of(context).cardColor.withOpacity(0.7)),
+                  decoration: BoxDecoration(color: Theme.of(context).cardColor.withValues(alpha: 0.7)),
                 ))),
                 const Positioned.fill(
                   child: Center(child: Text('Canceling...')),

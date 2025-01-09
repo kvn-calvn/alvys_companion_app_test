@@ -72,7 +72,7 @@ class _TripGoogleMapState extends ConsumerState<TripGoogleMap> {
                     child: Container(
                   width: double.infinity,
                   height: double.infinity,
-                  color: Theme.of(context).cardColor.withOpacity(0.4),
+                  color: Theme.of(context).cardColor.withValues(alpha: 0.4),
                 ))
             ],
           ),
