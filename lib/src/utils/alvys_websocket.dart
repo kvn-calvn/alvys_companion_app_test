@@ -1,8 +1,8 @@
 import 'dart:convert';
-
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logging/logging.dart';
 import 'package:signalr_netcore/ihub_protocol.dart';
 import 'package:signalr_netcore/signalr_client.dart';
 
@@ -17,22 +17,19 @@ import 'provider_args_saver.dart';
 final websocketProvider = Provider<AlvysWebsocket>((ref) => AlvysWebsocket(ref: ref));
 
 class AlvysWebsocket {
-  HubConnection get getWebSocketConnection {
+  Future<HubConnection> get getWebSocketConnection async {
     // Logger.root.level = Level.ALL;
     // Logger.root.onRecord.listen((LogRecord rec) {
     //   debugPrint('${rec.level.name}: ${rec.time}: ${rec.message}');
     // });
     var headers = MessageHeaders();
     headers.setHeaderValue('CompanyCode', ref.read(authProvider.notifier).tenantCompanyCodes.join(','));
-    // headers.setHeaderValue('Authorization', 'Basic ${await getToken()}');
+    // headers.setHeaderValue("Authorization", 'Bearer ${await getToken()}');
     return HubConnectionBuilder()
         .withUrl(
       ApiRoutes.webSocket,
       options: HttpConnectionOptions(
-          requestTimeout: 10000,
-          //  logger: Logger("SignalR - transport"),
-          accessTokenFactory: getToken,
-          headers: headers),
+          requestTimeout: 10000, logger: Logger("SignalR - transport"), accessTokenFactory: getToken, headers: headers),
     )
         // .configureLogging(Logger("SignalR - hub"))
         .withAutomaticReconnect(retryDelays: [
@@ -56,27 +53,27 @@ class AlvysWebsocket {
   HubConnection? connection;
   AlvysWebsocket({required this.ref});
   Future<void> restartConnection() async {
-    // if ((await getToken()).isNotEmpty) {
-    //   await Future.delayed(const Duration(seconds: 1), () async {
-    //     if (connection.isNotNull) {
-    //       if (connection!.state == HubConnectionState.Disconnected) {
-    //         try {
-    //           await stopWebsocketConnection();
-    //           await startWebsocketConnection();
-    //         } catch (e) {
-    //           debugPrint('$e');
-    //         }
-    //       }
-    //     } else {
-    //       await startWebsocketConnection();
-    //     }
-    //   });
-    // }
+    if ((await getToken()).isNotEmpty) {
+      await Future.delayed(const Duration(seconds: 1), () async {
+        if (connection.isNotNull) {
+          if (connection!.state == HubConnectionState.Disconnected) {
+            try {
+              await stopWebsocketConnection();
+              await startWebsocketConnection();
+            } catch (e) {
+              debugPrint('$e');
+            }
+          }
+        } else {
+          await startWebsocketConnection();
+        }
+      });
+    }
   }
 
   Future<void> startWebsocketConnection() async {
-    connection ??= getWebSocketConnection;
-    // await connection?.start();
+    connection ??= await getWebSocketConnection;
+    await connection?.start();
     updateHandler();
   }
 

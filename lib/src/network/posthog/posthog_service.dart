@@ -10,6 +10,7 @@ class PostHogService {
   DriverUser? driver;
   PostHogService(this.driver);
   Future<void> postHogTrackEvent(String event, Map<String, Object>? properties) async {
+    debugPrint("Event: $event, Properties: $properties");
     await Posthog().capture(
       eventName: event,
       properties: properties,
@@ -25,10 +26,13 @@ class PostHogService {
 
     Map<String, Object> userProperties = driver != null
         ? {
-            'Phone': driver?.phone ?? '',
-            'Email': driver?.email ?? '',
-            'Name': driver?.name ?? '',
-            'Tenant': driver?.companyCodesWithSpace ?? "",
+            'UserID': driver?.id ?? '',
+            'UserPhone': driver?.phone ?? '',
+            'UserEmail': driver?.email ?? '',
+            'UserName': driver?.name ?? '',
+            'UserType': driver?.userType ?? '',
+            'UserTenantID': driver?.companyCodesWithSpace ?? "",
+            'Platform': 'Mobile',
             ...appPermissions.map((key, value) => MapEntry(key.sentenceCase, value as Object))
           }
         : {};

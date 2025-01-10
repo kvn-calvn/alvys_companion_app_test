@@ -102,10 +102,10 @@ class SettingsList extends ConsumerWidget {
           title: "Sign Out",
           onPressed: () async {
             ref.read(postHogProvider).postHogTrackEvent(PosthogTag.userSignedOut.toSnakeCase, null);
+            ref.read(postHogProvider).reset();
             if (context.mounted) {
               ref.read(authProvider.notifier).signOut(context);
             }
-            ref.read(postHogProvider).reset();
             ref.read(httpClientProvider).telemetryClient.trackEvent(name: "signed_out");
             await FirebaseAnalytics.instance.logEvent(name: "signed_out");
           },
