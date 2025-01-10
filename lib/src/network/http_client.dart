@@ -38,7 +38,7 @@ class AlvysHttpClient {
     final client = Client();
 
     final processor = TransmissionProcessor(
-      connectionString: FlavorConfig.instance!.connectionString,
+      connectionString: FlavorConfig.instance!.azureConnectionString,
       httpClient: client,
       timeout: const Duration(seconds: 100),
     );
@@ -48,7 +48,7 @@ class AlvysHttpClient {
     );
 
     debugPrint(
-        "TELEMETRY CONNECTION STRING: ${FlavorConfig.instance!.connectionString}");
+        "TELEMETRY CONNECTION STRING: ${FlavorConfig.instance!.azureConnectionString}");
     telemetryHttpClient = TelemetryHttpClient(
       telemetryClient: telemetryClient,
       inner: client,
