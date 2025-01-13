@@ -25,13 +25,12 @@ import 'custom_multipart_request.dart';
 import 'network_info.dart';
 
 final httpClientProvider = Provider<AlvysHttpClient>((ref) {
-  return AlvysHttpClient(ref.read(sharedPreferencesProvider)!,
-      ref.watch(internetConnectionCheckerProvider.notifier));
+  return AlvysHttpClient(ref.read(sharedPreferencesProvider)!, ref.watch(internetConnectionCheckerProvider.notifier));
 });
 
 class AlvysHttpClient {
   late TelemetryClient telemetryClient;
-  late TelemetryHttpClient telemetryHttpClient;
+  late InnerAlvysHttpClient telemetryHttpClient;
   final SharedPreferences pref;
   final NetworkNotifier networkInfo;
   AlvysHttpClient(this.pref, this.networkInfo) {
@@ -47,9 +46,8 @@ class AlvysHttpClient {
       processor: processor,
     );
 
-    debugPrint(
-        "TELEMETRY CONNECTION STRING: ${FlavorConfig.instance!.azureConnectionString}");
-    telemetryHttpClient = TelemetryHttpClient(
+    debugPrint("TELEMETRY CONNECTION STRING: ${FlavorConfig.instance!.azureConnectionString}");
+    telemetryHttpClient = InnerAlvysHttpClient(
       telemetryClient: telemetryClient,
       inner: client,
     );
@@ -60,10 +58,7 @@ class AlvysHttpClient {
       Map<String, Object> additionalProperties = const <String, Object>{},
       DateTime? timestamp}) async {
     await addPermissionDetails();
-    return telemetryClient.trackEvent(
-        name: name,
-        additionalProperties: additionalProperties,
-        timestamp: timestamp);
+    return telemetryClient.trackEvent(name: name, additionalProperties: additionalProperties, timestamp: timestamp);
   }
 
   Map<String, String> getBaseHeaders(String? companyCode) {
@@ -77,8 +72,7 @@ class AlvysHttpClient {
     };
   }
 
-  Map<String, String> getHeaders(
-      String? companyCode, Map<String, String>? headers) {
+  Map<String, String> getHeaders(String? companyCode, Map<String, String>? headers) {
     var newHeaders = getBaseHeaders(companyCode);
     if (headers != null) {
       newHeaders.addAll(headers);
@@ -87,8 +81,7 @@ class AlvysHttpClient {
   }
 
   Future<StreamedResponse> sendData<T>(BaseRequest request) async {
-    var streamedRes = await _tryRequest<T, StreamedResponse>(
-        (client) => client.send(request));
+    var streamedRes = await _tryRequest<T, StreamedResponse>((client) => client.send(request));
     _handleResponse(await Response.fromStream(streamedRes));
     return streamedRes;
   }
@@ -118,60 +111,40 @@ class AlvysHttpClient {
     await sendData<T>(request);
   }
 
-  Future<Response> getData<T>(Uri uri, String? companyCode,
-      {Map<String, String>? headers}) {
-    return _executeRequest<T>(companyCode,
-        (client) => client.get(uri, headers: getHeaders(companyCode, headers)));
+  Future<Response> getData<T>(Uri uri, String? companyCode, {Map<String, String>? headers}) {
+    return _executeRequest<T>(companyCode, (client) => client.get(uri, headers: getHeaders(companyCode, headers)));
   }
 
   Future<Response> postData<T>(Uri uri, String? companyCode,
       {Map<String, String>? headers, Object? body, Encoding? encoding}) {
-    return _executeRequest<T>(
-        companyCode,
-        (client) => client.post(uri,
-            headers: getHeaders(companyCode, headers),
-            body: body,
-            encoding: encoding));
+    return _executeRequest<T>(companyCode,
+        (client) => client.post(uri, headers: getHeaders(companyCode, headers), body: body, encoding: encoding));
   }
 
   Future<Response> putData<T>(Uri uri, String? companyCode,
       {Map<String, String>? headers, Object? body, Encoding? encoding}) {
-    return _executeRequest<T>(
-        companyCode,
-        (client) => client.put(uri,
-            headers: getHeaders(companyCode, headers),
-            body: body,
-            encoding: encoding));
+    return _executeRequest<T>(companyCode,
+        (client) => client.put(uri, headers: getHeaders(companyCode, headers), body: body, encoding: encoding));
   }
 
   Future<Response> deleteData<T>(Uri uri, String? companyCode,
       {Map<String, String>? headers, Object? body, Encoding? encoding}) {
-    return _executeRequest<T>(
-        companyCode,
-        (client) => client.delete(uri,
-            headers: getHeaders(companyCode, headers),
-            body: body,
-            encoding: encoding));
+    return _executeRequest<T>(companyCode,
+        (client) => client.delete(uri, headers: getHeaders(companyCode, headers), body: body, encoding: encoding));
   }
 
   Future<Response> patchData<T>(Uri uri, String? companyCode,
       {Map<String, String>? headers, Object? body, Encoding? encoding}) {
-    return _executeRequest<T>(
-        companyCode,
-        (client) => client.patch(uri,
-            headers: getHeaders(companyCode, headers),
-            body: body,
-            encoding: encoding));
+    return _executeRequest<T>(companyCode,
+        (client) => client.patch(uri, headers: getHeaders(companyCode, headers), body: body, encoding: encoding));
   }
 
-  Future<Response> _executeRequest<T>(String? companyCode,
-      Future<Response> Function(TelemetryHttpClient client) op) async {
+  Future<Response> _executeRequest<T>(
+      String? companyCode, Future<Response> Function(InnerAlvysHttpClient client) op) async {
     if (companyCode != null) {
       telemetryClient.context.properties['tenantId'] = companyCode;
     }
     await addPermissionDetails();
-    telemetryClient.context.operation.id =
-        const Uuid().v4(config: V4Options(null, CryptoRNG()));
     var res = await _tryRequest<T, Response>(op);
     return _handleResponse<T>(res);
   }
@@ -202,8 +175,7 @@ class AlvysHttpClient {
     }
   }
 
-  Future<TResponse> _tryRequest<TSource, TResponse>(
-      Future<TResponse> Function(TelemetryHttpClient client) op) async {
+  Future<TResponse> _tryRequest<TSource, TResponse>(Future<TResponse> Function(InnerAlvysHttpClient client) op) async {
     try {
       return await op(telemetryHttpClient).timeout(
         const Duration(minutes: 2),
@@ -224,20 +196,15 @@ class AlvysHttpClient {
       Permission.locationAlways,
       Permission.locationWhenInUse,
       Permission.notification,
-      Platform.isAndroid
-          ? await PermissionHelper.androidGalleryPermission()
-          : Permission.photos,
+      Platform.isAndroid ? await PermissionHelper.androidGalleryPermission() : Permission.photos,
       Permission.camera
     ];
     telemetryClient.context.properties['permissionStatus'] =
-        (await PermissionHelper.getAllUserPermissions(permissions))
-            .toJsonEncodedString;
+        (await PermissionHelper.getAllUserPermissions(permissions)).toJsonEncodedString;
   }
 
-  Future<void> setTelemetryContext(
-      {DriverUser? user, Map<String, dynamic>? extraData}) async {
-    assert((user == null && extraData != null) ||
-        (user != null && extraData == null));
+  Future<void> setTelemetryContext({DriverUser? user, Map<String, dynamic>? extraData}) async {
+    assert((user == null && extraData != null) || (user != null && extraData == null));
     Map<String, dynamic> driver = user == null
         ? extraData!
         : {
@@ -270,23 +237,58 @@ class AlvysHttpClient {
       ..applicationVersion = packageInfo.version
       ..user.accountId = user?.id
       ..properties['user'] = jsonEncode(driver)
-      ..device.id =
-          Platform.isAndroid ? androidInfo.id : iosInfo.identifierForVendor;
+      ..device.id = Platform.isAndroid ? androidInfo.id : iosInfo.identifierForVendor;
     await addPermissionDetails();
     if (user != null) {
-      telemetryClient.context.properties['tenantPermissions'] = Map.fromEntries(
-              user
-                  .userTenants
-                  .map((e) => MapEntry(e.companyCode, e.permissions)))
-          .toJsonEncodedString;
-      telemetryClient.context.properties['driverTypes'] = Map.fromEntries(user
-              .userTenants
-              .map((e) => MapEntry(e.companyCode, e.contractorType)))
-          .toJsonEncodedString;
+      telemetryClient.context.properties['tenantPermissions'] =
+          Map.fromEntries(user.userTenants.map((e) => MapEntry(e.companyCode, e.permissions))).toJsonEncodedString;
+      telemetryClient.context.properties['driverTypes'] =
+          Map.fromEntries(user.userTenants.map((e) => MapEntry(e.companyCode, e.contractorType))).toJsonEncodedString;
     }
   }
 }
 
 class AlvysHttpHeaders {
   static String companyCode = 'CompanyCode';
+}
+
+class InnerAlvysHttpClient extends BaseClient {
+  InnerAlvysHttpClient({
+    required this.inner,
+    required this.telemetryClient,
+    this.appendHeader,
+  });
+  final Client inner;
+  final TelemetryClient telemetryClient;
+  final bool Function(String header)? appendHeader;
+
+  @override
+  Future<StreamedResponse> send(BaseRequest request) async {
+    final timestamp = DateTime.now().toUtc();
+
+    final stopwatch = Stopwatch()..start();
+    final response = await inner.send(request);
+    stopwatch.stop();
+
+    final contentLength = request.contentLength;
+    final appendHeader = this.appendHeader ?? (_) => true;
+    final headers =
+        request.headers.entries.where((e) => appendHeader(e.key)).map((e) => '${e.key}=${e.value}').join(',');
+
+    telemetryClient.trackRequest(
+      responseCode: response.statusCode.toString(),
+      name: request.url.path.isEmpty ? '/' : request.url.path,
+      id: const Uuid().v4(config: V4Options(null, CryptoRNG())),
+      success: response.statusCode >= 200 && response.statusCode < 300,
+      duration: stopwatch.elapsed,
+      additionalProperties: <String, Object>{
+        'method': request.method,
+        if (headers.isNotEmpty) 'headers': headers,
+        if (contentLength != null) 'contentLength': contentLength,
+      },
+      timestamp: timestamp,
+    );
+
+    return response;
+  }
 }
