@@ -30,14 +30,14 @@ final httpClientProvider = Provider<AlvysHttpClient>((ref) {
 
 class AlvysHttpClient {
   late TelemetryClient telemetryClient;
-  late TelemetryHttpClient telemetryHttpClient;
+  late InnerAlvysHttpClient telemetryHttpClient;
   final SharedPreferences pref;
   final NetworkNotifier networkInfo;
   AlvysHttpClient(this.pref, this.networkInfo) {
     final client = Client();
 
     final processor = TransmissionProcessor(
-      instrumentationKey: FlavorConfig.instance!.azureConnectionString,
+      connectionString: FlavorConfig.instance!.azureConnectionString,
       httpClient: client,
       timeout: const Duration(seconds: 100),
     );
@@ -47,7 +47,7 @@ class AlvysHttpClient {
     );
 
     debugPrint("TELEMETRY CONNECTION STRING: ${FlavorConfig.instance!.azureConnectionString}");
-    telemetryHttpClient = TelemetryHttpClient(
+    telemetryHttpClient = InnerAlvysHttpClient(
       telemetryClient: telemetryClient,
       inner: client,
     );
@@ -140,12 +140,11 @@ class AlvysHttpClient {
   }
 
   Future<Response> _executeRequest<T>(
-      String? companyCode, Future<Response> Function(TelemetryHttpClient client) op) async {
+      String? companyCode, Future<Response> Function(InnerAlvysHttpClient client) op) async {
     if (companyCode != null) {
       telemetryClient.context.properties['tenantId'] = companyCode;
     }
     await addPermissionDetails();
-    telemetryClient.context.operation.id = const Uuid().v4(config: V4Options(null, CryptoRNG()));
     var res = await _tryRequest<T, Response>(op);
     return _handleResponse<T>(res);
   }
@@ -176,7 +175,7 @@ class AlvysHttpClient {
     }
   }
 
-  Future<TResponse> _tryRequest<TSource, TResponse>(Future<TResponse> Function(TelemetryHttpClient client) op) async {
+  Future<TResponse> _tryRequest<TSource, TResponse>(Future<TResponse> Function(InnerAlvysHttpClient client) op) async {
     try {
       return await op(telemetryHttpClient).timeout(
         const Duration(minutes: 2),
@@ -251,4 +250,45 @@ class AlvysHttpClient {
 
 class AlvysHttpHeaders {
   static String companyCode = 'CompanyCode';
+}
+
+class InnerAlvysHttpClient extends BaseClient {
+  InnerAlvysHttpClient({
+    required this.inner,
+    required this.telemetryClient,
+    this.appendHeader,
+  });
+  final Client inner;
+  final TelemetryClient telemetryClient;
+  final bool Function(String header)? appendHeader;
+
+  @override
+  Future<StreamedResponse> send(BaseRequest request) async {
+    final timestamp = DateTime.now().toUtc();
+
+    final stopwatch = Stopwatch()..start();
+    final response = await inner.send(request);
+    stopwatch.stop();
+
+    final contentLength = request.contentLength;
+    final appendHeader = this.appendHeader ?? (_) => true;
+    final headers =
+        request.headers.entries.where((e) => appendHeader(e.key)).map((e) => '${e.key}=${e.value}').join(',');
+
+    telemetryClient.trackRequest(
+      responseCode: response.statusCode.toString(),
+      name: request.url.path.isEmpty ? '/' : request.url.path,
+      id: const Uuid().v4(config: V4Options(null, CryptoRNG())),
+      success: response.statusCode >= 200 && response.statusCode < 300,
+      duration: stopwatch.elapsed,
+      additionalProperties: <String, Object>{
+        'method': request.method,
+        if (headers.isNotEmpty) 'headers': headers,
+        if (contentLength != null) 'contentLength': contentLength,
+      },
+      timestamp: timestamp,
+    );
+
+    return response;
+  }
 }
