@@ -111,7 +111,12 @@ extension DateTimeExtn on DateTime? {
 
   bool get isNullOrAfterNowOnlyDate {
     if (this == null) return true;
-    return DateTime.now().onlyDate!.isAfter(this!);
+    return (this!.isUtc ? DateTime.now().onlyUtcDate : DateTime.now().onlyDate)!.isAfter(this!);
+  }
+
+  bool get paystubDateShouldShow {
+    if (this == null) return true;
+    return DateTime.now().onlyDate!.add(Duration(seconds: 1)).isAfter(this!);
   }
 
   bool isAfterNull(DateTime? other) {
@@ -123,6 +128,11 @@ extension DateTimeExtn on DateTime? {
   DateTime? get onlyDate {
     if (this == null) return null;
     return DateTime(this!.year, this!.month, this!.day);
+  }
+
+  DateTime? get onlyUtcDate {
+    if (this == null) return null;
+    return DateTime.utc(this!.year, this!.month, this!.day);
   }
 }
 
