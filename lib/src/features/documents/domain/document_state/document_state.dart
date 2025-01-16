@@ -17,7 +17,7 @@ class DocumentState with _$DocumentState {
   }) = _DocumentState;
   DocumentState._();
   List<AppDocument> displayPaystubs(bool Function(String companyCode) shouldDisplay) => documentList
-      .where((element) => element.date.isNullOrAfterNowOnlyDate && shouldDisplay(element.companyCode))
+      .where((element) => element.date.paystubDateShouldShow && shouldDisplay(element.companyCode))
       .toList();
   List<AppDocument> documents(DisplayDocumentType type, [bool Function(String companyCode)? shouldDisplay]) =>
       List.from(type == DisplayDocumentType.paystubs ? displayPaystubs(shouldDisplay ?? (data) => false) : documentList)
