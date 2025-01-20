@@ -71,6 +71,8 @@ dependencies:
   app_tracking_transparency: ^2.0.4
   flutter_image_compress: ^2.3.0
   ua_client_hints: ^1.4.1
+  launchdarkly_flutter_client_sdk: ^4.9.0
+  
 dev_dependencies:
   flutter_test:
     sdk: flutter

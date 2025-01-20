@@ -16,41 +16,61 @@ class FlavorConfig {
   final String hubName;
   final String connectionString;
 
+  final String launchDarklySdkKey;
+
   static FlavorConfig? _instance;
 
-  factory FlavorConfig(
-      {required Flavor flavor,
-      required String env,
-      required String rawApiBase,
-      required String baseUrl,
-      required String storageUrl,
-      required String mobileBaseApi,
-      required String gMapsKey,
-      required String hereMapsKey,
-      required String iosGeniusScanSDKKey,
-      required String androidGeniusScanSDKKey,
-      required String azureTelemetryKey,
-      required String hubName,
-      required String connectionString}) {
-    _instance ??= FlavorConfig._internal(flavor, env, rawApiBase, baseUrl, storageUrl, mobileBaseApi, gMapsKey,
-        hereMapsKey, iosGeniusScanSDKKey, androidGeniusScanSDKKey, azureTelemetryKey, hubName, connectionString);
+  factory FlavorConfig({
+    required Flavor flavor,
+    required String env,
+    required String rawApiBase,
+    required String baseUrl,
+    required String storageUrl,
+    required String mobileBaseApi,
+    required String gMapsKey,
+    required String hereMapsKey,
+    required String iosGeniusScanSDKKey,
+    required String androidGeniusScanSDKKey,
+    required String azureTelemetryKey,
+    required String hubName,
+    required String connectionString,
+    required String launchDarklySdkKey,
+  }) {
+    _instance ??= FlavorConfig._internal(
+      flavor,
+      env,
+      rawApiBase,
+      baseUrl,
+      storageUrl,
+      mobileBaseApi,
+      gMapsKey,
+      hereMapsKey,
+      iosGeniusScanSDKKey,
+      androidGeniusScanSDKKey,
+      azureTelemetryKey,
+      hubName,
+      connectionString,
+      launchDarklySdkKey,
+    );
     return _instance!;
   }
 
   FlavorConfig._internal(
-      this.flavor,
-      this.env,
-      this.rawApiBase,
-      this.baseUrl,
-      this.storageUrl,
-      this.mobileBaseApi,
-      this.gMapsKey,
-      this.hereMapsKey,
-      this.iosGeniusScanSDKKey,
-      this.androidGeniusScanSDKKey,
-      this.azureConnectionString,
-      this.hubName,
-      this.connectionString);
+    this.flavor,
+    this.env,
+    this.rawApiBase,
+    this.baseUrl,
+    this.storageUrl,
+    this.mobileBaseApi,
+    this.gMapsKey,
+    this.hereMapsKey,
+    this.iosGeniusScanSDKKey,
+    this.androidGeniusScanSDKKey,
+    this.azureConnectionString,
+    this.hubName,
+    this.connectionString,
+    this.launchDarklySdkKey,
+  );
 
   static FlavorConfig? get instance => _instance;
 
