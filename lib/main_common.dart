@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:alvys3/src/utils/launch_darkly.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -64,7 +65,8 @@ Future<void> mainCommon() async {
 
     var pref = await SharedPreferences.getInstance();
     String? driverData = pref.getString(SharedPreferencesKey.driverData.name);
-    ThemeMode? appThemeMode = ThemeMode.values.byNameOrNull(pref.getString(SharedPreferencesKey.themeMode.name));
+    ThemeMode? appThemeMode = ThemeMode.values
+        .byNameOrNull(pref.getString(SharedPreferencesKey.themeMode.name));
     var isTablet = await PlatformChannel.isTablet();
     var firstInstall = pref.getBool(SharedPreferencesKey.firstInstall.name);
     var userAgentData = await userAgent();
@@ -84,26 +86,35 @@ Future<void> mainCommon() async {
 
     container = ProviderContainer(
       overrides: [
-        internetConnectionCheckerProvider.overrideWith(() => NetworkNotifier(hasInternet)),
+        internetConnectionCheckerProvider
+            .overrideWith(() => NetworkNotifier(hasInternet)),
         firebaseRemoteConfigServiceProvider.overrideWith(
           (_) => firebaseRemoteConfigService,
         ),
         sharedPreferencesProvider.overrideWithValue(pref),
-        firstInstallProvider.overrideWith(() => FirstInstallNotifier(firstInstall ?? false)),
-        authProvider.overrideWith(
-            () => AuthProviderNotifier(initDriver: driverUser, status: status?.titleCase ?? DriverStatus.online)),
-        themeHandlerProvider.overrideWith(() => ThemeHandlerNotifier(appThemeMode)),
+        firstInstallProvider
+            .overrideWith(() => FirstInstallNotifier(firstInstall ?? false)),
+        authProvider.overrideWith(() => AuthProviderNotifier(
+            initDriver: driverUser,
+            status: status?.titleCase ?? DriverStatus.online)),
+        themeHandlerProvider
+            .overrideWith(() => ThemeHandlerNotifier(appThemeMode)),
       ],
     );
     if (driverUser != null) {
-      await container.read(httpClientProvider).setTelemetryContext(user: driverUser);
+      await container
+          .read(httpClientProvider)
+          .setTelemetryContext(user: driverUser);
     }
     if (Platform.isAndroid && !isTablet) {
       if (isTablet) {
-        await SystemChrome.setPreferredOrientations(
-            [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
+        await SystemChrome.setPreferredOrientations([
+          DeviceOrientation.landscapeLeft,
+          DeviceOrientation.landscapeRight
+        ]);
       } else {
-        await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+        await SystemChrome.setPreferredOrientations(
+            [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
       }
     }
     FlutterError.onError = (details) {
@@ -121,12 +132,19 @@ Future<void> mainCommon() async {
       return true;
     };
 
+    // Initialize LaunchDarkly
+    await container.read(launchDarklyClientProvider).init(
+          FlavorConfig.instance!.launchDarklySdkKey,
+        );
+
     runApp(UncontrolledProviderScope(
       container: container,
       child: App(isTablet),
     ));
   }, (error, stack) {
-    container.read(globalErrorHandlerProvider).handle(null, false, error, stack);
+    container
+        .read(globalErrorHandlerProvider)
+        .handle(null, false, error, stack);
   });
   //FlutterNativeSplash.remove();
 }

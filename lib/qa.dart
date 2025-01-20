@@ -18,6 +18,7 @@ void main() {
     hereMapsKey: Env.hereMapsKeyDEV,
     hubName: Env.hubNameQA,
     connectionString: Env.connectionStringQA,
+    launchDarklySdkKey: Env.launchDarklySDKKeyQA,
   );
 
   mainCommon();
