@@ -18,7 +18,11 @@ class UploadOptions extends ConsumerWidget {
   final int? tabIndex;
   final bool mounted;
   const UploadOptions(
-      {this.tabIndex, required this.tripId, required this.documentType, required this.mounted, super.key});
+      {this.tabIndex,
+      required this.tripId,
+      required this.documentType,
+      required this.mounted,
+      super.key});
   String get route {
     switch (documentType) {
       case DisplayDocumentType.tripDocuments:
@@ -44,22 +48,30 @@ class UploadOptions extends ConsumerWidget {
             leading: const Icon(Icons.camera_alt),
             title: const Text('Camera'),
             onTap: () async {
-              var hasPermission = await PermissionHelper.getPermission(Permission.camera);
+              var hasPermission =
+                  await PermissionHelper.getPermission(Permission.camera);
               if (!hasPermission) {
-                throw PermissionException("Please enable camera permission", () {
+                throw PermissionException("Please enable camera permission",
+                    () {
                   Navigator.of(context, rootNavigator: false).pop();
                 }, [
                   ExceptionAction(
-                      title: 'Open Settings', action: () => AppSettings.openAppSettings(type: AppSettingsType.settings))
+                      title: 'Open Settings',
+                      action: () => AppSettings.openAppSettings(
+                          type: AppSettingsType.settings))
                 ]);
               }
-              postHogService.postHogTrackEvent(PosthogTag.userOpenedCamera.toSnakeCase, null);
+              postHogService.postHogTrackEvent(
+                  PosthogTag.userOpenedCamera.toSnakeCase, null);
               if (context.mounted) {
                 Navigator.of(context, rootNavigator: true).pop();
                 context.goNamed(route,
                     extra: UploadType.camera,
-                    pathParameters: tripId != null ? {ParamType.tripId.name: tripId!} : {},
-                    queryParameters: tabIndex != null ? {ParamType.tabIndex.name: tabIndex.toString()} : {});
+                    pathParameters:
+                        tripId != null ? {ParamType.tripId.name: tripId!} : {},
+                    queryParameters: tabIndex != null
+                        ? {ParamType.tabIndex.name: tabIndex.toString()}
+                        : {});
               }
             },
           ),
@@ -67,13 +79,15 @@ class UploadOptions extends ConsumerWidget {
             leading: const Icon(Icons.photo),
             title: const Text('Gallery'),
             onTap: () async {
-              postHogService.postHogTrackEvent(PosthogTag.userOpenedGallery.toSnakeCase, null);
+              postHogService.postHogTrackEvent(
+                  PosthogTag.userOpenedGallery.toSnakeCase, null);
               if (context.mounted) {
                 Navigator.of(context, rootNavigator: true).pop();
                 context.goNamed(
                   route,
                   extra: UploadType.gallery,
-                  pathParameters: tripId != null ? {ParamType.tripId.name: tripId!} : {},
+                  pathParameters:
+                      tripId != null ? {ParamType.tripId.name: tripId!} : {},
                 );
               }
             },
@@ -94,28 +108,39 @@ class DocumentUploadButton extends ConsumerWidget {
     required this.icon,
     required this.title,
   });
-  static DocumentUploadButton upload(UploadDocumentArgs args, BuildContext context) => DocumentUploadButton(
-      onTap: (ref) async {
-        await ref.read(uploadDocumentsController.call(args).notifier).uploadFile(context);
-      },
-      icon: Alvys3Icons.upload,
-      title: 'Upload');
-  static DocumentUploadButton add(UploadDocumentArgs args) => DocumentUploadButton(
+  static DocumentUploadButton upload(
+          UploadDocumentArgs args, BuildContext context) =>
+      DocumentUploadButton(
+          onTap: (ref) async {
+            await ref
+                .read(uploadDocumentsController.call(args).notifier)
+                .uploadFile(context);
+          },
+          icon: Alvys3Icons.upload,
+          title: 'Upload');
+  static DocumentUploadButton add(UploadDocumentArgs args) =>
+      DocumentUploadButton(
         onTap: (ref) async {
-          await ref.read(uploadDocumentsController.call(args).notifier).startScan();
+          await ref
+              .read(uploadDocumentsController.call(args).notifier)
+              .startScan();
         },
         icon: Alvys3Icons.add,
         title: 'Add',
       );
-  static DocumentUploadButton delete(UploadDocumentArgs args) => DocumentUploadButton(
-      onTap: (ref) {
-        ref.read(uploadDocumentsController.call(args).notifier).removePage();
-      },
-      icon: Alvys3Icons.delete,
-      title: 'Delete');
+  static DocumentUploadButton delete(UploadDocumentArgs args) =>
+      DocumentUploadButton(
+          onTap: (ref) {
+            ref
+                .read(uploadDocumentsController.call(args).notifier)
+                .removePage();
+          },
+          icon: Alvys3Icons.delete,
+          title: 'Delete');
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    var backgroundColor = Theme.of(context).cardColor.withOpacity(0.7);
+    var backgroundColor =
+        Theme.of(context).cardColor.withAlpha((255.0 * 0.7).round());
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -141,7 +166,8 @@ class DocumentUploadButton extends ConsumerWidget {
             borderRadius: BorderRadius.circular(20),
             color: backgroundColor,
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+              padding:
+                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
               child: Text(title),
             ))
       ],

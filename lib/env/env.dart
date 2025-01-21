@@ -60,5 +60,14 @@ abstract class Env {
   @EnviedField(varName: 'CONNECTION_STRING_DEV', obfuscate: true)
   static final String connectionStringDev = _Env.connectionStringDev;
 
+  @EnviedField(varName: 'LAUNCHDARKLY_SDK_KEY_PROD', obfuscate: true)
+  static final String launchDarklySDKKeyProd = _Env.launchDarklySDKKeyProd;
+
+  @EnviedField(varName: 'LAUNCHDARKLY_SDK_KEY_QA', obfuscate: true)
+  static final String launchDarklySDKKeyQA = _Env.launchDarklySDKKeyQA;
+
+  @EnviedField(varName: 'LAUNCHDARKLY_SDK_KEY_DEV', obfuscate: true)
+  static final String launchDarklySDKKeyDev = _Env.launchDarklySDKKeyDev;
+
   static String get geniusScanKey => Platform.isAndroid ? androidGeniusScanSDKKey : iOSGeniusScanSDKKey;
 }
