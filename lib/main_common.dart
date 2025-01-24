@@ -73,7 +73,7 @@ Future<void> mainCommon() async {
     pref.setString(SharedPreferencesKey.userAgent.name, userAgentData);
     TabletUtils.instance.isTablet = isTablet;
     DriverUser? driverUser;
-    var hasInternet = await InternetConnectionChecker().hasConnection;
+    var hasInternet = await InternetConnectionChecker.instance.hasConnection;
     var status = pref.getString(SharedPreferencesKey.driverStatus.name);
     if (driverData != null) {
       try {
