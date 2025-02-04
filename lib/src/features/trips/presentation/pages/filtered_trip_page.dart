@@ -1,3 +1,4 @@
+import 'package:alvys3/src/common_widgets/shimmers/trip_card_shimmer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -14,6 +15,8 @@ class FilteredTripPage extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final tripsState = ref.watch(tripControllerProvider);
+    if (tripsState.isLoading) return const TripListShimmer();
     var trips = filterType == TripFilterType.delivered
         ? ref.watch(tripControllerProvider).value!.deliveredTrips
         : ref.watch(tripControllerProvider).value!.processingTrips;
