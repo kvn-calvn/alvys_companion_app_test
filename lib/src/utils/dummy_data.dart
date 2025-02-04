@@ -77,7 +77,8 @@ final AppTrip testTrip = AppTrip(
       companyName: 'Test company 1',
       actualStopdate: DateTime.now().add(const Duration(days: 3)),
       address: Address(street: '345 Test Blvd', city: 'Test Town', zip: '3241', state: 'CA'),
-      appointment: DateFormat(DateFormat.HOUR_MINUTE).format(DateTime.now().add(const Duration(days: 3))),
+      appointment:
+          DateFormat(DateFormat.HOUR_MINUTE).format(DateTime.now().add(const Duration(days: 3))),
       stopAddress: '345 Test Blvd Test Town, CA, 3241',
       stopDate: DateTime.now().add(const Duration(days: 3)),
       genInstructions: 'Get here on time',
@@ -101,7 +102,8 @@ final AppTrip testTrip = AppTrip(
       companyName: 'Test company 2',
       actualStopdate: DateTime.now().add(const Duration(days: 10)),
       address: Address(street: '34 Test Ave', city: 'Testville', zip: '4425', state: 'VA'),
-      appointment: DateFormat(DateFormat.HOUR_MINUTE).format(DateTime.now().add(const Duration(days: 10))),
+      appointment:
+          DateFormat(DateFormat.HOUR_MINUTE).format(DateTime.now().add(const Duration(days: 10))),
       stopAddress: '34 Test Ave Testville, VA, 4425',
       stopDate: DateTime.now().add(const Duration(days: 10)),
       genInstructions: 'Get here on time',
@@ -153,4 +155,12 @@ final AppTrip testTrip = AppTrip(
   tripValueDriver: '',
   truckId: 'sadasewq23243ee',
   truckNum: '7738',
+  fuelPercentage: 0.0,
+  loadVolume: 0.0,
+  loadVolumeUnit: 'ft³',
+  loadWeightUnit: 'lbs',
+  probeTemperature: 0.0,
+  setPointTemperature: 0.0,
+  trailerStatus: 'Loaded',
+  tripType: 'Test',
 );

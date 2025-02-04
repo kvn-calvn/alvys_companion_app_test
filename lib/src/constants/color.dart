@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import '../utils/extensions.dart';
 
 class ColorManager {
-  static Color primary(Brightness brightness) => brightness.isLight ? const Color(0XFF233E90) : const Color(0XFF265CFF);
+  static Color primary(Brightness brightness) =>
+      brightness.isLight ? const Color(0XFF233E90) : const Color(0XFF265CFF);
   static Color greyColorScheme1(Brightness brightness) =>
       brightness.isLight ? const Color(0XFF1F1F1F) : const Color(0XFFEDEEF1);
   static Color greyColorScheme2 = const Color(0XFF7C7C7C);
@@ -47,4 +48,11 @@ class ColorManager {
         shimmerHighlight(brightness),
         shimmerBaseColor(brightness)
       ];
+
+  static Color blue500(Brightness brightness) =>
+      brightness.isLight ? const Color(0xFF434FEF) : const Color(0XFF7392FD);
+  static Color caption(Brightness brightness) =>
+      brightness.isLight ? const Color(0xFF6E6E7C) : const Color(0XFFA7A7B4);
+
+  static Color valid = const Color(0xFF009E64);
 }
