@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:alvys3/src/utils/telemetry.dart';
 import 'package:azure_application_insights/azure_application_insights.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
@@ -23,52 +24,66 @@ final globalErrorHandlerProvider = Provider<GlobalErrorHandler>((ref) {
       auth: () => ref.read(authProvider.notifier),
       providers: () => {
             AuthProviderNotifier: () => ref.read(authProvider.notifier),
-            UploadDocumentsController: () =>
-                ref.read(uploadDocumentsController.call(ProviderArgsSaver.instance.uploadArgs!).notifier),
+            UploadDocumentsController: () => ref.read(
+                uploadDocumentsController.call(ProviderArgsSaver.instance.uploadArgs!).notifier),
             DocumentsNotifier: () =>
                 ref.read(documentsProvider.call(ProviderArgsSaver.instance.documentArgs!).notifier),
             EditProfileNotifier: () => ref.read(editProfileProvider.notifier),
             TripController: () => ref.read(tripControllerProvider.notifier),
-            EcheckPageController: () =>
-                ref.read(echeckPageControllerProvider.call(ProviderArgsSaver.instance.echeckArgs).notifier),
-            SearchTrailerController: () =>
-                ref.read(searchTrailerControllerProvider.call(ProviderArgsSaver.instance.assignTrailerDto!).notifier)
+            EcheckPageController: () => ref.read(
+                echeckPageControllerProvider.call(ProviderArgsSaver.instance.echeckArgs).notifier),
+            SearchTrailerController: () => ref.read(searchTrailerControllerProvider
+                .call(ProviderArgsSaver.instance.assignTrailerDto!)
+                .notifier)
           },
-      telemetry: ref.read(httpClientProvider));
+      telemetry: ref.read(telemetryClientProvider),
+      customObserver: ref.read(customObserverProvider),
+      telemetrySpanHelper: ref.read(telemetrySpanProvider));
 });
 
 class GlobalErrorHandler {
-  final AlvysHttpClient telemetry;
+  final TelemetryClient telemetry;
+  final TelemetrySpanHelper telemetrySpanHelper;
+  final CustomObserver customObserver;
   LabeledGlobalKey<NavigatorState> navKey = LabeledGlobalKey<NavigatorState>("MainNavKey");
   Map<Type, IErrorHandler Function()> Function() providers;
   AuthProviderNotifier Function() auth;
-  GlobalErrorHandler({required this.providers, required this.telemetry, required this.auth});
+  GlobalErrorHandler(
+      {required this.providers,
+      required this.telemetrySpanHelper,
+      required this.telemetry,
+      required this.auth,
+      required this.customObserver});
   void handle(FlutterErrorDetails? details, bool flutterError, [Object? error, StackTrace? trace]) {
     _handleError(
       flutterError ? details!.exception : error!,
       () {
         if (flutterError) {
-          telemetry.telemetryClient
-              .trackTrace(severity: Severity.error, message: 'mobile_app_client_error', additionalProperties: {
-            "Error": details!.exception.toString(),
-            "StackTrace": details.stack.toString(),
-            "ErrorType": "Flutter error",
-            "Page": '${CustomObserver.instance.currentRoute}',
-          });
+          if (details!.exception is! SocketException) {
+            telemetry.trackError(
+                severity: Severity.error,
+                error: details.exception,
+                additionalProperties: {
+                  "Error": details.exception.toString(),
+                  "StackTrace": details.stack.toString(),
+                  "ErrorType": "Flutter error",
+                  "Page": '${customObserver.currentRoute}',
+                });
+          }
           FlutterError.presentError(details);
         } else {
           if (error is! SocketException) {
-            telemetry.telemetryClient
-                .trackTrace(severity: Severity.error, message: 'mobile_app_client_error', additionalProperties: {
+            telemetry.trackError(severity: Severity.error, error: error!, additionalProperties: {
               "Error": error.toString(),
               "StackTrace": trace.toString(),
               "ErrorType": "Regular",
-              "Page": '${CustomObserver.instance.currentRoute}',
+              "Page": '${customObserver.currentRoute}',
             });
           }
           debugPrint("$error");
           debugPrintStack(stackTrace: trace);
         }
+        telemetrySpanHelper.endSpan();
       },
     );
   }
@@ -149,20 +164,6 @@ class GlobalErrorHandler {
     if (providerData.containsKey(t)) {
       providerData[t]!().onError(ex);
     }
-    // switch (t) {
-    //   case AuthProviderNotifier:
-    //     ref.read(authProvider.notifier).onError();
-    //     break;
-    //   case UploadDocumentsController:
-    //     ref.read(uploadDocumentsController.call(ProviderArgsSaver.instance.uploadArgs!).notifier).onError();
-    //     break;
-    //   case EditProfileNotifier:
-    //     ref.read(editProfileProvider.notifier).onError();
-    //   case TripController:
-    //     ref.read(tripControllerProvider.notifier).onError();
-    //   case EcheckPageController:
-    //     ref.read(echeckPageControllerProvider.call(ProviderArgsSaver.instance.echeckArgs).notifier).onError();
-    // }
   }
 
   void showErrorDialog(
