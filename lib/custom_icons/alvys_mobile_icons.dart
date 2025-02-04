@@ -1,3 +1,4 @@
+
 import 'package:flutter/widgets.dart';
 
 class AlvysMobileIcons {
@@ -12,4 +13,5 @@ class AlvysMobileIcons {
   static const IconData temperature = IconData(0xe803, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData trailer = IconData(0xe804, fontFamily: _kFontFam, fontPackage: _kFontPkg);
   static const IconData trip = IconData(0xe805, fontFamily: _kFontFam, fontPackage: _kFontPkg);
+  static const IconData edit = IconData(0xe815, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }

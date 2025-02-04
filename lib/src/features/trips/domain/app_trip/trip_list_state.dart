@@ -23,7 +23,8 @@ class TripListState with _$TripListState {
 
   List<AppTrip> get activeTrips {
     return trips
-        .where((element) => element.status!.inIgnoreCase([TripStatus.inTransit, TripStatus.dispatched]))
+        .where((element) =>
+            element.status!.inIgnoreCase([TripStatus.inTransit, TripStatus.dispatched]))
         .orderBy((element) => element.deliveryDate, OrderDirection.asc)
         .toList();
   }
@@ -45,10 +46,11 @@ class TripListState with _$TripListState {
   //   return a.isAfterNull(b) ? 1 : -1;
   // }
 
-  AppTrip getTrip(String tripId) =>
-      trips.firstWhere((element) => element.id! == tripId, orElse: () => AppTrip(id: '-', tripNumber: '...'));
+  AppTrip getTrip(String tripId) => trips.firstWhere((element) => element.id! == tripId,
+      orElse: () => AppTrip(id: '-', tripNumber: '...'));
   AppTrip? tryGetTrip(String tripId) => trips.firstWhereOrNull((e) => e.id! == tripId);
-  Stop getStop(String tripId, String stopId) => getTrip(tripId).stops.firstWhere((element) => element.stopId == stopId);
+  Stop getStop(String tripId, String stopId) =>
+      getTrip(tripId).stops.firstWhere((element) => element.stopId == stopId);
   Stop? tryGetStop(String tripId, String? stopId) => stopId.isNullOrEmptyWhiteSpace
       ? null
       : tryGetTrip(tripId)?.stops.firstWhereOrNull((element) => element.stopId == stopId);

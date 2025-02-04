@@ -51,3 +51,4 @@ app.*.map.json
 *.lock
 .env
 .vscode/settings.json
+#/ios/Runner.xcodeproj/project.pbxproj

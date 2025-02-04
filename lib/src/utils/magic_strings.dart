@@ -34,12 +34,7 @@ enum RouteName {
 
 enum TripFilterType { processing, delivered }
 
-enum DisplayDocumentType {
-  tripDocuments,
-  personalDocuments,
-  paystubs,
-  tripReport
-}
+enum DisplayDocumentType { tripDocuments, personalDocuments, paystubs, tripReport }
 
 enum Environment { dev, qa, sandbox }
 
@@ -88,13 +83,7 @@ enum UploadType { camera, gallery }
 
 enum ParamType { tripId, stopId, tabIndex, loadNumber }
 
-enum EcheckReason {
-  advance,
-  trailerWash,
-  extraLaborDelivery,
-  lumper,
-  palletFee
-}
+enum EcheckReason { advance, trailerWash, extraLaborDelivery, lumper, palletFee }
 
 class DocumentTypes {
   static const String medical = 'Medical',
@@ -168,4 +157,11 @@ enum PosthogTag {
 
 class LaunchDarklyFeature {
   static const String documentSecureDownload = 'document-secure-download';
+}
+
+enum VolumeUnits {
+  gal('gl');
+
+  const VolumeUnits(this.volumeLabel);
+  final String volumeLabel;
 }

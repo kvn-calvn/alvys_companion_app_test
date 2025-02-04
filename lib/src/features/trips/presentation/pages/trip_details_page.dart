@@ -47,7 +47,8 @@ class _LoadDetailsPageState extends ConsumerState<LoadDetailsPage> with TickerPr
   @override
   void initState() {
     super.initState();
-    TabletUtils.instance.detailsController = TabController(initialIndex: widget.tabIndex, length: 3, vsync: this);
+    TabletUtils.instance.detailsController =
+        TabController(initialIndex: widget.tabIndex, length: 3, vsync: this);
     TabletUtils.instance.detailsController.addListener(tabListener);
   }
 
@@ -61,7 +62,8 @@ class _LoadDetailsPageState extends ConsumerState<LoadDetailsPage> with TickerPr
   void tabListener() {
     var tabC = TabletUtils.instance.detailsController;
     if (tabC.index == tabC.previousIndex || tabC.indexIsChanging) return;
-    ref.read(postHogProvider).postHogScreen(tripController.tabName(TabletUtils.instance.detailsController.index),
+    ref.read(postHogProvider).postHogScreen(
+        tripController.tabName(TabletUtils.instance.detailsController.index),
         tripState?.loadNumber == null ? null : {'LoadNumber': tripState?.loadNumber ?? ''});
   }
 
@@ -98,7 +100,10 @@ class _LoadDetailsPageState extends ConsumerState<LoadDetailsPage> with TickerPr
                     TabletUtils.instance.detailsController.index + 1,
                     TabletUtils.instance.detailsController.index + 1,
                     previousTripId);
-                ref.read(httpClientProvider).telemetryClient.trackEvent(name: "trip_details_tour_button_tapped");
+                ref
+                    .read(httpClientProvider)
+                    .telemetryClient
+                    .trackEvent(name: "trip_details_tour_button_tapped");
                 await FirebaseAnalytics.instance.logEvent(name: "trip_details_tour_button_tapped");
                 // context.goNamed(RouteName.tripDetails.name, pathParameters: {ParamType.tripId.name: testTrip.id!});
                 // ref.read(tripControllerProvider.notifier).prepareTutorialPreview(context,
@@ -119,8 +124,13 @@ class _LoadDetailsPageState extends ConsumerState<LoadDetailsPage> with TickerPr
               await ref.read(tripControllerProvider.notifier).refreshCurrentTrip(widget.tripId);
               if (mounted) {
                 ref.read(websocketProvider).restartConnection();
-                ref.read(postHogProvider).postHogTrackEvent(PosthogTag.userRefreshTripdetails.toSnakeCase, null);
-                ref.read(httpClientProvider).telemetryClient.trackEvent(name: "trip_refresh_button_tapped");
+                ref
+                    .read(postHogProvider)
+                    .postHogTrackEvent(PosthogTag.userRefreshTripdetails.toSnakeCase, null);
+                ref
+                    .read(httpClientProvider)
+                    .telemetryClient
+                    .trackEvent(name: "trip_refresh_button_tapped");
                 await FirebaseAnalytics.instance.logEvent(name: "trip_refresh_button_tapped");
               }
             },
@@ -242,10 +252,11 @@ class TripDetails extends ConsumerWidget {
                     TripDetailsInfo(trip),
                     const SizedBox(height: 8),
                     TripReferencesCard(
-                        key: ref.read(tutorialProvider).tripReferencesCard,
-                        tripReferences: trip.loadReferences,
-                        tripId: tripId,
-                        tabIndex: tabIndex),
+                      key: ref.read(tutorialProvider).tripReferencesCard,
+                      tripReferences: trip.loadReferences,
+                      tripId: tripId,
+                      tabIndex: tabIndex,
+                    ),
                     if (trip.stops.isNullOrEmpty) ...{
                       Center(
                         child: Column(
@@ -258,7 +269,8 @@ class TripDetails extends ConsumerWidget {
                               "No Stops",
                               style: Theme.of(context).textTheme.bodyLarge,
                             ),
-                            Text("There are no stops on this trip.", style: Theme.of(context).textTheme.bodyMedium)
+                            Text("There are no stops on this trip.",
+                                style: Theme.of(context).textTheme.bodyMedium)
                           ],
                         ),
                       ),
