@@ -35,13 +35,13 @@ class NetworkNotifier extends Notifier<bool> {
     state = initConnection ?? true;
     internetUpdate = internetConnectionStream;
     connectionUpdate = Connectivity().onConnectivityChanged;
+    errorHandler = ref.read(globalErrorHandlerProvider);
     initState();
     return state;
   }
 
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      errorHandler = ref.read(globalErrorHandlerProvider);
       internetSubscription = internetUpdate?.listen((event) {
         var oldState = state;
         state = event;

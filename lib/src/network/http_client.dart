@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:alvys3/src/utils/telemetry.dart';
 import 'package:azure_application_insights/azure_application_insights.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:device_info_plus/device_info_plus.dart';
@@ -11,9 +12,6 @@ import 'package:http/http.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:uuid/data.dart';
-import 'package:uuid/rng.dart';
-import 'package:uuid/uuid.dart';
 
 import '../../flavor_config.dart';
 import '../features/authentication/domain/models/driver_user/driver_user.dart';
@@ -25,40 +23,43 @@ import 'custom_multipart_request.dart';
 import 'network_info.dart';
 
 final httpClientProvider = Provider<AlvysHttpClient>((ref) {
-  return AlvysHttpClient(ref.read(sharedPreferencesProvider)!, ref.watch(internetConnectionCheckerProvider.notifier));
+  return AlvysHttpClient(ref.read(telemetryClientProvider), ref.read(sharedPreferencesProvider)!,
+      ref.watch(internetConnectionCheckerProvider.notifier), ref);
+});
+
+final telemetryClientProvider = Provider<TelemetryClient>((ref) {
+  final client = Client();
+  final processor = TransmissionProcessor(
+    connectionString: FlavorConfig.instance!.azureConnectionString,
+    httpClient: client,
+    timeout: const Duration(seconds: 100),
+  );
+
+  var telemetryClient = TelemetryClient(
+    processor: processor,
+  );
+  return telemetryClient;
 });
 
 class AlvysHttpClient {
-  late TelemetryClient telemetryClient;
+  TelemetryClient telemetryClient;
   late InnerAlvysHttpClient telemetryHttpClient;
   final SharedPreferences pref;
   final NetworkNotifier networkInfo;
-  AlvysHttpClient(this.pref, this.networkInfo) {
-    final client = Client();
-
-    final processor = TransmissionProcessor(
-      connectionString: FlavorConfig.instance!.azureConnectionString,
-      httpClient: client,
-      timeout: const Duration(seconds: 100),
-    );
-
-    telemetryClient = TelemetryClient(
-      processor: processor,
-    );
-
+  AlvysHttpClient(this.telemetryClient, this.pref, this.networkInfo, Ref ref) {
     debugPrint("TELEMETRY CONNECTION STRING: ${FlavorConfig.instance!.azureConnectionString}");
     telemetryHttpClient = InnerAlvysHttpClient(
-      telemetryClient: telemetryClient,
-      inner: client,
-    );
+        telemetryClient: telemetryClient,
+        inner: (telemetryClient.processor as TransmissionProcessor).httpClient,
+        ref: ref);
   }
-
   Future<void> trackEvent(
       {required String name,
       Map<String, Object> additionalProperties = const <String, Object>{},
       DateTime? timestamp}) async {
     await addPermissionDetails();
-    return telemetryClient.trackEvent(name: name, additionalProperties: additionalProperties, timestamp: timestamp);
+    telemetryClient.trackEvent(
+        name: name, additionalProperties: additionalProperties, timestamp: timestamp);
   }
 
   Map<String, String> getBaseHeaders(String? companyCode) {
@@ -112,31 +113,40 @@ class AlvysHttpClient {
   }
 
   Future<Response> getData<T>(Uri uri, String? companyCode, {Map<String, String>? headers}) {
-    return _executeRequest<T>(companyCode, (client) => client.get(uri, headers: getHeaders(companyCode, headers)));
+    return _executeRequest<T>(
+        companyCode, (client) => client.get(uri, headers: getHeaders(companyCode, headers)));
   }
 
   Future<Response> postData<T>(Uri uri, String? companyCode,
       {Map<String, String>? headers, Object? body, Encoding? encoding}) {
-    return _executeRequest<T>(companyCode,
-        (client) => client.post(uri, headers: getHeaders(companyCode, headers), body: body, encoding: encoding));
+    return _executeRequest<T>(
+        companyCode,
+        (client) => client.post(uri,
+            headers: getHeaders(companyCode, headers), body: body, encoding: encoding));
   }
 
   Future<Response> putData<T>(Uri uri, String? companyCode,
       {Map<String, String>? headers, Object? body, Encoding? encoding}) {
-    return _executeRequest<T>(companyCode,
-        (client) => client.put(uri, headers: getHeaders(companyCode, headers), body: body, encoding: encoding));
+    return _executeRequest<T>(
+        companyCode,
+        (client) => client.put(uri,
+            headers: getHeaders(companyCode, headers), body: body, encoding: encoding));
   }
 
   Future<Response> deleteData<T>(Uri uri, String? companyCode,
       {Map<String, String>? headers, Object? body, Encoding? encoding}) {
-    return _executeRequest<T>(companyCode,
-        (client) => client.delete(uri, headers: getHeaders(companyCode, headers), body: body, encoding: encoding));
+    return _executeRequest<T>(
+        companyCode,
+        (client) => client.delete(uri,
+            headers: getHeaders(companyCode, headers), body: body, encoding: encoding));
   }
 
   Future<Response> patchData<T>(Uri uri, String? companyCode,
       {Map<String, String>? headers, Object? body, Encoding? encoding}) {
-    return _executeRequest<T>(companyCode,
-        (client) => client.patch(uri, headers: getHeaders(companyCode, headers), body: body, encoding: encoding));
+    return _executeRequest<T>(
+        companyCode,
+        (client) => client.patch(uri,
+            headers: getHeaders(companyCode, headers), body: body, encoding: encoding));
   }
 
   Future<Response> _executeRequest<T>(
@@ -175,7 +185,8 @@ class AlvysHttpClient {
     }
   }
 
-  Future<TResponse> _tryRequest<TSource, TResponse>(Future<TResponse> Function(InnerAlvysHttpClient client) op) async {
+  Future<TResponse> _tryRequest<TSource, TResponse>(
+      Future<TResponse> Function(InnerAlvysHttpClient client) op) async {
     try {
       return await op(telemetryHttpClient).timeout(
         const Duration(minutes: 2),
@@ -241,9 +252,11 @@ class AlvysHttpClient {
     await addPermissionDetails();
     if (user != null) {
       telemetryClient.context.properties['tenantPermissions'] =
-          Map.fromEntries(user.userTenants.map((e) => MapEntry(e.companyCode, e.permissions))).toJsonEncodedString;
+          Map.fromEntries(user.userTenants.map((e) => MapEntry(e.companyCode, e.permissions)))
+              .toJsonEncodedString;
       telemetryClient.context.properties['driverTypes'] =
-          Map.fromEntries(user.userTenants.map((e) => MapEntry(e.companyCode, e.contractorType))).toJsonEncodedString;
+          Map.fromEntries(user.userTenants.map((e) => MapEntry(e.companyCode, e.contractorType)))
+              .toJsonEncodedString;
     }
   }
 }
@@ -256,39 +269,34 @@ class InnerAlvysHttpClient extends BaseClient {
   InnerAlvysHttpClient({
     required this.inner,
     required this.telemetryClient,
+    required this.ref,
     this.appendHeader,
   });
   final Client inner;
   final TelemetryClient telemetryClient;
   final bool Function(String header)? appendHeader;
+  final Ref ref;
 
   @override
   Future<StreamedResponse> send(BaseRequest request) async {
-    final timestamp = DateTime.now().toUtc();
-
-    final stopwatch = Stopwatch()..start();
+    var spanHelper = ref.read(telemetrySpanProvider);
+    request.headers.addAll(spanHelper.setHeaders);
     final response = await inner.send(request);
-    stopwatch.stop();
-
-    final contentLength = request.contentLength;
-    final appendHeader = this.appendHeader ?? (_) => true;
-    final headers =
-        request.headers.entries.where((e) => appendHeader(e.key)).map((e) => '${e.key}=${e.value}').join(',');
-
-    telemetryClient.trackRequest(
-      responseCode: response.statusCode.toString(),
-      name: request.url.path.isEmpty ? '/' : request.url.path,
-      id: const Uuid().v4(config: V4Options(null, CryptoRNG())),
-      success: response.statusCode >= 200 && response.statusCode < 300,
-      duration: stopwatch.elapsed,
-      additionalProperties: <String, Object>{
-        'method': request.method,
-        if (headers.isNotEmpty) 'headers': headers,
-        if (contentLength != null) 'contentLength': contentLength,
-      },
-      timestamp: timestamp,
-    );
-
+    //  removed since backend logs requests already
+    // telemetryClient.trackRequest(
+    //     responseCode: response.statusCode.toString(),
+    //     name: "${request.method} ${(request.url.path.isEmpty ? '/' : request.url.path)}",
+    //     id: spanHelper.traceData.parentSpanId,
+    //     success: response.statusCode >= 200 && response.statusCode < 300,
+    //     duration: stopwatch.elapsed,
+    //     additionalProperties: <String, Object>{
+    //       'method': request.method,
+    //       if (headers.isNotEmpty) 'headers': headers,
+    //       if (contentLength != null) 'contentLength': contentLength,
+    //     },
+    //     timestamp: timestamp,
+    //     url: request.url.toString());
+    spanHelper.endSpan();
     return response;
   }
 }

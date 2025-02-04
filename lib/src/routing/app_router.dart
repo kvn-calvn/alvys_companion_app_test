@@ -36,17 +36,20 @@ import 'custom_observer.dart';
 import 'error_page.dart';
 import 'landing.dart';
 
-Provider<GoRouter> get getRouter => TabletUtils.instance.isTablet ? tabletRouteProvider : routerProvider;
+Provider<GoRouter> get getRouter =>
+    TabletUtils.instance.isTablet ? tabletRouteProvider : routerProvider;
 Provider<GoRouter> routerProvider = Provider(
   (ref) => GoRouter(
     observers: [
       //PosthogObserver(),
       PostHogRouteObserver(),
       FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance),
-      CustomObserver.instance
+      ref.read(customObserverProvider)
     ],
     navigatorKey: ref.read(globalErrorHandlerProvider).navKey,
-    initialLocation: ref.read(authProvider).value!.driver == null ? RouteName.signIn.toRoute : RouteName.trips.toRoute,
+    initialLocation: ref.read(authProvider).value!.driver == null
+        ? RouteName.signIn.toRoute
+        : RouteName.trips.toRoute,
     debugLogDiagnostics: false,
     routes: [
       GoRoute(
@@ -98,7 +101,7 @@ Provider<GoRouter> routerProvider = Provider(
               ),
           branches: [
             StatefulShellBranch(observers: [
-              CustomObserver.instance,
+              ref.read(customObserverProvider),
               //PosthogObserver(),
               PostHogRouteObserver()
             ], routes: [
@@ -177,7 +180,7 @@ Provider<GoRouter> routerProvider = Provider(
               ),
             ]),
             StatefulShellBranch(observers: [
-              CustomObserver.instance,
+              ref.read(customObserverProvider),
               //PosthogObserver()
               PostHogRouteObserver()
             ], routes: [
@@ -208,7 +211,8 @@ Provider<GoRouter> routerProvider = Provider(
                     name: RouteName.personalDocumentsList.name,
                     path: RouteName.personalDocumentsList.name,
                     builder: (context, state) {
-                      return DocumentsPage(DocumentsArgs(DisplayDocumentType.personalDocuments, null));
+                      return DocumentsPage(
+                          DocumentsArgs(DisplayDocumentType.personalDocuments, null));
                     },
                     routes: [
                       GoRoute(
@@ -278,7 +282,8 @@ Provider<GoRouter> routerProvider = Provider(
                   pageBuilder: (context, state) => CustomTransitionPage(
                         child: const SettingsPage(),
                         transitionDuration: Duration.zero,
-                        transitionsBuilder: (context, animation, secondaryAnimation, child) => child,
+                        transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+                            child,
                       ),
                   redirect: (context, state) {
                     if (ref.read(authProvider).value!.driver == null) {
@@ -321,14 +326,15 @@ Provider<GoRouter> routerProvider = Provider(
 Provider<GoRouter> tabletRouteProvider = Provider((ref) {
   return GoRouter(
       navigatorKey: ref.read(globalErrorHandlerProvider).navKey,
-      initialLocation:
-          ref.read(authProvider).value!.driver == null ? RouteName.signIn.toRoute : RouteName.emptyView.toRoute,
+      initialLocation: ref.read(authProvider).value!.driver == null
+          ? RouteName.signIn.toRoute
+          : RouteName.emptyView.toRoute,
       debugLogDiagnostics: false,
       observers: [
         PosthogObserver(),
         PostHogRouteObserver(),
         FirebaseAnalyticsObserver(analytics: FirebaseAnalytics.instance),
-        CustomObserver.instance
+        ref.read(customObserverProvider)
       ],
       routes: [
         GoRoute(
@@ -369,7 +375,8 @@ Provider<GoRouter> tabletRouteProvider = Provider((ref) {
         ),
         StatefulShellRoute(
             parentNavigatorKey: ref.read(globalErrorHandlerProvider).navKey,
-            pageBuilder: (context, state, navigationShell) => NoTransitionPage(child: navigationShell),
+            pageBuilder: (context, state, navigationShell) =>
+                NoTransitionPage(child: navigationShell),
             navigatorContainerBuilder: (context, navigationShell, children) => TabletView(
                   navigationShell,
                   children,
@@ -382,13 +389,14 @@ Provider<GoRouter> tabletRouteProvider = Provider((ref) {
                     name: RouteName.emptyView.name,
                     path: RouteName.emptyView.toRoute,
                     builder: (context, state) => const Scaffold(
-                      body: EmptyView(title: '', description: 'Tap a trip on the left to see the details'),
+                      body: EmptyView(
+                          title: '', description: 'Tap a trip on the left to see the details'),
                     ),
                   )
                 ],
               ),
               StatefulShellBranch(observers: [
-                CustomObserver.instance,
+                ref.read(customObserverProvider),
                 PosthogObserver(),
                 PostHogRouteObserver()
               ], routes: [
@@ -439,7 +447,8 @@ Provider<GoRouter> tabletRouteProvider = Provider((ref) {
                             name: RouteName.tripReferences.name,
                             path: RouteName.tripReferences.name,
                             builder: (context, state) {
-                              return TripReferencesPage(state.pathParameters[ParamType.tripId.name]!);
+                              return TripReferencesPage(
+                                  state.pathParameters[ParamType.tripId.name]!);
                             },
                           ),
                           GoRoute(
@@ -455,7 +464,7 @@ Provider<GoRouter> tabletRouteProvider = Provider((ref) {
                     ])
               ]),
               StatefulShellBranch(observers: [
-                CustomObserver.instance,
+                ref.read(customObserverProvider),
                 PosthogObserver(),
                 PostHogRouteObserver()
               ], routes: [
@@ -471,7 +480,8 @@ Provider<GoRouter> tabletRouteProvider = Provider((ref) {
                   name: RouteName.personalDocumentsList.name,
                   path: RouteName.personalDocumentsList.toRoute,
                   builder: (context, state) {
-                    return DocumentsPage(DocumentsArgs(DisplayDocumentType.personalDocuments, null));
+                    return DocumentsPage(
+                        DocumentsArgs(DisplayDocumentType.personalDocuments, null));
                   },
                   routes: [
                     GoRoute(

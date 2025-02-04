@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:alvys3/src/utils/launch_darkly.dart';
+import 'package:alvys3/src/utils/telemetry.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -13,10 +14,11 @@ import 'package:flutter/services.dart';
 import 'package:flutter_genius_scan/flutter_genius_scan.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:internet_connection_checker/internet_connection_checker.dart';
+import 'package:opentelemetry/api.dart';
+import 'package:opentelemetry/sdk.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:stack_trace/stack_trace.dart';
 import 'package:ua_client_hints/ua_client_hints.dart';
-
 import 'app.dart';
 import 'firebase_options.dart';
 import 'flavor_config.dart';
@@ -62,11 +64,17 @@ Future<void> mainCommon() async {
       firebaseRemoteConfig: FirebaseRemoteConfig.instance,
     );
     await firebaseRemoteConfigService.init();
+    var connectionData = TelemetryHelper.parseConnectionString(FlavorConfig.instance!.azureConnectionString);
+    final tracerProvider = TracerProviderBase(processors: [
+      BatchSpanProcessor(CollectorExporter(Uri.parse(connectionData.ingestionEndpoint))),
+      SimpleSpanProcessor(ConsoleExporter())
+    ]);
+
+    registerGlobalTracerProvider(tracerProvider);
 
     var pref = await SharedPreferences.getInstance();
     String? driverData = pref.getString(SharedPreferencesKey.driverData.name);
-    ThemeMode? appThemeMode = ThemeMode.values
-        .byNameOrNull(pref.getString(SharedPreferencesKey.themeMode.name));
+    ThemeMode? appThemeMode = ThemeMode.values.byNameOrNull(pref.getString(SharedPreferencesKey.themeMode.name));
     var isTablet = await PlatformChannel.isTablet();
     var firstInstall = pref.getBool(SharedPreferencesKey.firstInstall.name);
     var userAgentData = await userAgent();
@@ -86,35 +94,26 @@ Future<void> mainCommon() async {
 
     container = ProviderContainer(
       overrides: [
-        internetConnectionCheckerProvider
-            .overrideWith(() => NetworkNotifier(hasInternet)),
+        internetConnectionCheckerProvider.overrideWith(() => NetworkNotifier(hasInternet)),
         firebaseRemoteConfigServiceProvider.overrideWith(
           (_) => firebaseRemoteConfigService,
         ),
         sharedPreferencesProvider.overrideWithValue(pref),
-        firstInstallProvider
-            .overrideWith(() => FirstInstallNotifier(firstInstall ?? false)),
-        authProvider.overrideWith(() => AuthProviderNotifier(
-            initDriver: driverUser,
-            status: status?.titleCase ?? DriverStatus.online)),
-        themeHandlerProvider
-            .overrideWith(() => ThemeHandlerNotifier(appThemeMode)),
+        firstInstallProvider.overrideWith(() => FirstInstallNotifier(firstInstall ?? false)),
+        authProvider.overrideWith(
+            () => AuthProviderNotifier(initDriver: driverUser, status: status?.titleCase ?? DriverStatus.online)),
+        themeHandlerProvider.overrideWith(() => ThemeHandlerNotifier(appThemeMode)),
       ],
     );
     if (driverUser != null) {
-      await container
-          .read(httpClientProvider)
-          .setTelemetryContext(user: driverUser);
+      await container.read(httpClientProvider).setTelemetryContext(user: driverUser);
     }
     if (Platform.isAndroid && !isTablet) {
       if (isTablet) {
-        await SystemChrome.setPreferredOrientations([
-          DeviceOrientation.landscapeLeft,
-          DeviceOrientation.landscapeRight
-        ]);
-      } else {
         await SystemChrome.setPreferredOrientations(
-            [DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
+            [DeviceOrientation.landscapeLeft, DeviceOrientation.landscapeRight]);
+      } else {
+        await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp, DeviceOrientation.portraitDown]);
       }
     }
     FlutterError.onError = (details) {
@@ -142,9 +141,7 @@ Future<void> mainCommon() async {
       child: App(isTablet),
     ));
   }, (error, stack) {
-    container
-        .read(globalErrorHandlerProvider)
-        .handle(null, false, error, stack);
+    container.read(globalErrorHandlerProvider).handle(null, false, error, stack);
   });
   //FlutterNativeSplash.remove();
 }
