@@ -1,8 +1,8 @@
+import 'package:alvys3/src/utils/helpers.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 
 import '../features/authentication/presentation/auth_provider_controller.dart';
 import '../features/trips/domain/app_trip/app_trip.dart';
@@ -55,8 +55,10 @@ class TripCard extends ConsumerWidget {
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                         if (authState.value!.shouldShowOOPRate(trip.companyCode!))
-                          Text(NumberFormat.simpleCurrency().format(trip.tripValue),
-                              style: Theme.of(context).textTheme.bodyMedium),
+                          Text(
+                            Helpers.fixedAmountDecimals(trip.tripValue ?? 0),
+                            style: Theme.of(context).textTheme.bodyMedium,
+                          ),
                       ],
                     ),
                   ),
@@ -81,14 +83,18 @@ class TripCard extends ConsumerWidget {
                                 constraints: BoxConstraints(
                                   maxWidth: constraints.maxWidth * 0.75,
                                 ),
-                                child: Text(trip.stops.firstOrNull?.tripCardAddress ?? "-",
-                                    style: Theme.of(context).textTheme.bodyLarge),
+                                child: Text(
+                                  trip.stops.firstOrNull?.tripCardAddress ?? "-",
+                                  style: Theme.of(context).textTheme.bodyLarge,
+                                ),
                               ),
                               ConstrainedBox(
                                 constraints: BoxConstraints(
                                   maxWidth: constraints.maxWidth * 0.8,
                                 ),
-                                child: StopDateDetails(args: trip.stops.firstOrNull?.formattedStopDate),
+                                child: StopDateDetails(
+                                  args: trip.stops.firstOrNull?.formattedStopDate,
+                                ),
                               )
                             ],
                           ),
@@ -129,7 +135,9 @@ class TripCard extends ConsumerWidget {
                                 constraints: BoxConstraints(
                                   maxWidth: constraints.maxWidth * 0.8,
                                 ),
-                                child: StopDateDetails(args: trip.stops.lastOrNull?.formattedStopDate),
+                                child: StopDateDetails(
+                                  args: trip.stops.lastOrNull?.formattedStopDate,
+                                ),
                               ),
                             ],
                           ),
@@ -147,7 +155,7 @@ class TripCard extends ConsumerWidget {
                           title: 'd/h',
                           details: trip.emptyMiles == null
                               ? '-'
-                              : '${NumberFormat.decimalPattern().format(trip.emptyMiles)} mi',
+                              : '${Helpers.fixedDecimals(trip.emptyMiles!)} mi',
                         ),
                         const SizedBox(
                           height: 32,
@@ -160,7 +168,7 @@ class TripCard extends ConsumerWidget {
                           title: 'trip',
                           details: trip.totalMiles.isNull
                               ? '-'
-                              : '${NumberFormat.decimalPattern().format(trip.totalMiles)} mi',
+                              : '${Helpers.fixedDecimals(trip.totalMiles!)} mi',
                         ),
                         const SizedBox(
                           height: 32,
@@ -182,7 +190,8 @@ class TripCard extends ConsumerWidget {
                         ),
                         TripCardDetail(
                           title: 'Wgt.',
-                          details: '${NumberFormat.decimalPattern().format(trip.totalWeight ?? 0)} lbs',
+                          details:
+                              '${Helpers.fixedDecimals(trip.totalWeight ?? 0)} ${trip.loadWeightUnit ?? ''}',
                         ),
                       ],
                     ),
@@ -212,7 +221,10 @@ class TripCardDetail extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(title.toUpperCase(), style: Theme.of(context).textTheme.bodySmall),
+        Text(
+          title.toUpperCase(),
+          style: Theme.of(context).textTheme.bodySmall,
+        ),
         Text(
           details,
         ),

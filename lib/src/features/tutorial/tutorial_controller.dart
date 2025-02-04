@@ -18,7 +18,12 @@ class TutorialElement {
   final Widget Function(RelativeRect position, RenderBox box) content;
   final WidgetShape shape;
   final double inflate;
-  TutorialElement({required this.globalKey, required this.content, this.shape = WidgetShape.square, this.inflate = 0});
+  TutorialElement({
+    required this.globalKey,
+    required this.content,
+    this.shape = WidgetShape.square,
+    this.inflate = 0,
+  });
 }
 
 class TutorialData {
@@ -91,8 +96,11 @@ class TutorialController {
               queryParameters: {ParamType.tabIndex.name: 0.toString()},
             );
             await Future.delayed(Duration(milliseconds: 110), () async {
-              await tripInfoScrollController.animateTo(tripInfoScrollController.position.maxScrollExtent * 0.45,
-                  duration: Duration(milliseconds: 100), curve: Curves.easeIn);
+              await tripInfoScrollController.animateTo(
+                tripInfoScrollController.position.maxScrollExtent * 0.6,
+                duration: Duration(milliseconds: 100),
+                curve: Curves.easeIn,
+              );
             });
           },
         ),
@@ -214,7 +222,12 @@ class TutorialController {
   int index = 0;
   OverlayEntry? entry;
   void Function()? onEnd;
-  TutorialController({required this.firstInstall, required this.navigator, required this.navKey, required this.pref});
+  TutorialController({
+    required this.firstInstall,
+    required this.navigator,
+    required this.navKey,
+    required this.pref,
+  });
   Future<void> endTutorial() async {
     index = 0;
     firstInstall.setState(false);
@@ -222,7 +235,8 @@ class TutorialController {
     onEnd?.call();
   }
 
-  void startTutorial(BuildContext context, void Function() onEnd, [int startIndex = 0, int? endIndex]) {
+  void startTutorial(BuildContext context, void Function() onEnd,
+      [int startIndex = 0, int? endIndex]) {
     if (index == tutorials.length || !firstInstall.currentState) {
       index = 0;
       return;
@@ -264,7 +278,12 @@ class TutorialController {
     Overlay.of(context, rootOverlay: true).insert(entry!);
   }
 
-  void showTutorialSection(BuildContext context, int startIndex, int endIndex, void Function() onEnd) {
+  void showTutorialSection(
+    BuildContext context,
+    int startIndex,
+    int endIndex,
+    void Function() onEnd,
+  ) {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       // this.onEnd = onEnd;
       firstInstall.setState(true);
