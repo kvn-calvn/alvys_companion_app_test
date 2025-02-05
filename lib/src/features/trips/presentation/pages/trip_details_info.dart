@@ -182,6 +182,12 @@ class TripDetailsInfo extends ConsumerWidget {
                       : null,
                 ),
                 DetailInfoItem(
+                  title: 'Required Temp',
+                  value: trip.temperature != null
+                      ? '${Helpers.fixedDecimals(trip.temperature!)}° F'
+                      : null,
+                ),
+                DetailInfoItem(
                   title: 'Trailer Status',
                   value: trip.trailerStatus,
                 ),
