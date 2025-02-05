@@ -1,6 +1,5 @@
 import 'package:alvys3/custom_icons/alvys_mobile_icons.dart';
 import 'package:alvys3/src/utils/helpers.dart';
-import 'package:alvys3/src/utils/magic_strings.dart';
 
 import '../../../../constants/color.dart';
 import '../../../authentication/presentation/auth_provider_controller.dart';
@@ -165,8 +164,7 @@ class TripDetailsInfo extends ConsumerWidget {
                 DetailInfoItem(
                   title: 'Volume',
                   value: trip.loadVolume != null
-                      ? '${Helpers.fixedDecimals(trip.loadVolume!)} '
-                          '${VolumeUnits.values.firstWhereOrNull((element) => element.toLowerCase == trip.loadVolumeUnit)?.volumeLabel ?? trip.loadVolumeUnit}'
+                      ? '${Helpers.fixedDecimals(trip.loadVolume!)} ${trip.loadVolumeUnit}'
                       : null,
                 ),
                 DetailInfoItem(
