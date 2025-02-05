@@ -158,10 +158,3 @@ enum PosthogTag {
 class LaunchDarklyFeature {
   static const String documentSecureDownload = 'document-secure-download';
 }
-
-enum VolumeUnits {
-  gal('gl');
-
-  const VolumeUnits(this.volumeLabel);
-  final String volumeLabel;
-}
