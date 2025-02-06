@@ -14,59 +14,64 @@ class TripDetailsInfo extends ConsumerWidget {
   final AppTrip trip;
   const TripDetailsInfo(this.trip, {super.key});
 
-  Widget? _trailerWidget(BuildContext context, WidgetRef ref) {
+  Widget _trailerWidget(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authProvider);
     final canEditTrailer = authState.value?.canEditTrailer(trip.companyCode ?? '') ?? false;
-
-    if (!trip.canAssignTrailer || !canEditTrailer) {
-      return null;
-    }
 
     return Expanded(
       flex: 3,
       child: InkWell(
-        onTap: () async {
-          await showSearchTruckSheet(
-            context: context,
-            dto: trip.assignTrailerDto,
-            onSelect: (trailer) {
-              ref.read(tripControllerProvider.notifier).updateTrailerNumber(
-                    trip.assignTrailerDto.copyWith(
-                      trailerNumber: trailer.trailerNumber,
-                      trailerId: trailer.trailerId,
-                    ),
-                  );
-            },
-          );
-        },
-        child: RichText(
-          textAlign: TextAlign.end,
-          text: TextSpan(
-            children: [
-              if (!trip.trailerNum.isNullOrEmpty) ...[
-                WidgetSpan(
-                  child: Icon(
-                    AlvysMobileIcons.edit,
-                    size: 16,
-                    color: ColorManager.blue500(Theme.of(context).brightness),
-                  ),
-                ),
-                WidgetSpan(
-                  child: SizedBox(width: 5),
-                ),
-              ],
-              TextSpan(
-                text: trip.trailerNum.isNullOrEmpty ? 'Add' : '${trip.trailerNum}',
+        onTap: !trip.canAssignTrailer || !canEditTrailer
+            ? null
+            : () async {
+                await showSearchTruckSheet(
+                  context: context,
+                  dto: trip.assignTrailerDto,
+                  onSelect: (trailer) {
+                    ref.read(tripControllerProvider.notifier).updateTrailerNumber(
+                          trip.assignTrailerDto.copyWith(
+                            trailerNumber: trailer.trailerNumber,
+                            trailerId: trailer.trailerId,
+                          ),
+                        );
+                  },
+                );
+              },
+        child: !trip.canAssignTrailer || !canEditTrailer
+            ? Text(trip.trailerNum ?? "--",
+                textAlign: TextAlign.end,
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                       fontWeight: FontWeight.w600,
-                      color: ColorManager.blue500(
-                        Theme.of(context).brightness,
+                      color: Theme.of(context).textTheme.bodyMedium?.color,
+                    ))
+            : RichText(
+                textAlign: TextAlign.end,
+                text: TextSpan(
+                  children: [
+                    if (!trip.trailerNum.isNullOrEmpty) ...[
+                      WidgetSpan(
+                        child: Icon(
+                          AlvysMobileIcons.edit,
+                          size: 16,
+                          color: ColorManager.blue500(Theme.of(context).brightness),
+                        ),
                       ),
+                      WidgetSpan(
+                        child: SizedBox(width: 5),
+                      ),
+                    ],
+                    TextSpan(
+                      text: trip.trailerNum.isNullOrEmpty ? 'Add' : '${trip.trailerNum}',
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: ColorManager.blue500(
+                              Theme.of(context).brightness,
+                            ),
+                          ),
                     ),
+                  ],
+                ),
               ),
-            ],
-          ),
-        ),
       ),
     );
   }
