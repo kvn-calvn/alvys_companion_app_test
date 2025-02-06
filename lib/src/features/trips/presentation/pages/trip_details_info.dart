@@ -73,44 +73,51 @@ class TripDetailsInfo extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    var authState = ref.watch(authProvider);
     return Column(
       children: [
-        Card(
-          margin: EdgeInsets.zero,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
-          ),
-          clipBehavior: Clip.antiAlias,
-          child: Padding(
-            padding: const EdgeInsets.all(15.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: RichText(
-                    text: TextSpan(
-                      text: "You're getting paid ",
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            fontWeight: FontWeight.w500,
-                            color: ColorManager.caption(
-                              Theme.of(context).brightness,
-                            ),
-                          ),
-                      children: [
-                        TextSpan(
-                          text: Helpers.fixedAmountDecimals(trip.tripValue ?? 0),
-                          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: ColorManager.valid,
+        if (trip.driverPayable(authState.value!.tryGetUserTenant(trip.companyCode!)?.assetId) !=
+                null &&
+            authState.value!.shouldShowPayableAmount(trip.companyCode!))
+          Card(
+            margin: EdgeInsets.zero,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            clipBehavior: Clip.antiAlias,
+            child: Padding(
+              padding: const EdgeInsets.all(15.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: RichText(
+                      text: TextSpan(
+                        text: "You're getting paid ",
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                              fontWeight: FontWeight.w500,
+                              color: ColorManager.caption(
+                                Theme.of(context).brightness,
                               ),
-                        ),
-                      ],
+                            ),
+                        children: [
+                          TextSpan(
+                            text: Helpers.fixedAmountDecimals(trip.driverPayable(authState.value!
+                                    .tryGetUserTenant(trip.companyCode!)!
+                                    .assetId!) ??
+                                0),
+                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: ColorManager.valid,
+                                ),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
-        ),
         SizedBox(height: 15),
         Card(
           margin: EdgeInsets.zero,
