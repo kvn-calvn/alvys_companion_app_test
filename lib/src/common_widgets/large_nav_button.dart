@@ -32,8 +32,7 @@ class LargeNavButton extends StatelessWidget {
             child: InkWell(
               onTap: onPressed,
               child: Padding(
-                padding:
-                    EdgeInsets.symmetric(vertical: padding, horizontal: 12),
+                padding: EdgeInsets.symmetric(vertical: padding, horizontal: 12),
                 child: Row(
                   children: [
                     if (icon != null) icon!,
@@ -41,16 +40,19 @@ class LargeNavButton extends StatelessWidget {
                       width: 5,
                     ),
                     ConstrainedBox(
-                      constraints:
-                          BoxConstraints(maxWidth: constraints.maxWidth * 0.8),
+                      constraints: BoxConstraints(maxWidth: constraints.maxWidth * 0.8),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(title,
-                              style: Theme.of(context).textTheme.bodyLarge),
+                          Text(
+                            title,
+                            style: Theme.of(context).textTheme.bodyLarge,
+                          ),
                           if (subtitle.isNotNullOrEmpty) ...[
-                            Text(subtitle!,
-                                style: Theme.of(context).textTheme.bodySmall)
+                            Text(
+                              subtitle!,
+                              style: Theme.of(context).textTheme.bodySmall,
+                            )
                           ]
                         ],
                       ),
