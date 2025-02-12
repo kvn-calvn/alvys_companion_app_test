@@ -208,7 +208,7 @@ class TripDetails extends ConsumerWidget {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    TripGoogleMap(key: ValueKey(trip.id!), trip.id!),
+                    TripGoogleMap(key: UniqueKey(), trip.id!),
                     // Column(
                     //   mainAxisSize: MainAxisSize.max,
                     //   mainAxisAlignment: MainAxisAlignment.center,

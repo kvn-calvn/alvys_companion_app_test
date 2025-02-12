@@ -1,3 +1,4 @@
+import '../echeck_dropdown.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:mask_text_input_formatter/mask_text_input_formatter.dart';
@@ -35,10 +36,12 @@ class _GenerateEcheckState extends ConsumerState<GenerateEcheck> {
   var amountMaskFormatter = MaskTextInputFormatter(
       mask: '\$##########', filter: {"#": RegExp(r'[0-9\.]')}, type: MaskAutoCompletionType.eager);
   final TextEditingController amount = TextEditingController(), notes = TextEditingController();
-  EcheckPageController get notifier => ref.read(echeckPageControllerProvider.call(widget.stopId).notifier);
+  EcheckPageController get notifier => ref.read(echeckPageControllerProvider.call((stopId: widget.stopId)).notifier);
   @override
   Widget build(BuildContext context) {
-    var state = ref.watch(echeckPageControllerProvider.call(widget.stopId));
+    var trip = ref.watch(tripControllerProvider).value!.getTrip(widget.tripId);
+    var state = ref.watch(echeckPageControllerProvider.call((stopId: widget.stopId)));
+
     return Dialog(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
       // contentPadding: EdgeInsets.zero,
@@ -82,12 +85,13 @@ class _GenerateEcheckState extends ConsumerState<GenerateEcheck> {
                               const SizedBox(
                                 height: 16,
                               ),
-                              DropdownButtonFormField(
-                                value: state.value!.reason,
-                                decoration: const InputDecoration(hintText: "Reason"),
-                                onChanged: notifier.setReason,
-                                items: notifier.reasonsDropdown,
-                              ),
+                              EcheckReasonsDropdown(trip.companyCode!, widget.stopId),
+                              // DropdownButtonFormField(
+                              //   value: state.value!.reason,
+                              //   decoration: const InputDecoration(hintText: "Reason"),
+                              //   onChanged: notifier.setReason,
+                              //   items: stateNotifier.reasonsDropdown,
+                              // ),
                               const SizedBox(
                                 height: 16,
                               ),

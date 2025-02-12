@@ -8,7 +8,7 @@ class GenerateECheckRequest with _$GenerateECheckRequest {
   factory GenerateECheckRequest({
     @JsonKey(name: 'TripId') required String tripId,
     @JsonKey(name: 'StopId') String? stopId,
-    @JsonKey(name: 'Reason') required String reason,
+    @JsonKey(name: 'TypeId') required String typeId,
     @JsonKey(name: 'Note') required String note,
     @JsonKey(name: 'FirstName') required String firstName,
     @JsonKey(name: 'LastName') required String lastName,
@@ -16,5 +16,6 @@ class GenerateECheckRequest with _$GenerateECheckRequest {
     @JsonKey(name: 'Amount') required double amount,
   }) = _GenerateECheckRequest;
 
-  factory GenerateECheckRequest.fromJson(Map<String, dynamic> json) => _$GenerateECheckRequestFromJson(json);
+  factory GenerateECheckRequest.fromJson(Map<String, dynamic> json) =>
+      _$GenerateECheckRequestFromJson(json);
 }

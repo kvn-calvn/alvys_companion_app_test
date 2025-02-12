@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import '../../domain/accessorial_types/accessorial_types.dart';
+
 import '../../../../network/posthog/domain/posthog_objects.dart';
 import '../../../../network/posthog/posthog_service.dart';
 import '../../../../utils/magic_strings.dart';
@@ -22,7 +24,14 @@ import '../../data/echeck_repository.dart';
 import '../../domain/echeck_state/echeck_state.dart';
 import '../../domain/generate_echeck/generate_echeck_request.dart';
 
-class EcheckPageController extends AutoDisposeFamilyAsyncNotifier<ECheckState, String?> implements IErrorHandler {
+class EcheckArgs {
+  final String? stopId;
+
+  EcheckArgs(this.stopId);
+}
+
+class EcheckPageController extends AutoDisposeFamilyAsyncNotifier<ECheckState, ({String? stopId})>
+    implements IErrorHandler {
   late TripController tripController;
   late EcheckRepository repo;
   late AuthProviderNotifier auth;
@@ -31,29 +40,23 @@ class EcheckPageController extends AutoDisposeFamilyAsyncNotifier<ECheckState, S
   //   'Extra Labor Delivery',
   //   'Lumper',
   // ];
-
   @override
-  FutureOr<ECheckState> build(String? arg) {
+  FutureOr<ECheckState> build(({String? stopId}) arg) {
+    debugPrint('build called');
     tripController = ref.read(tripControllerProvider.notifier);
     repo = ref.read(eCheckRepoProvider);
     auth = ref.read(authProvider.notifier);
     postHogService = ref.read(postHogProvider);
     ProviderArgsSaver.instance.echeckArgs = arg;
-    return ECheckState(stopId: arg);
+    return ECheckState(stopId: arg.stopId);
   }
 
-  List<DropdownMenuItem<String>> get reasonsDropdown => state.value!.reasons
-      .map<DropdownMenuItem<String>>((e) => DropdownMenuItem(
-            value: e,
-            child: Text(e),
-          ))
-      .toList();
-
-  void setReason(String? val) {
+  void setReason(GetAccessorialTypesResponse? val) {
     state = AsyncData(state.value!.copyWith(reason: val));
     if (!state.value!.showStopDropdown) {
       setStopId(null);
     }
+    debugPrint(state.value as String?);
   }
 
   void setStopId(String? stopId) {
@@ -61,7 +64,9 @@ class EcheckPageController extends AutoDisposeFamilyAsyncNotifier<ECheckState, S
   }
 
   void setAmount(String? amount) {
-    state = AsyncValue.data(state.value!.copyWith(amount: double.tryParse(amount.currencyNumbersOnly) ?? 0));
+    state = AsyncValue.data(
+        state.value!.copyWith(amount: double.tryParse(amount.currencyNumbersOnly) ?? 0));
+    debugPrint(state.value as String?);
   }
 
   void setNote(String? note) {
@@ -75,17 +80,19 @@ class EcheckPageController extends AutoDisposeFamilyAsyncNotifier<ECheckState, S
     return null;
   }
 
-  Future<void> generateEcheck(GlobalKey<FormState> formKey, BuildContext context, String tripId) async {
+  Future<void> generateEcheck(
+      GlobalKey<FormState> formKey, BuildContext context, String tripId) async {
     if (formKey.currentState?.validate() ?? false) {
       state = const AsyncLoading();
-      var firstName = auth.driver!.name!.split(' ').first;
-      var lastName = auth.driver!.name!.split(' ').elementAtOrNull(1) ?? '';
+      var nameList = auth.driver!.name!.split(' ');
+      var firstName = nameList.first;
+      var lastName = nameList.elementAtOrNull(1) ?? '';
       var trip = tripController.getTrip(tripId)!;
       var stopId = state.value!.showStopDropdown ? state.value!.stopId : null;
       var stop = tripController.getStop(tripId, stopId);
       var req = GenerateECheckRequest(
         tripId: trip.id!,
-        reason: state.value!.reason!,
+        typeId: state.value!.reason!.id,
         note: state.value!.note,
         firstName: firstName,
         lastName: lastName,
@@ -100,18 +107,21 @@ class EcheckPageController extends AutoDisposeFamilyAsyncNotifier<ECheckState, S
         tripId: tripId,
         stopName: stop?.companyName,
         stopId: stopId,
-        reason: req.reason,
-        success: res.expressCheckNumber != null && res.expressCheckNumber!.trim().isNotEmpty,
+        reason: state.value!.reason!.name,
+        success: (res.expressCheckNumber != null && res.expressCheckNumber!.trim().isNotEmpty)
+            .toString(),
         note: req.note,
         amount: req.amount,
       );
-      postHogService.postHogTrackEvent(PosthogTag.userGeneratedEcheck.toSnakeCase, {...event.toJson()});
+      postHogService
+          .postHogTrackEvent(PosthogTag.userGeneratedEcheck.toSnakeCase, {...event.toJson()});
 
       ref
           .read(httpClientProvider)
           .telemetryClient
           .trackEvent(name: "generate_echeck", additionalProperties: {...event.toJson()});
-      await FirebaseAnalytics.instance.logEvent(name: "generate_echeck", parameters: {...event.toJson()});
+      await FirebaseAnalytics.instance
+          .logEvent(name: "generate_echeck", parameters: {...event.toJson()});
 
       tripController.addEcheck(trip.id!, res);
       state = AsyncData(state.value!);
@@ -122,28 +132,29 @@ class EcheckPageController extends AutoDisposeFamilyAsyncNotifier<ECheckState, S
     }
   }
 
-  Future<void> cancelEcheck(BuildContext context, String tripId, String echeckNumber) async {
-    state = AsyncData(state.value!.copyWith(loadingEcheckNumber: echeckNumber));
+  Future<void> cancelEcheck(BuildContext context, String tripId, String echeckId) async {
+    state = AsyncData(state.value!.copyWith(loadingEcheckId: echeckId));
     var trip = tripController.getTrip(tripId);
 
     if (trip == null) {
-      state = AsyncData(state.value!.copyWith(loadingEcheckNumber: null));
+      state = AsyncData(state.value!.copyWith(loadingEcheckId: null));
       return;
     }
-    var res = await repo.cancelEcheck<EcheckPageController>(trip.companyCode!, echeckNumber);
+    var res = await repo.cancelEcheck<EcheckPageController>(trip.companyCode!, echeckId);
     tripController.updateEcheck(tripId, res);
-    state = AsyncData(state.value!.copyWith(loadingEcheckNumber: null));
-    var snackbar = SnackBarWrapper.getSnackBar('ECheck $echeckNumber has been canceled');
+    state = AsyncData(state.value!.copyWith(loadingEcheckId: null));
+    var snackbar = SnackBarWrapper.getSnackBar(
+        'ECheck ${trip.getEcheck(echeckId)?.expressCheckNumber ?? ""} has been canceled');
     if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(snackbar);
   }
 
   @override
   FutureOr<void> onError(Exception ex) {
-    state = AsyncData(state.value!.copyWith(loadingEcheckNumber: null));
+    state = AsyncData(state.value!.copyWith(loadingEcheckId: null));
   }
 
   void resetState() {
-    state = AsyncData(ECheckState(stopId: arg));
+    state = AsyncData(ECheckState(stopId: arg.stopId));
   }
 
   @override
@@ -151,4 +162,10 @@ class EcheckPageController extends AutoDisposeFamilyAsyncNotifier<ECheckState, S
 }
 
 final echeckPageControllerProvider =
-    AutoDisposeAsyncNotifierProviderFamily<EcheckPageController, ECheckState, String?>(EcheckPageController.new);
+    AutoDisposeAsyncNotifierProviderFamily<EcheckPageController, ECheckState, ({String? stopId})>(
+        EcheckPageController.new);
+final echeckReasonsProvider =
+    AutoDisposeFutureProviderFamily<List<GetAccessorialTypesResponse>, String>(
+        (ref, companyCode) async {
+  return await ref.read(eCheckRepoProvider).getEcheckReasons(companyCode);
+});

@@ -1,15 +1,14 @@
-
 //import 'package:alvys3/flavor_config.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'dummy_data.dart';
 
 class PlatformChannel {
   static const platform = MethodChannel('PLATFORM_CHANNEL');
-  static void getNotification(
-      String driverPhone, String hubName, String connectionString) async {
+  static void getNotification(String driverPhone, String hubName, String connectionString) async {
     try {
       await platform.invokeMethod('registerForNotification', <String, String>{
         'driverPhone': driverPhone,
@@ -87,6 +86,15 @@ class PlatformChannel {
       debugPrint(
         "unregister notification unsuccessful: \n $e",
       );
+    }
+  }
+
+  static Future<PermissionStatus> requestAndroidLocationPermissions() async {
+    try {
+      bool res = await platform.invokeMethod("requestLocationPermissions", <String, String>{});
+      return res ? PermissionStatus.granted : PermissionStatus.permanentlyDenied;
+    } on Exception {
+      return PermissionStatus.permanentlyDenied;
     }
   }
 }

@@ -125,6 +125,7 @@ class AppTrip with _$AppTrip {
       trailerId: '',
       trailerNumber: '');
   bool get canAssignTrailer => isTrackable && tripType.equalsIgnoreCase(TripTypes.carrier);
+  ECheck? getEcheck(String echeckId) => eChecks.firstWhereOrNull((x) => x.eCheckId == echeckId);
 }
 
 // const jk = ;

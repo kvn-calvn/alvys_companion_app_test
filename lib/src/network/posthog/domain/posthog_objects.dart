@@ -67,7 +67,7 @@ class PosthotEcheckGeneratedLog with _$PosthotEcheckGeneratedLog {
     @JsonKey(name: 'stop_name', includeIfNull: false) required String? stopName,
     @JsonKey(name: 'stop_id', includeIfNull: false) required String? stopId,
     required String reason,
-    required bool success,
+    required String success,
     required String note,
     required double amount,
   }) = _PosthotEcheckGeneratedLog;
