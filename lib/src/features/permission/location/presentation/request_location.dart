@@ -40,7 +40,8 @@ class _RequestLocationState extends ConsumerState<RequestLocation> {
             padding: const EdgeInsetsDirectional.fromSTEB(24, 0, 24, 0),
             child: Container(
               constraints: BoxConstraints(
-                  maxWidth: MediaQuery.of(context).size.longestSide * (TabletUtils.instance.isTablet ? 0.5 : 1)),
+                  maxWidth: MediaQuery.of(context).size.longestSide *
+                      (TabletUtils.instance.isTablet ? 0.5 : 1)),
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -69,6 +70,9 @@ class _RequestLocationState extends ConsumerState<RequestLocation> {
                       isLoading: false,
                       isDisable: false,
                       onPressAction: () async {
+                        if (Platform.isAndroid) {
+                          await PlatformChannel.requestAndroidLocationPermissions();
+                        }
                         var requestLocationResult = await Permission.location.request();
                         await Permission.locationAlways.request();
 
@@ -88,8 +92,10 @@ class _RequestLocationState extends ConsumerState<RequestLocation> {
 
                         if (notificationPermStatus.isGranted) {
                           if (!context.mounted) return;
-                          PlatformChannel.getNotification(ref.read(authProvider).value!.driver!.phone!,
-                              FlavorConfig.instance!.hubName, FlavorConfig.instance!.connectionString);
+                          PlatformChannel.getNotification(
+                              ref.read(authProvider).value!.driver!.phone!,
+                              FlavorConfig.instance!.hubName,
+                              FlavorConfig.instance!.connectionString);
                           context.goNamed(RouteName.trips.name);
                         }
 
@@ -113,7 +119,8 @@ class _RequestLocationState extends ConsumerState<RequestLocation> {
                         key: const Key("locationPermNotNowBtn'"),
                         onPressed: () async {
                           var notificationPermStatus = await Permission.notification.status;
-                          if (notificationPermStatus.isGranted || notificationPermStatus.isPermanentlyDenied) {
+                          if (notificationPermStatus.isGranted ||
+                              notificationPermStatus.isPermanentlyDenied) {
                             if (!context.mounted) return;
                             context.goNamed(RouteName.trips.name);
                           } else {

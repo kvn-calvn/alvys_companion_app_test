@@ -20,12 +20,10 @@ class PhoneNumberVerificationPage extends ConsumerStatefulWidget {
 
   @override
   // ignore: library_private_types_in_public_api
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _PhoneNumberVerificationPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _PhoneNumberVerificationPageState();
 }
 
-class _PhoneNumberVerificationPageState
-    extends ConsumerState<PhoneNumberVerificationPage> {
+class _PhoneNumberVerificationPageState extends ConsumerState<PhoneNumberVerificationPage> {
   final pinController = TextEditingController();
   final focusNode = FocusNode();
   bool canResend = false;
@@ -62,9 +60,7 @@ class _PhoneNumberVerificationPageState
           color: Theme.of(context).inputDecorationTheme.fillColor,
           borderRadius: BorderRadius.circular(8),
           border: Border.all(
-            color: (Theme.of(context).brightness.isLight
-                    ? Colors.black
-                    : Colors.white)
+            color: (Theme.of(context).brightness.isLight ? Colors.black : Colors.white)
                 .withAlpha((255.0 * 0.5).round()),
           ),
         ),
@@ -116,12 +112,7 @@ class _PhoneNumberVerificationPageState
                         'Enter the code sent to the number',
                         textAlign: TextAlign.center,
                       ),
-                      Text(
-                          ref
-                              .watch(authProvider)
-                              .value!
-                              .phone
-                              .toPhoneNumberString,
+                      Text(ref.watch(authProvider).value!.phone.toPhoneNumberString,
                           textAlign: TextAlign.center,
                           style: Theme.of(context).textTheme.titleMedium),
                       const SizedBox(
@@ -132,17 +123,13 @@ class _PhoneNumberVerificationPageState
                         length: length,
                         controller: pinController,
                         focusNode: focusNode,
-                        onChanged: ref
-                            .watch(authProvider.notifier)
-                            .setVerificationCode,
+                        onChanged: ref.watch(authProvider.notifier).setVerificationCode,
                         defaultPinTheme: defaultPinTheme(context),
                         cursor: Padding(
                           padding: const EdgeInsets.symmetric(vertical: 12.0),
                           child: Container(
                             decoration: BoxDecoration(
-                                color: Theme.of(context)
-                                    .textSelectionTheme
-                                    .cursorColor),
+                                color: Theme.of(context).textSelectionTheme.cursorColor),
                             height: double.infinity,
                             width: 2,
                           ),
@@ -151,19 +138,15 @@ class _PhoneNumberVerificationPageState
                           FilteringTextInputFormatter.allow(RegExp('[0-9]')),
                         ],
                         onCompleted: (pin) async {
-                          await ref
-                              .read(authProvider.notifier)
-                              .verifyDriver(context);
+                          await ref.read(authProvider.notifier).verifyDriver(context);
                         },
                         focusedPinTheme: defaultPinTheme(context).copyWith(
-                          decoration:
-                              defaultPinTheme(context).decoration!.copyWith(
-                                    border: Border.all(
-                                      color: ColorManager.primary(
-                                              Theme.of(context).brightness)
-                                          .withAlpha((255.0 * 0.8).round()),
-                                    ),
-                                  ),
+                          decoration: defaultPinTheme(context).decoration!.copyWith(
+                                border: Border.all(
+                                  color: ColorManager.primary(Theme.of(context).brightness)
+                                      .withAlpha((255.0 * 0.8).round()),
+                                ),
+                              ),
                         ),
                         errorPinTheme: defaultPinTheme(context).copyWith(
                           decoration: BoxDecoration(
@@ -183,16 +166,9 @@ class _PhoneNumberVerificationPageState
                       else ...[
                         ButtonStyle1(
                             key: const Key('verifyBtn'),
-                            isDisable: ref
-                                    .watch(authProvider)
-                                    .value!
-                                    .verificationCode
-                                    .length !=
-                                6,
+                            isDisable: ref.watch(authProvider).value!.verificationCode.length != 6,
                             onPressAction: () async {
-                              await ref
-                                  .read(authProvider.notifier)
-                                  .verifyDriver(context);
+                              await ref.read(authProvider.notifier).verifyDriver(context);
                             },
                             title: "Verify",
                             isLoading: false),
@@ -203,9 +179,7 @@ class _PhoneNumberVerificationPageState
                             onPressed: canResend
                                 ? () {
                                     setState(() => canResend = false);
-                                    ref
-                                        .read(authProvider.notifier)
-                                        .resendCode();
+                                    ref.read(authProvider.notifier).resendCode();
                                   }
                                 : null,
                             child: Row(
@@ -239,8 +213,7 @@ class _PhoneNumberVerificationPageState
 class ResendTimer extends StatefulWidget {
   final bool canResend;
   final void Function(bool canResendCode) resendCodeUpdater;
-  const ResendTimer(
-      {super.key, required this.resendCodeUpdater, required this.canResend});
+  const ResendTimer({super.key, required this.resendCodeUpdater, required this.canResend});
 
   @override
   State<ResendTimer> createState() => _ResendTimerState();
@@ -260,8 +233,7 @@ class _ResendTimerState extends State<ResendTimer> {
         widget.resendCodeUpdater(true);
         return;
       }
-      setState(
-          () => timerDuration = Duration(seconds: timerDuration.inSeconds - 1));
+      setState(() => timerDuration = Duration(seconds: timerDuration.inSeconds - 1));
     });
   }
 

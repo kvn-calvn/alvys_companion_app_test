@@ -1,4 +1,4 @@
-import 'package:alvys3/src/network/posthog/posthog_provider.dart';
+import '../../../../network/posthog/posthog_provider.dart';
 
 import '../../../../common_widgets/empty_view.dart';
 import '../../../../common_widgets/refreshable_page.dart';
@@ -20,11 +20,7 @@ class TripReferencesCard extends StatelessWidget {
   final List<Reference> tripReferences;
   final String tripId;
   final int tabIndex;
-  const TripReferencesCard(
-      {super.key,
-      required this.tripReferences,
-      required this.tripId,
-      required this.tabIndex});
+  const TripReferencesCard({super.key, required this.tripReferences, required this.tripId, required this.tabIndex});
 
   @override
   Widget build(BuildContext context) {
@@ -69,13 +65,9 @@ class TripReferencesCard extends StatelessWidget {
                     overflow: TextOverflow.ellipsis,
                     text: TextSpan(
                         style: Theme.of(context).textTheme.bodySmall,
-                        text: firstTwoReferences
-                            .map((x) => '${x.name}: ${x.getValue}')
-                            .join(', '),
+                        text: firstTwoReferences.map((x) => '${x.name}: ${x.getValue}').join(', '),
                         children: [
-                          if (restOfReferences.isNotEmpty)
-                            TextSpan(
-                                text: ' and ${restOfReferences.length} more')
+                          if (restOfReferences.isNotEmpty) TextSpan(text: ' and ${restOfReferences.length} more')
                         ]),
                   )
                 ],
@@ -96,9 +88,7 @@ class TripReferencesPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     return RefreshablePage(
         refresh: () async {
-          await ref
-              .read(tripControllerProvider.notifier)
-              .refreshCurrentTrip(tripId);
+          await ref.read(tripControllerProvider.notifier).refreshCurrentTrip(tripId);
           if (context.mounted) ref.read(websocketProvider).restartConnection();
         },
         title: 'References',
@@ -107,20 +97,12 @@ class TripReferencesPage extends ConsumerWidget {
             return TripReferencesShimer();
           }
           var trip = ref.watch(tripControllerProvider).value?.getTrip(tripId);
-          ref
-              .read(httpClientProvider)
-              .telemetryClient
-              .trackEvent(name: "opened_trip_references");
+          ref.read(httpClientProvider).telemetryClient.trackEvent(name: "opened_trip_references");
           ref.read(postHogProvider).postHogTrackEvent('opened_trip_references', null);
           return trip == null
-              ? const EmptyView(
-                  title: 'Trip Not found',
-                  description: 'Return to the previous page.')
+              ? const EmptyView(title: 'Trip Not found', description: 'Return to the previous page.')
               : ListView(
-                  children: [
-                    for (var reference in trip.loadReferences)
-                      ReferenceDetailsWidget(reference)
-                  ],
+                  children: [for (var reference in trip.loadReferences) ReferenceDetailsWidget(reference)],
                 );
         });
   }

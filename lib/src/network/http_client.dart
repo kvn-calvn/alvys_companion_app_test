@@ -161,7 +161,6 @@ class AlvysHttpClient {
 
   Future<Response> _handleResponse<T>(Response response) {
     networkInfo.setInternetState(true);
-
     switch (response.statusCode) {
       case (400):
         throw AlvysClientException(jsonDecode(response.body), T);

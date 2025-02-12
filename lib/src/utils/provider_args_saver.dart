@@ -1,3 +1,4 @@
+
 import '../features/trailers/domain/trailer_request/trailer_request.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -7,7 +8,7 @@ import '../features/documents/presentation/upload_documents_controller.dart';
 
 class ProviderArgsSaver {
   UploadDocumentArgs? uploadArgs;
-  String? echeckArgs;
+  ({String? stopId})? echeckArgs;
   DocumentsArgs? documentArgs;
   SetTrailerDto? assignTrailerDto;
   ProviderArgsSaver._privateConstructor();

@@ -48,6 +48,16 @@ extension ListExt<T, K> on Iterable<T>? {
     var res = this!.map((e) async => await op(e));
     return Future.wait(res);
   }
+
+  Iterable<T> distinctBy(K Function(T data) op) {
+    if (this == null) return <T>[];
+    var distinctList = <K, T>{};
+
+    for (var element in this!) {
+      distinctList.putIfAbsent(op(element), () => element);
+    }
+    return distinctList.values;
+  }
 }
 
 extension StringExt on String? {

@@ -1,4 +1,4 @@
-import 'package:alvys3/src/features/trips/domain/app_trip/reference.dart';
+import '../features/trips/domain/app_trip/reference.dart';
 import 'package:intl/intl.dart';
 
 import '../features/documents/domain/app_document/app_document.dart';

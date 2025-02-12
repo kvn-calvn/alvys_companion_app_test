@@ -16,8 +16,7 @@ class EditProfile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var editState = ref.watch(editProfileProvider);
-    EditProfileNotifier editNotifier() =>
-        ref.read(editProfileProvider.notifier);
+    EditProfileNotifier editNotifier() => ref.read(editProfileProvider.notifier);
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit Profile'),
@@ -32,14 +31,9 @@ class EditProfile extends ConsumerWidget {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        ProfileDetailCard(
-                            title: 'Name', content: editState.value!.dto.name),
-                        ProfileDetailCard(
-                            title: 'Email',
-                            content: editState.value!.dto.email),
-                        ProfileDetailCard(
-                            title: 'Phone',
-                            content: editState.value!.dto.phone),
+                        ProfileDetailCard(title: 'Name', content: editState.value!.dto.name),
+                        ProfileDetailCard(title: 'Email', content: editState.value!.dto.email),
+                        ProfileDetailCard(title: 'Phone', content: editState.value!.dto.phone),
                         Stack(
                           alignment: AlignmentDirectional.center,
                           children: [
@@ -53,21 +47,16 @@ class EditProfile extends ConsumerWidget {
                                 ),
                                 GoogleAddressAutocomplete(
                                     onResult: editNotifier().updateAddress,
-                                    enabled:
-                                        editState.value!.autocompleteEnabled),
+                                    enabled: editState.value!.autocompleteEnabled),
                                 Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     Text('Auto-complete',
-                                        style: Theme.of(context)
-                                            .textTheme
-                                            .bodySmall),
+                                        style: Theme.of(context).textTheme.bodySmall),
                                     Checkbox.adaptive(
                                         visualDensity: VisualDensity.compact,
-                                        value: editState
-                                            .value!.autocompleteEnabled,
-                                        onChanged: editNotifier()
-                                            .setAutoCompleteEnabled),
+                                        value: editState.value!.autocompleteEnabled,
+                                        onChanged: editNotifier().setAutoCompleteEnabled),
                                   ],
                                 ),
                                 EditProfileDetailCard(
@@ -108,9 +97,8 @@ class EditProfile extends ConsumerWidget {
                                 right: 0,
                                 bottom: 0,
                                 child: Container(
-                                  color: Theme.of(context)
-                                      .cardColor
-                                      .withAlpha((255.0 * 0.7).round()),
+                                  color:
+                                      Theme.of(context).cardColor.withAlpha((255.0 * 0.7).round()),
                                   alignment: Alignment.center,
                                   child: const Text('Loading...'),
                                 ),
@@ -136,14 +124,11 @@ class EditProfile extends ConsumerWidget {
                           elevation: 0,
                           textStyle: Theme.of(context).textTheme.bodyMedium,
                           initialItem: editState.value!.dto.licenseIssueState,
-                          backgroundColor:
-                              Theme.of(context).scaffoldBackgroundColor,
+                          backgroundColor: Theme.of(context).scaffoldBackgroundColor,
                           items: EditProfileNotifier.states,
                           coverDisplayText: false,
                           border: BorderSide(
-                              color:
-                                  Colors.grey.withAlpha((255.0 * 0.6).round()),
-                              width: 1),
+                              color: Colors.grey.withAlpha((255.0 * 0.6).round()), width: 1),
                           includeTrailing: false,
                           onItemTap: editNotifier().setLicenseIssueState,
                           dropDownTitle: (item) => item,
@@ -182,13 +167,8 @@ class EditProfileDetailCard extends ConsumerWidget {
   final String? initString;
 
   const EditProfileDetailCard(
-      {super.key,
-      required this.title,
-      this.controller,
-      this.initString,
-      this.onChanged})
-      : assert((controller != null &&
-                (initString == null && onChanged == null)) ||
+      {super.key, required this.title, this.controller, this.initString, this.onChanged})
+      : assert((controller != null && (initString == null && onChanged == null)) ||
             (controller == null && (initString != null && onChanged != null)));
 
   @override
@@ -206,8 +186,7 @@ class EditProfileDetailCard extends ConsumerWidget {
           initialValue: initString,
           onChanged: onChanged,
           style: Theme.of(context).textTheme.bodyMedium,
-          decoration: const InputDecoration(
-              isDense: true, contentPadding: EdgeInsets.all(12)),
+          decoration: const InputDecoration(isDense: true, contentPadding: EdgeInsets.all(12)),
         ),
         const SizedBox(
           height: 12,

@@ -6,7 +6,7 @@ import android.app.*
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
-import android.os.Binder
+import android.os.Build
 import android.os.IBinder
 import android.os.Looper
 import android.util.Log
@@ -79,20 +79,27 @@ class LocationTrackingService : Service() {
         return null
     }
 
+    private fun hasRequiredPermissions(): Boolean {
+        return ActivityCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED &&
+             ( if  (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE)
+                ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.FOREGROUND_SERVICE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED else true)
+    }
+
     @SuppressLint("MissingPermission")
     private fun startLocationUpdates() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                this,
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+        if ( !hasRequiredPermissions()) {
+           Log.e("LocationService", "Missing required permissions")
+
             return
         }else {
             mFusedLocationClient!!.requestLocationUpdates(
@@ -126,27 +133,11 @@ class LocationTrackingService : Service() {
         startForeground(1, notification)
     }
 
-//    override fun onBind(intent: Intent?): IBinder {
-//        Log.e("Binded", "Bind")
-//        val driverInfoString = intent?.getStringExtra("DRIVER-INFO").toString()
-//        driverInfo = JSONObject(driverInfoString)
-//
-//        Log.d("ONBIND_INTENT",  driverInfo.get("url").toString())
-//        Log.d("ONBIND_INTENT", "$driverInfoString")
-//        return localBinder
-//    }
-
-//    inner class MyLocalBinder : Binder() {
-//        fun getService() : LocationTrackingService {
-//            return this@LocationTrackingService
-//        }
-//    }
-
     private fun initData() {
 
         locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, INTERVAL_IN_MILLISECONDS.toLong())
             .apply {
-                setWaitForAccurateLocation(true)                
+                setWaitForAccurateLocation(true)
             }.build()
 
         mFusedLocationClient =
