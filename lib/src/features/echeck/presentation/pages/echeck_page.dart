@@ -31,7 +31,8 @@ class _EcheckPageState extends ConsumerState<EcheckPage> {
     FirebaseAnalytics.instance.logScreenView(screenName: "echecks_page");
   }
 
-  EcheckPageController get notifier => ref.read(echeckPageControllerProvider.call(null).notifier);
+  EcheckPageController notifier(String companyCode) =>
+      ref.read(echeckPageControllerProvider.call((stopId: null)).notifier);
   @override
   Widget build(BuildContext context) {
     var state = ref.watch(tripControllerProvider);
@@ -83,7 +84,7 @@ class _EcheckPageState extends ConsumerState<EcheckPage> {
                       companyCode: trip.companyCode!,
                       tripNumber: trip.tripNumber!,
                       cancelECheck: (echeckNumber) async =>
-                          await notifier.cancelEcheck(context, widget.tripId, echeckNumber),
+                          await notifier(trip.companyCode!).cancelEcheck(context, widget.tripId, echeckNumber),
                       tripId: widget.tripId,
                     ),
                   ),

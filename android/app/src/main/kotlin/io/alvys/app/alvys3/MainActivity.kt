@@ -5,19 +5,24 @@ import android.graphics.Point
 import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
+import androidx.core.app.ActivityCompat
 import com.microsoft.windowsazure.messaging.notificationhubs.NotificationHub
 import io.flutter.embedding.android.FlutterActivity
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import org.json.JSONObject
 import kotlin.math.hypot
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.core.content.ContextCompat
 
 
 @Suppress("UNCHECKED_CAST")
 class MainActivity : FlutterActivity() {
     private lateinit var locationTrackingServiceIntent: Intent
     private var startString: String? = null
-
+    private var locationPermissionRequestCode = 1010
+    private var channel = "PLATFORM_CHANNEL"
     private fun WindowManager.currentDeviceRealSize(): Pair<Int, Int> {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             return Pair(
@@ -38,7 +43,7 @@ class MainActivity : FlutterActivity() {
 
         val messenger = flutterEngine.dartExecutor.binaryMessenger
 
-        MethodChannel(messenger, "PLATFORM_CHANNEL")
+        MethodChannel(messenger, channel)
             .setMethodCallHandler { call, result ->
                 when (call.method) {
                     "registerForNotification" -> {
@@ -51,6 +56,13 @@ class MainActivity : FlutterActivity() {
                         NotificationHub.setEnabled(true)
                     }
                     "startLocationTracking" -> {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                            val permissions = arrayOf(
+                                Manifest.permission.FOREGROUND_SERVICE_LOCATION
+                            )
+                            ActivityCompat.requestPermissions(this, permissions, locationPermissionRequestCode)
+                        }
+
                         //Format and send data from flutter channel to tracking service
                         locationTrackingServiceIntent.putExtra(
                             "DRIVER-INFO",
@@ -94,6 +106,22 @@ class MainActivity : FlutterActivity() {
                         result.success((if (widthInInches < heightInInches)  widthInInches else heightInInches) >=5)
                         // result.success( (context.resources.configuration.screenLayout and Configuration.SCREENLAYOUT_SIZE_MASK) >= Configuration.SCREENLAYOUT_SIZE_LARGE)
                     }
+                    "requestLocationPermissions" -> {
+                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+                            val permissions = arrayOf(
+                                Manifest.permission.FOREGROUND_SERVICE_LOCATION
+                            )
+
+                            if (permissions.all { ContextCompat.checkSelfPermission(this, it) == PackageManager.PERMISSION_GRANTED }) {
+                                result.success(true) // Permissions already granted
+                            } else {
+                                ActivityCompat.requestPermissions(this, permissions, locationPermissionRequestCode)
+                                result.success(false) // Requesting permissions
+                            }
+                        } else {
+                           result.success(true)
+                        }
+                    }
                     else -> result.notImplemented()
                 }
             }
@@ -119,7 +147,14 @@ class MainActivity : FlutterActivity() {
 //        }
 
     }
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
+//        if (requestCode == locationPermissionRequestCode) {
+//            val granted = grantResults.all { it == PackageManager.PERMISSION_GRANTED }
+//            MethodChannel(flutterEngine!!.dartExecutor.binaryMessenger, channel).invokeMethod("permissionResult", granted)
+//        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val intent = intent

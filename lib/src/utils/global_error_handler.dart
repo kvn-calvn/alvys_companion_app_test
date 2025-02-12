@@ -31,7 +31,7 @@ final globalErrorHandlerProvider = Provider<GlobalErrorHandler>((ref) {
             EditProfileNotifier: () => ref.read(editProfileProvider.notifier),
             TripController: () => ref.read(tripControllerProvider.notifier),
             EcheckPageController: () => ref.read(
-                echeckPageControllerProvider.call(ProviderArgsSaver.instance.echeckArgs).notifier),
+                echeckPageControllerProvider.call(ProviderArgsSaver.instance.echeckArgs!).notifier),
             SearchTrailerController: () => ref.read(searchTrailerControllerProvider
                 .call(ProviderArgsSaver.instance.assignTrailerDto!)
                 .notifier)

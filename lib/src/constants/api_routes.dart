@@ -12,13 +12,16 @@ class ApiRoutes {
   static String userData(String userId) => '${baseUrl}newusers/GetUser/$userId';
   static String trips = '${mobileBaseApi}trips';
   static String tripDetails(String tripId) => '$mobileBaseApi$tripId/trip';
-  static String timeStopRecord(String tripId, String stopId) => '$mobileBaseApi$tripId/$stopId/time_record';
+  static String timeStopRecord(String tripId, String stopId) =>
+      '$mobileBaseApi$tripId/$stopId/time_record';
   static String get webSocket => 'https://$rawBaseUrl/mobilehub';
   static String driverPaystubs = '${mobileBaseApi}driver/paystubs';
   static String tripReport = '${mobileBaseApi}driver/trip_report';
   static Uri get driverStatus => Uri.parse('${mobileBaseApi}driver/status');
-  static Uri get generateEcheck => Uri.parse('${mobileBaseApi}echeck');
-  static Uri cancelEcheck(String echeckNumber) => Uri.parse('$mobileBaseApi$echeckNumber/echeck');
+  static Uri get generateEcheck => Uri.parse('${mobileBaseApi}v2.0/echeck');
+  static Uri cancelEcheck(String echeckId) =>
+      Uri.parse('${mobileBaseApi}v2.0/echeck/$echeckId/cancel');
+  static Uri get echeckReasons => Uri.parse('${mobileBaseApi}v2.0/echeck/types');
   static Uri paystubs(DriverPaystubDTO dto) =>
       Uri.https(FlavorConfig.instance!.rawApiBase, '/api/mobile/driver/paystubs', dto.toJson());
   static Uri tripReports([DriverDocumentsDTO? dto]) =>
