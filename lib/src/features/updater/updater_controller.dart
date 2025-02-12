@@ -17,6 +17,7 @@ class UpdaterController {
   bool showing = false;
   final GlobalErrorHandler errorHandler;
   void showUpdateDialog() {
+    if (errorHandler.navKey.currentContext == null) return;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (Upgrader.sharedInstance.shouldDisplayUpgrade() && !showing) {
         showing = true;
@@ -26,8 +27,7 @@ class UpdaterController {
             barrierDismissible: false,
             builder: (context) => PopScope(
                   canPop: true,
-                  onPopInvokedWithResult: (didPop, result) =>
-                      (didPop) => Future.value(false),
+                  onPopInvokedWithResult: (didPop, result) => (didPop) => Future.value(false),
                   child: AppDialog(
                     title: 'Update Available',
                     description:
