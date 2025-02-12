@@ -1,3 +1,5 @@
+import 'package:http/http.dart';
+
 import '../../../common_widgets/empty_view.dart';
 import '../../../utils/exceptions.dart';
 import 'package:flutter/material.dart';
@@ -54,38 +56,57 @@ class _DocumentsPageState extends ConsumerState<DocumentsPage> {
               onPressed: () {
                 showCustomBottomSheet(
                   context,
-                  UploadOptions(documentType: widget.args.documentType, tripId: widget.args.tripId, mounted: mounted),
+                  UploadOptions(
+                    documentType: widget.args.documentType,
+                    tripId: widget.args.tripId,
+                    mounted: mounted,
+                  ),
                 );
               },
               child: const Icon(Icons.cloud_upload),
             )
           : null,
       body: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: docsState.when(
-              skipError: true,
-              data: (value) => DocumentList(
-                    documents: value.documents(widget.args.documentType, authState.value!.canViewPaystubs),
-                    refreshFunction: () async {
-                      await ref.read(documentsProvider.call(widget.args).notifier).getDocuments();
-                    },
-                    args: widget.args,
-                    emptyMessage: "No ${docsNotifier.pageTitle}",
-                    extra: value.canLoadMore
-                        ? LoadMoreButton(loadMoreFunction: () async {
-                            await ref.read(documentsProvider.call(widget.args).notifier).loadMorePaystubs();
-                          })
-                        : null,
-                  ),
-              error: (error, trace) {
-                if (error is AppControllerException) {
-                  return RefreshIndicator(
-                      onRefresh: ref.read(documentsProvider.call(widget.args).notifier).getDocuments,
-                      child: EmptyView(title: 'Error Occured', description: error.message));
-                }
-                throw error;
-              },
-              loading: () => const DocumentsShimmer())),
+        padding: const EdgeInsets.symmetric(horizontal: 16.0),
+        child: docsState.when(
+          skipError: true,
+          data: (value) => DocumentList(
+            documents: value.documents(widget.args.documentType, authState.value!.canViewPaystubs),
+            refreshFunction: () async {
+              await ref.read(documentsProvider.call(widget.args).notifier).getDocuments();
+            },
+            args: widget.args,
+            emptyMessage: "No ${docsNotifier.pageTitle}",
+            extra: value.canLoadMore
+                ? LoadMoreButton(loadMoreFunction: () async {
+                    await ref.read(documentsProvider.call(widget.args).notifier).loadMorePaystubs();
+                  })
+                : null,
+          ),
+          error: (error, trace) {
+            if (error is AppControllerException) {
+              return RefreshIndicator(
+                onRefresh: ref.read(documentsProvider.call(widget.args).notifier).getDocuments,
+                child: EmptyView(
+                  title: 'Error Occured',
+                  description: error.message,
+                ),
+              );
+            } else if (error is ClientException) {
+              return RefreshIndicator(
+                onRefresh: ref.read(documentsProvider.call(widget.args).notifier).getDocuments,
+                child: EmptyView(
+                  title: 'Network Error',
+                  description:
+                      'Failed to load documents. Please check your internet connection and try again.',
+                ),
+              );
+            }
+            throw error;
+          },
+          loading: () => const DocumentsShimmer(),
+        ),
+      ),
     );
   }
 }

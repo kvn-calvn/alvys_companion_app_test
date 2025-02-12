@@ -78,8 +78,10 @@ class NetworkNotifier extends Notifier<bool> {
       if (state == oldState) return;
       if (!state) {
         if (!_hasInsert) {
-          noInternetOverlay = OverlayEntry(builder: (context) => NoInternetWidget(noInternetOverlay.remove));
-          errorHandler.navKey.currentState!.overlay!.insert(noInternetOverlay);
+          noInternetOverlay = OverlayEntry(
+            builder: (context) => NoInternetWidget(noInternetOverlay.remove),
+          );
+          errorHandler.navKey.currentState?.overlay?.insert(noInternetOverlay);
           _hasInsert = true;
         }
       } else {
@@ -93,7 +95,8 @@ class NetworkNotifier extends Notifier<bool> {
   bool get hasInternet => state;
 }
 
-final internetConnectionCheckerProvider = NotifierProvider<NetworkNotifier, bool>(NetworkNotifier.new);
+final internetConnectionCheckerProvider =
+    NotifierProvider<NetworkNotifier, bool>(NetworkNotifier.new);
 
 class NoInternetWidget extends ConsumerStatefulWidget {
   final void Function() removeBanner;
@@ -103,7 +106,8 @@ class NoInternetWidget extends ConsumerStatefulWidget {
   ConsumerState<NoInternetWidget> createState() => _NoInternetWidgetState();
 }
 
-class _NoInternetWidgetState extends ConsumerState<NoInternetWidget> with SingleTickerProviderStateMixin {
+class _NoInternetWidgetState extends ConsumerState<NoInternetWidget>
+    with SingleTickerProviderStateMixin {
   late AnimationController _controller;
 
   @override
@@ -122,43 +126,45 @@ class _NoInternetWidgetState extends ConsumerState<NoInternetWidget> with Single
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
-        animation: _controller.view,
-        builder: (context, child) {
-          if (ref.watch(internetConnectionCheckerProvider)) {
-            _controller.reverse().then((value) {
-              try {
-                widget.removeBanner.call();
-              } catch (_) {}
-            });
-          }
-          return Stack(
-            children: [
-              Positioned(
-                top: Platform.isIOS ? -10 : 0,
-                left: 0,
-                right: 0,
-                child: ClipRRect(
-                  child: Align(
-                    heightFactor: _controller.value,
-                    child: Container(
-                      color: Colors.red,
-                      alignment: Alignment.center,
-                      child: Material(
-                        color: Colors.transparent,
-                        child: SafeArea(
-                          bottom: false,
-                          child: Text(
-                            'No internet',
-                            style: Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white),
-                          ),
+      animation: _controller.view,
+      builder: (context, child) {
+        if (ref.watch(internetConnectionCheckerProvider)) {
+          _controller.reverse().then((value) {
+            try {
+              widget.removeBanner.call();
+            } catch (_) {}
+          });
+        }
+        return Stack(
+          children: [
+            Positioned(
+              top: Platform.isIOS ? -10 : 0,
+              left: 0,
+              right: 0,
+              child: ClipRRect(
+                child: Align(
+                  heightFactor: _controller.value,
+                  child: Container(
+                    color: Colors.red,
+                    alignment: Alignment.center,
+                    child: Material(
+                      color: Colors.transparent,
+                      child: SafeArea(
+                        bottom: false,
+                        child: Text(
+                          'No internet',
+                          style:
+                              Theme.of(context).textTheme.bodyMedium?.copyWith(color: Colors.white),
                         ),
                       ),
                     ),
                   ),
                 ),
-              )
-            ],
-          );
-        });
+              ),
+            )
+          ],
+        );
+      },
+    );
   }
 }
