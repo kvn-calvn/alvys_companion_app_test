@@ -73,6 +73,7 @@ dependencies:
   ua_client_hints: ^1.4.1
   launchdarkly_flutter_client_sdk: ^4.9.0
   opentelemetry: ^0.18.6
+  firebase_performance: ^0.10.1+2
 dev_dependencies:
   flutter_test:
     sdk: flutter
