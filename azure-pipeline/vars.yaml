@@ -8,13 +8,16 @@ variables:
     environment: "dev"
     iosDistribMethodString: "ad-hoc"
     provisionProfile: "alvys_dev_adhoc.mobileprovision"
+    googleServiceInfoPlist: "google_service_info_dev"
   ${{ if eq(variables['Build.SourceBranchName'], 'qa') }}:
     appIdentifier: "io.alvys.app.qa"
     environment: "qa"
     iosDistribMethodString: "ad-hoc"
     provisionProfile: "alvys_qa_adhoc.mobileprovision"
+    googleServiceInfoPlist: "google_service_info_qa"
   ${{ if eq(variables['Build.SourceBranchName'], 'main') }}:
     appIdentifier: "io.alvys.app"
     environment: "prod"
     iosDistribMethodString: "app-store"
     provisionProfile: "alvys_prod_appstore.mobileprovision"
+    googleServiceInfoPlist: "google_service_info_prod"
