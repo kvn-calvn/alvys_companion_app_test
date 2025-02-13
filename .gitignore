@@ -52,3 +52,7 @@ app.*.map.json
 .env
 .vscode/settings.json
 #/ios/Runner.xcodeproj/project.pbxproj
+/android/app/google-services.json
+/ios/config/dev/GoogleService-Info.plist
+/ios/config/qa/GoogleService-Info.plist
+/ios/config/prod/GoogleService-Info.plist
