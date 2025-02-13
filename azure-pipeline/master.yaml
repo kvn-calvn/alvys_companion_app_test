@@ -11,6 +11,11 @@ stages:
           displayName: Download .env file
           inputs:
             secureFile: 'env'     
+        - task: DownloadSecureFile@1
+          name: GoogleService_Info_plist
+          displayName: Download GoogleService-Info.plist file
+          inputs:
+            secureFile: '${{variables.googleServiceInfoPlist}}' 
         - task: InstallAppleCertificate@2
           enabled: true
           inputs:
@@ -27,6 +32,13 @@ stages:
             targetType: 'inline'
             script: |
               cp $(env.secureFilePath) $(Build.SourcesDirectory)/.env
+        - task: Bash@3
+          displayName: Copy GoogleService-Info file
+          inputs:
+            targetType: 'inline'
+            script: |
+              mkdir -p $(Build.SourcesDirectory)/ios/config/${{variables.environment}}
+              cp $(GoogleService_Info_plist.secureFilePath) $(Build.SourcesDirectory)/ios/config/${{variables.environment}}/GoogleService-Info.plist
         - task: FlutterInstall@0
           inputs:
             mode: 'custom'
@@ -88,7 +100,18 @@ stages:
           inputs:
             targetType: 'inline'
             script: |
-              cp $(env.secureFilePath) $(Build.SourcesDirectory)/.env     
+              cp $(env.secureFilePath) $(Build.SourcesDirectory)/.env   
+        - task: DownloadSecureFile@1
+          name: google_services_json
+          displayName: Download google-services.json file
+          inputs:
+            secureFile: 'google_services_json'   
+        - task: Bash@3
+          displayName: Copy google-services_json file
+          inputs:
+            targetType: 'inline'
+            script: |
+              cp $(google_services_json.secureFilePath) $(Build.SourcesDirectory)/android/app/google-services.json
         - task: DownloadSecureFile@1
           name: key
           displayName: Download .jks file
