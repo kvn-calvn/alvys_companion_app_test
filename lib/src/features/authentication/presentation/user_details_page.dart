@@ -88,7 +88,7 @@ class UserDetailsPage extends ConsumerWidget {
 class ProfileDetailCard extends StatelessWidget {
   final String title;
   final String? content;
-  const ProfileDetailCard({super.key, required this.title, required this.content});
+  const ProfileDetailCard({super.key, required this.title, this.content});
 
   @override
   Widget build(BuildContext context) {
