@@ -49,6 +49,7 @@ stages:
         - script: |
             $(flutterToolPath)/flutter test
           displayName: Run Tests
+          condition: succeeded()
         - script: |
             $(flutterToolPath)/flutter build ios --flavor=${{variables.environment}} --target=lib/${{variables.environment}}.dart --release --no-codesign      
           displayName: "Flutter Build iOS"  
