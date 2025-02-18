@@ -8,6 +8,7 @@ import '../../../../network/firebase_remote_config_service.dart';
 
 import '../../../../network/http_client.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 
 import '../../../../network/posthog/posthog_provider.dart';
 import '../../../../utils/alvys_websocket.dart';
@@ -46,12 +47,11 @@ class _LoadListPageState extends ConsumerState<LoadListPage> with TickerProvider
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       var userState = ref.watch(authProvider);
       final postHogService = ref.read(postHogProvider);
-      //postHogService.postHogScreen('Trips', null);
-      postHogService.postHogIdentify(userState.value?.driver?.id ?? '');
+      postHogService.postHogIdentify(userState.value?.driver?.phone ?? '');
+      FirebaseCrashlytics.instance.setUserIdentifier(userState.value?.driver?.phone?? '');
 
       ref.read(tutorialProvider).startTutorial(context,
           () async => ref.read(tripControllerProvider.notifier).handleAfterTutorial(context));
-      //checkLocationPermission(context);
     });
   }
 
