@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.app.*
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.pm.ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION
 import android.location.Location
 import android.os.Build
 import android.os.IBinder
@@ -130,7 +131,12 @@ class LocationTrackingService : Service() {
             .setSmallIcon(R.mipmap.ic_notification)
             .setContentIntent(pendingIntent)
             .build()
-        startForeground(1, notification)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            startForeground(1, notification, FOREGROUND_SERVICE_TYPE_LOCATION)
+        }
+        else {
+            startForeground(1, notification)
+        }
     }
 
     private fun initData() {
