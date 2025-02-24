@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:alvys3/src/features/authentication/presentation/auth_extension.dart';
 import 'package:app_settings/app_settings.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -22,6 +23,7 @@ class RequestNotification extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref, [bool mounted = true]) {
     var userState = ref.watch(authProvider);
+    final userValue = userState.authValue;
 
     return Scaffold(
         appBar: AppBar(
@@ -67,8 +69,7 @@ class RequestNotification extends ConsumerWidget {
                       isLoading: false,
                       isDisable: false,
                       onPressAction: () async {
-                        var requestNotificationResult =
-                            await Permission.notification.request();
+                        var requestNotificationResult = await Permission.notification.request();
 
                         if (requestNotificationResult.isPermanentlyDenied) {
                           if (context.mounted) {
@@ -84,12 +85,9 @@ class RequestNotification extends ConsumerWidget {
                                         label: 'Allow',
                                         action: () {
                                           AppSettings.openAppSettings(
-                                                  type: AppSettingsType
-                                                      .notification)
+                                                  type: AppSettingsType.notification)
                                               .then((value) => {
-                                                    if (context.mounted)
-                                                      GoRouter.of(context)
-                                                          .pop(),
+                                                    if (context.mounted) GoRouter.of(context).pop(),
                                                   });
                                         },
                                         primary: true),
@@ -126,11 +124,10 @@ class RequestNotification extends ConsumerWidget {
                         if (requestNotificationResult.isGranted) {
                           if (!context.mounted) return;
 
-                          debugPrint(
-                              "PHONE_NUMBER: ${userState.value!.driver!.phone!}");
+                          debugPrint("PHONE_NUMBER: ${userValue.driver!.phone!}");
 
                           PlatformChannel.getNotification(
-                              userState.value!.driver!.phone!,
+                              userValue.driver!.phone!,
                               FlavorConfig.instance!.hubName,
                               FlavorConfig.instance!.connectionString);
 

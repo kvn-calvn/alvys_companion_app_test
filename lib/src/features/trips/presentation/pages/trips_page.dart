@@ -1,3 +1,4 @@
+import 'package:alvys3/src/features/authentication/presentation/auth_extension.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 
 import '../../../authentication/presentation/auth_provider_controller.dart';
@@ -46,9 +47,10 @@ class _LoadListPageState extends ConsumerState<LoadListPage> with TickerProvider
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       var userState = ref.watch(authProvider);
+      final userValue = userState.authValue;
       final postHogService = ref.read(postHogProvider);
-      postHogService.postHogIdentify(userState.value?.driver?.phone ?? '');
-      FirebaseCrashlytics.instance.setUserIdentifier(userState.value?.driver?.phone?? '');
+      postHogService.postHogIdentify(userValue.driver?.phone ?? '');
+      FirebaseCrashlytics.instance.setUserIdentifier(userValue.driver?.phone ?? '');
 
       ref.read(tutorialProvider).startTutorial(context,
           () async => ref.read(tripControllerProvider.notifier).handleAfterTutorial(context));

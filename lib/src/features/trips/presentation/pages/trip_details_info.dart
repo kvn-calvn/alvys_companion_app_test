@@ -1,4 +1,5 @@
 import 'package:alvys3/custom_icons/alvys_mobile_icons.dart';
+import 'package:alvys3/src/features/authentication/presentation/auth_extension.dart';
 import 'package:alvys3/src/utils/helpers.dart';
 
 import '../../../../constants/color.dart';
@@ -16,7 +17,9 @@ class TripDetailsInfo extends ConsumerWidget {
 
   Widget _trailerWidget(BuildContext context, WidgetRef ref) {
     final authState = ref.watch(authProvider);
-    final canEditTrailer = authState.value?.canEditTrailer(trip.companyCode ?? '') ?? false;
+    final userValue = authState.authValue;
+
+    final canEditTrailer = userValue.canEditTrailer(trip.companyCode ?? '');
 
     return Expanded(
       flex: 3,
@@ -79,11 +82,12 @@ class TripDetailsInfo extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var authState = ref.watch(authProvider);
+    final userValue = authState.authValue;
+
     return Column(
       children: [
-        if (trip.driverPayable(authState.value!.tryGetUserTenant(trip.companyCode!)?.assetId) !=
-                null &&
-            authState.value!.shouldShowPayableAmount(trip.companyCode!))
+        if (trip.driverPayable(userValue.tryGetUserTenant(trip.companyCode!)?.assetId) != null &&
+            userValue.shouldShowPayableAmount(trip.companyCode!))
           Card(
             margin: EdgeInsets.zero,
             shape: RoundedRectangleBorder(
@@ -106,9 +110,8 @@ class TripDetailsInfo extends ConsumerWidget {
                             ),
                         children: [
                           TextSpan(
-                            text: Helpers.fixedAmountDecimals(trip.driverPayable(authState.value!
-                                    .tryGetUserTenant(trip.companyCode!)!
-                                    .assetId!) ??
+                            text: Helpers.fixedAmountDecimals(trip.driverPayable(
+                                    userValue.tryGetUserTenant(trip.companyCode!)!.assetId!) ??
                                 0),
                             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                                   fontWeight: FontWeight.w600,

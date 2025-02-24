@@ -17,11 +17,9 @@ class DocumentsArgs {
   DocumentsArgs(this.documentType, this.tripId);
 }
 
-class DocumentsNotifier
-    extends AutoDisposeFamilyAsyncNotifier<DocumentState, DocumentsArgs>
+class DocumentsNotifier extends AutoDisposeFamilyAsyncNotifier<DocumentState, DocumentsArgs>
     implements IErrorHandler {
-  late AppDocumentRepository<DocumentsNotifier, UploadDocumentsController>
-      docRepo;
+  late AppDocumentRepository<DocumentsNotifier, UploadDocumentsController> docRepo;
   late AuthProviderNotifier auth;
   int top = 10;
 
@@ -46,21 +44,19 @@ class DocumentsNotifier
       case DisplayDocumentType.tripDocuments:
         break;
       case DisplayDocumentType.personalDocuments:
-        var res = await docRepo.getPersonalDocs(
-            auth.getCompanyOwned.companyCode!, auth.driver!);
+        var res = await docRepo.getPersonalDocs(auth.getCompanyOwned.companyCode!, auth.driver!);
         state = AsyncData(state.hasValue
             ? state.value!.copyWith(documentList: res)
             : DocumentState(documentList: res));
         break;
       case DisplayDocumentType.paystubs:
         await getPaystubs();
-        state = AsyncData(state.value!
-            .copyWith(canLoadMore: state.value!.documentList.length == top));
+        state =
+            AsyncData(state.value!.copyWith(canLoadMore: state.value!.documentList.length == top));
 
         break;
       case DisplayDocumentType.tripReport:
-        var res = await docRepo.getTripReportDocs(
-            auth.getCompanyOwned.companyCode!, auth.driver!);
+        var res = await docRepo.getTripReportDocs(auth.getCompanyOwned.companyCode!, auth.driver!);
         state = AsyncData(state.hasValue
             ? state.value!.copyWith(documentList: res)
             : DocumentState(documentList: res));
@@ -69,7 +65,7 @@ class DocumentsNotifier
   }
 
   Future<void> getPaystubs() async {
-    if (auth.state.value!.canViewPaystubsAll) {
+    if (auth.state.value?.canViewPaystubsAll ?? false) {
       var res = await docRepo.getPaystubs(
         auth.driver!,
         top = top,
@@ -78,9 +74,8 @@ class DocumentsNotifier
           ? state.value!.copyWith(documentList: res)
           : DocumentState(documentList: res));
     } else {
-      state = AsyncValue.data(state.hasValue
-          ? state.value!.copyWith(documentList: [])
-          : DocumentState());
+      state = AsyncValue.data(
+          state.hasValue ? state.value!.copyWith(documentList: []) : DocumentState());
     }
   }
 
@@ -121,14 +116,13 @@ class DocumentsNotifier
 
   @override
   FutureOr<void> onError(Exception ex) {
-    state = !state.hasValue
-        ? AsyncValue.data(DocumentState())
-        : AsyncData(state.value!);
+    state = !state.hasValue ? AsyncValue.data(DocumentState()) : AsyncData(state.value!);
   }
 
   @override
   FutureOr<void> refreshPage(String page) {}
 }
 
-final documentsProvider = AutoDisposeAsyncNotifierProviderFamily<
-    DocumentsNotifier, DocumentState, DocumentsArgs>(DocumentsNotifier.new);
+final documentsProvider =
+    AutoDisposeAsyncNotifierProviderFamily<DocumentsNotifier, DocumentState, DocumentsArgs>(
+        DocumentsNotifier.new);

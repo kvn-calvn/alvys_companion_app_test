@@ -38,7 +38,8 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IErrorHan
   FutureOr<AuthState> build() {
     authRepo = ref.read(authRepoProvider);
     pref = ref.read(sharedPreferencesProvider)!;
-    state = AsyncValue.data(AuthState(driver: initDriver, driverStatus: status, driverLoggedIn: initDriver != null));
+    state = AsyncValue.data(
+        AuthState(driver: initDriver, driverStatus: status, driverLoggedIn: initDriver != null));
     return state.value!;
   }
 
@@ -55,31 +56,36 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IErrorHan
   }
 
   void logOutDriver() {
-    state = AsyncValue.data(state.value!.copyWith(phone: '', verificationCode: '', driverLoggedIn: false));
+    state = AsyncValue.data(
+        state.value!.copyWith(phone: '', verificationCode: '', driverLoggedIn: false));
   }
 
   DriverUser? get driver => state.value!.driver;
 
   Future<void> verifyDriver(BuildContext context) async {
     state = const AsyncValue.loading();
-    var driverRes = await authRepo.verifyDriverCode(state.value!.phone, state.value!.verificationCode);
+    var driverRes =
+        await authRepo.verifyDriverCode(state.value!.phone, state.value!.verificationCode);
     var driverTenant = driverRes.userTenants.length == 1
         ? driverRes.userTenants.firstOrNull
         : driverRes.userTenants.firstWhereOrNull((element) => element.companyOwnedAsset ?? false);
-    await pref.setString(SharedPreferencesKey.driverData.name, driverRes.toJson().toJsonEncodedString);
+    await pref.setString(
+        SharedPreferencesKey.driverData.name, driverRes.toJson().toJsonEncodedString);
     await pref.setString(
       SharedPreferencesKey.driverToken.name,
-      base64.encode(utf8.encode("${driverRes.userName}:${driverRes.appToken ?? driverRes.currentToken?.accessToken}")),
+      base64.encode(utf8.encode(
+          "${driverRes.userName}:${driverRes.appToken ?? driverRes.currentToken?.accessToken}")),
     );
     String? driverStatus;
     if (driverTenant != null) {
-      var driverAsset = await authRepo.getDriverAsset(driverTenant.companyCode!, driverTenant.assetId!);
-      await pref.setString(
-          SharedPreferencesKey.driverStatus.name, DriverStatus.initStatus(driverAsset.status).titleCase);
+      var driverAsset =
+          await authRepo.getDriverAsset(driverTenant.companyCode!, driverTenant.assetId!);
+      await pref.setString(SharedPreferencesKey.driverStatus.name,
+          DriverStatus.initStatus(driverAsset.status).titleCase);
       driverStatus = DriverStatus.initStatus(driverAsset.status).titleCase;
     }
-    state = AsyncValue.data(
-        state.value!.copyWith(driver: driverRes, driverStatus: driverStatus?.titleCase, hasLoginError: false));
+    state = AsyncValue.data(state.value!
+        .copyWith(driver: driverRes, driverStatus: driverStatus?.titleCase, hasLoginError: false));
     if (driverStatus.equalsIgnoreCase(DriverStatus.offDuty)) {
       await initDriverStatus(DriverStatus.online);
     }
@@ -156,8 +162,8 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IErrorHan
   Future<void> registerForNotification() async {
     var notificationPermission = await PermissionHelper.getPermission(Permission.notification);
     if (notificationPermission) {
-      PlatformChannel.getNotification(
-          state.value!.driver!.phone!, FlavorConfig.instance!.hubName, FlavorConfig.instance!.connectionString);
+      PlatformChannel.getNotification(state.value!.driver!.phone!, FlavorConfig.instance!.hubName,
+          FlavorConfig.instance!.connectionString);
     }
   }
 
@@ -171,7 +177,8 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IErrorHan
       pref.setString(SharedPreferencesKey.driverData.name, user.toJson().toJsonEncodedString);
       pref.setString(
         SharedPreferencesKey.driverToken.name,
-        base64.encode(utf8.encode("${user.userName}:${user.appToken ?? user.currentToken?.accessToken}")),
+        base64.encode(
+            utf8.encode("${user.userName}:${user.appToken ?? user.currentToken?.accessToken}")),
       );
     }
   }
@@ -196,7 +203,10 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IErrorHan
       state = AsyncValue.data(state.value!.copyWith(driverStatus: status));
     });
     var dto = UpdateDriverStatusDTO(
-        status: status.toUpperCase(), id: '', latitude: location.latitude, longitude: location.longitude);
+        status: status.toUpperCase(),
+        id: '',
+        latitude: location.latitude,
+        longitude: location.longitude);
     await authRepo.updateDriverStatus(getCompanyOwned.companyCode!, dto);
   }
 
@@ -220,11 +230,11 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IErrorHan
       .map<String>((e) => e.companyCode!)
       .toList();
 
-  UserTenant? getCurrentUserTenant(String companyCode) =>
-      state.value!.driver!.userTenants.firstWhereOrNull((element) => element.companyCode == companyCode);
+  UserTenant? getCurrentUserTenant(String companyCode) => state.value!.driver!.userTenants
+      .firstWhereOrNull((element) => element.companyCode == companyCode);
   UserTenant get getCompanyOwned {
-    var tenant = state.value!.driver!.userTenants
-            .firstWhereOrNull((element) => (element.companyOwnedAsset ?? false) && !(element.isDisabled ?? true)) ??
+    var tenant = state.value!.driver!.userTenants.firstWhereOrNull(
+            (element) => (element.companyOwnedAsset ?? false) && !(element.isDisabled ?? true)) ??
         state.value!.driver!.userTenants.first;
     if (tenant.isDisabled ?? true) {
       throw AlvysUnauthorizedException(AuthProviderNotifier);
@@ -234,15 +244,16 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IErrorHan
 
   Future<void> refreshDriverUser() async {
     var res = await authRepo.getDriverUser(getCompanyOwned.companyCode!, driver!.id!);
-    var driverTenant = res.userTenants
-        .firstWhereOrNull((element) => (element.companyOwnedAsset ?? false) && !(element.isDisabled ?? true));
+    var driverTenant = res.userTenants.firstWhereOrNull(
+        (element) => (element.companyOwnedAsset ?? false) && !(element.isDisabled ?? true));
     updateUser(res);
     if (driverTenant != null) {
-      var driverAsset = await authRepo.getDriverAsset(driverTenant.companyCode!, driverTenant.assetId!);
-      await pref.setString(
-          SharedPreferencesKey.driverStatus.name, DriverStatus.initStatus(driverAsset.status).titleCase);
-      state =
-          AsyncValue.data(state.value!.copyWith(driverStatus: DriverStatus.initStatus(driverAsset.status).titleCase));
+      var driverAsset =
+          await authRepo.getDriverAsset(driverTenant.companyCode!, driverTenant.assetId!);
+      await pref.setString(SharedPreferencesKey.driverStatus.name,
+          DriverStatus.initStatus(driverAsset.status).titleCase);
+      state = AsyncValue.data(state.value!
+          .copyWith(driverStatus: DriverStatus.initStatus(driverAsset.status).titleCase));
     }
   }
 
@@ -263,11 +274,3 @@ class AuthProviderNotifier extends AsyncNotifier<AuthState> implements IErrorHan
 }
 
 var authProvider = AsyncNotifierProvider<AuthProviderNotifier, AuthState>(AuthProviderNotifier.new);
-
-
-// ACCEPT NOT WORKING
-// connection issues: reaccept, error in backend
-// integration not available (extreme)
-
-// TENDER NOT AVAILABLE
-

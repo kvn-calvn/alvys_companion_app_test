@@ -1,3 +1,4 @@
+import 'package:alvys3/src/features/authentication/presentation/auth_extension.dart';
 import 'package:alvys3/src/utils/helpers.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:flutter/material.dart';
@@ -19,6 +20,8 @@ class TripCard extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var authState = ref.watch(authProvider);
+    var authValue = authState.authValue;
+
     return LayoutBuilder(builder: (context, constraints) {
       return Padding(
         padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -54,7 +57,7 @@ class TripCard extends ConsumerWidget {
                           'Trip# ${trip.tripNumber}',
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
-                        if (authState.value!.shouldShowOOPRate(trip.companyCode!))
+                        if (authValue.shouldShowOOPRate(trip.companyCode!))
                           Text(
                             Helpers.fixedAmountDecimals(trip.tripValue ?? 0),
                             style: Theme.of(context).textTheme.bodyMedium,
