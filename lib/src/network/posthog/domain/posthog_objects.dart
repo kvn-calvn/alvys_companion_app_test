@@ -84,7 +84,8 @@ class PosthogTimeRecordLog with _$PosthogTimeRecordLog {
     @JsonKey(name: 'load_number') required String loadNumber,
     @JsonKey(includeIfNull: false) required bool? success,
     required String distance,
-    required String location,
+    required String location, 
+    required String stopId, required String stopName,
   }) = _PosthogTimeRecordLog;
 
   factory PosthogTimeRecordLog.fromJson(Map<String, dynamic> json) => _$PosthogTimeRecordLogFromJson(json);
