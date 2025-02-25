@@ -157,10 +157,6 @@ class _LoadListPageState extends ConsumerState<LoadListPage> with TickerProvider
         bottom: TabBar(
           controller: _tabController,
           labelStyle: Theme.of(context).textTheme.bodyLarge,
-          onTap: (value) {
-            /*if (functions.isLoading)
-                  setState(() => tabController.index = 0);*/
-          },
           tabs: const <Widget>[
             Tab(
               child: TabText('Active'),
@@ -174,15 +170,18 @@ class _LoadListPageState extends ConsumerState<LoadListPage> with TickerProvider
           ],
         ),
       ),
-      body: TabBarView(controller: _tabController, children: const [
-        TripList(),
-        FilteredTripPage(
-          filterType: TripFilterType.delivered,
-        ),
-        FilteredTripPage(
-          filterType: TripFilterType.processing,
-        ),
-      ]),
+      body: TabBarView(
+        controller: _tabController,
+        children: const [
+          TripList(),
+          FilteredTripPage(
+            filterType: TripFilterType.delivered,
+          ),
+          FilteredTripPage(
+            filterType: TripFilterType.processing,
+          ),
+        ],
+      ),
     );
   }
 }
