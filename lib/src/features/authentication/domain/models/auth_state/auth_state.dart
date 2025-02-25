@@ -27,33 +27,53 @@ class AuthState with _$AuthState {
   factory AuthState.fromJson(Map<String, dynamic> json) => _$AuthStateFromJson(json);
 
   bool shouldShowEcheckButton(String companyCode) =>
-      (tryGetUserTenant(companyCode)?.permissions.containsIgnoreCase(UserPermissions.generateEcheck) ?? false);
+      tryGetUserTenant(companyCode)
+          ?.permissions
+          .containsIgnoreCase(UserPermissions.generateEcheck) ??
+      false;
 
   bool shouldShowCancelEcheckButton(String companyCode, String? echeckUserId) {
-    return (tryGetUserTenant(companyCode)?.permissions.containsIgnoreCase(UserPermissions.cancelEcheck) ?? false) &&
+    return (tryGetUserTenant(companyCode)
+                ?.permissions
+                .containsIgnoreCase(UserPermissions.cancelEcheck) ??
+            false) &&
         driver?.id == (echeckUserId ?? "");
   }
 
   bool shouldShowOOPRate(String companyCode) =>
-      tryGetUserTenant(companyCode)?.permissions.containsIgnoreCase(UserPermissions.viewOOPRate) ?? false;
+      tryGetUserTenant(companyCode)?.permissions.containsIgnoreCase(UserPermissions.viewOOPRate) ??
+      false;
 
   bool shouldShowPayableAmount(String companyCode) =>
-      tryGetUserTenant(companyCode)?.permissions.containsIgnoreCase(UserPermissions.viewPayableAmount) ?? false;
+      tryGetUserTenant(companyCode)
+          ?.permissions
+          .containsIgnoreCase(UserPermissions.viewPayableAmount) ??
+      false;
 
   bool shouldShowCarrierConfirmations(String companyCode) =>
-      tryGetUserTenant(companyCode)?.permissions.containsIgnoreCase(UserPermissions.viewCarrierRateConfirmation) ??
+      tryGetUserTenant(companyCode)
+          ?.permissions
+          .containsIgnoreCase(UserPermissions.viewCarrierRateConfirmation) ??
       false;
 
   bool shouldShowCustomerRateConfirmations(String companyCode) =>
-      tryGetUserTenant(companyCode)?.permissions.containsIgnoreCase(UserPermissions.viewCustomerRateConfirmation) ??
+      tryGetUserTenant(companyCode)
+          ?.permissions
+          .containsIgnoreCase(UserPermissions.viewCustomerRateConfirmation) ??
       false;
 
   bool get canViewPaystubsAll => driver!.userTenants
       .where((element) => element.companyOwnedAsset ?? false)
       .expand((element) => element.permissions)
       .containsIgnoreCase(UserPermissions.viewPaystubs);
+
   bool canViewPaystubs(String companyCode) =>
-      tryGetUserTenant(companyCode)?.permissions.containsIgnoreCase(UserPermissions.viewPaystubs) ?? false;
+      tryGetUserTenant(companyCode)?.permissions.containsIgnoreCase(UserPermissions.viewPaystubs) ??
+      false;
+
   bool canEditTrailer(String companyCode) =>
-      tryGetUserTenant(companyCode)?.permissions.containsIgnoreCase(UserPermissions.editTrailerNumber) ?? false;
+      tryGetUserTenant(companyCode)
+          ?.permissions
+          .containsIgnoreCase(UserPermissions.editTrailerNumber) ??
+      false;
 }

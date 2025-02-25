@@ -1,3 +1,4 @@
+import 'package:alvys3/src/features/authentication/presentation/auth_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -44,6 +45,8 @@ class ProfileList extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var userState = ref.watch(authProvider);
+    final authValue = userState.authValue;
+
     return RefreshIndicator.adaptive(
       onRefresh: ref.read(authProvider.notifier).refreshDriverUser,
       child: ListView(
@@ -53,7 +56,7 @@ class ProfileList extends ConsumerWidget {
             height: 10,
           ),
           LargeNavButton(
-            title: userState.value?.driver?.name ?? "User Details",
+            title: authValue.driver?.name ?? "User Details",
             onPressed: () {
               context.goNamed(RouteName.userDetails.name);
             },
@@ -64,7 +67,7 @@ class ProfileList extends ConsumerWidget {
               context.goNamed(RouteName.personalDocumentsList.name);
             },
           ),
-          if (userState.value!.canViewPaystubsAll)
+          if (authValue.canViewPaystubsAll)
             LargeNavButton(
               title: "Paystubs",
               onPressed: () {

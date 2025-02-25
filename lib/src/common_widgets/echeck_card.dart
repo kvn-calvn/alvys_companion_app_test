@@ -1,3 +1,5 @@
+import 'package:alvys3/src/features/authentication/presentation/auth_extension.dart';
+
 import '../network/posthog/domain/posthog_objects.dart';
 
 import '../network/posthog/posthog_provider.dart';
@@ -73,6 +75,8 @@ class EcheckCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var state = ref.watch(echeckPageControllerProvider.call((stopId: null)));
     var authState = ref.watch(authProvider);
+    var authValue = authState.authValue;
+
     var postHogService = ref.watch(postHogProvider);
 
     return LayoutBuilder(builder: (context, constraints) {
@@ -91,7 +95,7 @@ class EcheckCard extends ConsumerWidget {
                 onLongPress: () {
                   showEcheckMenu(
                     context,
-                    authState.value!.shouldShowCancelEcheckButton(companyCode, eCheck.userId),
+                    authValue.shouldShowCancelEcheckButton(companyCode, eCheck.userId),
                     state.value!.loadingEcheckId,
                     eCheck,
                     postHogService,
@@ -179,8 +183,7 @@ class EcheckCard extends ConsumerWidget {
                         onPressed: () {
                           showEcheckMenu(
                             context,
-                            authState.value!
-                                .shouldShowCancelEcheckButton(companyCode, eCheck.userId),
+                            authValue.shouldShowCancelEcheckButton(companyCode, eCheck.userId),
                             state.value!.loadingEcheckId,
                             eCheck,
                             postHogService,

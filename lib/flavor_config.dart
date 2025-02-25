@@ -5,7 +5,6 @@ class FlavorConfig {
   final String env;
   final String rawApiBase;
   final String baseUrl;
-  final String storageUrl;
   final String mobileBaseApi;
 
   final String gMapsKey;
@@ -25,7 +24,6 @@ class FlavorConfig {
     required String env,
     required String rawApiBase,
     required String baseUrl,
-    required String storageUrl,
     required String mobileBaseApi,
     required String gMapsKey,
     required String hereMapsKey,
@@ -41,7 +39,6 @@ class FlavorConfig {
       env,
       rawApiBase,
       baseUrl,
-      storageUrl,
       mobileBaseApi,
       gMapsKey,
       hereMapsKey,
@@ -60,7 +57,6 @@ class FlavorConfig {
     this.env,
     this.rawApiBase,
     this.baseUrl,
-    this.storageUrl,
     this.mobileBaseApi,
     this.gMapsKey,
     this.hereMapsKey,

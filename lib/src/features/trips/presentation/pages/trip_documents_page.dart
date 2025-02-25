@@ -1,3 +1,4 @@
+import 'package:alvys3/src/features/authentication/presentation/auth_extension.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
 import 'package:intl/intl.dart';
 
@@ -27,14 +28,19 @@ class TripDocuments extends ConsumerWidget {
     var state = ref.watch(tripControllerProvider);
     var notifier = ref.read(tripControllerProvider.notifier);
     var authState = ref.watch(authProvider);
+
+    final authValue = authState.authValue;
+
     var trip = state.value!.tryGetTrip(tripId);
     if (state.isLoading) return const DocumentsShimmer();
 
     if (trip == null) {
       return const EmptyView(title: 'Trip Not found', description: 'Return to the previous page');
     }
-    var attachments = trip.getAttachments(authState.value!.shouldShowCustomerRateConfirmations(trip.companyCode!),
-        authState.value!.shouldShowCarrierConfirmations(trip.companyCode!));
+    var attachments = trip.getAttachments(
+      authValue.shouldShowCustomerRateConfirmations(trip.companyCode!),
+      authValue.shouldShowCarrierConfirmations(trip.companyCode!),
+    );
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         key: ref.read(tutorialProvider).documentButton,
@@ -55,7 +61,8 @@ class TripDocuments extends ConsumerWidget {
         child: RefreshIndicator(
           onRefresh: () => notifier.refreshCurrentTrip(tripId),
           child: attachments.isEmpty
-              ? const EmptyView(title: 'No Load Documents', description: 'Uploaded documents will appear here.')
+              ? const EmptyView(
+                  title: 'No Load Documents', description: 'Uploaded documents will appear here.')
               : ListView.builder(
                   itemCount: attachments.length,
                   padding: const EdgeInsets.only(top: 16.0),
@@ -63,8 +70,11 @@ class TripDocuments extends ConsumerWidget {
                     var doc = attachments[index];
                     return LargeNavButton(
                         title: doc.documentType,
-                        subtitle: DateFormat('MMM d, yyyy @ HH:mm').formatNullDate(doc.date?.toLocal(), ""),
-                        key: index == 0 && tripId == testTrip.id! ? ref.read(tutorialProvider).documentCard : null,
+                        subtitle: DateFormat('MMM d, yyyy @ HH:mm')
+                            .formatNullDate(doc.date?.toLocal(), ""),
+                        key: index == 0 && tripId == testTrip.id!
+                            ? ref.read(tutorialProvider).documentCard
+                            : null,
                         onPressed: () {
                           context.pushNamed(RouteName.tripDocumentView.name,
                               extra: doc, pathParameters: {ParamType.tripId.name: tripId});

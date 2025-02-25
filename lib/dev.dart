@@ -10,7 +10,6 @@ void main() {
     rawApiBase: "devapi.alvys.net",
     baseUrl: "https://devapi.alvys.net/api/",
     mobileBaseApi: 'https://devapi.alvys.net/api/mobile/',
-    storageUrl: "https://devfiles.alvys.net/",
     androidGeniusScanSDKKey: Env.androidGeniusScanSDKKeyDEV,
     iosGeniusScanSDKKey: Env.iOSGeniusScanSDKKeyDEV,
     azureTelemetryKey: Env.azureTelemetryConnectionStringDEV,

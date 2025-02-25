@@ -1,8 +1,6 @@
 import 'dart:async';
 
 import 'package:alvys3/src/features/documents/data/repositories/documents_repository.dart';
-import 'package:alvys3/src/utils/launch_darkly.dart';
-import 'package:alvys3/src/utils/magic_strings.dart';
 import 'package:flutter_pdfview/flutter_pdfview.dart';
 
 import '../../../network/http_client.dart';
@@ -41,22 +39,11 @@ class _PDFViewerState extends ConsumerState<PDFViewer> {
   Future<void> initPdf() async {
     path = "${(await getTemporaryDirectory()).path}/doc.pdf";
 
-    final useSecureStorage = ref
-        .read(launchDarklyClientProvider)
-        .client
-        .boolVariation(LaunchDarklyFeature.documentSecureDownload, false);
-
     try {
-      String? documentUrl;
-      if (useSecureStorage) {
-        documentUrl =
-            await ref.read(documentsRepositoryProvider).getDocumentUrl(
-                  widget.arguments.companyCode,
-                  widget.arguments.documentPath,
-                );
-      } else {
-        documentUrl = widget.arguments.documentUrl;
-      }
+      final documentUrl = await ref.read(documentsRepositoryProvider).getDocumentUrl(
+            widget.arguments.companyCode,
+            widget.arguments.documentPath,
+          );
 
       await Dio().download(
         documentUrl,
@@ -106,9 +93,7 @@ class _PDFViewerState extends ConsumerState<PDFViewer> {
               await Share.shareXFiles([XFile(path)]);
               ref.read(httpClientProvider).telemetryClient.trackEvent(
                   name: "share_document",
-                  additionalProperties: {
-                    "document_type": widget.arguments.documentType
-                  });
+                  additionalProperties: {"document_type": widget.arguments.documentType});
               await FirebaseAnalytics.instance.logEvent(
                   name: "share_document",
                   parameters: {"document_type": widget.arguments.documentType});
@@ -129,9 +114,7 @@ class _PDFViewerState extends ConsumerState<PDFViewer> {
                       strokeWidth: 16,
                     ),
                   ),
-                  progress > 0
-                      ? Text('${(progress * 100).ceil()}')
-                      : const SizedBox.shrink(),
+                  progress > 0 ? Text('${(progress * 100).ceil()}') : const SizedBox.shrink(),
                 ],
               )
             : errorMessage.isNotEmpty

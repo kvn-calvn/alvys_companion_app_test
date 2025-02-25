@@ -1,3 +1,4 @@
+import 'package:alvys3/src/features/authentication/presentation/auth_extension.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:lottie/lottie.dart';
@@ -13,7 +14,9 @@ class DriverStatusDropdown extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     var authState = ref.watch(authProvider);
-    var status = authState.value!.driverStatus;
+    var authValue = authState.authValue;
+
+    var status = authValue.driverStatus;
     return DropdownButtonHideUnderline(
       key: ref.read(tutorialProvider).sleepDropdown,
       child: DropdownButton(
@@ -27,8 +30,7 @@ class DriverStatusDropdown extends ConsumerWidget {
                   child: Row(
                     children: [
                       e == DriverStatus.online
-                          ? Lottie.asset('assets/lottie/green_pulse.json',
-                              width: 30, height: 30)
+                          ? Lottie.asset('assets/lottie/green_pulse.json', width: 30, height: 30)
                           : const Padding(
                               padding: EdgeInsets.all(8.0),
                               child: Icon(
