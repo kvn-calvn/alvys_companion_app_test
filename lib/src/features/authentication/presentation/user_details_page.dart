@@ -1,3 +1,5 @@
+import 'package:alvys3/src/features/authentication/presentation/auth_extension.dart';
+
 import '../../../network/firebase_remote_config_service.dart';
 import '../../../utils/magic_strings.dart';
 import 'package:coder_matthews_extensions/coder_matthews_extensions.dart';
@@ -16,6 +18,7 @@ class UserDetailsPage extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     var showEditProfile = ref.watch(firebaseRemoteConfigServiceProvider).showEditProfileBtn();
     var userState = ref.watch(authProvider);
+    var userValue = userState.authValue;
 
     return Scaffold(
       appBar: AppBar(
@@ -47,37 +50,37 @@ class UserDetailsPage extends ConsumerWidget {
           // TextButton(onPressed: () {}, child: const Text("Edit Picture")),
           ProfileDetailCard(
             title: 'Full Name',
-            content: userState.value?.driver?.name,
+            content: userValue.driver?.name,
           ),
           ProfileDetailCard(
             title: 'Email',
-            content: userState.value?.driver?.email,
+            content: userValue.driver?.email,
           ),
           ProfileDetailCard(
             title: 'Phone',
-            content: userState.value?.driver?.phone,
+            content: userValue.driver?.phone,
           ),
           ProfileDetailCard(
             title: 'Tenant(s)',
-            content: userState.value?.driver?.companyCodesWithSpace,
+            content: userValue.driver?.companyCodesWithSpace,
           ),
           ProfileDetailCard(
             title: 'Address',
-            content: userState.value?.driver?.address?.formattedAddress,
+            content: userValue.driver?.address?.formattedAddress,
           ),
           ProfileDetailCard(
             title: 'License #',
-            content: userState.value?.driver?.driversLicenceNumber,
+            content: userValue.driver?.driversLicenceNumber,
           ),
           ProfileDetailCard(
             title: 'License Expiration Date',
             content: DateFormat('MMM d, yyyy', 'en_US').formatNullDate(
-              userState.value?.driver?.driversLicenceExpirationDate,
+              userValue.driver?.driversLicenceExpirationDate,
             ),
           ),
           ProfileDetailCard(
             title: 'License Issue State',
-            content: userState.value?.driver?.driversLicenceState,
+            content: userValue.driver?.driversLicenceState,
           ),
         ],
       ),

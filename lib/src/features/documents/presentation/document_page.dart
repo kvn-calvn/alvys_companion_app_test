@@ -1,3 +1,4 @@
+import 'package:alvys3/src/features/authentication/presentation/auth_extension.dart';
 import 'package:http/http.dart';
 
 import '../../../common_widgets/empty_view.dart';
@@ -41,6 +42,8 @@ class _DocumentsPageState extends ConsumerState<DocumentsPage> {
   Widget build(BuildContext context) {
     final docsState = ref.watch(documentsProvider.call(widget.args));
     final authState = ref.watch(authProvider);
+    final userValue = authState.authValue;
+
     return Scaffold(
       appBar: AppBar(
         elevation: 0,
@@ -71,7 +74,7 @@ class _DocumentsPageState extends ConsumerState<DocumentsPage> {
         child: docsState.when(
           skipError: true,
           data: (value) => DocumentList(
-            documents: value.documents(widget.args.documentType, authState.value!.canViewPaystubs),
+            documents: value.documents(widget.args.documentType, userValue.canViewPaystubs),
             refreshFunction: () async {
               await ref.read(documentsProvider.call(widget.args).notifier).getDocuments();
             },
