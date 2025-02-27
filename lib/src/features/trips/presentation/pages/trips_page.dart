@@ -48,7 +48,7 @@ class _LoadListPageState extends ConsumerState<LoadListPage> with TickerProvider
       var userState = ref.watch(authProvider);
       final postHogService = ref.read(postHogProvider);
       postHogService.postHogIdentify(userState.value?.driver?.phone ?? '');
-      FirebaseCrashlytics.instance.setUserIdentifier(userState.value?.driver?.phone?? '');
+      FirebaseCrashlytics.instance.setUserIdentifier(userState.value?.driver?.phone ?? '');
 
       ref.read(tutorialProvider).startTutorial(context,
           () async => ref.read(tripControllerProvider.notifier).handleAfterTutorial(context));
@@ -155,10 +155,6 @@ class _LoadListPageState extends ConsumerState<LoadListPage> with TickerProvider
         bottom: TabBar(
           controller: _tabController,
           labelStyle: Theme.of(context).textTheme.bodyLarge,
-          onTap: (value) {
-            /*if (functions.isLoading)
-                  setState(() => tabController.index = 0);*/
-          },
           tabs: const <Widget>[
             Tab(
               child: TabText('Active'),
@@ -172,15 +168,18 @@ class _LoadListPageState extends ConsumerState<LoadListPage> with TickerProvider
           ],
         ),
       ),
-      body: TabBarView(controller: _tabController, children: const [
-        TripList(),
-        FilteredTripPage(
-          filterType: TripFilterType.delivered,
-        ),
-        FilteredTripPage(
-          filterType: TripFilterType.processing,
-        ),
-      ]),
+      body: TabBarView(
+        controller: _tabController,
+        children: const [
+          TripList(),
+          FilteredTripPage(
+            filterType: TripFilterType.delivered,
+          ),
+          FilteredTripPage(
+            filterType: TripFilterType.processing,
+          ),
+        ],
+      ),
     );
   }
 }
