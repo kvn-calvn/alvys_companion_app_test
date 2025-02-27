@@ -98,8 +98,11 @@ class TelemetrySpanHelper {
     setHeaders = <String, String>{};
     currentSpan = tracer.startSpan('mobile-http');
     var propagator = W3CTraceContextPropagator();
-    propagator.inject(contextWithSpanContext(globalContextManager.active, currentSpan!.spanContext),
-        setHeaders, CustomTextMapSetter());
+    propagator.inject(
+      contextWithSpanContext(Context.current, currentSpan!.spanContext),
+      setHeaders,
+      CustomTextMapSetter(),
+    );
   }
 
   void endSpan() {
