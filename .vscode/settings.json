@@ -1,18 +1,17 @@
 {
-    "java.configuration.updateBuildConfiguration": "interactive",
-    "dart.flutterSdkPath": "/Users/codermatthews/Documents/FlutterSDK/flutter",
-    "yaml.schemas": {
-        "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/vars.json": "file:///Users/kcalvin/Documents/Flutter/Projects/AlvysMobileAppV3/azure-pipeline/vars.yaml"
-    },
-    "dart.lineLength": 100,
-    "[dart]": {
-        "editor.rulers": [
-            100
-        ],
-    },
-    // fix and format on save
-    "editor.codeActionsOnSave": {
-        "source.fixAll": "always",
-    },
-    "editor.formatOnSave": true,
+  "java.configuration.updateBuildConfiguration": "interactive",
+  "dart.flutterSdkPath": ".fvm/versions/3.29.0",
+  "yaml.schemas": {
+    "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/vars.json": "file:///Users/kcalvin/Documents/Flutter/Projects/AlvysMobileAppV3/azure-pipeline/vars.yaml"
+  },
+  "dart.lineLength": 100,
+  "[dart]": {
+    "editor.rulers": [
+      100
+    ]
+  },
+  "editor.codeActionsOnSave": {
+    "source.fixAll": "always"
+  },
+  "editor.formatOnSave": true
 }

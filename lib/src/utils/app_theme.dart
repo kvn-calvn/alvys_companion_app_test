@@ -75,7 +75,7 @@ class AlvysTheme {
           isDense: true,
           fillColor: brightness.isLight ? Colors.white : ColorManager.lightgrey2,
           filled: true,
-          border: AlvysOutlineBorder(brightness),
+          border: AlvysOutlineBorder.resolve(brightness),
         ),
         textSelectionTheme: TextSelectionThemeData(
           cursorColor: ColorManager.primary(brightness),
@@ -223,23 +223,21 @@ class AlvysTheme {
   }
 }
 
-class AlvysOutlineBorder extends MaterialStateUnderlineInputBorder {
-  final Brightness brightness;
-
-  const AlvysOutlineBorder(this.brightness);
-  @override
-  InputBorder resolve(Set<WidgetState> states) {
-    Color color = Colors.grey.withAlpha((255.0 * 0.6).round());
-    if (states.contains(WidgetState.focused)) {
-      color = ColorManager.primary(brightness).withAlpha((255.0 * 0.8).round());
-    }
-    if (states.contains(WidgetState.error)) {
-      color = ColorManager.cancelColor;
-    }
-    return OutlineInputBorder(
-      borderSide: BorderSide(color: color, width: 1),
-      borderRadius: BorderRadius.circular(10),
-    );
+class AlvysOutlineBorder {
+  static InputBorder resolve(Brightness brightness) {
+    return WidgetStateInputBorder.resolveWith((states) {
+      Color color = Colors.grey.withAlpha((255.0 * 0.6).round());
+      if (states.contains(WidgetState.focused)) {
+        color = ColorManager.primary(brightness).withAlpha((255.0 * 0.8).round());
+      }
+      if (states.contains(WidgetState.error)) {
+        color = ColorManager.cancelColor;
+      }
+      return OutlineInputBorder(
+        borderSide: BorderSide(color: color, width: 1),
+        borderRadius: BorderRadius.circular(10),
+      );
+    });
   }
 }
 
