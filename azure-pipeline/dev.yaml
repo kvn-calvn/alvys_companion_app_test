@@ -2,7 +2,7 @@ trigger:
   - dev
   
 pool: 
-  vmImage: "macOS-13"
+  vmImage: "macOS-15"
 
 extends:
  template: master.yaml
