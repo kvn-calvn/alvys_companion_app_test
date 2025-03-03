@@ -47,6 +47,10 @@ stages:
             $(flutterToolPath)/flutter pub get && $(flutterToolPath)/flutter pub run build_runner build --delete-conflicting-outputs
           displayName: Build Runner     
         - script: |
+            $(flutterToolPath)/flutter test
+          displayName: Run Tests
+          condition: succeeded()
+        - script: |
             $(flutterToolPath)/flutter build ios --flavor=${{variables.environment}} --target=lib/${{variables.environment}}.dart --release --no-codesign      
           displayName: "Flutter Build iOS"  
 
@@ -143,6 +147,10 @@ stages:
             $(flutterToolPath)/flutter pub get && $(flutterToolPath)/flutter pub run build_runner build --delete-conflicting-outputs
           displayName: Build Runner 
         - script: |
+            $(flutterToolPath)/flutter test
+          displayName: Run Tests
+          condition: succeeded()
+        - script: |
             $(flutterToolPath)/flutter build appbundle --flavor=${{variables.environment}} --target=lib/${{variables.environment}}.dart   
           displayName: "Build Android"      
         - script: |
@@ -175,4 +183,3 @@ stages:
             PathtoPublish: '$(Build.ArtifactStagingDirectory)/app-${{variables.environment}}-release-universal.apk'
             ArtifactName: 'apk'
             publishLocation: 'Container'
-       
