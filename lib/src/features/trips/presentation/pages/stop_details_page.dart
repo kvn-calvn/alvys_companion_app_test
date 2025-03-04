@@ -45,8 +45,13 @@ class _StopDetailsPageState extends ConsumerState<StopDetailsPage> {
             onPressed: () async {
               await ref.read(tripControllerProvider.notifier).refreshCurrentTrip(widget.tripId);
               if (mounted) {
-                ref.read(postHogProvider).postHogTrackEvent(PosthogTag.userRefreshStopdetails.toSnakeCase, null);
-                ref.read(httpClientProvider).telemetryClient.trackEvent(name: "stop_refresh_button_tapped");
+                ref
+                    .read(postHogProvider)
+                    .postHogTrackEvent(PosthogTag.userRefreshStopdetails.toSnakeCase, null);
+                ref
+                    .read(httpClientProvider)
+                    .telemetryClient
+                    .trackEvent(name: "stop_refresh_button_tapped");
                 await FirebaseAnalytics.instance.logEvent(name: "stop_refresh_button_tapped");
               }
             },
@@ -87,7 +92,10 @@ class StopDetails extends ConsumerWidget {
       onRefresh: () async {
         await ref.read(tripControllerProvider.notifier).refreshCurrentTrip(tripId);
         if (context.mounted) {
-          ref.read(httpClientProvider).telemetryClient.trackEvent(name: "stop_refresh_button_tapped");
+          ref
+              .read(httpClientProvider)
+              .telemetryClient
+              .trackEvent(name: "stop_refresh_button_tapped");
           await FirebaseAnalytics.instance.logEvent(name: "stop_refresh_button_tapped");
         }
       },
@@ -177,7 +185,10 @@ class StopDetails extends ConsumerWidget {
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         Text(
-                          DateFormat.yMMMd().addPattern('@').add_Hm().formatNullDate(currentStop.arrived?.localDate),
+                          DateFormat.yMMMd()
+                              .addPattern('@')
+                              .add_Hm()
+                              .formatNullDate(currentStop.arrived?.localDate),
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
@@ -190,7 +201,10 @@ class StopDetails extends ConsumerWidget {
                           style: Theme.of(context).textTheme.bodyLarge,
                         ),
                         Text(
-                          DateFormat.yMMMd().addPattern('@').add_Hm().formatNullDate(currentStop.departed?.localDate),
+                          DateFormat.yMMMd()
+                              .addPattern('@')
+                              .add_Hm()
+                              .formatNullDate(currentStop.departed?.localDate),
                           style: Theme.of(context).textTheme.bodyMedium,
                         ),
                       ],
@@ -213,7 +227,9 @@ class StopDetails extends ConsumerWidget {
                       style: Theme.of(context).textTheme.bodyLarge,
                     ),
                     HtmlWidget(
-                      currentStop.genInstructions.isNullOrEmpty ? '-' : currentStop.genInstructions!,
+                      currentStop.genInstructions.isNullOrEmpty
+                          ? '-'
+                          : currentStop.genInstructions!,
                     ),
                     /*Text(
                       currentStop.genInstructions.isNullOrEmpty
@@ -286,24 +302,27 @@ class ReferenceDetailsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return LayoutBuilder(
         builder: (context, constraints) => Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 const SizedBox(height: 12),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                Wrap(
+                  alignment: WrapAlignment.spaceBetween,
+                  crossAxisAlignment: WrapCrossAlignment.start,
                   children: [
                     Text(
                       reference.name ?? '',
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.bold),
+                      style: Theme.of(context)
+                          .textTheme
+                          .bodyMedium
+                          ?.copyWith(fontWeight: FontWeight.bold),
                     ),
                     ConstrainedBox(
-                      constraints: BoxConstraints(maxWidth: constraints.maxWidth * 0.6),
-                      child: Text(reference.getValue,
-                          style: Theme.of(context).textTheme.bodyMedium,
-                          textAlign: TextAlign.right,
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 10,
-                          softWrap: true),
+                      constraints: BoxConstraints(maxWidth: constraints.maxWidth * 0.62),
+                      child: Text(
+                        reference.getValue,
+                        style: Theme.of(context).textTheme.bodyMedium,
+                        textAlign: TextAlign.right,
+                      ),
                     )
                   ],
                 ),
@@ -372,7 +391,9 @@ class ItemsWidget extends StatelessWidget {
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                             Text(
-                              item.numPieces.isNull ? '-' : NumberFormat.decimalPattern().format(item.numPieces ?? 0),
+                              item.numPieces.isNull
+                                  ? '-'
+                                  : NumberFormat.decimalPattern().format(item.numPieces ?? 0),
                               style: Theme.of(context).textTheme.bodyMedium,
                             ),
                           ],
