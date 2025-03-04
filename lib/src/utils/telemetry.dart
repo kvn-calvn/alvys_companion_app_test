@@ -99,7 +99,7 @@ class TelemetrySpanHelper {
     currentSpan = tracer.startSpan('mobile-http');
     var propagator = W3CTraceContextPropagator();
     propagator.inject(
-      contextWithSpanContext(Context.current, currentSpan!.spanContext),
+      contextWithSpanContext(globalContextManager.active, currentSpan!.spanContext),
       setHeaders,
       CustomTextMapSetter(),
     );
