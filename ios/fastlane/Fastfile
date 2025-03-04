@@ -33,7 +33,7 @@ platform :ios do
 
   desc "Build for Development"
   lane :build_dev do
-    build(flavor: 'dev', appId: 'io.alvys.app.dev', profile: 'Alvys Dev Adhoc' )
+    build(flavor: 'dev', appId: 'io.alvys.app.dev', profile: 'alvys_dev_adhoc' )
   end
 
   desc "Build for QA"
