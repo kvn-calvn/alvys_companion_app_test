@@ -112,7 +112,6 @@ class _SearchTrailerPageState extends ConsumerState<SearchTrailerPage> {
                     focusNode: focus,
                     style: Theme.of(context).textTheme.bodyMedium,
                     autofocus: true,
-                    enabled: !trailerState.isLoading,
                     controller: textController,
                     decoration: InputDecoration(
                       hintText: 'Enter Number',
