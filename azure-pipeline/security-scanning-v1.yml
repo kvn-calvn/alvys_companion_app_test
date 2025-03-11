@@ -18,7 +18,7 @@ pool:
   vmImage: "macOS-15"
 
 variables:
-  flutterVersion: "3.29.0"
+  flutterVersion: "3.29.1"
   flutterToolPath: "$(Agent.ToolsDirectory)/Flutter/${flutterVersion}/macos/flutter/bin"
   keyPropertiesPath: "$(Build.SourcesDirectory)/android/key.properties"
   bundlToolVersion: "1.15.6"
