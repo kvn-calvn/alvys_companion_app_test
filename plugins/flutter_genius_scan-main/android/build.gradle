@@ -1,0 +1,46 @@
+group 'com.geniusscansdk.flutter_genius_scan'
+version '1.0-SNAPSHOT'
+
+buildscript {
+    repositories {
+        google()
+        jcenter()
+    }
+
+    dependencies {
+        classpath 'com.android.tools.build:gradle:8.1.2'
+    }
+}
+
+rootProject.allprojects {
+    repositories {
+        mavenLocal()
+        google()
+        mavenCentral()
+        maven {
+            url 'https://s3.amazonaws.com/tgl.maven'
+            content {
+                includeGroup('com.geniusscansdk')
+            }
+        }
+    }
+}
+
+apply plugin: 'com.android.library'
+
+android {
+    namespace 'com.geniusscansdk.flutter'
+    compileSdkVersion 35
+
+    defaultConfig {
+        minSdkVersion 21
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    lintOptions {
+        disable 'InvalidPackage'
+    }
+}
+
+dependencies {
+    implementation 'com.geniusscansdk:gssdk:5.6.1'
+}

@@ -46,9 +46,7 @@ dependencies:
   permission_handler: ^11.0.0
   app_settings: 5.1.1
   flutter_genius_scan:
-    git:
-      url: https://github.com/bryanjorgealvys/flutter_genius_scan.git
-      ref: main
+    path: ./plugins/flutter_genius_scan-main
   image_picker: ^1.1.2
   material_symbols_icons: ^4.2668.0
   google_maps_flutter: ^2.10.1
