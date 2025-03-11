@@ -1,0 +1,21 @@
+name: flutter_genius_scan
+description: Flutter plugin for the Genius Scan SDK for iOS and Android. It allows scanning paper documents using a smartphone camera.
+version: 5.6.1
+homepage: https://www.geniusscansdk.com
+
+environment:
+  sdk: ">=2.12.0 <3.0.0"
+  flutter: ">=1.12.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+flutter:
+  plugin:
+    platforms:
+      android:
+        package: com.geniusscansdk.flutter
+        pluginClass: FlutterGeniusScanPlugin
+      ios:
+        pluginClass: FlutterGeniusScanPlugin
