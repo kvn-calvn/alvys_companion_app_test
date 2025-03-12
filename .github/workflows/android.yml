@@ -19,11 +19,9 @@ jobs:
 
       - name: Set environment variables
         run: |
-          branch=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
-          echo "Branch name1: $branch"
-          BRANCH_NAME=${GITHUB_REF##*/}
+          BRANCH_NAME=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
           echo "Branch name: $BRANCH_NAME"
-
+          
           if [[ "$BRANCH_NAME" == "dev" ]]; then
             echo "APP_ID=io.alvys.app.dev" >> $GITHUB_ENV
             echo "ENV=dev" >> $GITHUB_ENV
