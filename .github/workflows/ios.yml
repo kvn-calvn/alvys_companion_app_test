@@ -79,13 +79,13 @@ jobs:
           bundle exec fastlane ios build_${{ env.ENV }}
 
       - name: Upload IPA
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ipa
           path: ios/alvys-${{ env.ENV }}.ipa
 
       - name: Upload Release Notes
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: release_notes
           path: release_notes.txt
