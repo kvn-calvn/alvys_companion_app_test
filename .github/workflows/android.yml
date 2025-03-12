@@ -64,6 +64,7 @@ jobs:
 
       - name: Debug ENV_FILE content (REMOVE IN PRODUCTION)
         run: |
+          ls
           echo "First 10 characters of ENV_FILE:"
           head .env
 
