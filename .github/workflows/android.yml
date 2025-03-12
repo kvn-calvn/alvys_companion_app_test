@@ -20,14 +20,14 @@ jobs:
       - name: Set environment variables
         run: |
           if [[ $GITHUB_REF == 'refs/heads/dev' ]]; then
-            echo "APP_ID=io.alvys.app.dev" >> $GITHUB_ENV
-            echo "ENV=dev" >> $GITHUB_ENV
+            echo "APP_ID=io.alvys.app.dev" >> "$GITHUB_ENV"
+            echo "ENV=dev" >> "$GITHUB_ENV"
           elif [[ $GITHUB_REF == 'refs/heads/qa' ]]; then
-            echo "APP_ID=io.alvys.app.qa" >> $GITHUB_ENV
-            echo "ENV=qa" >> $GITHUB_ENV
+            echo "APP_ID=io.alvys.app.qa" >> "$GITHUB_ENV"
+            echo "ENV=qa" >> "$GITHUB_ENV"
           elif [[ $GITHUB_REF == 'refs/heads/main' ]]; then
-            echo "APP_ID=io.alvys.app" >> $GITHUB_ENV
-            echo "ENV=prod" >> $GITHUB_ENV
+            echo "APP_ID=io.alvys.app" >> "$GITHUB_ENV"
+            echo "ENV=prod" >> "$GITHUB_ENV"
           fi
 
       - name: Set up JDK
@@ -61,12 +61,6 @@ jobs:
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: "stable"
-
-      - name: Debug ENV_FILE content (REMOVE IN PRODUCTION)
-        run: |
-          ls
-          echo "First 10 characters of ENV_FILE:"
-          cat .env
 
       - name: Install dependencies & run build_runner
         run: |
