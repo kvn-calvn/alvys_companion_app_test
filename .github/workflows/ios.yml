@@ -2,9 +2,16 @@ name: iOS Build
 
 on:
   push:
-    branches: [qa, dev, main]
+    branches:
+      - 'qa'
+      - 'dev'
+      - 'main'
   pull_request:
-    branches: [qa, dev, main]
+    branches:
+      - 'qa'
+      - 'dev'
+      - 'main'
+    types: [opened, synchronize]
 
 env:
   FLUTTER_VERSION: "3.29.1"
