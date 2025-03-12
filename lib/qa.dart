@@ -7,7 +7,7 @@ void main() {
   FlavorConfig(
     flavor: Flavor.qa,
     env: Flavor.qa.toUpperCase,
-    rawApiBase: "alvysapi-qa.azurewebsites.net",
+    rawApiBase: "qaapi.alvys.net",
     baseUrl: "https://qaapi.alvys.net/api/",
     mobileBaseApi: 'https://qaapi.alvys.net/api/mobile/',
     androidGeniusScanSDKKey: Env.androidGeniusScanSDKKeyQA,
