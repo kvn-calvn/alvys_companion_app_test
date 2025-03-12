@@ -36,11 +36,6 @@ jobs:
           distribution: "temurin"
           java-version: "17"
 
-      - name: Debug ENV_FILE content (REMOVE IN PRODUCTION)
-        run: |
-          echo "First 10 characters of ENV_FILE:"
-          echo "${{ secrets.ENV_FILE }}" | head -c 10
-
       - name: Download .env file
         run: |
           echo "${{ secrets.ENV_FILE }}" > .env
@@ -66,6 +61,11 @@ jobs:
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: "stable"
+
+      - name: Debug ENV_FILE content (REMOVE IN PRODUCTION)
+        run: |
+          echo "First 10 characters of ENV_FILE:"
+          head .env
 
       - name: Install dependencies & run build_runner
         run: |
