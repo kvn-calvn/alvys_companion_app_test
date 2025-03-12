@@ -19,17 +19,21 @@ jobs:
 
       - name: Set environment variables
         run: |
-          if [[ $GITHUB_REF == 'refs/heads/dev' ]]; then
-            echo "APP_ID=io.alvys.app.dev" >> "$GITHUB_ENV"
-            echo "ENV=dev" >> "$GITHUB_ENV"
-          elif [[ $GITHUB_REF == 'refs/heads/qa' ]]; then
-            echo "APP_ID=io.alvys.app.qa" >> "$GITHUB_ENV"
-            echo "ENV=qa" >> "$GITHUB_ENV"
-          elif [[ $GITHUB_REF == 'refs/heads/main' ]]; then
-            echo "APP_ID=io.alvys.app" >> "$GITHUB_ENV"
-            echo "ENV=prod" >> "$GITHUB_ENV"
-          fi
+          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          echo "Branch name: $BRANCH_NAME"
 
+          if [[ "$BRANCH_NAME" == "dev" ]]; then
+            echo "APP_ID=io.alvys.app.dev" >> $GITHUB_ENV
+            echo "ENV=dev" >> $GITHUB_ENV
+          elif [[ "$BRANCH_NAME" == "qa" ]]; then
+            echo "APP_ID=io.alvys.app.qa" >> $GITHUB_ENV
+            echo "ENV=qa" >> $GITHUB_ENV
+          elif [[ "$BRANCH_NAME" == "main" ]]; then
+            echo "APP_ID=io.alvys.app" >> $GITHUB_ENV
+            echo "ENV=prod" >> $GITHUB_ENV
+          fi
+          echo "Set ENV to: ${{ env.ENV }}"
+          
       - name: Set up JDK
         uses: actions/setup-java@v3
         with:
