@@ -38,16 +38,7 @@ jobs:
 
       - name: Download .env file
         run: |
-          pwd
-          echo "Current directory structure:"
-          ls -la
           echo "${{ secrets.ENV_FILE }}" > .env
-          echo "Verifying .env file:"
-          ls -la .env
-          echo "File contents (first line):"
-          head -n 1 .env
-          echo "Working directory contents after creating .env:"
-          ls -la
 
       - name: Download google-services.json
         run: echo "${{ secrets.GOOGLE_SERVICES_JSON }}" > android/app/google-services.json
