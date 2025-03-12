@@ -36,6 +36,11 @@ jobs:
           distribution: "temurin"
           java-version: "17"
 
+      - name: Debug ENV_FILE content (REMOVE IN PRODUCTION)
+        run: |
+          echo "First 10 characters of ENV_FILE:"
+          echo "${{ secrets.ENV_FILE }}" | head -c 10
+
       - name: Download .env file
         run: |
           echo "${{ secrets.ENV_FILE }}" > .env
