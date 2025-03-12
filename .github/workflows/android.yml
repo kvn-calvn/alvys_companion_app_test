@@ -37,7 +37,6 @@ jobs:
           java-version: "17"
 
       - name: Download .env file
-        run: echo "${{ secrets.ENV_FILE }}" > .env
         run: |
           echo "${{ secrets.ENV_FILE }}" > .env
           if [ ! -f .env ]; then
