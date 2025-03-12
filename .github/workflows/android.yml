@@ -2,9 +2,16 @@ name: Android Build
 
 on:
   push:
-    branches: [qa, dev, main]
+    branches:
+      - 'qa'
+      - 'dev'
+      - 'main'
   pull_request:
-    branches: [qa, dev, main]
+    branches:
+      - 'qa'
+      - 'dev'
+      - 'main'
+    types: [opened, synchronize]
 
 env:
   FLUTTER_VERSION: "3.29.1"
@@ -13,6 +20,10 @@ env:
 jobs:
   build-android:
     runs-on: ubuntu-latest
+    if: |
+      github.ref == 'refs/heads/qa' ||
+      github.ref == 'refs/heads/dev' ||
+      github.ref == 'refs/heads/main'
 
     steps:
       - uses: actions/checkout@v4
