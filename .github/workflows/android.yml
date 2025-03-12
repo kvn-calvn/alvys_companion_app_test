@@ -38,6 +38,14 @@ jobs:
 
       - name: Download .env file
         run: echo "${{ secrets.ENV_FILE }}" > .env
+        run: |
+          echo "${{ secrets.ENV_FILE }}" > .env
+          if [ ! -f .env ]; then
+            echo "Error: .env file was not created"
+            exit 1
+          fi
+          echo "Created .env file at $(pwd)/.env"
+          ls -la .env
 
       - name: Download google-services.json
         run: echo "${{ secrets.GOOGLE_SERVICES_JSON }}" > android/app/google-services.json
