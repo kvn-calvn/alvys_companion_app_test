@@ -20,7 +20,6 @@ jobs:
       github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v4
-
       - name: Set environment variables
         run: |
           BRANCH_NAME=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
@@ -41,7 +40,6 @@ jobs:
         with:
           distribution: "temurin"
           java-version: "17"
-
       - name: Download .env file
         run: |
           echo '${{ secrets.ENV_FILE }}' | base64 --decode > .env
@@ -72,14 +70,12 @@ jobs:
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: "stable"
-
       - name: Install dependencies & run build_runner
         run: |
           flutter pub get
           flutter pub run build_runner build --delete-conflicting-outputs
       - name: Build Android
         run: flutter build appbundle --flavor=${{ env.ENV }} --target=lib/${{ env.ENV }}.dart
-
       - name: Generate Universal APK
         run: |
           cd build/app/outputs/bundle/${{ env.ENV }}Release
@@ -104,111 +100,12 @@ jobs:
         with:
           name: aab
           path: build/app/outputs/bundle/${{ env.ENV }}Release/app-${{ env.ENV }}-release.aab
-
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: apk
           path: build/app/outputs/bundle/${{ env.ENV }}Release/app-${{ env.ENV }}-release-universal.apk
       - uses: actions/checkout@v4
-
-      - name: Set environment variables
-        run: |
-          BRANCH_NAME=${GITHUB_REF#refs/heads/}
-          echo "Branch name: $BRANCH_NAME"
-
-          if [[ "$BRANCH_NAME" == "dev" ]]; then
-            echo "APP_ID=io.alvys.app.dev" >> $GITHUB_ENV
-            echo "ENV=dev" >> $GITHUB_ENV
-          elif [[ "$BRANCH_NAME" == "qa" ]]; then
-            echo "APP_ID=io.alvys.app.qa" >> $GITHUB_ENV
-            echo "ENV=qa" >> $GITHUB_ENV
-          elif [[ "$BRANCH_NAME" == "main" ]]; then
-            echo "APP_ID=io.alvys.app" >> $GITHUB_ENV
-            echo "ENV=prod" >> $GITHUB_ENV
-          else
-            echo "Error: Unknown branch $BRANCH_NAME"
-            exit 1
-          fi
-
-          echo "Set ENV to: ${{ env.ENV }}"
-
-      - name: Set up JDK
-        uses: actions/setup-java@v3
-        with:
-          distribution: "temurin"
-          java-version: "17"
-
-      - name: Download .env file
-        run: |
-          cat << 'EOL' > .env
-          ${{ secrets.ENV_FILE }}
-          EOL
-
-          if [ ! -s .env ]; then
-            echo "Error: .env file is empty"
-            exit 1
-          fi
-
-          echo "Verifying .env file:"
-          ls -la .env
-          echo "File contents preview (first 3 lines):"
-          head -n 3 .env
-
-      - name: Download google-services.json
-        run: echo "${{ secrets.GOOGLE_SERVICES_JSON }}" > android/app/google-services.json
-
-      - name: Setup Android keystore
-        run: |
-          echo "${{ secrets.ALVYS_JKS }}" | base64 --decode > android/app/key.jks
-          echo "storeFile=key.jks" > android/key.properties
-          echo "storePassword=${{ secrets.STORE_PASSWORD }}" >> android/key.properties
-          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
-          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
-
-      - name: Download bundletool
-        run: |
-          curl -o bundletool.jar -L "https://github.com/google/bundletool/releases/download/$(echo $BUNDLETOOL_VERSION)/bundletool-all-$(echo $BUNDLETOOL_VERSION).jar"
-          chmod +x bundletool.jar
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: "stable"
-
-      - name: Install dependencies & run build_runner
-        run: |
-          flutter pub get
-          flutter pub run build_runner build --delete-conflicting-outputs
-
-      - name: Build Android
-        run: flutter build appbundle --flavor=${{ env.ENV }} --target=lib/${{ env.ENV }}.dart
-
-      - name: Generate Universal APK
-        run: |
-          cd build/app/outputs/bundle/${{ env.ENV }}Release
-          java -jar ../../../../bundletool.jar build-apks \
-            --mode=universal \
-            --bundle=app-${{ env.ENV }}-release.aab \
-            --output=app-${{ env.ENV }}-release.apks \
-            --ks=../../../../../android/app/key.jks \
-            --ks-pass=pass:${{ secrets.STORE_PASSWORD }} \
-            --ks-key-alias=${{ secrets.KEY_ALIAS }} \
-            --key-pass=pass:${{ secrets.KEY_PASSWORD }}
-          unzip -p app-${{ env.ENV }}-release.apks universal.apk > app-${{ env.ENV }}-release-universal.apk
-
-      - name: Upload AAB
-        uses: actions/upload-artifact@v4
-        with:
-          name: aab
-          path: build/app/outputs/bundle/${{ env.ENV }}Release/app-${{ env.ENV }}-release.aab
-
-      - name: Upload APK
-        uses: actions/upload-artifact@v4
-        with:
-          name: apk
-          path: build/app/outputs/bundle/${{ env.ENV }}Release/app-${{ env.ENV }}-release-universal.apk
   build-ios:
     runs-on: macos-latest
     if: |
@@ -217,7 +114,6 @@ jobs:
       github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v4
-
       - name: Set environment variables
         run: |
           BRANCH_NAME=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
@@ -254,7 +150,6 @@ jobs:
         with:
           p12-file-base64: ${{ secrets.APPLE_DISTRIBUTION_P12 }}
           p12-password: ${{ secrets.P12_PWD }}
-
       - name: Install Provisioning Profile
         run: |
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
@@ -264,7 +159,6 @@ jobs:
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
           channel: "stable"
-
       - name: Install dependencies & run build_runner
         run: |
           flutter pub get
@@ -282,7 +176,6 @@ jobs:
         with:
           name: ipa
           path: ios/alvys-${{ env.ENV }}.ipa
-
       - name: Upload Release Notes
         uses: actions/upload-artifact@v4
         with:
