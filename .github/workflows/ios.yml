@@ -1,106 +1,106 @@
-name: iOS Build
+# name: iOS Build
 
-on:
-  push:
-    branches:
-      - 'qa'
-      - 'dev'
-      - 'main'
-  pull_request:
-    branches:
-      - 'qa'
-      - 'dev'
-      - 'main'
-    types: [opened, synchronize]
+# on:
+#   push:
+#     branches:
+#       - 'qa'
+#       - 'dev'
+#       - 'main'
+#   pull_request:
+#     branches:
+#       - 'qa'
+#       - 'dev'
+#       - 'main'
+#     types: [opened, synchronize]
 
-env:
-  FLUTTER_VERSION: "3.29.1"
+# env:
+#   FLUTTER_VERSION: "3.29.1"
 
-jobs:
-  build-ios:
-    runs-on: macos-latest
-    if: |
-      github.ref == 'refs/heads/qa' ||
-      github.ref == 'refs/heads/dev' ||
-      github.ref == 'refs/heads/main'
+# jobs:
+#   build-ios:
+#     runs-on: macos-latest
+#     if: |
+#       github.ref == 'refs/heads/qa' ||
+#       github.ref == 'refs/heads/dev' ||
+#       github.ref == 'refs/heads/main'
 
-    steps:
-      - uses: actions/checkout@v4
+#     steps:
+#       - uses: actions/checkout@v4
 
-      - name: Set environment variables
-        run: |
-          BRANCH_NAME=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
-          echo "Branch name: $BRANCH_NAME"
-           
-          if [[ "$BRANCH_NAME" == "dev" ]]; then
-            echo "APP_ID=io.alvys.app.dev" >> $GITHUB_ENV
-            echo "ENV=dev" >> $GITHUB_ENV
-            echo "GOOGLE_SERVICE_INFO=${{ secrets.GOOGLE_SERVICE_INFO_PLIST_DEV }}" >> $GITHUB_ENV
-            echo "PROVISIONING_PROFILE_DATA=${{ secrets.PROVISIONING_PROFILE_DEV }}" >> $GITHUB_ENV
-            echo "PROVISION_PROFILE=alvys_dev_adhoc.mobileprovision" >> $GITHUB_ENV
-          elif [[ "$BRANCH_NAME" == "qa" ]]; then
-            echo "APP_ID=io.alvys.app.qa" >> $GITHUB_ENV
-            echo "ENV=qa" >> $GITHUB_ENV
-            echo "GOOGLE_SERVICE_INFO=${{ secrets.GOOGLE_SERVICE_INFO_PLIST_QA }}" >> $GITHUB_ENV
-            echo "PROVISIONING_PROFILE_DATA=${{ secrets.PROVISIONING_PROFILE_QA }}" >> $GITHUB_ENV
-            echo "PROVISION_PROFILE=alvys_qa_adhoc.mobileprovision" >> $GITHUB_ENV
-          elif [[ "$BRANCH_NAME" == "main" ]]; then
-            echo "APP_ID=io.alvys.app" >> $GITHUB_ENV
-            echo "ENV=prod" >> $GITHUB_ENV
-            echo "GOOGLE_SERVICE_INFO=${{ secrets.GOOGLE_SERVICE_INFO_PLIST_PROD }}" >> $GITHUB_ENV
-            echo "PROVISIONING_PROFILE_DATA=${{ secrets.PROVISIONING_PROFILE_PROD_APPSTORE }}" >> $GITHUB_ENV
-            echo "PROVISION_PROFILE=alvys_prod_appstore.mobileprovision" >> $GITHUB_ENV
-          fi
+#       - name: Set environment variables
+#         run: |
+#           BRANCH_NAME=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
+#           echo "Branch name: $BRANCH_NAME"
 
-      - name: Download .env file
-        run: |
-          echo '${{ secrets.ENV_FILE }}' | base64 --decode > .env
+#           if [[ "$BRANCH_NAME" == "dev" ]]; then
+#             echo "APP_ID=io.alvys.app.dev" >> $GITHUB_ENV
+#             echo "ENV=dev" >> $GITHUB_ENV
+#             echo "GOOGLE_SERVICE_INFO=${{ secrets.GOOGLE_SERVICE_INFO_PLIST_DEV }}" >> $GITHUB_ENV
+#             echo "PROVISIONING_PROFILE_DATA=${{ secrets.PROVISIONING_PROFILE_DEV }}" >> $GITHUB_ENV
+#             echo "PROVISION_PROFILE=alvys_dev_adhoc.mobileprovision" >> $GITHUB_ENV
+#           elif [[ "$BRANCH_NAME" == "qa" ]]; then
+#             echo "APP_ID=io.alvys.app.qa" >> $GITHUB_ENV
+#             echo "ENV=qa" >> $GITHUB_ENV
+#             echo "GOOGLE_SERVICE_INFO=${{ secrets.GOOGLE_SERVICE_INFO_PLIST_QA }}" >> $GITHUB_ENV
+#             echo "PROVISIONING_PROFILE_DATA=${{ secrets.PROVISIONING_PROFILE_QA }}" >> $GITHUB_ENV
+#             echo "PROVISION_PROFILE=alvys_qa_adhoc.mobileprovision" >> $GITHUB_ENV
+#           elif [[ "$BRANCH_NAME" == "main" ]]; then
+#             echo "APP_ID=io.alvys.app" >> $GITHUB_ENV
+#             echo "ENV=prod" >> $GITHUB_ENV
+#             echo "GOOGLE_SERVICE_INFO=${{ secrets.GOOGLE_SERVICE_INFO_PLIST_PROD }}" >> $GITHUB_ENV
+#             echo "PROVISIONING_PROFILE_DATA=${{ secrets.PROVISIONING_PROFILE_PROD_APPSTORE }}" >> $GITHUB_ENV
+#             echo "PROVISION_PROFILE=alvys_prod_appstore.mobileprovision" >> $GITHUB_ENV
+#           fi
 
-      - name: Download GoogleService-Info.plist
-        run: |
-          mkdir -p ios/config/${{ env.ENV }}
-          echo "${{ env.GOOGLE_SERVICE_INFO }}" | base64 --decode > ios/config/${{ env.ENV }}/GoogleService-Info.plist
+#       - name: Download .env file
+#         run: |
+#           echo '${{ secrets.ENV_FILE }}' | base64 --decode > .env
 
-      - name: Install Apple Certificate
-        uses: apple-actions/import-codesign-certs@v1
-        with:
-          p12-file-base64: ${{ secrets.APPLE_DISTRIBUTION_P12 }}
-          p12-password: ${{ secrets.P12_PWD }}
+#       - name: Download GoogleService-Info.plist
+#         run: |
+#           mkdir -p ios/config/${{ env.ENV }}
+#           echo "${{ env.GOOGLE_SERVICE_INFO }}" | base64 --decode > ios/config/${{ env.ENV }}/GoogleService-Info.plist
 
-      - name: Install Provisioning Profile
-        run: |
-          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
-          echo "${{ env.PROVISIONING_PROFILE_DATA }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/${{ env.PROVISION_PROFILE }}
+#       - name: Install Apple Certificate
+#         uses: apple-actions/import-codesign-certs@v1
+#         with:
+#           p12-file-base64: ${{ secrets.APPLE_DISTRIBUTION_P12 }}
+#           p12-password: ${{ secrets.P12_PWD }}
 
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: "stable"
+#       - name: Install Provisioning Profile
+#         run: |
+#           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+#           echo "${{ env.PROVISIONING_PROFILE_DATA }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/${{ env.PROVISION_PROFILE }}
 
-      - name: Install dependencies & run build_runner
-        run: |
-          flutter pub get
-          flutter pub run build_runner build --delete-conflicting-outputs
+#       - name: Setup Flutter
+#         uses: subosito/flutter-action@v2
+#         with:
+#           flutter-version: ${{ env.FLUTTER_VERSION }}
+#           channel: "stable"
 
-      - name: Build iOS
-        run: |
-          flutter build ios --flavor=${{ env.ENV }} --target=lib/${{ env.ENV }}.dart --release --no-codesign
+#       - name: Install dependencies & run build_runner
+#         run: |
+#           flutter pub get
+#           flutter pub run build_runner build --delete-conflicting-outputs
 
-      - name: Build and Sign iOS App
-        run: |
-          cd ios
-          bundle install
-          bundle exec fastlane ios build_${{ env.ENV }}
+#       - name: Build iOS
+#         run: |
+#           flutter build ios --flavor=${{ env.ENV }} --target=lib/${{ env.ENV }}.dart --release --no-codesign
 
-      - name: Upload IPA
-        uses: actions/upload-artifact@v4
-        with:
-          name: ipa
-          path: ios/alvys-${{ env.ENV }}.ipa
+#       - name: Build and Sign iOS App
+#         run: |
+#           cd ios
+#           bundle install
+#           bundle exec fastlane ios build_${{ env.ENV }}
 
-      - name: Upload Release Notes
-        uses: actions/upload-artifact@v4
-        with:
-          name: release_notes
-          path: release_notes.txt
+#       - name: Upload IPA
+#         uses: actions/upload-artifact@v4
+#         with:
+#           name: ipa
+#           path: ios/alvys-${{ env.ENV }}.ipa
+
+#       - name: Upload Release Notes
+#         uses: actions/upload-artifact@v4
+#         with:
+#           name: release_notes
+#           path: release_notes.txt
