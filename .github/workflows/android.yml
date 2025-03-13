@@ -63,10 +63,10 @@ jobs:
         run: |
           echo "${{ secrets.ALVYS_JKS }}" | base64 --decode > android/app/key.jks
           echo "storeFile=key.jks" > android/key.properties
-          echo "storePassword=${{ secrets.STORE_PASSWORD }}" >> android/key.properties
-          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
-          echo "keyPassword=${{ secrets.KEY_PASSWORD }}" >> android/key.properties
-
+          echo "storePassword=${{openssl enc -base64 -d <<< ${{ secrets.STORE_PASSWORD }}}}" >> android/key.properties
+          echo "keyAlias=${{openssl enc -base64 -d <<< ${{ secrets.KEY_ALIAS }}}}" >> android/key.properties
+          echo "keyPassword=${{openssl enc -base64 -d <<< ${{ secrets.KEY_PASSWORD }}}}" >> android/key.properties
+          
       - name: Download bundletool
         run: |
           curl -o bundletool.jar -L "https://github.com/google/bundletool/releases/download/$(echo $BUNDLETOOL_VERSION)/bundletool-all-$(echo $BUNDLETOOL_VERSION).jar"
