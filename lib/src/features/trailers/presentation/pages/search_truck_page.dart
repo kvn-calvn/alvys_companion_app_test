@@ -2,7 +2,7 @@ import 'dart:async';
 
 import '../../../../../custom_icons/alvys_mobile_icons.dart';
 import '../../../../common_widgets/custom_bottom_sheet.dart';
-import '../../../../common_widgets/shimmers/search_trailers_List_shimmer.dart';
+import '../../../../common_widgets/shimmers/search_trailers_list_shimmer.dart';
 import '../../domain/search_trailer_state/search_trailer_state.dart';
 import '../../domain/trailer_request/trailer_request.dart';
 import '../../domain/trailer_result/trailer_result.dart';
