@@ -75,6 +75,7 @@ jobs:
         run: |
           curl -o bundletool.jar -L "https://github.com/google/bundletool/releases/download/${{ env.BUNDLETOOL_VERSION }}/bundletool-all-${{ env.BUNDLETOOL_VERSION }}.jar"
           chmod +x bundletool.jar
+          ls
 
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
@@ -94,7 +95,7 @@ jobs:
         run: |
           cd build/app/outputs/bundle/${{ env.ENV }}Release
           ls
-          java -jar ../../../../bundletool.jar build-apks \
+          java -jar ${{ github.workspace }}/bundletool.jar build-apks \
             --mode=universal \
             --bundle=app-${{ env.ENV }}-release.aab \
             --output=app-${{ env.ENV }}-release.apks \
