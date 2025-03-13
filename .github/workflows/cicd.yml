@@ -9,7 +9,7 @@ on:
 
 env:
   FLUTTER_VERSION: "3.29.1"
-  JAVA_VERSION: "17"
+  BUNDLETOOL_VERSION: "1.15.6"
 
 jobs:
   build-android:
