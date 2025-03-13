@@ -98,14 +98,23 @@ jobs:
         run: |
           cd build/app/outputs/bundle/${{ env.ENV }}Release
           ls
+          # Decode secrets
+          echo "${{ secrets.STORE_PASSWORD }}" | base64 -d > store_password.txt
+          echo "${{ secrets.KEY_ALIAS }}" | base64 -d > key_alias.txt
+          echo "${{ secrets.KEY_PASSWORD }}" | base64 -d > key_password.txt
+
           java -jar ${{ github.workspace }}/bundletool.jar build-apks \
             --mode=universal \
             --bundle=app-${{ env.ENV }}-release.aab \
             --output=app-${{ env.ENV }}-release.apks \
             --ks=../../../../../android/app/key.jks \
-            --ks-pass=pass:${{ secrets.STORE_PASSWORD }} \
-            --ks-key-alias=${{ secrets.KEY_ALIAS }} \
-            --key-pass=pass:${{ secrets.KEY_PASSWORD }}
+            --ks-pass=pass:$(cat store_password.txt) \
+            --ks-key-alias=$(cat key_alias.txt) \
+            --key-pass=pass:$(cat key_password.txt)
+
+          # Clean up secret files
+          rm store_password.txt key_alias.txt key_password.txt
+
           unzip -p app-${{ env.ENV }}-release.apks universal.apk > app-${{ env.ENV }}-release-universal.apk
 
       - name: Upload AAB
