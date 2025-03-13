@@ -29,19 +29,22 @@ jobs:
 
       - name: Set environment variables
         run: |
-          if [[ $GITHUB_REF == 'refs/heads/dev' ]]; then
+          BRANCH_NAME=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
+          echo "Branch name: $BRANCH_NAME"
+           
+          if [[ "$BRANCH_NAME" == "dev" ]]; then
             echo "APP_ID=io.alvys.app.dev" >> $GITHUB_ENV
             echo "ENV=dev" >> $GITHUB_ENV
             echo "GOOGLE_SERVICE_INFO=${{ secrets.GOOGLE_SERVICE_INFO_PLIST_DEV }}" >> $GITHUB_ENV
             echo "PROVISIONING_PROFILE_DATA=${{ secrets.PROVISIONING_PROFILE_DEV }}" >> $GITHUB_ENV
             echo "PROVISION_PROFILE=alvys_dev_adhoc.mobileprovision" >> $GITHUB_ENV
-          elif [[ $GITHUB_REF == 'refs/heads/qa' ]]; then
+          elif [[ "$BRANCH_NAME" == "qa" ]]; then
             echo "APP_ID=io.alvys.app.qa" >> $GITHUB_ENV
             echo "ENV=qa" >> $GITHUB_ENV
             echo "GOOGLE_SERVICE_INFO=${{ secrets.GOOGLE_SERVICE_INFO_PLIST_QA }}" >> $GITHUB_ENV
             echo "PROVISIONING_PROFILE_DATA=${{ secrets.PROVISIONING_PROFILE_QA }}" >> $GITHUB_ENV
             echo "PROVISION_PROFILE=alvys_qa_adhoc.mobileprovision" >> $GITHUB_ENV
-          elif [[ $GITHUB_REF == 'refs/heads/main' ]]; then
+          elif [[ "$BRANCH_NAME" == "main" ]]; then
             echo "APP_ID=io.alvys.app" >> $GITHUB_ENV
             echo "ENV=prod" >> $GITHUB_ENV
             echo "GOOGLE_SERVICE_INFO=${{ secrets.GOOGLE_SERVICE_INFO_PLIST_PROD }}" >> $GITHUB_ENV
@@ -50,12 +53,13 @@ jobs:
           fi
 
       - name: Download .env file
-        run: echo "${{ secrets.ENV_FILE }}" > .env
+        run: |
+          echo '${{ secrets.ENV_FILE }}' | base64 --decode > .env
 
       - name: Download GoogleService-Info.plist
         run: |
           mkdir -p ios/config/${{ env.ENV }}
-          echo "${{ env.GOOGLE_SERVICE_INFO }}" > ios/config/${{ env.ENV }}/GoogleService-Info.plist
+          echo "${{ env.GOOGLE_SERVICE_INFO }}" | base64 --decode > ios/config/${{ env.ENV }}/GoogleService-Info.plist
 
       - name: Install Apple Certificate
         uses: apple-actions/import-codesign-certs@v1
