@@ -108,13 +108,13 @@ jobs:
           unzip -p app-${{ env.ENV }}-release.apks universal.apk > app-${{ env.ENV }}-release-universal.apk
 
       - name: Upload AAB
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: aab
           path: build/app/outputs/bundle/${{ env.ENV }}Release/app-${{ env.ENV }}-release.aab
 
       - name: Upload APK
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: apk
           path: build/app/outputs/bundle/${{ env.ENV }}Release/app-${{ env.ENV }}-release-universal.apk
@@ -212,13 +212,13 @@ jobs:
           bundle exec fastlane ios build_${{ env.ENV }}
 
       - name: Upload IPA
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: ipa
           path: ios/alvys-${{ env.ENV }}.ipa
 
       - name: Upload Release Notes
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: release_notes
           path: release_notes.txt
