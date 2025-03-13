@@ -66,7 +66,9 @@ jobs:
           echo "${{ secrets.STORE_PASSWORD }}" | base64 -d > store_password.txt
           echo "storePassword=$(cat store_password.txt)" >> android/key.properties
           rm store_password.txt
-          echo "keyAlias=${{ secrets.KEY_ALIAS }}" >> android/key.properties
+          echo "${{ secrets.KEY_ALIAS }}" | base64 -d > key_alias.txt
+          echo "keyAlias=$(cat key_alias.txt)" >> android/key.properties
+          rm key_alias.txt
           echo "${{ secrets.KEY_PASSWORD }}" | base64 -d > key_password.txt
           echo "keyPassword=$(cat key_password.txt)" >> android/key.properties
           rm key_password.txt
