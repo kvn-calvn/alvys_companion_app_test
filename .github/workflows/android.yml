@@ -71,7 +71,7 @@ jobs:
           echo "keyPassword=$(cat key_password.txt)" >> android/key.properties
           rm key_password.txt
 
-      - name: Download bundletool
+      - name: Download Bundletool
         run: |
           curl -o bundletool.jar -L "https://github.com/google/bundletool/releases/download/${{ env.BUNDLETOOL_VERSION }}/bundletool-all-${{ env.BUNDLETOOL_VERSION }}.jar"
           chmod +x bundletool.jar
