@@ -73,7 +73,7 @@ jobs:
 
       - name: Download bundletool
         run: |
-          curl -o bundletool.jar -L "https://github.com/google/bundletool/releases/download/$(echo $BUNDLETOOL_VERSION)/bundletool-all-$(echo $BUNDLETOOL_VERSION).jar"
+          curl -o bundletool.jar -L "https://github.com/google/bundletool/releases/download/${{ env.BUNDLETOOL_VERSION }}/bundletool-all-${{ env.BUNDLETOOL_VERSION }}.jar"
           chmod +x bundletool.jar
 
       - name: Setup Flutter
@@ -93,6 +93,7 @@ jobs:
       - name: Generate Universal APK
         run: |
           cd build/app/outputs/bundle/${{ env.ENV }}Release
+          ls
           java -jar ../../../../bundletool.jar build-apks \
             --mode=universal \
             --bundle=app-${{ env.ENV }}-release.aab \
