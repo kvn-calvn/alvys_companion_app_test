@@ -23,6 +23,97 @@ jobs:
 
       - name: Set environment variables
         run: |
+          BRANCH_NAME=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
+          echo "Branch name: $BRANCH_NAME"
+          if [[ "$BRANCH_NAME" == "dev" ]]; then
+            echo "APP_ID=io.alvys.app.dev" >> $GITHUB_ENV
+            echo "ENV=dev" >> $GITHUB_ENV
+          elif [[ "$BRANCH_NAME" == "qa" ]]; then
+            echo "APP_ID=io.alvys.app.qa" >> $GITHUB_ENV
+            echo "ENV=qa" >> $GITHUB_ENV
+          elif [[ "$BRANCH_NAME" == "main" ]]; then
+            echo "APP_ID=io.alvys.app" >> $GITHUB_ENV
+            echo "ENV=prod" >> $GITHUB_ENV
+          fi
+          echo "Set ENV to: ${{ env.ENV }}"
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: "17"
+
+      - name: Download .env file
+        run: |
+          echo '${{ secrets.ENV_FILE }}' | base64 --decode > .env
+      - name: Download google-services.json
+        run: |
+          echo '${{ secrets.GOOGLE_SERVICES_JSON }}' | base64 --decode > android/app/google-services.json
+      - name: Setup Android keystore
+        run: |
+          echo "${{ secrets.ALVYS_JKS }}" | base64 --decode > android/app/key.jks
+          echo "storeFile=key.jks" > android/key.properties
+          echo "${{ secrets.STORE_PASSWORD }}" | base64 -d > store_password.txt
+          echo "storePassword=$(cat store_password.txt)" >> android/key.properties
+          rm store_password.txt
+          echo "${{ secrets.KEY_ALIAS }}" | base64 -d > key_alias.txt
+          echo "keyAlias=$(cat key_alias.txt)" >> android/key.properties
+          rm key_alias.txt
+          echo "${{ secrets.KEY_PASSWORD }}" | base64 -d > key_password.txt
+          echo "keyPassword=$(cat key_password.txt)" >> android/key.properties
+          rm key_password.txt
+          cat android/key.properties
+      - name: Download Bundletool
+        run: |
+          curl -o bundletool.jar -L "https://github.com/google/bundletool/releases/download/${{ env.BUNDLETOOL_VERSION }}/bundletool-all-${{ env.BUNDLETOOL_VERSION }}.jar"
+          chmod +x bundletool.jar
+          ls
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: "stable"
+
+      - name: Install dependencies & run build_runner
+        run: |
+          flutter pub get
+          flutter pub run build_runner build --delete-conflicting-outputs
+      - name: Build Android
+        run: flutter build appbundle --flavor=${{ env.ENV }} --target=lib/${{ env.ENV }}.dart
+
+      - name: Generate Universal APK
+        run: |
+          cd build/app/outputs/bundle/${{ env.ENV }}Release
+          ls
+          # Decode secrets
+          echo "${{ secrets.STORE_PASSWORD }}" | base64 -d > store_password.txt
+          echo "${{ secrets.KEY_ALIAS }}" | base64 -d > key_alias.txt
+          echo "${{ secrets.KEY_PASSWORD }}" | base64 -d > key_password.txt
+          java -jar ${{ github.workspace }}/bundletool.jar build-apks \
+            --mode=universal \
+            --bundle=app-${{ env.ENV }}-release.aab \
+            --output=app-${{ env.ENV }}-release.apks \
+            --ks=../../../../../android/app/key.jks \
+            --ks-pass=pass:$(cat store_password.txt) \
+            --ks-key-alias=$(cat key_alias.txt) \
+            --key-pass=pass:$(cat key_password.txt)
+          # Clean up secret files
+          rm store_password.txt key_alias.txt key_password.txt
+          unzip -p app-${{ env.ENV }}-release.apks universal.apk > app-${{ env.ENV }}-release-universal.apk
+      - name: Upload AAB
+        uses: actions/upload-artifact@v4
+        with:
+          name: aab
+          path: build/app/outputs/bundle/${{ env.ENV }}Release/app-${{ env.ENV }}-release.aab
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: apk
+          path: build/app/outputs/bundle/${{ env.ENV }}Release/app-${{ env.ENV }}-release-universal.apk
+      - uses: actions/checkout@v4
+
+      - name: Set environment variables
+        run: |
           BRANCH_NAME=${GITHUB_REF#refs/heads/}
           echo "Branch name: $BRANCH_NAME"
 
@@ -124,15 +215,14 @@ jobs:
       github.ref == 'refs/heads/qa' ||
       github.ref == 'refs/heads/dev' ||
       github.ref == 'refs/heads/main'
-
     steps:
       - uses: actions/checkout@v4
 
       - name: Set environment variables
         run: |
-          BRANCH_NAME=${GITHUB_REF#refs/heads/}
+          BRANCH_NAME=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
           echo "Branch name: $BRANCH_NAME"
-
+           
           if [[ "$BRANCH_NAME" == "dev" ]]; then
             echo "APP_ID=io.alvys.app.dev" >> $GITHUB_ENV
             echo "ENV=dev" >> $GITHUB_ENV
@@ -151,34 +241,14 @@ jobs:
             echo "GOOGLE_SERVICE_INFO=${{ secrets.GOOGLE_SERVICE_INFO_PLIST_PROD }}" >> $GITHUB_ENV
             echo "PROVISIONING_PROFILE_DATA=${{ secrets.PROVISIONING_PROFILE_PROD_APPSTORE }}" >> $GITHUB_ENV
             echo "PROVISION_PROFILE=alvys_prod_appstore.mobileprovision" >> $GITHUB_ENV
-          else
-            echo "Error: Unknown branch $BRANCH_NAME"
-            exit 1
           fi
-
-          echo "Set ENV to: ${{ env.ENV }}"
-
       - name: Download .env file
         run: |
-          cat << 'EOL' > .env
-          ${{ secrets.ENV_FILE }}
-          EOL
-
-          if [ ! -s .env ]; then
-            echo "Error: .env file is empty"
-            exit 1
-          fi
-
-          echo "Verifying .env file:"
-          ls -la .env
-          echo "File contents preview (first 3 lines):"
-          head -n 3 .env
-
+          echo '${{ secrets.ENV_FILE }}' | base64 --decode > .env
       - name: Download GoogleService-Info.plist
         run: |
           mkdir -p ios/config/${{ env.ENV }}
-          echo "${{ env.GOOGLE_SERVICE_INFO }}" > ios/config/${{ env.ENV }}/GoogleService-Info.plist
-
+          echo "${{ env.GOOGLE_SERVICE_INFO }}" | base64 --decode > ios/config/${{ env.ENV }}/GoogleService-Info.plist
       - name: Install Apple Certificate
         uses: apple-actions/import-codesign-certs@v1
         with:
@@ -189,7 +259,6 @@ jobs:
         run: |
           mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
           echo "${{ env.PROVISIONING_PROFILE_DATA }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/${{ env.PROVISION_PROFILE }}
-
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -200,17 +269,14 @@ jobs:
         run: |
           flutter pub get
           flutter pub run build_runner build --delete-conflicting-outputs
-
       - name: Build iOS
         run: |
           flutter build ios --flavor=${{ env.ENV }} --target=lib/${{ env.ENV }}.dart --release --no-codesign
-
       - name: Build and Sign iOS App
         run: |
           cd ios
           bundle install
           bundle exec fastlane ios build_${{ env.ENV }}
-
       - name: Upload IPA
         uses: actions/upload-artifact@v4
         with:
