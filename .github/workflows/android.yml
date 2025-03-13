@@ -70,6 +70,7 @@ jobs:
           echo "${{ secrets.KEY_PASSWORD }}" | base64 -d > key_password.txt
           echo "keyPassword=$(cat key_password.txt)" >> android/key.properties
           rm key_password.txt
+          cat android/key.properties
 
       - name: Download Bundletool
         run: |
