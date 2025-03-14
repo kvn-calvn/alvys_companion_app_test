@@ -1,11 +1,12 @@
 name: Flutter CI/CD Pipeline
 
 on:
-  push:
-    branches: [main, qa, dev]
   pull_request:
-    branches: [main, qa, dev]
-    types: [opened, synchronize, reopened, closed]
+    branches: 
+      - dev
+      - qa
+      - main
+    types: [closed]
 
 env:
   FLUTTER_VERSION: "3.29.1"
@@ -185,7 +186,7 @@ jobs:
     name: Deploy to QA
     needs: [build-android, build-ios]
     runs-on: ubuntu-latest
-    if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true && github.base_ref == 'qa'
+    if: github.base_ref == 'qa'
     environment:
       name: qa
     steps:
