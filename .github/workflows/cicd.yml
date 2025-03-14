@@ -2,7 +2,7 @@ name: Flutter CI/CD Pipeline
 
 on:
   pull_request:
-    branches:
+    branches: 
       - dev
       - qa
       - main
@@ -205,7 +205,7 @@ jobs:
         with:
           appId: ${{ vars.FIREBASE_ANDROID_APP_ID }}
           serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_CREDENTIALS }}
-          groups: "alvys-internal, alvys-external"
+          groups: 'alvys-internal, alvys-external'
           file: app-qa-release-universal.apk
           releaseNotes: "QA Build from GitHub Actions - ${{ github.event.pull_request.title }}"
 
@@ -214,9 +214,10 @@ jobs:
         with:
           appId: ${{ vars.FIREBASE_IOS_APP_ID }}
           serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_CREDENTIALS }}
-          groups: "alvys-internal, alvys-external"
+          groups: 'alvys-internal, alvys-external'
           file: alvys-qa.ipa
           releaseNotes: "QA Build from GitHub Actions - ${{ github.event.pull_request.title }}"
+
 #   deploy_prod:
 #     name: Deploy to Production
 #     needs: [build-android, build-ios]
