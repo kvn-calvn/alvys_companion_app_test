@@ -1,1 +1,2 @@
-- Test github actions..
+- Bug fixes
+- Pr test
