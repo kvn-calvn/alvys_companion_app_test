@@ -152,7 +152,7 @@ jobs:
           mkdir -p ios/config/${{ env.ENV }}
           echo "${{ env.GOOGLE_SERVICE_INFO }}" | base64 --decode > ios/config/${{ env.ENV }}/GoogleService-Info.plist
       - name: Install Apple Certificate
-        uses: apple-actions/import-codesign-certs@v1
+        uses: apple-actions/import-codesign-certs@v3
         with:
           p12-file-base64: ${{ secrets.APPLE_DISTRIBUTION_P12 }}
           p12-password: ${{ secrets.P12_PWD }}
@@ -208,7 +208,7 @@ jobs:
       - name: Deploy Android to Firebase
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
-          appId: ${{ vars.FIREBASE_ANDROID_APP_ID }}
+          appId: '1:459046327856:android:7019297aeec2f04547fff5' #${{ vars.FIREBASE_ANDROID_APP_ID }}
           serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_CREDENTIALS }}
           groups: 'alvys-internal, alvys-external'
           file: app-qa-release-universal.apk
@@ -217,7 +217,7 @@ jobs:
       - name: Deploy iOS to Firebase
         uses: wzieba/Firebase-Distribution-Github-Action@v1
         with:
-          appId: ${{ vars.FIREBASE_IOS_APP_ID }}
+          appId: '1:459046327856:ios:43e55ebb1f35f60447fff5' #${{ vars.FIREBASE_IOS_APP_ID }}
           serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_CREDENTIALS }}
           groups: 'alvys-internal, alvys-external'
           file: alvys-qa.ipa
