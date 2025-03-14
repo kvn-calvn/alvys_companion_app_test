@@ -3,7 +3,7 @@ name: Flutter CI/CD Pipeline
 on:
   push:
     branches: [dev, qa, main]
-
+    
 env:
   FLUTTER_VERSION: "3.29.1"
   BUNDLETOOL_VERSION: "1.15.6"
