@@ -1,0 +1,252 @@
+name: Flutter CI/CD Pipeline
+
+on:
+  pull_request:
+    branches:
+      - dev
+      - qa
+      - main
+    types: [closed]
+
+env:
+  FLUTTER_VERSION: "3.29.1"
+  BUNDLETOOL_VERSION: "1.15.6"
+
+jobs:
+  build-android:
+    runs-on: ubuntu-latest
+    if: |
+      github.ref == 'refs/heads/qa' ||
+      github.ref == 'refs/heads/dev' ||
+      github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set environment variables
+        run: |
+          BRANCH_NAME=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
+          echo "Branch name: $BRANCH_NAME"
+          if [[ "$BRANCH_NAME" == "dev" ]]; then
+            echo "APP_ID=io.alvys.app.dev" >> $GITHUB_ENV
+            echo "ENV=dev" >> $GITHUB_ENV
+          elif [[ "$BRANCH_NAME" == "qa" ]]; then
+            echo "APP_ID=io.alvys.app.qa" >> $GITHUB_ENV
+            echo "ENV=qa" >> $GITHUB_ENV
+          elif [[ "$BRANCH_NAME" == "main" ]]; then
+            echo "APP_ID=io.alvys.app" >> $GITHUB_ENV
+            echo "ENV=prod" >> $GITHUB_ENV
+          fi
+          echo "Set ENV to: ${{ env.ENV }}"
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: "temurin"
+          java-version: "17"
+      - name: Download .env file
+        run: |
+          echo '${{ secrets.ENV_FILE }}' | base64 --decode > .env
+      - name: Download google-services.json
+        run: |
+          echo '${{ secrets.GOOGLE_SERVICES_JSON }}' | base64 --decode > android/app/google-services.json
+      - name: Setup Android keystore
+        run: |
+          echo "${{ secrets.ALVYS_JKS }}" | base64 --decode > android/app/key.jks
+          echo "storeFile=key.jks" > android/key.properties
+          echo "${{ secrets.STORE_PASSWORD }}" | base64 -d > store_password.txt
+          echo "storePassword=$(cat store_password.txt)" >> android/key.properties
+          rm store_password.txt
+          echo "${{ secrets.KEY_ALIAS }}" | base64 -d > key_alias.txt
+          echo "keyAlias=$(cat key_alias.txt)" >> android/key.properties
+          rm key_alias.txt
+          echo "${{ secrets.KEY_PASSWORD }}" | base64 -d > key_password.txt
+          echo "keyPassword=$(cat key_password.txt)" >> android/key.properties
+          rm key_password.txt
+          cat android/key.properties
+      - name: Download Bundletool
+        run: |
+          curl -o bundletool.jar -L "https://github.com/google/bundletool/releases/download/${{ env.BUNDLETOOL_VERSION }}/bundletool-all-${{ env.BUNDLETOOL_VERSION }}.jar"
+          chmod +x bundletool.jar
+          ls
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: "stable"
+      - name: Install dependencies & run build_runner
+        run: |
+          flutter pub get
+          flutter pub run build_runner build --delete-conflicting-outputs
+      - name: Build Android
+        run: flutter build appbundle --flavor=${{ env.ENV }} --target=lib/${{ env.ENV }}.dart
+      - name: Generate Universal APK
+        run: |
+          cd build/app/outputs/bundle/${{ env.ENV }}Release
+          ls
+          # Decode secrets
+          echo "${{ secrets.STORE_PASSWORD }}" | base64 -d > store_password.txt
+          echo "${{ secrets.KEY_ALIAS }}" | base64 -d > key_alias.txt
+          echo "${{ secrets.KEY_PASSWORD }}" | base64 -d > key_password.txt
+          java -jar ${{ github.workspace }}/bundletool.jar build-apks \
+            --mode=universal \
+            --bundle=app-${{ env.ENV }}-release.aab \
+            --output=app-${{ env.ENV }}-release.apks \
+            --ks=../../../../../android/app/key.jks \
+            --ks-pass=pass:$(cat store_password.txt) \
+            --ks-key-alias=$(cat key_alias.txt) \
+            --key-pass=pass:$(cat key_password.txt)
+          # Clean up secret files
+          rm store_password.txt key_alias.txt key_password.txt
+          unzip -p app-${{ env.ENV }}-release.apks universal.apk > app-${{ env.ENV }}-release-universal.apk
+      - name: Upload AAB
+        uses: actions/upload-artifact@v4
+        with:
+          name: aab
+          path: build/app/outputs/bundle/${{ env.ENV }}Release/app-${{ env.ENV }}-release.aab
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: apk
+          path: build/app/outputs/bundle/${{ env.ENV }}Release/app-${{ env.ENV }}-release-universal.apk
+      - uses: actions/checkout@v4
+  build-ios:
+    runs-on: macos-latest
+    if: |
+      github.ref == 'refs/heads/qa' ||
+      github.ref == 'refs/heads/dev' ||
+      github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set environment variables
+        run: |
+          BRANCH_NAME=${GITHUB_HEAD_REF:-${GITHUB_REF#refs/heads/}}
+          echo "Branch name: $BRANCH_NAME"
+           
+          if [[ "$BRANCH_NAME" == "dev" ]]; then
+            echo "APP_ID=io.alvys.app.dev" >> $GITHUB_ENV
+            echo "ENV=dev" >> $GITHUB_ENV
+            echo "GOOGLE_SERVICE_INFO=${{ secrets.GOOGLE_SERVICE_INFO_PLIST_DEV }}" >> $GITHUB_ENV
+            echo "PROVISIONING_PROFILE_DATA=${{ secrets.PROVISIONING_PROFILE_DEV }}" >> $GITHUB_ENV
+            echo "PROVISION_PROFILE=alvys_dev_adhoc.mobileprovision" >> $GITHUB_ENV
+          elif [[ "$BRANCH_NAME" == "qa" ]]; then
+            echo "APP_ID=io.alvys.app.qa" >> $GITHUB_ENV
+            echo "ENV=qa" >> $GITHUB_ENV
+            echo "GOOGLE_SERVICE_INFO=${{ secrets.GOOGLE_SERVICE_INFO_PLIST_QA }}" >> $GITHUB_ENV
+            echo "PROVISIONING_PROFILE_DATA=${{ secrets.PROVISIONING_PROFILE_QA }}" >> $GITHUB_ENV
+            echo "PROVISION_PROFILE=alvys_qa_adhoc.mobileprovision" >> $GITHUB_ENV
+          elif [[ "$BRANCH_NAME" == "main" ]]; then
+            echo "APP_ID=io.alvys.app" >> $GITHUB_ENV
+            echo "ENV=prod" >> $GITHUB_ENV
+            echo "GOOGLE_SERVICE_INFO=${{ secrets.GOOGLE_SERVICE_INFO_PLIST_PROD }}" >> $GITHUB_ENV
+            echo "PROVISIONING_PROFILE_DATA=${{ secrets.PROVISIONING_PROFILE_PROD_APPSTORE }}" >> $GITHUB_ENV
+            echo "PROVISION_PROFILE=alvys_prod_appstore.mobileprovision" >> $GITHUB_ENV
+          fi
+      - name: Download .env file
+        run: |
+          echo '${{ secrets.ENV_FILE }}' | base64 --decode > .env
+      - name: Download GoogleService-Info.plist
+        run: |
+          mkdir -p ios/config/${{ env.ENV }}
+          echo "${{ env.GOOGLE_SERVICE_INFO }}" | base64 --decode > ios/config/${{ env.ENV }}/GoogleService-Info.plist
+      - name: Install Apple Certificate
+        uses: apple-actions/import-codesign-certs@v1
+        with:
+          p12-file-base64: ${{ secrets.APPLE_DISTRIBUTION_P12 }}
+          p12-password: ${{ secrets.P12_PWD }}
+      - name: Install Provisioning Profile
+        run: |
+          mkdir -p ~/Library/MobileDevice/Provisioning\ Profiles
+          echo "${{ env.PROVISIONING_PROFILE_DATA }}" | base64 --decode > ~/Library/MobileDevice/Provisioning\ Profiles/${{ env.PROVISION_PROFILE }}
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: ${{ env.FLUTTER_VERSION }}
+          channel: "stable"
+      - name: Install dependencies & run build_runner
+        run: |
+          flutter pub get
+          flutter pub run build_runner build --delete-conflicting-outputs
+      - name: Build iOS
+        run: |
+          flutter build ios --flavor=${{ env.ENV }} --target=lib/${{ env.ENV }}.dart --release --no-codesign
+      - name: Build and Sign iOS App
+        run: |
+          cd ios
+          bundle install
+          bundle exec fastlane ios build_${{ env.ENV }}
+      - name: Upload IPA
+        uses: actions/upload-artifact@v4
+        with:
+          name: ipa
+          path: ios/alvys-${{ env.ENV }}.ipa
+      - name: Upload Release Notes
+        uses: actions/upload-artifact@v4
+        with:
+          name: release_notes
+          path: release_notes.txt
+  deploy_qa:
+    name: Deploy to QA
+    needs: [build-android, build-ios]
+    runs-on: ubuntu-latest
+    if: github.base_ref == 'qa'
+    environment:
+      name: qa
+    steps:
+      - name: Download Android artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: apk
+
+      - name: Download iOS artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: ipa
+
+      - name: Deploy Android to Firebase
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{ vars.FIREBASE_ANDROID_APP_ID }}
+          serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_CREDENTIALS }}
+          groups: "alvys-internal, alvys-external"
+          file: app-qa-release-universal.apk
+          releaseNotes: "QA Build from GitHub Actions - ${{ github.event.pull_request.title }}"
+
+      - name: Deploy iOS to Firebase
+        uses: wzieba/Firebase-Distribution-Github-Action@v1
+        with:
+          appId: ${{ vars.FIREBASE_IOS_APP_ID }}
+          serviceCredentialsFileContent: ${{ secrets.FIREBASE_SERVICE_CREDENTIALS }}
+          groups: "alvys-internal, alvys-external"
+          file: alvys-qa.ipa
+          releaseNotes: "QA Build from GitHub Actions - ${{ github.event.pull_request.title }}"
+#   deploy_prod:
+#     name: Deploy to Production
+#     needs: [build-android, build-ios]
+#     runs-on: ubuntu-latest
+#     if: github.event_name == 'pull_request' && github.event.action == 'closed' && github.event.pull_request.merged == true && github.base_ref == 'main'
+#     environment:
+#       name: production
+#       url: ${{ vars.STORE_CONSOLE_URL }}
+#     steps:
+#       - name: Download Android artifacts
+#         uses: actions/download-artifact@v4
+#         with:
+#           name: aab
+
+#       - name: Download iOS artifacts
+#         uses: actions/download-artifact@v4
+#         with:
+#           name: ipa
+
+#       - name: Deploy to Google Play
+#         uses: r0adkll/upload-google-play@v1
+#         with:
+#           serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+#           packageName: ${{ vars.ANDROID_PACKAGE_NAME }}
+#           releaseFiles: app-prod-release.aab
+#           track: ${{ vars.PLAY_STORE_TRACK }}
+
+#       - name: Deploy to App Store
+#         uses: apple-actions/upload-app-store@v1
+#         with:
+#           app-path: alvys-prod.ipa
+#           apple-id: ${{ vars.APPLE_APP_ID }}
+#           password: ${{ secrets.APPLE_APP_SPECIFIC_PASSWORD }}
