@@ -20,7 +20,10 @@ env:
 jobs:
   build-android:
     runs-on: ubuntu-latest
-    if: github.base_ref == 'dev' || github.base_ref == 'qa' || github.base_ref == 'main'
+    if: |
+      github.ref == 'refs/heads/qa' ||
+      github.ref == 'refs/heads/dev' ||
+      github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v4
       - name: Set environment variables
@@ -111,7 +114,10 @@ jobs:
       - uses: actions/checkout@v4
   build-ios:
     runs-on: macos-latest
-    if: github.base_ref == 'dev' || github.base_ref == 'qa' || github.base_ref == 'main'
+    if: |
+      github.ref == 'refs/heads/qa' ||
+      github.ref == 'refs/heads/dev' ||
+      github.ref == 'refs/heads/main'
     steps:
       - uses: actions/checkout@v4
       - name: Set environment variables
@@ -185,7 +191,7 @@ jobs:
     name: Deploy to QA
     needs: [build-android, build-ios]
     runs-on: ubuntu-latest
-    if: github.base_ref == 'qa'
+    # if: github.base_ref == 'qa'
     environment:
       name: qa
     steps:
